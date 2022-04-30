@@ -1,6 +1,6 @@
 ## Hi there 👋
 
-My name is Dennis Kinuthia. I am a growing _web developer_. I love working with Javascript with libraries like 
+My name is Dennis Kinuthia. I am an aspiring _web developer_. I love working with Javascript with libraries like 
 
 1. React for front end
 2. GrapQl on Nodejs and apollo/react-query as the client
