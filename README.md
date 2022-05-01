@@ -24,7 +24,7 @@ Am currently:
 How to reach me: 
 - LinkedIn: https://linkedin.com/in/dennis-kinuthia
 - Github: https://github.com/tigawanna
-- website: next-portfolio-f8mq61p2m-tigawanna.vercel.app
+- website: https://next-portfolio-zeta-two.vercel.app/
 
 
 coding is te one thing that doesn;t feel like work to me
