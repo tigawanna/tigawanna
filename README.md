@@ -18,7 +18,8 @@ Am currently:
 
 - 🌱 I’m learning Nextjs and jetpack compose on the side too 
 - 👯 I’m looking to collaborate on any open source or other projects that can help me be a better developer.
--  pull requests and issues welcome on any of my repositories
+- My current side project is : [preview link](https://tigawanna.github.io/project-mangaer/) [repo link](https://github.com/tigawanna/project-mangaer)
+    looking to colaborate , pull requests and issues welcome and i will walk you through if you find any of it interesting
 
 
 How to reach me: 
