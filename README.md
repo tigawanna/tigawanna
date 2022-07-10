@@ -16,10 +16,17 @@ Am currently:
 
 - 🔭 I’m currently going through the ALX code academy :https://www.alxafrica.com/software-engineering-
 
-- 🌱 I’m learning Nextjs and jetpack compose on the side too 
-- 👯 I’m looking to collaborate on any open source or other projects that can help me be a better developer.
-- My current side project is : [preview link](https://tigawanna.github.io/project-mangaer/) , [repo link](https://github.com/tigawanna/project-mangaer)
-    looking to colaborate , pull requests and issues welcome and i will walk you through if you find any of it interesting
+
+- live projects am working on 
+
+
+| Project | live demo | about |
+|---------|-------|----------|
+|[Property manager](https://github.com/tigawanna/project-mangaer)|[preview link](https://tigawanna.github.io/project-mangaer/)|simple react app with typescript , tailwind, react-query and firebase for managing tenants in a property|
+| [table-for-react](https://github.com/tigawanna/table-for-react) | [example implementation](https://tigawanna.github.io/table-for-react-example/) | custom react table component made with tsdx and tailwindcss ,[example code](https://github.com/tigawanna/table-for-react-example) the  [actual package here](https://www.npmjs.com/package/table-for-react)|
+
+
+ collaboration welcome and i will walk you through if you find any of it interesting
 
 
 How to reach me: 
@@ -28,5 +35,6 @@ How to reach me:
 - website: https://next-portfolio-zeta-two.vercel.app/
 
 
-coding is te one thing that doesn;t feel like work to me
+coding is the one thing that doesn't feel like work to me
+
 
