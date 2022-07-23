@@ -24,7 +24,7 @@ Am currently:
 |---------|-------|----------|
 |[Property manager](https://github.com/tigawanna/project-mangaer)|[preview link](https://tigawanna.github.io/project-mangaer/)|simple react app with typescript , tailwind, react-query and firebase for managing tenants in a property|
 | [table-for-react](https://github.com/tigawanna/table-for-react) | [example implementation](https://tigawanna.github.io/table-for-react-example/) | custom react table component made with tsdx and tailwindcss ,[example code](https://github.com/tigawanna/table-for-react-example) the  [actual package here](https://www.npmjs.com/package/table-for-react)|
-|[simple-chat-reactjs-client](https://github.com/tigawanna/sockets-client) </br> [simple-chat server](https://github.com/tigawanna/sockets-server) </br> [sreact native-client](https://github.com/tigawanna/sockets-rn)|[live chat](https://tigawanna.github.io/sockets-client/) </br> [Built apk for android](https://drive.google.com/file/d/1GMfPdDjFU3Uepw8I6FrAUbkGQ-k_trOR/view?usp=drivesdk)| Simple chat app with socket.io React and Nodejs |
+|[simple-reactjs-client](https://github.com/tigawanna/sockets-client) </br> [simple-chat server](https://github.com/tigawanna/sockets-server) </br> [sreact native-client](https://github.com/tigawanna/sockets-rn)|[live chat](https://tigawanna.github.io/sockets-client/) </br> [Built apk for android](https://drive.google.com/file/d/1GMfPdDjFU3Uepw8I6FrAUbkGQ-k_trOR/view?usp=drivesdk)| Simple chat app with socket.io React and Nodejs |
 
 
  collaboration welcome and i will walk you through if you find any of it interesting
