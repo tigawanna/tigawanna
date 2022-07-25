@@ -17,7 +17,7 @@ Am currently:
 - 🔭 I’m currently going through the ALX code academy :https://www.alxafrica.com/software-engineering-
 
 
-- live projects am working on 
+- - highlight projects am working on 
 
 
 | Project | live demo | about |
