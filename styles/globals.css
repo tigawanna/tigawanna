@@ -71,7 +71,8 @@ body{
     @apply flex flex-col md:flex-row h-[100%] p-[3%] md:h-20 w-full 
     items-center justify-evenly border-t bg-slate-800
 }
-.footer-projects-li{ @apply text-base md:text-lg text-slate-50 shadow hover:shadow-lg 
-    shadow-slate-50 hover:shadow-green-300 p-4 md:w-[40%] m-[2%] flex flex-col 
+.footer-projects-li{ 
+    @apply text-base md:text-lg text-slate-50 shadow-md hover:shadow-lg 
+    shadow-slate-50 hover:shadow-green-300 p-4 md:w-[25%] m-[2%] flex flex-col 
     justify-between items-center
 }

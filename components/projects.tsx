@@ -33,8 +33,8 @@ return (
         <div  className="text-3xl md:text-4xl text-slate-400 font-bold">
           Projects
           </div>
-          <ul  className="flex flex-col md:flex-row mt-[5%] ">
-         {
+          <ul  className="flex-center flex-wrap ">
+          {
            projects&&projects.map((item,index)=>{
              return(
                <motion.li
@@ -72,8 +72,9 @@ return (
                    </div>
                    </div>
                    <div className="font-small text-sm w-full flex-center flex-wrap  ">
-                    {item.tools.map((item)=>{
-                      return(<div className="p-[2px] m-[2px] rounded-sm text-green-200 bg-slate-900 ">
+                    {item.tools.map((item,index)=>{
+                      return(<div key={index} 
+                      className="p-[2px] m-[2px] rounded-sm text-green-200 bg-slate-900 ">
                         {item}</div>
                       )
                     })}
