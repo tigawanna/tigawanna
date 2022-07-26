@@ -15,7 +15,7 @@ HTML, CSS, JavaScript, Python, and some kotlin .
 Am currently:
 
 - 🔭 I’m currently going through the ALX code academy :https://www.alxafrica.com/software-engineering-
-
+- learning Go and Kotlin 
 
 - - highlight projects am working on 
 
