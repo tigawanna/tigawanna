@@ -27,7 +27,9 @@ Am currently:
 |[simple-reactjs-client](https://github.com/tigawanna/sockets-client) </br> [simple-chat server](https://github.com/tigawanna/sockets-server) </br> [sreact native-client](https://github.com/tigawanna/sockets-rn)|[live chat](https://tigawanna.github.io/sockets-client/) </br> [Built apk for android](https://drive.google.com/file/d/1GMfPdDjFU3Uepw8I6FrAUbkGQ-k_trOR/view?usp=drivesdk)| Simple chat app with socket.io React and Nodejs |
 |[gitpals](https://github.com/tigawanna/gitpals) |  [previewlink](https://tigawanna.github.io/gitpals/)| github discovery site, find fellow devs and build something beautifull|
 
- collaboration welcome and i will walk you through if you find any of it interesting
+[![GitHub Streak](https://github-readme-streak-stats.herokuapp.com?user=tigawanna&theme=navy-gear)](https://git.io/streak-stats)
+
+collaboration welcome and i will walk you through if you find any of it interesting
 
 
 How to reach me: 
@@ -36,6 +38,6 @@ How to reach me:
 - website: https://next-portfolio-zeta-two.vercel.app/
 
 
-coding is the one thing that doesn't feel like work to me
+
 
 
