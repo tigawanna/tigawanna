@@ -27,7 +27,7 @@ export const frontend=[
     'apollo-client',
     'firebase SDK',
     'REST',
-    'GaraphQL'
+    'GraphQL'
 
 ]
  
