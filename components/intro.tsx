@@ -26,11 +26,12 @@ export const Intro: React.FC<introProps> = ({}) => {
           />
         </div>
 
-        <div className="font-sarif mt-[40px] text-base  text-slate-200 md:w-[40%] md:text-lg">
+        <div className="font-sarif mt-[40px] text-base  text-green-200 md:w-[40%] md:text-lg">
 
-         Javascript/Typescript front-end design and
-          implementation with multiple tools to fetch, organise and display the
-          data effeciently
+         ❤️ React 
+         ❤️ tailwindcss
+         ❤️ react-query
+         ❤️ GraphQL
         </div>
 
         
