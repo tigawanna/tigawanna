@@ -95,8 +95,8 @@ export const local_projects = [
       'react-icons',
       'dayjs',
     ],
-    link: 'https://github.com/tigawanna/project-mangaer',
-    previewlink: 'https://tigawanna.github.io/project-mangaer/',
+    link: 'https://github.com/tigawanna/project-manager',
+    previewlink: 'https://firenotes3.web.app/',
     image: property,
   },
   {
