@@ -55,7 +55,8 @@ export const local_projects = [
       'gitpages',
       'react-icons',
       'dayjs',
-      'github rest api',
+      'github rest api + graphql api',
+      'react-query'
     ],
     link: 'https://github.com/tigawanna/gitpals',
     previewlink: 'https://tigawanna.github.io/gitpals/',
@@ -74,9 +75,31 @@ export const local_projects = [
       'react-icons',
       'dayjs',
       'github graphql api',
+      'react-query'
     ],
     link: 'https://github.com/tigawanna/gitdeck',
     previewlink: 'https://gitdeck-two.vercel.app/',
+    image: gitdeck,
+  },
+  {
+    title: 'Gityhub',
+    desc: `implemented gitdeck using relay as the main graphql client and 
+    react-location as the router since it supports preloading queries`,
+    tools: [
+      'react',
+      'typescript',
+      'react-query',
+      'tailwindcss',
+      'github',
+      'graphql-tag',
+      'react-icons',
+      'dayjs',
+      'github graphql api',
+      'relay',
+      'react-location'
+    ],
+    link: 'https://github.com/tigawanna/gityhub',
+    previewlink: 'http://gittyhub.vercel.app/',
     image: gitdeck,
   },
   {
