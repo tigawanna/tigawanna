@@ -3,6 +3,7 @@
 My name is Dennis Kinuthia. I am an aspiring _web developer_
 I love React , tailwindcss , react-query , graphql and everything in between  
 
+![Spotify recently played](https://spotify-recently-played-readme.vercel.app/api?user=ux88ch98gposewxwurgcx0pho)
 
 Am currently:
 
