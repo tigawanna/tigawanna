@@ -25,7 +25,7 @@ Am currently:
 
 collaboration welcome and i will walk you through if you find any of it interesting
 
-
+![Alt text](https://spotify-recently-played-readme.vercel.app/api?user=ux88ch98gposewxwurgcx0pho&count={count})
 How to reach me: 
 - LinkedIn: https://linkedin.com/in/dennis-kinuthia
 - Github: https://github.com/tigawanna
