@@ -1,17 +1,12 @@
 ## Hi there 👋
 
-My name is Dennis Kinuthia. I am an aspiring _web developer_
+My name is Dennis Kinuthia. I am a javascript/Tyescript web developer
 I love React , tailwindcss , react-query , graphql and everything in between  
 
-![Spotify recently played](https://spotify-recently-played-readme.vercel.app/api?user=ux88ch98gposewxwurgcx0pho)
 
-Am currently:
 
-- 🔭 I’m currently going through the ALX code academy https://www.alxafrica.com/software-engineering-
 
-- learning Golang
-
--  highlight projects am working on 
+### highlight projects am working on 
 
 
 | Project | live demo | about |
@@ -26,7 +21,9 @@ Am currently:
 
 collaboration welcome and i will walk you through if you find any of it interesting
 
-![Alt text](https://spotify-recently-played-readme.vercel.app/api?user=ux88ch98gposewxwurgcx0pho&count={count})
+current vibe:
+![Alt text](https://spotify-recently-played-readme.vercel.app/api?user=ux88ch98gposewxwurgcx0pho&count=10)
+
 How to reach me: 
 - LinkedIn: https://linkedin.com/in/dennis-kinuthia
 - Github: https://github.com/tigawanna
