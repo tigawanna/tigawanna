@@ -1,5 +1,5 @@
 import React from 'react'
-import TypeAnimation from 'react-type-animation'
+
 
 
 
@@ -18,12 +18,12 @@ export const Intro: React.FC<introProps> = ({}) => {
         </div>
 
         <div className="font-sarif mt-[30px] text-3xl font-bold text-slate-200 md:text-6xl">
-          <TypeAnimation
+          {/* <TypeAnimation
             cursor={true}
             sequence={['African web developer and designer']}
             wrapper="h1"
             className="text-green-300"
-          />
+          /> */}
         </div>
 
         <div className="font-sarif mt-[40px] text-base  text-green-200 md:w-[40%] md:text-lg">

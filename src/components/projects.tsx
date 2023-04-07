@@ -1,10 +1,6 @@
 import React from 'react'
 import { local_projects } from '../util/aboututils';
-import { useRouter } from 'next/router';
-import Link from 'next/link'
-import {animate, motion} from 'framer-motion'
-import Image, { StaticImageData } from 'next/image'
-
+import { Link } from 'rakkasjs';
 
 
 export interface Project {
@@ -12,9 +8,10 @@ title:string,
 desc:string,
 link:string,
 previewlink:string,
-image:StaticImageData,
 tools:string[]
+image:string
 }
+
 interface footerProps {
 fb_projects:Project[] | undefined
 }
@@ -24,7 +21,7 @@ const localdata = local_projects as Project[]
 
 const projects=fb_projects&&fb_projects.length>0?fb_projects:localdata;
 
-const router = useRouter();
+
 return (
 <div className="min-h-screen w-[100%] flex flex-col bg-slate-700 pl-4">
   <div className="flex flex-col">
@@ -37,20 +34,8 @@ return (
           {
            projects&&projects.map((item,index)=>{
              return(
-               <motion.li
-               initial={{
-                y:100,
-                opacity:0.1
-              }}
-               whileInView={{
-                 opacity:1,
-                 y:0,
-                 x:0
-               }} 
-               transition={{
-                 type:"spring",
-                 stiffness:30
-               }}
+               <li
+
           
                key={index} 
                className="footer-projects-li">
@@ -62,9 +47,8 @@ return (
                      overflow-hidden p-1 m-1">
                    {item.title}
                    </div>
-                   <Image
+                   <img
                     src={item.image}
-                    
                     className={'h-full w-full object-cover'}
                     />
                    <div className="text-sm my-2">
@@ -94,7 +78,7 @@ return (
                    </div>  
                    </div>
 
-                </motion.li>
+                </li>
              )
            })
          }

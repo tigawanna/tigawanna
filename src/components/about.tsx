@@ -1,8 +1,8 @@
 import React from 'react'
 import {  metext,frontend,backend } from '../util/aboututils';
-import { motion } from 'framer-motion';
 import Icons from './Icons' 
-import Link from 'next/link'
+import { Link } from 'rakkasjs';
+
 
 interface introProps {
 
@@ -21,11 +21,7 @@ interface introProps {
 
      <div  className="flex w-full  h-full flex-col md:flex-row justify-evenly ">  
 
-      <motion.div 
-          initial={{y:0,x:0,opacity:0.1}}
-          whileInView={{ opacity:1,y:0,x:0}} 
-          transition={{type:"spring", stiffness:30}}
-      className="flex-center flex-col h-full w-[95%] shadow hover:shadow-lg shadow-slate-300 
+      <div className="flex-center flex-col h-full w-[95%] shadow hover:shadow-lg shadow-slate-300 
       hover:shadow-green-300 p-4 m-2 ">
       
        <div  className="text-lg w-[90%] md:w-[70%]  flex-col-center text-white">
@@ -45,17 +41,15 @@ interface introProps {
          {
            metext.map((item,index)=>{
              return(
-               <motion.li
-               whileHover={{ scale: 1.1, opacity: 1}}
-               key={index}
+               <li key={index}
               className="text-base md:text-lg  font-mono text-slate-50 hover:text-green-300"> {"*"} {item}
-               </motion.li>
+               </li>
              )
            })
          }
          ...
         </ul>
-      </motion.div>
+      </div>
 
 
 
@@ -64,23 +58,7 @@ interface introProps {
 
     <div className="flex-center w-full  flex-col md:flex-row justify-evenly ">
 
-    <motion.div
-      initial={{
-        y:0,
-        x:-20,
-      opacity:0.1
-        }}
-        whileInView={{
-        opacity:1,
-        y:0,
-        x:0
-          }} 
-        transition={{
-        type:"spring",
-        stiffness:30
-          }}
-    
-    className="flex w-[95%] flex-col  justify-evenly  shadow hover:shadow-lg 
+    <div className="flex w-[95%] flex-col  justify-evenly  shadow hover:shadow-lg 
     shadow-slate-300 hover:shadow-green-300 p-4 m-1"> 
 
       <div  className="text-2xl md:text-4xl text-slate-400 font-bold">
@@ -98,24 +76,9 @@ interface introProps {
          }
 
         </ul>
-      </motion.div>
+      </div>
 
-      <motion.div 
-        initial={{
-          y:0,
-          x:-20,
-        opacity:0.1
-          }}
-          whileInView={{
-          opacity:1,
-          y:0,
-          x:0
-            }} 
-          transition={{
-          type:"spring",
-          stiffness:30
-            }}
-      className="flex flex-col w-[95%] shadow hover:shadow-lg  shadow-slate-300 
+      <div className="flex flex-col w-[95%] shadow hover:shadow-lg  shadow-slate-300 
       hover:shadow-green-300 p-4 m-1 rounded-lg">
         <div  className="h-full text-2xl md:text-4xl text-slate-400 font-bold">
           Backend 
@@ -132,7 +95,7 @@ interface introProps {
          }
 
         </ul>
-     </motion.div>
+     </div>
 
     </div>
 

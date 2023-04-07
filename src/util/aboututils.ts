@@ -11,7 +11,7 @@ export const metext=[
     "Effecient State management to optimise data usage and network requests",
     "Mobile first design",
     "Use tailwind to simplify and streamline the styles",
-    "Minimal, clean aesthetic >>>>"
+    "Minimal, clean aesthetic >>>"
     ]
 
 
