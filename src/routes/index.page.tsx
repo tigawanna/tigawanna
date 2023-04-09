@@ -1,14 +1,13 @@
 import { Head, Link } from "rakkasjs"
 import { IconContext } from "react-icons/lib";
-import About from "src/components/about";
-import Intro from "src/components/intro";
-import Projects, { Project } from "src/components/projects";
-import { local_projects } from './../util/aboututils';
 import { FaLinkedinIn, FaGithub, FaDev } from 'react-icons/fa'
+import About from "../components/about";
+import Intro from "../components/intro";
+import Projects, { Project } from "../components/projects";
 
 export default function HomePage() {
 
-	const projects = local_projects as Project[]
+
 
 	return (
 		<main>
@@ -48,7 +47,7 @@ export default function HomePage() {
 				</div>
 
 				<About />
-				<Projects fb_projects={projects} />
+				<Projects />
 			</main>
 		</main>
 	);

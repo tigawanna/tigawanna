@@ -17,7 +17,7 @@
     {
         "name":"Awesome Teams",
         "description":" role based project management system",
-        "link":"https://github.com/tigawanna/awesome-notes",
+        "link":"https://github.com/tigawanna/awesome-teams",
         "hosted":"https://awesome-notes.vercel.app/",
         "technologies":["React","vite","tailwind","react-query","zustand","pocketbase"]
     },

@@ -1,6 +1,8 @@
 import React from 'react'
-import { local_projects } from '../util/aboututils';
+
 import { Link } from 'rakkasjs';
+import { projects_list } from '../util/projects';
+import { GoodImage } from '../shared/GoodImage';
 
 
 export interface Project {
@@ -12,14 +14,14 @@ tools:string[]
 image:string
 }
 
-interface footerProps {
-fb_projects:Project[] | undefined
+interface ProjectProps {
+// fb_projects:Project[] | undefined
 }
 
-const Projects: React.FC<footerProps> = ({fb_projects}) => {
-const localdata = local_projects as Project[]  
+function Projects ({ }: ProjectProps){
+// const localdata = local_projects as Project[]  
 
-const projects=fb_projects&&fb_projects.length>0?fb_projects:localdata;
+const projects=projects_list
 
 
 return (
@@ -34,10 +36,7 @@ return (
           {
            projects&&projects.map((item,index)=>{
              return(
-               <li
-
-          
-               key={index} 
+               <li key={index} 
                className="footer-projects-li">
 
                  <div className="font-medium text-sm w-full flex flex-col">
@@ -45,18 +44,23 @@ return (
                    <div 
                     className="text-2xl md:text-xl text-green-300 opacacity-1 font-bold
                      overflow-hidden p-1 m-1">
-                   {item.title}
+                   {item.name}
                    </div>
-                   <img
+                   <GoodImage
+                   props={{src:item.image}}
+                   height="700px"
+                   width="500px"
+                   />
+                   {/* <img
                     src={item.image}
                     className={'h-full w-full object-cover'}
-                    />
-                   <div className="text-sm my-2">
-                   {item.desc}
+                    /> */}
+                   <div className="text-base  my-2">
+                   {item.description}
                    </div>
                    </div>
                    <div className="font-small text-sm w-full flex-center flex-wrap  ">
-                    {item.tools.map((item,index)=>{
+                    {item.technologies.map((item,index)=>{
                       return(<div key={index} 
                       className="p-[2px] m-[2px] rounded-sm text-green-200 bg-slate-900 ">
                         {item}</div>
@@ -66,7 +70,7 @@ return (
                    <div className="font-medium text-sm w-full flex justify-between ">
          
                    <div className="bg-slate-800 shadow-md shadow-white hover:shadow-green-300 rounded-sm p-1 m-1"> 
-                   <Link href={item?.previewlink}>
+                   <Link href={item?.hosted}>
                    <a target="_blank">live preview</a>
                    </Link>
                    </div>    

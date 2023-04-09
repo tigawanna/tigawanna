@@ -1,6 +1,7 @@
 import { LayoutProps, StyledLink } from "rakkasjs";
+import { MainFooter } from "../components/footer";
 import "../styles/tailwind.css";
-import { MainFooter } from "src/components/footer";
+
 
 export default function MainLayout({ children }: LayoutProps) {
     return (
