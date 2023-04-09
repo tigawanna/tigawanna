@@ -5,39 +5,51 @@ import  project from '../res/project.webp'
 import  github from '../res/github.jpg'
 import gitdeck from '../res/gitdeck.webp'
 
+
 export const metext=[     
     "A good user experience > fancy designs",
     "Making my custom logic when practical > installing libraries",
-    "Effecient State management to optimise data usage and network requests",
+    "Effecient state management to optimise data usage and network requests",
     "Mobile first design",
     "Use tailwind to simplify and streamline the styles",
-    "Minimal, clean aesthetic >>>"
+    "Minimal, clean aesthetic"
     ]
 
 
+export const meback_story=[
+ `Hi, I'm Dennis!
+  I'm a Kenyan React developer with experience in Next.js, Rakkas, Vite, Tailwind CSS, React Query,
+  and all the tooling in between
+  I fell in love with computer science while in high school and have been passionate about coding ever since. 
+  After working in a property management company for some time,
+  I decided to get serious about coding again during the 2020 Covid lockdowns.
+  Since then, I've learned React and the basics of programming in C ,python and linux in the ALX bootcamp
+  and am now seeking to switch careers to web development.`
+]
+
+
 export const frontend=[
-    'Html + CSS',
+    'HTMLl + CSS',
+    'Javascript & Typescript',
     'Vite',
     'Tailwind css',
     'framer-motion',
     'React/Nextjs',
+    'React/Rakkasjs',
     'React-Native',
-    'redux',
     'react-query',
-    'apollo-client',
-    'firebase SDK',
-    'REST',
-    'GaraphQL'
-
+    'zustand',
+    'Firebase/Supabase/Pocketbase SDK',
+    'Relay',
 ]
  
 export const backend=[
-    'NodeJs+express',
+    'NodeJs + express',
+    'REST & Websockets',
     'graphQl + express-apollo-server',
     'Mongo db',
-    'Postgresql',
+    'Postgresql,Mysql,sqlite',
     'Redis',
-    'websockets + REST',
     'Firebase Admin SDK'
 ]
 

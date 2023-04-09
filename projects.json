@@ -1,0 +1,32 @@
+[
+    {
+        "name":"ForEach",
+        "description":" simple social medial timeline",
+        "link":"https://github.com/tigawanna/foreach",
+        "hosted":"https://devhub-brown.vercel.app/",
+        "technologies":["React","vite","tailwind","react-query","pocketbase"]
+    },
+    {
+        "name":"Mashamba",
+        "description":"simple real estate site",
+        "link":"https://github.com/tigawanna/mashamba",
+        "hosted":"https://mashamba.vercel.app/",
+        "technologies":["React","rakkasjs","tailwind","pocketbase"]
+
+    },
+    {
+        "name":"Awesome Teams",
+        "description":" role based project management system",
+        "link":"https://github.com/tigawanna/awesome-notes",
+        "hosted":"https://awesome-notes.vercel.app/",
+        "technologies":["React","vite","tailwind","react-query","zustand","pocketbase"]
+    },
+    {
+        "name":"Gittyhub",
+        "description":" Social media Themed github client ",
+        "link":"https://github.com/tigawanna/gittyhub",
+        "hosted":"http://gittyhub.vercel.app/",
+        "technologies":["React","vite","tailwind","react-location","relay","Github GraphQL API"]
+
+    }
+]
