@@ -26,7 +26,8 @@ export async function getViewerLangs() {
     return fetch('https://api.github.com/graphql', {
         method: 'POST',
         headers: {
-            "Authorization": "bearer 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",
+            //@ts-expect-error
+            "Authorization": `bearer ${import.meta.env.VITE_GH_PAT}`,
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
