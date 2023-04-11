@@ -8,11 +8,9 @@ import {
     SiJavascript,
     SiTypescript,
     SiTailwindcss,
-    SiKotlin,
     SiNodedotjs,
     SiMongodb,
     SiLinux,
-    SiFlutter,
     SiNextdotjs,
     SiPostgresql,
     SiRedis
@@ -31,8 +29,7 @@ return (
     <IconContext.Provider value={{ size: "40px",color:"#7CFC00", className: "m-2" }} >
      <SiJavascript/>
      <SiTypescript/>
-     <SiKotlin/>
-     <SiPython/>        
+      <SiPython/>        
      <SiReact/>
      <SiTailwindcss/>
      <SiApollographql/>
@@ -41,8 +38,7 @@ return (
      <SiNodedotjs/>
      <SiMongodb/>
      <SiLinux/>
-     <SiFlutter/>
-     <SiNextdotjs/>
+      <SiNextdotjs/>
      <SiPostgresql/>
      <SiRedis/>
 </IconContext.Provider>

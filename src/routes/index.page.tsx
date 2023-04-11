@@ -1,51 +1,27 @@
-import { Head, Link } from "rakkasjs"
-import { IconContext } from "react-icons/lib";
-import { FaLinkedinIn, FaGithub, FaDev } from 'react-icons/fa'
+import { Head, Link, useLocation, useSSQ } from "rakkasjs"
 import About from "../components/about";
+import { AboutLinks } from "../components/AboutLinks";
 import Intro from "../components/intro";
 import Projects, { Project } from "../components/projects";
+import {  getViewerLangs } from "../util/gql";
+
 
 export default function HomePage() {
-
-
-
+const location = useLocation()
+console.log("location.current.href", location.current.href)
+const {data,dataUpdatedAt,} = useSSQ(()=>{
+	return getViewerLangs()
+}
+)
+console.log("data==== ",data)
 	return (
 		<main>
 			<Head title="Dennis Kinuthia"/>
-			<main className="flex w-full h-[100%] flex-col bg-slate-700">
+			<main className="flex w-full h-[100%] flex-col font-serif
+				bg-gradient-to-br from-green-900 via-transparent to-emerald-100	
+			">
 				<Intro />
-
-				<div className="flex justify-end  w-[100%] p-1 sticky top-0 z-50 bg-slate-700">
-					<div className='p-1 m-1 flex '>
-						<IconContext.Provider
-							value={{ size: "30px", className: "mx-2" }}>
-
-							<div className='my-2 md:my-0 text-sm md:text-lg  text-slate-300 font-mono'>
-
-								<Link href="https://github.com/tigawanna"
-								><a target="_blank" className="text-green-400">
-										<FaGithub />
-									</a></Link>
-							</div>
-
-							<div className='my-2 md:my-0 text-sm md:text-lg text-slate-300 font-mono'>
-								<Link href="https://linkedin.com/in/dennis-kinuthia" >
-									<a target="_blank" className="text-green-400">
-										<FaLinkedinIn />
-									</a></Link>
-							</div>
-
-							<div className='my-2 md:my-0 text-sm md:text-lg text-slate-300 font-mono'>
-								<Link href="https://dev.to/tigawanna" >
-									<a target="_blank" className="text-green-400">
-										<FaDev />
-									</a></Link>
-							</div>
-
-						</IconContext.Provider>
-					</div>
-				</div>
-
+				<AboutLinks/>
 				<About />
 				<Projects />
 			</main>

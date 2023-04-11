@@ -2,7 +2,7 @@
 
 [website link](https://next-portfolio-zeta-two.vercel.app/)
 
-Made with Next.js + Tailwind CSS + framer-motion + react-icons and hosted on vercel
+Made with Rakkas.js + Tailwind CSS +  react-icons and hosted on vercel
 
 
 

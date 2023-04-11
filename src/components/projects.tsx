@@ -51,10 +51,7 @@ return (
                    height="700px"
                    width="500px"
                    />
-                   {/* <img
-                    src={item.image}
-                    className={'h-full w-full object-cover'}
-                    /> */}
+    
                    <div className="text-base  my-2">
                    {item.description}
                    </div>

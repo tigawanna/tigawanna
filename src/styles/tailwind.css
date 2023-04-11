@@ -83,3 +83,32 @@ body{
     shadow-slate-50 hover:shadow-green-300 p-4 md:w-[25%] m-[2%] flex flex-col 
     justify-between items-center
 }
+
+
+
+.gradient-text {
+  background-image: linear-gradient(to right, #d24ef3 0%, #f07969 100%);
+  -webkit-background-clip: text;
+  background-clip:"text";
+  -webkit-text-fill-color: transparent;
+  animation-name: gradient-shift;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: left;
+  
+  }
+  
+  50% {
+    background-position: right;
+
+  }
+  
+  100% {
+    background-position: left;
+   
+  }
+}
