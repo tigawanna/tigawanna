@@ -67,14 +67,12 @@ return (
                    <div className="font-medium text-sm w-full flex justify-between ">
          
                    <div className="bg-slate-800 shadow-md shadow-white hover:shadow-green-300 rounded-sm p-1 m-1"> 
-                   <Link href={item?.hosted}>
-                   <a target="_blank">live preview</a>
-                   </Link>
+                     <Link href={item?.hosted} target="_blank">live preview</Link>
                    </div>    
 
                    <div className="bg-slate-800 shadow-md shadow-white hover:shadow-green-300 rounded-sm p-1 m-1"> 
-                   <Link href={item.link}>
-                   <a target="_blank">source code</a>
+                     <Link href={item.link} target="_blank">
+                      source code
                    </Link>
                    </div>  
                    </div>

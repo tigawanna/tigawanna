@@ -1,19 +1,15 @@
-import { Head, Link, useLocation, useSSQ } from "rakkasjs"
+import { Head } from "rakkasjs"
 import About from "../components/about";
 import { AboutLinks } from "../components/AboutLinks";
 import Intro from "../components/intro";
-import Projects, { Project } from "../components/projects";
-import {  getViewerLangs } from "../util/gql";
+import Projects from "../components/projects";
+import { TechDetails } from "../components/TechDetails";
+
 
 
 export default function HomePage() {
-const location = useLocation()
-console.log("location.current.href", location.current.href)
-const {data,dataUpdatedAt,} = useSSQ(()=>{
-	return getViewerLangs()
-}
-)
-console.log("data==== ",data)
+
+	
 	return (
 		<main>
 			<Head title="Dennis Kinuthia"/>
@@ -22,6 +18,7 @@ console.log("data==== ",data)
 			">
 				<Intro />
 				<AboutLinks/>
+				<TechDetails/>
 				<About />
 				<Projects />
 			</main>

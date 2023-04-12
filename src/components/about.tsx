@@ -40,10 +40,12 @@ interface introProps {
                   <li>I completed the ALX software engineering program
                   where we learned the basics of C, Python, and Linux.</li>
                 </ul>
-                <Link href="https://www.alxafrica.com/software-engineering-" >
-                  <a target="_blank" className="text-green-400">
-                    ALX software engineering program
-                  </a></Link>
+              
+              <Link 
+                href="https://www.alxafrica.com/software-engineering-"
+                target="_blank" className="text-green-400">
+                ALX software engineering program
+             </Link>
 
               </div>
      

@@ -33,9 +33,7 @@
     "vitest": "^0.28.5"
   },
   "dependencies": {
-    "@hattip/graphql": "^0.0.33",
     "@hattip/response": "^0.0.33",
-    "@mdx-js/mdx": "^2.0.0-rc.2",
     "graphql-request": "^5.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
