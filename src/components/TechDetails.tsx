@@ -16,7 +16,7 @@ export function TechDetails({}:TechDetailsProps){
     }
     )
     
-// console.log("data==== ", data)
+console.log("data==== ", data)
 
 if (("message" &&"documentation_url") in data.data){
     return <ErrorOutput error={data.data}/>
@@ -28,12 +28,15 @@ const language_percentages = getMostFrequentLanguages(data.data.viewer.repositor
 
 
 return (
- <div className='w-full h-full flex flex-wrap items-center justify-center gap-2'>
+ <div className='w-full h-full flex flex-col items-center justify-center'>
+<div className='w-full h-full flex flex-wrap items-center justify-center gap-2'>
+<h3 className="w-full pl-10 text-lg text-green-300  ">Most used languages in my Github projects</h3>
 {
     language_percentages.map((lang, index) => {
         return <ProgressBar prop={lang}  key={lang.name}/>
     })
 }
+</div>
 </div>
 );
 }

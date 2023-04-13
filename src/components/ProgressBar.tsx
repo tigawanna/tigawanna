@@ -17,18 +17,12 @@ export function ProgressBar({prop}:ProgressBarProps){
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding:2
+        padding:2,
+
     }
 
 
-    const is_tiny = prop.name.length > 4 && prop.percentage < 3
-    
-    function calcNameLength(){
-        // if(is_tiny){
-        //     return prop.name.slice(0,3) + "..."
-        // }
-        return prop.name
-    }
+
 if(prop.percentage<1){
     return null
 }
@@ -36,11 +30,11 @@ if(prop.percentage<1){
 return (
     <div 
        style={fillerStyles}
-       className="md:max-w-[40%] md:min-w-[10%] min-w-fit"
-       >
+        className="md:max-w-[40%] md:min-w-[10%] min-w-fit ">
         <span className="flex px-2 items-center justify-center rounded-2xl"></span>
-            <div className="px-1 min-w-fit text-sm bg-slate-900 bg-opacity-70 truncate rounded-lg flex items-end justify-center">
-                {`${calcNameLength()} ${prop.percentage}%`}
+        <div className="font-mono px-1 min-w-fit text-sm bg-slate-600 text-green-300
+        truncate rounded-lg flex items-end justify-center">
+                {`${prop.name} ${prop.percentage}%`}
            </div>
         </div>
    

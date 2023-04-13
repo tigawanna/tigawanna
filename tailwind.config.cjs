@@ -6,6 +6,8 @@ module.exports = {
     extend: {
       colors: {
         accent:"var(--accent-color)",
+
+
       }
     },
   },

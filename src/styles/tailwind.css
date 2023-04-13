@@ -5,9 +5,12 @@
 
 
 :root{
-  --primary-color: #f33131;
+  
   --accent-color: #44ec02;
+
+  
 }
+
 
 body{
     --tw-bg-opacity: 1;
@@ -67,6 +70,11 @@ body{
       opacity: 0;
     }
   }
+
+
+
+
+
 
 .flex-center{
     @apply flex items-center justify-center

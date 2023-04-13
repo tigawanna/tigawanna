@@ -52,7 +52,7 @@ export interface LanguageNode {
 
 export async function getViewerLangs() {
 
-    const querr = `
+const querr = `
 {
   viewer {
     repositories(first: 100) {
