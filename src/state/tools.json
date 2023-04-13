@@ -1,0 +1,769 @@
+[
+    {
+        "status": "fulfilled",
+        "value": [
+            "@hattip/response^0.0.33",
+            "graphql-request^5.2.0",
+            "react^18.2.0",
+            "react-dom^18.2.0",
+            "react-icons^4.8.0"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@tanem/react-nprogress^5.0.25",
+            "@tanstack/react-query^4.20.4",
+            "dayjs^1.11.7",
+            "pocketbase^0.9.1",
+            "react^18.2.0",
+            "react-dom^18.2.0",
+            "react-icons^4.7.1",
+            "react-intersection-observer^9.4.1",
+            "react-modal^3.16.1",
+            "react-router-dom^6.6.1",
+            "yarn^1.22.19",
+            "zustand^4.3.2"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@tanem/react-nprogress^5.0.30",
+            "@tanstack/react-query^5.0.0-alpha.5",
+            "@tanstack/react-query-devtools^5.0.0-alpha.5",
+            "date-fns^2.29.3",
+            "dayjs^1.11.7",
+            "i^0.3.7",
+            "npm^9.6.2",
+            "pocketbase^0.13.1",
+            "react^18.2.0",
+            "react-calendar^4.0.0",
+            "react-dom^18.2.0",
+            "react-icons^4.7.1",
+            "react-modal^3.16.1",
+            "react-router-dom^6.8.2",
+            "react-select^5.7.0",
+            "zustand^4.3.4"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@tanem/react-nprogress^5.0.25",
+            "@tanstack/react-query^4.24.4",
+            "axios^0.27.2",
+            "babel-plugin-relay^14.1.0",
+            "dayjs^1.11.5",
+            "graphql^16.6.0",
+            "graphql-request^5.0.0",
+            "graphql-tag^2.12.6",
+            "pocketbase^0.10.1",
+            "react^18.2.0",
+            "react-dom^18.2.0",
+            "react-icons^4.4.0",
+            "react-modal^3.16.1",
+            "react-relay^14.1.0",
+            "react-router-dom^6.8.0",
+            "relay-compiler^14.1.0",
+            "relay-runtime^14.1.0",
+            "uniqid^5.4.0",
+            "vite-plugin-relay^2.0.0",
+            "zustand^4.1.1",
+            "zustand-persist^0.4.0"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@emotion/react^11.10.5",
+            "@hattip/adapter-vercel-edge^0.0.29",
+            "@hattip/response^0.0.27",
+            "@mantine/core^5.10.3",
+            "@mantine/hooks^5.10.3",
+            "@tanem/react-nprogress^5.0.27",
+            "leaflet^1.9.3",
+            "pocketbase^0.10.2",
+            "react^18.2.0",
+            "react-dom^18.2.0",
+            "react-icons^4.7.1",
+            "react-leaflet^4.2.0",
+            "react-modal^3.16.1",
+            "react-select^5.7.0"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@emotion/react^11.10.6",
+            "@mantine/core^6.0.5",
+            "@mantine/hooks^6.0.5",
+            "@tanem/react-nprogress^5.0.33",
+            "@tanstack/react-query^5.0.0-alpha.9",
+            "@tanstack/react-query-devtools^5.0.0-alpha.9",
+            "dayjs^1.11.7",
+            "eslint-config-airbnb-typescript^17.0.0",
+            "pocketbase^0.13.1",
+            "react^18.2.0",
+            "react-dom^18.2.0",
+            "react-icons^4.8.0",
+            "react-modal^3.16.1",
+            "react-router-dom^6.10.0",
+            "react-select^5.7.2",
+            "react-to-print^2.14.12",
+            "zustand^4.3.7"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "astro^2.2.0"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@denniskinuthia/tiny-pkgs^0.0.8",
+            "@tanstack/react-query^5.0.0-alpha.9",
+            "@tanstack/react-query-devtools^5.0.0-alpha.9",
+            "dayjs^1.11.7",
+            "eslint-config-airbnb-typescript^17.0.0",
+            "react^18.2.0",
+            "react-dom^18.2.0",
+            "react-icons^4.8.0",
+            "react-router-dom^6.10.0"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@tanstack/react-query^4.20.4",
+            "react-icons^4.7.1",
+            "react-modal^3.16.1"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@react-query-firebase/auth^0.3.4",
+            "@react-query-firebase/firestore^0.4.2",
+            "@react-query-firebase/functions^0.2.2",
+            "@testing-library/jest-dom^5.16.4",
+            "@testing-library/react^13.2.0",
+            "@testing-library/user-event^13.5.0",
+            "@types/date-fns^2.6.0",
+            "@types/jest^27.5.1",
+            "@types/node^16.11.36",
+            "@types/react^18.0.9",
+            "@types/react-dom^18.0.4",
+            "@types/uniqid^5.3.2",
+            "axios^0.27.2",
+            "date-fns^2.28.0",
+            "dayjs^1.11.2",
+            "firebase^9.8.1",
+            "firebase-admin^11.4.1",
+            "firebase-functions^3.24.1",
+            "firebaseui^6.0.1",
+            "gapi^0.0.3",
+            "gapi-script^1.2.0",
+            "react^18.1.0",
+            "react-day-picker^8.0.5",
+            "react-dom^18.1.0",
+            "react-gapi-auth2^1.0.4",
+            "react-icons^4.3.1",
+            "react-query^3.39.0",
+            "react-router-dom^6.3.0",
+            "react-scripts5.0.1",
+            "typescript^4.6.4",
+            "uniqid^5.4.0",
+            "web-vitals^2.1.4"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "bull^3.16.0",
+            "chai-http^4.3.0",
+            "express^4.17.1",
+            "image-thumbnail^1.0.10",
+            "mime-types^2.1.27",
+            "mongodb^3.5.9",
+            "redis^2.8.0",
+            "sha1^1.1.1",
+            "uuid^8.2.0"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@denniskinuthia/tiny-pkgs^0.0.8",
+            "@tanstack/react-query^4.20.9",
+            "dayjs^1.11.7",
+            "eslint-config-airbnb-typescript^17.0.0",
+            "pocketbase^0.11.0",
+            "react^18.2.0",
+            "react-dom^18.2.0",
+            "react-icons^4.7.1",
+            "react-progressive-graceful-image^0.7.0",
+            "react-router-dom^6.6.1"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@genql/runtime^2.10.0",
+            "axios^0.27.2",
+            "dayjs^1.11.4",
+            "dayjs-ext^2.1.1",
+            "graphql^16.5.0",
+            "graphql-request^4.3.0",
+            "graphql-tag^2.12.6",
+            "query-string^7.1.1",
+            "react^18.0.0",
+            "react-dom^18.0.0",
+            "react-icons^4.4.0",
+            "react-query^3.39.0",
+            "react-router-dom^6.3.0"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@apollo/client^3.6.9",
+            "dayjs^1.11.3",
+            "graphql^16.5.0",
+            "react^18.0.0",
+            "react-dom^18.0.0",
+            "react-icons^4.4.0",
+            "subscriptions-transport-ws^0.11.0",
+            "ws^8.8.0"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "axios^0.27.2",
+            "dayjs^1.11.5",
+            "graphql^16.6.0",
+            "graphql-request^5.0.0",
+            "graphql-tag^2.12.6",
+            "react^18.2.0",
+            "react-dom^18.2.0",
+            "react-icons^4.4.0",
+            "react-query^3.39.2",
+            "react-router-dom^6.4.0",
+            "react-use-measure^2.1.1",
+            "uniqid^5.4.0",
+            "use-countdown-timer^1.3.2"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "axios^0.27.2",
+            "dayjs^1.11.5",
+            "graphql^16.6.0",
+            "graphql-request^5.0.0",
+            "graphql-tag^2.12.6",
+            "pocketbase^0.7.1",
+            "react^18.2.0",
+            "react-dom^18.2.0",
+            "react-icons^4.4.0",
+            "react-query^3.39.2",
+            "react-router-dom^6.4.2",
+            "uniqid^5.4.0"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@tanstack/react-location^3.7.4",
+            "@types/react-relay^14.1.1",
+            "@types/relay-runtime^14.1.3",
+            "axios^0.27.2",
+            "babel-plugin-relay^14.1.0",
+            "dayjs^1.11.5",
+            "graphql^16.6.0",
+            "graphql-request^5.0.0",
+            "graphql-tag^2.12.6",
+            "react^18.2.0",
+            "react-dom^18.2.0",
+            "react-icons^4.4.0",
+            "react-location-devtools^3.3.4",
+            "react-query^3.39.2",
+            "react-relay^14.1.0",
+            "relay-compiler^14.1.0",
+            "relay-runtime^14.1.0",
+            "uniqid^5.4.0",
+            "vite-plugin-relay^2.0.0",
+            "zustand^4.1.1",
+            "zustand-persist^0.4.0"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@animxyz/react^0.6.7",
+            "@tanem/react-nprogress^5.0.26",
+            "react^18.2.0",
+            "react-dom^18.2.0",
+            "react-icons^4.7.1",
+            "react-modal^3.16.1"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@react-native-async-storage/async-storage^1.17.7",
+            "axios^0.27.2",
+            "expo~45.0.0",
+            "expo-status-bar~1.3.0",
+            "expo-updates~0.13.3",
+            "formik^2.2.9",
+            "react17.0.2",
+            "react-dom17.0.2",
+            "react-native0.68.2",
+            "react-native-linear-gradient^2.6.2",
+            "react-native-web0.17.7",
+            "socket.io-client^4.5.1",
+            "use-countdown-timer^1.3.2",
+            "yup^0.32.11",
+            "expo-linear-gradient~11.3.0"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "dotenv^16.0.1",
+            "ejs^3.1.8",
+            "express^4.18.1",
+            "firebase-admin^11.4.1",
+            "googleapis^100.0.0",
+            "ioredis^5.0.6",
+            "nodemailer^6.7.5",
+            "open^8.4.0",
+            "redis^4.1.0",
+            "server-destroy^1.0.1"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@jridgewell/sourcemap-codec^1.4.14",
+            "@supabase/supabase-js^2.1.1",
+            "@tanstack/react-query^4.17.1",
+            "dayjs^1.11.6",
+            "react^18.2.0",
+            "react-dom^18.2.0",
+            "react-hook-form^7.41.3",
+            "react-icons^4.6.0",
+            "react-modal^3.16.1",
+            "react-router-dom^6.4.3",
+            "react-select^5.7.0",
+            "react-to-print^2.14.10",
+            "react-use-keypress^1.3.1",
+            "react-use-measure^2.1.1",
+            "use-countdown-timer^1.3.2"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "dayjs^1.11.3",
+            "react-icons^4.4.0",
+            "use-countdown-timer^1.3.2"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@tanstack/react-query^4.23.0",
+            "react^18.2.0",
+            "react-dom^18.2.0",
+            "react-router-dom^6.7.0"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@graphql-tools/schema^8.3.1",
+            "@typegoose/typegoose^9.4.0",
+            "apollo-server-express^3.5.0",
+            "cors^2.8.5",
+            "dotenv^16.0.1",
+            "express^4.17.2",
+            "express-graphql^0.12.0",
+            "express-session^1.17.2",
+            "graphql^15.3.0",
+            "graphql-subscriptions^2.0.0",
+            "http0.0.1-security",
+            "mongoose^6.1.3",
+            "mongoose-paginate-v2^1.4.2",
+            "subscriptions-transport-ws^0.11.0",
+            "type-graphql^1.1.1",
+            "typegoose^5.9.1",
+            "uuid^8.3.2"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@supabase/supabase-js^2.1.1",
+            "@tanstack/react-query^4.17.1",
+            "dayjs^1.11.6",
+            "pocketbase^0.8.3",
+            "react^18.2.0",
+            "react-dom^18.2.0",
+            "react-icons^4.6.0",
+            "react-intersection-observer^9.4.1",
+            "react-modal^3.16.1",
+            "react-router-dom^6.4.3",
+            "react-to-print^2.14.10",
+            "react-use-measure^2.1.1",
+            "use-countdown-timer^1.3.2",
+            "zustand^4.1.5",
+            "zustand-persist^0.4.0"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@tanstack/react-query^4.16.1",
+            "@tanstack/react-query-devtools^4.16.1",
+            "dayjs^1.11.6",
+            "pocketbase^0.8.0",
+            "react^18.2.0",
+            "react-dom^18.2.0",
+            "react-icons^4.6.0",
+            "react-intersection-observer^9.4.1",
+            "react-router-dom^6.4.3",
+            "tailwind-scrollbar^2.0.1"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@tanstack/react-query^4.16.1",
+            "@tanstack/react-query-devtools^4.16.1",
+            "dayjs^1.11.6",
+            "pocketbase^0.8.0",
+            "react^18.2.0",
+            "react-dom^18.2.0",
+            "react-icons^4.6.0",
+            "react-intersection-observer^9.4.1",
+            "react-router-dom^6.4.3",
+            "tailwind-scrollbar^2.0.1"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@tanstack/react-query^4.16.1",
+            "@tanstack/react-query-devtools^4.16.1",
+            "dayjs^1.11.6",
+            "pocketbase^0.8.0",
+            "react^18.2.0",
+            "react-dom^18.2.0",
+            "react-icons^4.6.0",
+            "react-intersection-observer^9.4.1",
+            "react-router-dom^6.4.3",
+            "tailwind-scrollbar^2.0.1"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "axios^0.27.2",
+            "dayjs^1.11.5",
+            "graphql^16.6.0",
+            "graphql-request^4.3.0",
+            "graphql-tag^2.12.6",
+            "next12.2.5",
+            "react18.2.0",
+            "react-dom18.2.0",
+            "react-icons^4.4.0",
+            "react-query^3.39.2"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "axios^0.27.2",
+            "cross-fetch^3.1.5",
+            "dayjs^1.11.5",
+            "eventsource^2.0.2",
+            "pocketbase^0.7.0",
+            "react^18.2.0",
+            "react-dom^18.2.0",
+            "react-icons^4.4.0",
+            "react-query^3.39.2",
+            "react-router-dom^6.4.0",
+            "uniqid^5.4.0"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@react-query-firebase/auth^1.0.0-dev.1",
+            "@react-query-firebase/firestore^1.0.0-dev.6",
+            "axios^0.27.2",
+            "dayjs^1.11.2",
+            "firebase^9.8.1",
+            "firebase-admin^10.2.0",
+            "firebase-functions^3.21.2",
+            "react^18.2.0",
+            "react-dom^18.2.0",
+            "react-icons^4.3.1",
+            "react-query^3.39.0",
+            "react-router-dom^6.3.0",
+            "react-to-print^2.14.7",
+            "react-use-measure^2.1.1",
+            "table-for-react^0.9.0",
+            "uniqid^5.4.0",
+            "use-countdown-timer^1.3.2"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "axios^0.27.2",
+            "query-string^7.1.1",
+            "react^18.0.0",
+            "react-dom^18.0.0",
+            "react-icons^4.4.0",
+            "react-router-dom^6.3.0",
+            "socket.io-client^4.5.1"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@testing-library/jest-dom^5.16.4",
+            "@testing-library/react^13.3.0",
+            "@testing-library/user-event^13.5.0",
+            "@types/jest^27.5.2",
+            "@types/node^16.11.42",
+            "@types/react^18.0.14",
+            "@types/react-dom^18.0.5",
+            "dayjs^1.11.3",
+            "react^18.2.0",
+            "react-dom^18.2.0",
+            "react-icons^4.4.0",
+            "react-scripts5.0.1",
+            "table-for-react^0.10.0",
+            "typescript^4.7.4",
+            "use-countdown-timer^1.3.2",
+            "web-vitals^2.1.4"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@react-query-firebase/auth^1.0.0-dev.1",
+            "@react-query-firebase/firestore^1.0.0-dev.6",
+            "@tanstack/react-query^4.13.0",
+            "@tanstack/react-query-devtools^4.13.0",
+            "@tanstack/react-table^8.5.15",
+            "axios^0.27.2",
+            "dayjs^1.11.5",
+            "firebase-admin^11.4.1",
+            "firebase-functions^3.21.2",
+            "pocketbase^0.7.4",
+            "react^18.2.0",
+            "react-dom^18.2.0",
+            "react-icons^4.3.1",
+            "react-router-dom^6.3.0",
+            "react-to-print^2.14.7",
+            "react-use-measure^2.1.1",
+            "table-for-react^0.9.0",
+            "uniqid^5.4.0",
+            "use-countdown-timer^1.3.2"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@react-query-firebase/auth^1.0.0-dev.1",
+            "@react-query-firebase/firestore^1.0.0-dev.6",
+            "axios^0.27.2",
+            "dayjs^1.11.2",
+            "firebase^9.8.1",
+            "firebase-admin^11.4.1",
+            "firebase-functions^3.21.2",
+            "react^18.2.0",
+            "react-dom^18.2.0",
+            "react-icons^4.3.1",
+            "react-query^3.39.0",
+            "react-router-dom^6.3.0",
+            "react-to-print^2.14.7",
+            "react-use-measure^2.1.1",
+            "table-for-react^0.9.0",
+            "uniqid^5.4.0",
+            "use-countdown-timer^1.3.2"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "color^4.2.3",
+            "colors^1.4.0"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "dotenv^16.0.3",
+            "express^4.18.1"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "body-parser^1.20.0",
+            "cors^2.8.5",
+            "express^4.18.1",
+            "express-session^1.17.3",
+            "nodemon^2.0.19",
+            "socket.io^4.5.1",
+            "unique-names-generator^4.7.1"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "axios^0.27.2",
+            "dayjs^1.11.5",
+            "graphql^16.6.0",
+            "graphql-request^5.0.0",
+            "graphql-tag^2.12.6",
+            "next12.2.5",
+            "react18.2.0",
+            "react-dom18.2.0",
+            "react-icons^4.4.0",
+            "react-query^3.39.2",
+            "yarn^1.22.19"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "body-parser^1.20.0",
+            "cors^2.8.5",
+            "dotenv^16.0.1",
+            "express^4.18.1"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@types/react-typing-animation^1.6.3",
+            "framer-motion^6.3.3",
+            "nextlatest",
+            "react^17.0.2",
+            "react-dom^17.0.2",
+            "react-icons^4.3.1",
+            "react-type-animation^1.1.3"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@react-query-firebase/auth^1.0.0-dev.1",
+            "@react-query-firebase/firestore^1.0.0-dev.6",
+            "@testing-library/jest-dom^5.16.4",
+            "@testing-library/react^13.2.0",
+            "@testing-library/user-event^13.5.0",
+            "@types/date-fns^2.6.0",
+            "@types/jest^27.5.1",
+            "@types/node^16.11.36",
+            "@types/react^18.0.9",
+            "@types/react-dom^18.0.4",
+            "@types/uniqid^5.3.2",
+            "axios^0.27.2",
+            "dayjs^1.11.2",
+            "firebase^9.8.1",
+            "firebase-admin^10.2.0",
+            "firebase-functions^3.21.2",
+            "react^18.1.0",
+            "react-dom^18.1.0",
+            "react-icons^4.3.1",
+            "react-query^3.39.0",
+            "react-router-dom^6.3.0",
+            "react-to-print^2.14.7",
+            "table-for-react^0.9.0",
+            "typescript^4.6.4",
+            "uniqid^5.4.0",
+            "use-countdown-timer^1.3.2",
+            "web-vitals^2.1.4"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "ejs^3.1.8",
+            "express^4.17.1",
+            "googleapis^100.0.0",
+            "nodemailer^6.7.5"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@react-query-firebase/auth^0.3.4",
+            "@react-query-firebase/firestore^0.4.2",
+            "@react-query-firebase/functions^0.2.2",
+            "@testing-library/jest-dom^5.16.4",
+            "@testing-library/react^13.2.0",
+            "@testing-library/user-event^13.5.0",
+            "@types/jest^27.5.1",
+            "@types/node^16.11.36",
+            "@types/react^18.0.9",
+            "@types/react-dom^18.0.4",
+            "firebase^9.8.1",
+            "react^18.1.0",
+            "react-dom^18.1.0",
+            "react-icons^4.3.1",
+            "react-query^3.39.0",
+            "react-router-dom^6.3.0",
+            "react-scripts5.0.1",
+            "typescript^4.6.4",
+            "web-vitals^2.1.4"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@testing-library/jest-dom^5.14.1",
+            "@testing-library/react^11.2.7",
+            "@testing-library/user-event^12.8.3",
+            "dayjs^1.10.6",
+            "react^17.0.2",
+            "react-dom^17.0.2",
+            "react-icons^4.2.0",
+            "react-scripts4.0.3",
+            "web-vitals^1.1.2"
+        ]
+    },
+    {
+        "status": "fulfilled",
+        "value": [
+            "@react-native-community/slider^4.1.1",
+            "@react-navigation/bottom-tabs^6.0.4",
+            "@react-navigation/native^6.0.2",
+            "expo~42.0.1",
+            "expo-av~9.2.3",
+            "expo-media-library~12.1.2",
+            "expo-music-info^1.0.1",
+            "expo-status-bar~1.0.4",
+            "react16.13.1",
+            "react-dom16.13.1",
+            "react-nativehttps://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
+            "react-native-safe-area-context3.2.0",
+            "react-native-screens~3.4.0",
+            "react-native-web~0.13.12",
+            "react-native-windows^0.64.14",
+            "recyclerlistview^3.0.5",
+            "@react-native-async-storage/async-storage~1.15.0"
+        ]
+    }
+]

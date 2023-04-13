@@ -13,7 +13,7 @@ export function TechDetails({}:TechDetailsProps){
     
     const { data, dataUpdatedAt, } = useSSQ<ViewerLang>(() => {
         return getViewerLangs()
-    }
+    },
     )
     
 console.log("data==== ", data)

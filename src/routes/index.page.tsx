@@ -5,25 +5,25 @@ import Intro from "../components/intro";
 import Projects from "../components/projects";
 import { TechDetails } from "../components/TechDetails";
 import { ErrorOutput } from "../shared/ErrorOutput";
-import { getAllReposPkgJson, getPackgeJson } from "../util/getPackge";
+import { getAllReposPkgJson, getPackgeJson, sanitizePackageNames } from "../util/getPackge";
 
 
 
 export default function HomePage() {
 
 
-	const { data, dataUpdatedAt, } = useSSQ(() => {
-		return getAllReposPkgJson()
-	}
-	)
-	console.log("package.json  data ==== ", data)
+	// const { data, dataUpdatedAt, } = useSSQ(() => {
+	// 	return getAllReposPkgJson()
+	// }
+	// )
+	// console.log("package.json  data ==== ", data)
 
-	// @ts-expect-error
-	if (data?.message && data?.documentation_url) {
-		return <ErrorOutput error={data}/>
-	}
+	
+	// if (data?.message && data?.documentation_url) {
+	// 	return <ErrorOutput error={data}/>
+	// }
 
-
+sanitizePackageNames()
 	return (
 		<main>
 			<Head title="Dennis Kinuthia"/>

@@ -1,3 +1,4 @@
+import tools from '../state/tools.json' 
 
 export interface ViewerRepos {
     data: Data
@@ -22,6 +23,11 @@ export interface Node {
     nameWithOwner: string
 }
 
+
+interface ViewerRepoError{
+    message: string
+    documentation_url: string
+}
 
 
 export async function getViewerRepos(){
@@ -55,9 +61,12 @@ query {
     }).then(result => result.json() as unknown as ViewerRepos)
         .catch(err => {
             console.log("error fetching viewer repos  ==> ", err)
-            throw err
+            return err as ViewerRepoError
         });
 }
+
+
+
 
 export async function getOwnerRepo(name: string) {
     try {
@@ -99,7 +108,7 @@ export interface Links {
 }
 
 
-export async function getPackgeJson(owner_repo: string) {
+export async function getPackgeJson(owner_repo: string):Promise<string[]> {
    
     try {    
     const headersList = {
@@ -113,26 +122,22 @@ export async function getPackgeJson(owner_repo: string) {
 
     const data = await response.json();
 
-    if(!data){
-        return
-    }
-    // console.log("get pkg json data  ==== > ",data)
-    if (data.message && data.documentation_url ){
-        return  data    
-    }
 
 
-        if (data && data.encoding === "base64" && data.content){
+
+    if (data && data.encoding === "base64" && data.content){
         const pgkjson = JSON.parse(Buffer.from(data.content, data.encoding).toString())
         const dependancies = Object.entries(pgkjson.dependencies).map(([key, value]) => key + value)
         return dependancies
     }
+    
+    throw data
 
   
    } 
    catch (error) {
         console.log("error fetching acakge.json ",error)
-        return error
+        throw error
     }
 
 }
@@ -140,16 +145,43 @@ export async function getPackgeJson(owner_repo: string) {
 
 export async function getAllReposPkgJson(){
     const repos = await getViewerRepos()
-    const reposList = repos.data.viewer.repositories.nodes
-    
-    // const reposPkgJson = reposList.map((repo) => {
-    //     // console.log("repo  === ",repo.nameWithOwner)
-    //     // return await getPackgeJson(repo.nameWithOwner)
-    //     return repo
-    // })
-    // console.log("reposPkgJson  === ",reposPkgJson)
 
-    return reposList
-    // return Promise.allSettled(reposPkgJson)
+    if ("data" in repos) {
+        const reposList = repos.data.viewer.repositories.nodes
+
+        const reposPkgJson = reposList.map(async (repo) => {
+            // console.log("repo  === ", repo.nameWithOwner)
+            return await getPackgeJson(repo.nameWithOwner)
+        })
+        return (await Promise.allSettled(reposPkgJson)).filter((x) => x.status === "fulfilled")
+    }
+}
+
+
+export function sanitizePackageNames(){
+    const pkgslist = tools.map(x => x.value)
+    const flat_pkgs = pkgslist.flat(1).map((item) => item.split('^')[0])
+    const pkg_count = countPackages(flat_pkgs)
+   const final_pkgs_list =  Object.entries(pkg_count).map(([key, value]) => {
+        return {
+            name: key,
+            count: value
+        }
+    }).sort((a, b) => b.count - a.count)
+
+    console.log(final_pkgs_list)
+    return final_pkgs_list
+}
+
+
+
+interface PackageCount { [key: string]: number }
+
+function countPackages(arr: string[]):PackageCount  {
+    return arr.reduce((acc:PackageCount, curr) => {
+        const pkgname = curr;
+        acc[pkgname] = (acc[pkgname] || 0) + 1;
+        return acc;
+    }, {});
 }
 
