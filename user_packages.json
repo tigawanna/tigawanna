@@ -1,1 +1,1825 @@
 [{"status":"fulfilled","value":{"name":"kinuthia","type":"module","private":true,"scripts":{"dev":"rakkas --port 3000 ","build":"rakkas build","start":"node dist/server","format":"prettier --write --ignore-unknown src","test":"npm run test:typecheck && npm run test:format && npm run test:lint && npm run test:unit","test:typecheck":"tsc -p tsconfig.json --noEmit","test:format":"prettier --check --ignore-unknown src","test:lint":"eslint . --ignore-pattern dist","test:unit":"vitest run"},"devDependencies":{"@rakkasjs/eslint-config":"0.6.20","@tailwindcss/line-clamp":"^0.4.4","@tailwindcss/typography":"^0.5.9","@types/react":"^18.0.28","@types/react-dom":"^18.0.11","autoprefixer":"^10.4.14","eslint":"^8.34.0","postcss":"^8.4.21","prettier":"^2.8.4","rakkasjs":"0.6.20","tailwind-scrollbar":"^3.0.0","tailwindcss":"^3.3.1","tailwindcss-animate":"^1.0.5","typescript":"^4.9.5","vite":"^4.1.3","vite-tsconfig-paths":"^4.0.5","vitest":"^0.28.5"},"dependencies":{"@hattip/response":"^0.0.33","graphql-request":"^5.2.0","react":"^18.2.0","react-dom":"^18.2.0","react-icons":"^4.8.0"}}},{"status":"fulfilled","value":{"name":"devhub","private":true,"version":"0.0.1","type":"module","scripts":{"dev":"vite --port 3000","build":"tsc && vite build","test":"vitest","coverage":"vitest run --coverage","preview":"vite preview --port 3000","upgrade-deps":"npm install -g npm-check-updates && ncu -u && npm install"},"dependencies":{"@tanem/react-nprogress":"^5.0.25","@tanstack/react-query":"^4.20.4","dayjs":"^1.11.7","pocketbase":"^0.9.1","react":"^18.2.0","react-dom":"^18.2.0","react-icons":"^4.7.1","react-intersection-observer":"^9.4.1","react-modal":"^3.16.1","react-router-dom":"^6.6.1","yarn":"^1.22.19","zustand":"^4.3.2"},"devDependencies":{"@tailwindcss/line-clamp":"^0.4.2","@tailwindcss/typography":"^0.5.8","@tanstack/react-query-devtools":"^4.22.0","@testing-library/jest-dom":"^5.16.5","@testing-library/react":"^13.4.0","@testing-library/user-event":"^14.4.3","@types/react":"^18.0.26","@types/react-dom":"^18.0.10","@types/react-lazy-load-image-component":"^1.5.2","@types/react-modal":"^3.13.1","@types/react-scroll":"^1.8.6","@typescript-eslint/eslint-plugin":"^5.48.0","@typescript-eslint/parser":"^5.48.0","@vitejs/plugin-react":"^3.0.0","@vitest/coverage-c8":"^0.26.3","autoprefixer":"^10.4.13","eslint":"^8.2.0","eslint-config-airbnb":"^19.0.4","eslint-config-airbnb-typescript":"^17.0.0","eslint-config-prettier":"^8.6.0","eslint-plugin-import":"^2.25.3","eslint-plugin-jsx-a11y":"^6.5.1","eslint-plugin-prettier":"^4.2.1","eslint-plugin-react":"^7.28.0","eslint-plugin-react-hooks":"^4.3.0","jsdom":"^20.0.3","postcss":"^8.4.21","prettier":"^2.8.1","tailwind-scrollbar":"^2.1.0","tailwindcss":"^3.2.4","tailwindcss-animate":"^1.0.5","typescript":"^4.9.4","vite":"^4.0.3","vitest":"^0.26.3","zod":"^3.20.2"},"prettier":{"arrowParens":"avoid","bracketSpacing":true,"htmlWhitespaceSensitivity":"css","insertPragma":false,"jsxBracketSameLine":false,"jsxSingleQuote":false,"printWidth":100,"proseWrap":"preserve","quoteProps":"as-needed","requirePragma":false,"semi":true,"singleQuote":false,"tabWidth":4,"trailingComma":"none","useTabs":false,"vueIndentScriptAndStyle":false,"rangeStart":0}}},{"status":"fulfilled","value":{"name":"awesome-notes","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite --port 3000","build":"tsc && vite build","preview":"vite preview --port 3000","test":"vitest","test:ui":"vitest --ui","coverage":"vitest run --coverage","page":"node ./scripts/newRoute.cjs","cypress":"npx cypress open","test-ct":"playwright test -c playwright-ct.config.ts"},"dependencies":{"@tanem/react-nprogress":"^5.0.30","@tanstack/react-query":"^5.0.0-alpha.5","@tanstack/react-query-devtools":"^5.0.0-alpha.5","date-fns":"^2.29.3","dayjs":"^1.11.7","i":"^0.3.7","npm":"^9.6.2","pocketbase":"^0.13.1","react":"^18.2.0","react-calendar":"^4.0.0","react-dom":"^18.2.0","react-icons":"^4.7.1","react-modal":"^3.16.1","react-router-dom":"^6.8.2","react-select":"^5.7.0","zustand":"^4.3.4"},"devDependencies":{"@playwright/experimental-ct-react":"^1.32.0","@playwright/test":"^1.32.0","@tailwindcss/container-queries":"^0.1.0","@tailwindcss/line-clamp":"^0.4.2","@tailwindcss/typography":"^0.5.9","@testing-library/jest-dom":"^5.16.5","@testing-library/react":"^14.0.0","@types/react":"^18.0.26","@types/react-calendar":"^3.9.0","@types/react-dom":"^18.0.9","@types/react-modal":"^3.13.1","@vitejs/plugin-react":"^3.0.0","@vitest/ui":"^0.29.1","autoprefixer":"^10.4.13","colors":"^1.4.0","cypress":"^12.8.1","cypress-dark":"^1.1.0","jsdom":"^21.1.0","postcss":"^8.4.21","prettier":"^2.8.4","tailwind-scrollbar":"^2.1.0","tailwindcss":"^3.2.7","tailwindcss-animate":"^1.0.5","typescript":"^4.9.3","vite":"^4.0.0","vitest":"^0.29.1"}}},{"status":"fulfilled","value":{"name":"gittyhub","private":true,"version":"0.0.0","type":"module","scripts":{"relay":"yarn run relay-compiler --src './src' --schema 'schema.docs.graphql' ","dev":"yarn run relay && vite --port 3000 ","build":"tsc && vite build","preview":"vite preview","gen":"graphql-codegen --config codegen.yml"},"dependencies":{"@tanem/react-nprogress":"^5.0.25","@tanstack/react-query":"^4.24.4","axios":"^0.27.2","babel-plugin-relay":"^14.1.0","dayjs":"^1.11.5","graphql":"^16.6.0","graphql-request":"^5.0.0","graphql-tag":"^2.12.6","pocketbase":"^0.10.1","react":"^18.2.0","react-dom":"^18.2.0","react-icons":"^4.4.0","react-modal":"^3.16.1","react-relay":"^14.1.0","react-router-dom":"^6.8.0","relay-compiler":"^14.1.0","relay-runtime":"^14.1.0","uniqid":"^5.4.0","vite-plugin-relay":"^2.0.0","zustand":"^4.1.1","zustand-persist":"^0.4.0"},"devDependencies":{"@graphql-codegen/cli":"2.12.1","@graphql-codegen/introspection":"2.2.1","@graphql-codegen/typescript":"^2.7.3","@graphql-codegen/typescript-operations":"^2.5.3","@graphql-codegen/typescript-react-apollo":"3.3.3","@graphql-codegen/typescript-react-query":"^4.0.1","@types/react":"^18.0.17","@types/react-dom":"^18.0.6","@types/react-modal":"^3.13.1","@types/react-relay":"^14.1.3","@types/relay-runtime":"^14.1.6","@types/uniqid":"^5.3.2","@vitejs/plugin-react":"^2.1.0","autoprefixer":"^10.4.10","postcss":"^8.4.16","prettier":"^2.8.3","prettier-plugin-tailwindcss":"^0.2.2","tailwind-scrollbar":"^2.0.1","tailwindcss":"^3.1.8","typescript":"^4.6.4","vite":"^3.1.0"},"relay":{"src":"./src","schema":"schema.docs.graphql","language":"typescript","eagerEsModules":true,"exclude":["**/node_modules/**","**/__mocks__/**","**/__generated__/**"]}}},{"status":"fulfilled","value":{"name":"masahmva","type":"module","private":true,"scripts":{"dev":"rakkas --port 3000 ","dev-debug":"set NODE_OPTIONS=--inspect && rakkas --port 3000","build":"rakkas build","start":"node dist/server","format":"prettier --write --ignore-unknown src","test":"npm run test:typecheck && npm run test:format && npm run test:lint && npm run test:unit","test:typecheck":"tsc -p tsconfig.json --noEmit","test:format":"prettier --check --ignore-unknown src","test:lint":"eslint . --ignore-pattern dist","test:unit":"vitest run"},"devDependencies":{"@rakkasjs/eslint-config":"0.6.15","@tailwindcss/line-clamp":"^0.4.2","@types/leaflet":"^1.9.0","@types/react":"^18.0.27","@types/react-dom":"^18.0.10","@types/react-modal":"^3.13.1","autoprefixer":"^10.4.13","eslint":"^8.33.0","postcss":"^8.4.21","prettier":"^2.8.3","rakkasjs":"0.6.15","tailwind-scrollbar":"^2.1.0","tailwindcss":"^3.2.6","tailwindcss-animate":"^1.0.5","typescript":"^4.9.5","vite":"^4.1.1","vite-tsconfig-paths":"^4.0.5","vitest":"^0.28.4"},"dependencies":{"@emotion/react":"^11.10.5","@hattip/adapter-vercel-edge":"^0.0.29","@hattip/response":"^0.0.27","@mantine/core":"^5.10.3","@mantine/hooks":"^5.10.3","@tanem/react-nprogress":"^5.0.27","leaflet":"^1.9.3","pocketbase":"^0.10.2","react":"^18.2.0","react-dom":"^18.2.0","react-icons":"^4.7.1","react-leaflet":"^4.2.0","react-modal":"^3.16.1","react-select":"^5.7.0"}}},{"status":"fulfilled","value":{"name":"react-starter","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite --port 3000","build":"tsc && vite build","preview":"vite preview","upgrade-deps":"npm install -g npm-check-updates && ncu -u && npm install","page":"node ./scripts/newRoute.cjs"},"dependencies":{"@emotion/react":"^11.10.6","@mantine/core":"^6.0.5","@mantine/hooks":"^6.0.5","@tanem/react-nprogress":"^5.0.33","@tanstack/react-query":"^5.0.0-alpha.9","@tanstack/react-query-devtools":"^5.0.0-alpha.9","dayjs":"^1.11.7","eslint-config-airbnb-typescript":"^17.0.0","pocketbase":"^0.13.1","react":"^18.2.0","react-dom":"^18.2.0","react-icons":"^4.8.0","react-modal":"^3.16.1","react-router-dom":"^6.10.0","react-select":"^5.7.2","react-to-print":"^2.14.12","zustand":"^4.3.7"},"devDependencies":{"@tailwindcss/line-clamp":"^0.4.4","@tailwindcss/typography":"^0.5.9","@testing-library/jest-dom":"^5.16.5","@testing-library/react":"^14.0.0","@types/react":"^18.0.31","@types/react-dom":"^18.0.11","@types/react-modal":"^3.13.1","@types/react-select":"^5.0.1","@typescript-eslint/eslint-plugin":"^5.57.0","@typescript-eslint/parser":"^5.57.0","@vitejs/plugin-react":"^3.1.0","autoprefixer":"^10.4.14","eslint":"^8.37.0","eslint-config-airbnb":"^19.0.4","eslint-config-prettier":"^8.8.0","eslint-plugin-import":"^2.27.5","eslint-plugin-jsx-a11y":"^6.7.1","eslint-plugin-prettier":"^4.2.1","eslint-plugin-react":"^7.32.2","eslint-plugin-react-hooks":"^4.6.0","postcss":"^8.4.21","prettier":"^2.8.7","tailwind-scrollbar":"^3.0.0","tailwindcss":"^3.3.1","typescript":"^5.0.3","vite":"^4.2.1","vitest":"^0.29.8"}}},{"status":"fulfilled","value":{"name":"kinuthia","type":"module","version":"0.0.1","scripts":{"dev":"astro dev","start":"astro dev","build":"astro build","preview":"astro preview","astro":"astro"},"dependencies":{"astro":"^2.2.0"}}},{"status":"fulfilled","value":{"name":"react-starter","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite --port 3000","build":"tsc && vite build","preview":"vite preview","upgrade-deps":"npm install -g npm-check-updates && ncu -u && npm install","page":"node ./scripts/newRoute.cjs"},"dependencies":{"@denniskinuthia/tiny-pkgs":"^0.0.8","@tanstack/react-query":"^5.0.0-alpha.9","@tanstack/react-query-devtools":"^5.0.0-alpha.9","dayjs":"^1.11.7","eslint-config-airbnb-typescript":"^17.0.0","react":"^18.2.0","react-dom":"^18.2.0","react-icons":"^4.8.0","react-router-dom":"^6.10.0"},"devDependencies":{"@tailwindcss/line-clamp":"^0.4.4","@tailwindcss/typography":"^0.5.9","@testing-library/jest-dom":"^5.16.5","@testing-library/react":"^14.0.0","@types/react":"^18.0.31","@types/react-dom":"^18.0.11","@typescript-eslint/eslint-plugin":"^5.57.0","@typescript-eslint/parser":"^5.57.0","@vitejs/plugin-react":"^3.1.0","autoprefixer":"^10.4.14","eslint":"^8.37.0","eslint-config-airbnb":"^19.0.4","eslint-config-prettier":"^8.8.0","eslint-plugin-import":"^2.27.5","eslint-plugin-jsx-a11y":"^6.7.1","eslint-plugin-prettier":"^4.2.1","eslint-plugin-react":"^7.32.2","eslint-plugin-react-hooks":"^4.6.0","postcss":"^8.4.21","prettier":"^2.8.7","tailwind-scrollbar":"^3.0.0","tailwindcss":"^3.3.1","typescript":"^5.0.3","vite":"^4.2.1","vitest":"^0.29.8"}}},{"status":"fulfilled","value":{"name":"@denniskinuthia/tiny-pkgs","version":"0.0.8","main":"build/index.js","module":"build/index.esm.js","files":["build"],"types":"build/index.d.ts","description":"A skeleton to create your own React component library using Rollup, TypeScript, Sass and Storybook","scripts":{"build":"rollup -c","test":"jest","test:watch":"jest --watch","generate":"node ./util/create-component","prepublishOnly":"npm run build","story-dev":"ladle serve --port 4123","story-build":"ladle build"},"repository":{"type":"git","url":"https://github.com/tigawanna/tiny-pkgs"},"keywords":["React","Component","Library","Rollup","Typescript"],"author":"tigawanna","license":"MIT","bugs":{"url":"https://github.com/tigawanna/tiny-pkgs"},"homepage":"https://github.com/tigawanna/tiny-pkgs#readme","peerDependencies":{"@tanstack/react-query":"^4.20.4","@types/react-modal":"^3.13.1","react-icons":"^4.7.1","react-modal":"^3.16.1","@types/react":"^18.0.26","@types/react-dom":"^18.0.10","react":"^18.2.0","react-dom":"^18.2.0"},"devDependencies":{"@babel/core":"^7.15.0","@ladle/react":"^2.4.5","@rollup/plugin-commonjs":"^17.1.0","@rollup/plugin-node-resolve":"^11.2.1","@testing-library/jest-dom":"^5.14.1","@testing-library/react":"^11.2.7","@types/jest":"^24.9.1","@types/react":"^18.0.26","@types/react-dom":"^18.0.10","@types/react-modal":"^3.13.1","autoprefixer":"^10.4.13","babel-loader":"^8.2.2","babel-preset-react-app":"^10.0.0","colors":"^1.4.0","identity-obj-proxy":"^3.0.0","jest":"^26.6.3","postcss":"^8.4.20","react":"^18.2.0","react-dom":"^18.2.0","rollup":"^2.56.3","rollup-plugin-copy":"^3.4.0","rollup-plugin-peer-deps-external":"^2.2.4","rollup-plugin-postcss":"^4.0.2","rollup-plugin-typescript2":"^0.29.0","tailwind-scrollbar":"^2.0.1","tailwindcss":"^3.2.4","ts-jest":"^26.5.6","tslib":"^2.4.1","typescript":"^4.8.4"},"dependencies":{"@tanstack/react-query":"^4.20.4","react-icons":"^4.7.1","react-modal":"^3.16.1"}}},{"status":"fulfilled","value":{"name":"projects","version":"0.1.0","homepage":"https://tigawanna.github.io/projects","private":true,"dependencies":{"@react-query-firebase/auth":"^0.3.4","@react-query-firebase/firestore":"^0.4.2","@react-query-firebase/functions":"^0.2.2","@testing-library/jest-dom":"^5.16.4","@testing-library/react":"^13.2.0","@testing-library/user-event":"^13.5.0","@types/date-fns":"^2.6.0","@types/jest":"^27.5.1","@types/node":"^16.11.36","@types/react":"^18.0.9","@types/react-dom":"^18.0.4","@types/uniqid":"^5.3.2","axios":"^0.27.2","date-fns":"^2.28.0","dayjs":"^1.11.2","firebase":"^9.8.1","firebase-admin":"^11.4.1","firebase-functions":"^3.24.1","firebaseui":"^6.0.1","gapi":"^0.0.3","gapi-script":"^1.2.0","react":"^18.1.0","react-day-picker":"^8.0.5","react-dom":"^18.1.0","react-gapi-auth2":"^1.0.4","react-icons":"^4.3.1","react-query":"^3.39.0","react-router-dom":"^6.3.0","react-scripts":"5.0.1","typescript":"^4.6.4","uniqid":"^5.4.0","web-vitals":"^2.1.4"},"scripts":{"start":"react-scripts start","build":"react-scripts build","test":"react-scripts test","eject":"react-scripts eject","predeploy":"npm run build","deploy":"gh-pages -d build"},"eslintConfig":{"extends":["react-app","react-app/jest"]},"browserslist":{"production":[">0.2%","not dead","not op_mini all"],"development":["last 1 chrome version","last 1 firefox version","last 1 safari version"]},"devDependencies":{"gh-pages":"^4.0.0","tailwindcss":"^3.0.24"}}},{"status":"fulfilled","value":{"name":"files_manager","version":"1.0.0","description":"","main":"index.js","scripts":{"lint":"./node_modules/.bin/eslint","check-lint":"lint [0-9]*.js","start-server":"nodemon --exec babel-node --presets @babel/preset-env ./server.js","start-worker":"nodemon --exec babel-node --presets @babel/preset-env ./worker.js","dev":"nodemon --exec babel-node --presets @babel/preset-env","test":"./node_modules/.bin/mocha --require @babel/register --exit"},"author":"","license":"ISC","dependencies":{"bull":"^3.16.0","chai-http":"^4.3.0","express":"^4.17.1","image-thumbnail":"^1.0.10","mime-types":"^2.1.27","mongodb":"^3.5.9","redis":"^2.8.0","sha1":"^1.1.1","uuid":"^8.2.0"},"devDependencies":{"@babel/cli":"^7.8.0","@babel/core":"^7.8.0","@babel/node":"^7.8.0","@babel/preset-env":"^7.8.2","@babel/register":"^7.8.0","chai":"^4.2.0","chai-http":"^4.3.0","mocha":"^6.2.2","nodemon":"^2.0.2","eslint":"^6.4.0","eslint-config-airbnb-base":"^14.0.0","eslint-plugin-import":"^2.18.2","eslint-plugin-jest":"^22.17.0","request":"^2.88.0","sinon":"^7.5.0"}}},{"status":"fulfilled","value":{"name":"react-starter","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite --port 3000","build":"tsc && vite build","preview":"vite preview","upgrade-deps":"npm install -g npm-check-updates && ncu -u && npm install"},"dependencies":{"@denniskinuthia/tiny-pkgs":"^0.0.8","@tanstack/react-query":"^4.20.9","dayjs":"^1.11.7","eslint-config-airbnb-typescript":"^17.0.0","pocketbase":"^0.11.0","react":"^18.2.0","react-dom":"^18.2.0","react-icons":"^4.7.1","react-progressive-graceful-image":"^0.7.0","react-router-dom":"^6.6.1"},"devDependencies":{"@tailwindcss/line-clamp":"^0.4.2","@tailwindcss/typography":"^0.5.8","@testing-library/jest-dom":"^5.16.5","@testing-library/react":"^13.4.0","@types/react":"^18.0.26","@types/react-dom":"^18.0.10","@typescript-eslint/eslint-plugin":"^5.48.0","@typescript-eslint/parser":"^5.48.0","@vitejs/plugin-react":"^3.0.0","autoprefixer":"^10.4.13","eslint":"^8.31.0","eslint-config-airbnb":"^19.0.4","eslint-config-prettier":"^8.6.0","eslint-plugin-import":"^2.26.0","eslint-plugin-jsx-a11y":"^6.6.1","eslint-plugin-prettier":"^4.2.1","eslint-plugin-react":"^7.31.11","eslint-plugin-react-hooks":"^4.6.0","postcss":"^8.4.20","prettier":"^2.8.1","tailwind-scrollbar":"^2.1.0","tailwindcss":"^3.2.4","tailwindcss-animate":"^1.0.5","typescript":"^4.9.4","vite":"^4.0.4","vitest":"^0.26.3","zod":"^3.20.2"}}},{"status":"fulfilled","value":{"name":"gitpals","private":true,"version":"0.0.0","scripts":{"dev":"vite","build":"tsc && vite build","preview":"vite preview","deploy":"npm run build && git add dist -f && git commit -m'hosting'  && git subtree push --prefix dist origin gh-pages","gen":"graphql-codegen --config codegen.yml"},"dependencies":{"@genql/runtime":"^2.10.0","axios":"^0.27.2","dayjs":"^1.11.4","dayjs-ext":"^2.1.1","graphql":"^16.5.0","graphql-request":"^4.3.0","graphql-tag":"^2.12.6","query-string":"^7.1.1","react":"^18.0.0","react-dom":"^18.0.0","react-icons":"^4.4.0","react-query":"^3.39.0","react-router-dom":"^6.3.0"},"devDependencies":{"@genql/cli":"^2.10.0","@graphql-codegen/cli":"2.11.6","@graphql-codegen/typescript":"2.7.3","@graphql-codegen/typescript-operations":"2.5.3","@graphql-codegen/typescript-react-query":"^4.0.1","@types/react":"^18.0.0","@types/react-dom":"^18.0.0","@types/react-query":"^1.2.9","@vitejs/plugin-react":"^1.3.0","autoprefixer":"^10.4.7","gh-pages":"^4.0.0","postcss":"^8.4.14","tailwind-scrollbar":"^1.3.1","tailwindcss":"^3.1.6","typescript":"^4.6.3","vite":"^2.9.9","@graphql-codegen/introspection":"2.2.1"}}},{"status":"fulfilled","value":{"name":"vite-client","private":true,"version":"0.0.0","scripts":{"dev":"vite","build":"tsc && vite build","preview":"vite preview"},"dependencies":{"@apollo/client":"^3.6.9","dayjs":"^1.11.3","graphql":"^16.5.0","react":"^18.0.0","react-dom":"^18.0.0","react-icons":"^4.4.0","subscriptions-transport-ws":"^0.11.0","ws":"^8.8.0"},"devDependencies":{"@graphql-codegen/cli":"^2.8.0","@graphql-codegen/typescript":"^2.7.1","@graphql-codegen/typescript-operations":"^2.5.1","@graphql-codegen/typescript-react-query":"^3.6.1","@types/react":"^18.0.0","@types/react-dom":"^18.0.0","@vitejs/plugin-react":"^1.3.0","autoprefixer":"^10.4.7","gh-pages":"^4.0.0","postcss":"^8.4.14","tailwind-scrollbar":"^1.3.1","tailwindcss":"^3.1.6","typescript":"^4.6.3","vite":"^2.9.9"}}},{"status":"fulfilled","value":{"name":"starter-vite","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite --port 3000","build":"tsc && vite build","preview":"vite preview","gen":"graphql-codegen --config codegen.yml"},"dependencies":{"axios":"^0.27.2","dayjs":"^1.11.5","graphql":"^16.6.0","graphql-request":"^5.0.0","graphql-tag":"^2.12.6","react":"^18.2.0","react-dom":"^18.2.0","react-icons":"^4.4.0","react-query":"^3.39.2","react-router-dom":"^6.4.0","react-use-measure":"^2.1.1","uniqid":"^5.4.0","use-countdown-timer":"^1.3.2"},"devDependencies":{"@graphql-codegen/cli":"2.12.1","@graphql-codegen/introspection":"2.2.1","@graphql-codegen/typescript":"^2.7.3","@graphql-codegen/typescript-operations":"^2.5.3","@graphql-codegen/typescript-react-apollo":"3.3.3","@graphql-codegen/typescript-react-query":"^4.0.1","@types/react":"^18.0.17","@types/react-dom":"^18.0.6","@types/uniqid":"^5.3.2","@vitejs/plugin-react":"^2.1.0","autoprefixer":"^10.4.10","postcss":"^8.4.16","tailwind-scrollbar":"^2.0.1","tailwindcss":"^3.1.8","typescript":"^4.6.4","vite":"^3.1.0"}}},{"status":"fulfilled","value":{"name":"starter-vite","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite --port 3000","build":"tsc && vite build","preview":"vite preview","gen":"graphql-codegen --config codegen.yml"},"dependencies":{"axios":"^0.27.2","dayjs":"^1.11.5","graphql":"^16.6.0","graphql-request":"^5.0.0","graphql-tag":"^2.12.6","pocketbase":"^0.7.1","react":"^18.2.0","react-dom":"^18.2.0","react-icons":"^4.4.0","react-query":"^3.39.2","react-router-dom":"^6.4.2","uniqid":"^5.4.0"},"devDependencies":{"@graphql-codegen/cli":"2.12.1","@graphql-codegen/introspection":"2.2.1","@graphql-codegen/typescript":"^2.7.3","@graphql-codegen/typescript-operations":"^2.5.3","@graphql-codegen/typescript-react-apollo":"3.3.3","@graphql-codegen/typescript-react-query":"^4.0.1","@types/react":"^18.0.17","@types/react-dom":"^18.0.6","@types/uniqid":"^5.3.2","@vitejs/plugin-react":"^2.1.0","autoprefixer":"^10.4.10","postcss":"^8.4.16","tailwind-scrollbar":"^2.0.1","tailwindcss":"^3.1.8","typescript":"^4.6.4","vite":"^3.1.0"}}},{"status":"fulfilled","value":{"name":"starter-vite","private":true,"version":"0.0.0","type":"module","scripts":{"relay":"yarn run relay-compiler","dev":"yarn run relay && vite ","build":"tsc && vite build","preview":"vite preview","gen":"graphql-codegen --config codegen.yml"},"dependencies":{"@tanstack/react-location":"^3.7.4","@types/react-relay":"^14.1.1","@types/relay-runtime":"^14.1.3","axios":"^0.27.2","babel-plugin-relay":"^14.1.0","dayjs":"^1.11.5","graphql":"^16.6.0","graphql-request":"^5.0.0","graphql-tag":"^2.12.6","react":"^18.2.0","react-dom":"^18.2.0","react-icons":"^4.4.0","react-location-devtools":"^3.3.4","react-query":"^3.39.2","react-relay":"^14.1.0","relay-compiler":"^14.1.0","relay-runtime":"^14.1.0","uniqid":"^5.4.0","vite-plugin-relay":"^2.0.0","zustand":"^4.1.1","zustand-persist":"^0.4.0"},"devDependencies":{"@graphql-codegen/cli":"2.12.1","@graphql-codegen/introspection":"2.2.1","@graphql-codegen/typescript":"^2.7.3","@graphql-codegen/typescript-operations":"^2.5.3","@graphql-codegen/typescript-react-apollo":"3.3.3","@graphql-codegen/typescript-react-query":"^4.0.1","@types/react":"^18.0.17","@types/react-dom":"^18.0.6","@types/uniqid":"^5.3.2","@vitejs/plugin-react":"^2.1.0","autoprefixer":"^10.4.10","postcss":"^8.4.16","tailwind-scrollbar":"^2.0.1","tailwindcss":"^3.1.8","typescript":"^4.6.4","vite":"^3.1.0"},"relay":{"src":"./src","schema":"schema.docs.graphql","language":"typescript","eagerEsModules":true,"exclude":["**/node_modules/**","**/__mocks__/**","**/__generated__/**"]}}},{"status":"fulfilled","value":{"name":"herufi","type":"module","private":true,"scripts":{"dev":"rakkas --port 3000","build":"rakkas build","start":"node dist/server","format":"prettier --write --ignore-unknown src","test":"npm run test:typecheck && npm run test:format && npm run test:lint && npm run test:unit","test:typecheck":"tsc -p tsconfig.json --noEmit","test:format":"prettier --check --ignore-unknown src","test:lint":"eslint . --ignore-pattern dist","test:unit":"vitest run","bat":" rakkas build && node dist/server"},"devDependencies":{"@rakkasjs/eslint-config":"0.6.14","@types/react":"^18.0.26","@types/react-dom":"^18.0.10","@types/react-modal":"^3.13.1","autoprefixer":"^10.4.13","eslint":"^8.32.0","postcss":"^8.4.21","prettier":"^2.8.3","rakkasjs":"0.6.14","tailwindcss":"^3.2.4","typescript":"^4.9.4","vite":"^4.0.3","vite-tsconfig-paths":"^4.0.3","vitest":"^0.27.1"},"dependencies":{"@animxyz/react":"^0.6.7","@tanem/react-nprogress":"^5.0.26","react":"^18.2.0","react-dom":"^18.2.0","react-icons":"^4.7.1","react-modal":"^3.16.1"},"prettier":{"arrowParens":"avoid","bracketSpacing":true,"htmlWhitespaceSensitivity":"css","insertPragma":false,"jsxBracketSameLine":false,"jsxSingleQuote":false,"printWidth":100,"proseWrap":"preserve","quoteProps":"as-needed","requirePragma":false,"semi":true,"singleQuote":false,"tabWidth":4,"trailingComma":"none","useTabs":false,"vueIndentScriptAndStyle":false,"rangeStart":0}}},{"status":"fulfilled","value":{"name":"sockets-rn","version":"1.0.0","main":"node_modules/expo/AppEntry.js","scripts":{"start":"expo start","android":"expo start --android","ios":"expo start --ios","web":"expo start --web","eject":"expo eject"},"dependencies":{"@react-native-async-storage/async-storage":"^1.17.7","axios":"^0.27.2","expo":"~45.0.0","expo-status-bar":"~1.3.0","expo-updates":"~0.13.3","formik":"^2.2.9","react":"17.0.2","react-dom":"17.0.2","react-native":"0.68.2","react-native-linear-gradient":"^2.6.2","react-native-web":"0.17.7","socket.io-client":"^4.5.1","use-countdown-timer":"^1.3.2","yup":"^0.32.11","expo-linear-gradient":"~11.3.0"},"devDependencies":{"@babel/core":"^7.12.9","@types/react":"~17.0.21","@types/react-native":"~0.66.13","typescript":"~4.3.5"},"private":true}},{"status":"fulfilled","value":{"name":"express-typescript","version":"1.0.0","description":"","main":"index.js","scripts":{"build":"npx tsc","start":"nodemon dist/index.js","watch":"tsc -w","dev":"concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""},"keywords":[],"author":"","license":"ISC","dependencies":{"dotenv":"^16.0.1","ejs":"^3.1.8","express":"^4.18.1","firebase-admin":"^11.4.1","googleapis":"^100.0.0","ioredis":"^5.0.6","nodemailer":"^6.7.5","open":"^8.4.0","redis":"^4.1.0","server-destroy":"^1.0.1"},"devDependencies":{"@types/express":"^4.17.13","@types/node":"^17.0.39","concurrently":"^7.2.1","nodemon":"^2.0.16","typescript":"^4.7.3"}}},{"status":"fulfilled","value":{"name":"web","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite --port 3000","build":"tsc && vite build","preview":"vite preview","upgrade-deps":"npm install -g npm-check-updates && ncu -u && npm install"},"dependencies":{"@jridgewell/sourcemap-codec":"^1.4.14","@supabase/supabase-js":"^2.1.1","@tanstack/react-query":"^4.17.1","dayjs":"^1.11.6","react":"^18.2.0","react-dom":"^18.2.0","react-hook-form":"^7.41.3","react-icons":"^4.6.0","react-modal":"^3.16.1","react-router-dom":"^6.4.3","react-select":"^5.7.0","react-to-print":"^2.14.10","react-use-keypress":"^1.3.1","react-use-measure":"^2.1.1","use-countdown-timer":"^1.3.2"},"devDependencies":{"@tailwindcss/line-clamp":"^0.4.2","@types/inline-css":"^3.0.1","@types/react":"^18.0.24","@types/react-dom":"^18.0.8","@types/react-modal":"^3.13.1","@vitejs/plugin-react":"^2.2.0","autoprefixer":"^10.4.13","postcss":"^8.4.19","supabase":"^1.17.4","tailwind-scrollbar":"^2.0.1","tailwindcss":"^3.2.4","typescript":"^4.6.4","vite":"^3.2.3"}}},{"status":"fulfilled","value":{"version":"0.9.0","license":"MIT","main":"dist/index.js","typings":"dist/index.d.ts","files":["dist","src"],"engines":{"node":">=10"},"repository":{"type":"git","url":"https://github.com/tigawanna/table-for-react"},"scripts":{"start":"tsdx watch","build":"tsdx build && npm run build-tailwind","test":"tsdx test --passWithNoTests","lint":"tsdx lint","prepare":"npm run build","size":"size-limit","analyze":"size-limit --why","storybook":"start-storybook -p 6006","build-storybook":"build-storybook","build-tailwind":"npx tailwindcss -o ./dist/tailwind.css --minify"},"peerDependencies":{"react":">=16"},"husky":{"hooks":{"pre-commit":"tsdx lint"}},"prettier":{"printWidth":80,"semi":true,"singleQuote":true,"trailingComma":"es5"},"name":"table-for-react","author":"tigawanna","module":"dist/table-for-react.esm.js","size-limit":[{"path":"dist/table-for-react.cjs.production.min.js","limit":"10 KB"},{"path":"dist/table-for-react.esm.js","limit":"10 KB"}],"devDependencies":{"@babel/core":"^7.18.6","@size-limit/preset-small-lib":"^7.0.8","@storybook/addon-essentials":"^6.5.9","@storybook/addon-info":"^5.3.21","@storybook/addon-links":"^6.5.9","@storybook/addon-postcss":"^2.0.0","@storybook/addons":"^6.5.9","@storybook/react":"^6.5.9","@types/react":"^18.0.14","@types/react-dom":"^18.0.5","autoprefixer":"^10.4.7","babel-loader":"^8.2.5","husky":"^8.0.1","postcss":"^8.4.14","react":"^18.2.0","react-dom":"^18.2.0","react-is":"^18.2.0","size-limit":"^7.0.8","tailwindcss":"^3.1.4","tsdx":"^0.14.1","tslib":"^2.4.0","typescript":"^4.7.4"},"dependencies":{"dayjs":"^1.11.3","react-icons":"^4.4.0","use-countdown-timer":"^1.3.2"}}},{"status":"fulfilled","value":{"name":"notes-app","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite","build":"tsc && vite build","preview":"vite preview"},"dependencies":{"@tanstack/react-query":"^4.23.0","react":"^18.2.0","react-dom":"^18.2.0","react-router-dom":"^6.7.0"},"devDependencies":{"@tailwindcss/line-clamp":"^0.4.2","@types/react":"^18.0.26","@types/react-dom":"^18.0.9","@vitejs/plugin-react":"^3.0.0","tailwind-scrollbar":"^2.1.0","tailwindcss-animate":"^1.0.5","typescript":"^4.9.3","vite":"^4.0.0"}}},{"status":"fulfilled","value":{"name":"typescript-node-express-graphql-mongo","version":"1.0.0","description":"","main":"index.js","scripts":{"test":"echo \"Error: no test specified\" && exit 1","watch":"tsc -w","start":"nodemon dist/index.js"},"keywords":[],"author":"","license":"ISC","devDependencies":{"@types/express-session":"^1.17.4","@types/mongoose":"^5.11.97","nodemon":"^2.0.15","typescript":"^4.5.4"},"dependencies":{"@graphql-tools/schema":"^8.3.1","@typegoose/typegoose":"^9.4.0","apollo-server-express":"^3.5.0","cors":"^2.8.5","dotenv":"^16.0.1","express":"^4.17.2","express-graphql":"^0.12.0","express-session":"^1.17.2","graphql":"^15.3.0","graphql-subscriptions":"^2.0.0","http":"0.0.1-security","mongoose":"^6.1.3","mongoose-paginate-v2":"^1.4.2","subscriptions-transport-ws":"^0.11.0","type-graphql":"^1.1.1","typegoose":"^5.9.1","uuid":"^8.3.2"},"engines":{"node":"16.x","npm":"6.x"}}},{"status":"fulfilled","value":{"name":"allemps","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite --port 3000","build":"tsc && vite build","preview":"vite preview"},"dependencies":{"@supabase/supabase-js":"^2.1.1","@tanstack/react-query":"^4.17.1","dayjs":"^1.11.6","pocketbase":"^0.8.3","react":"^18.2.0","react-dom":"^18.2.0","react-icons":"^4.6.0","react-intersection-observer":"^9.4.1","react-modal":"^3.16.1","react-router-dom":"^6.4.3","react-to-print":"^2.14.10","react-use-measure":"^2.1.1","use-countdown-timer":"^1.3.2","zustand":"^4.1.5","zustand-persist":"^0.4.0"},"devDependencies":{"@tailwindcss/line-clamp":"^0.4.2","@tailwindcss/typography":"^0.5.8","@types/inline-css":"^3.0.1","@types/react":"^18.0.24","@types/react-dom":"^18.0.8","@types/react-modal":"^3.13.1","@vitejs/plugin-react":"^2.2.0","autoprefixer":"^10.4.13","postcss":"^8.4.19","supabase":"^1.17.4","tailwind-scrollbar":"^2.0.1","tailwind-scrollbar-hide":"^1.1.7","tailwindcss":"^3.2.4","typescript":"^4.6.4","vite":"^3.2.3"}}},{"status":"fulfilled","value":{"name":"all-emps-vite","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite --port 3000","build":"tsc && vite build ","preview":"vite preview"},"dependencies":{"@tanstack/react-query":"^4.16.1","@tanstack/react-query-devtools":"^4.16.1","dayjs":"^1.11.6","pocketbase":"^0.8.0","react":"^18.2.0","react-dom":"^18.2.0","react-icons":"^4.6.0","react-intersection-observer":"^9.4.1","react-router-dom":"^6.4.3","tailwind-scrollbar":"^2.0.1"},"devDependencies":{"@types/react":"^18.0.17","@types/react-dom":"^18.0.6","@vitejs/plugin-react":"^2.1.0","autoprefixer":"^10.4.13","postcss":"^8.4.19","tailwindcss":"^3.2.4","typescript":"^4.6.4","vite":"^3.1.0"}}},{"status":"fulfilled","value":{"name":"all-emps-vite","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite --port 3000","build":"tsc && vite build ","preview":"vite preview"},"dependencies":{"@tanstack/react-query":"^4.16.1","@tanstack/react-query-devtools":"^4.16.1","dayjs":"^1.11.6","pocketbase":"^0.8.0","react":"^18.2.0","react-dom":"^18.2.0","react-icons":"^4.6.0","react-intersection-observer":"^9.4.1","react-router-dom":"^6.4.3","tailwind-scrollbar":"^2.0.1"},"devDependencies":{"@types/react":"^18.0.17","@types/react-dom":"^18.0.6","@vitejs/plugin-react":"^2.1.0","autoprefixer":"^10.4.13","postcss":"^8.4.19","tailwindcss":"^3.2.4","typescript":"^4.6.4","vite":"^3.1.0"}}},{"status":"fulfilled","value":{"name":"all-emps-vite","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite --port 3000","build":"tsc && vite build ","preview":"vite preview"},"dependencies":{"@tanstack/react-query":"^4.16.1","@tanstack/react-query-devtools":"^4.16.1","dayjs":"^1.11.6","pocketbase":"^0.8.0","react":"^18.2.0","react-dom":"^18.2.0","react-icons":"^4.6.0","react-intersection-observer":"^9.4.1","react-router-dom":"^6.4.3","tailwind-scrollbar":"^2.0.1"},"devDependencies":{"@types/react":"^18.0.17","@types/react-dom":"^18.0.6","@vitejs/plugin-react":"^2.1.0","autoprefixer":"^10.4.13","postcss":"^8.4.19","tailwindcss":"^3.2.4","typescript":"^4.6.4","vite":"^3.1.0"}}},{"status":"fulfilled","value":{"name":"gitcircles","version":"0.1.0","private":true,"scripts":{"dev":"next dev","build":"next build","start":"next start","lint":"next lint"},"dependencies":{"axios":"^0.27.2","dayjs":"^1.11.5","graphql":"^16.6.0","graphql-request":"^4.3.0","graphql-tag":"^2.12.6","next":"12.2.5","react":"18.2.0","react-dom":"18.2.0","react-icons":"^4.4.0","react-query":"^3.39.2"},"devDependencies":{"@types/node":"18.7.11","@types/react":"18.0.17","@types/react-dom":"18.0.6","autoprefixer":"^10.4.8","eslint":"8.22.0","eslint-config-next":"12.2.5","postcss":"^8.4.16","tailwind-scrollbar":"^1.3.1","tailwindcss":"^3.1.8","typescript":"4.7.4"}}},{"status":"fulfilled","value":{"name":"pocket-base","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite --port 3000","build":"tsc && vite build","preview":"vite preview"},"dependencies":{"axios":"^0.27.2","cross-fetch":"^3.1.5","dayjs":"^1.11.5","eventsource":"^2.0.2","pocketbase":"^0.7.0","react":"^18.2.0","react-dom":"^18.2.0","react-icons":"^4.4.0","react-query":"^3.39.2","react-router-dom":"^6.4.0","uniqid":"^5.4.0"},"devDependencies":{"@types/react":"^18.0.17","@types/react-dom":"^18.0.6","@types/uniqid":"^5.3.2","@vitejs/plugin-react":"^2.1.0","autoprefixer":"^10.4.10","postcss":"^8.4.16","tailwind-scrollbar":"^2.0.1","tailwindcss":"^3.1.8","typescript":"^4.6.4","vite":"^3.1.0"}}},{"status":"fulfilled","value":{"name":"project-manager","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite --port 3000","build":"tsc && vite build","preview":"vite preview"},"dependencies":{"@react-query-firebase/auth":"^1.0.0-dev.1","@react-query-firebase/firestore":"^1.0.0-dev.6","axios":"^0.27.2","dayjs":"^1.11.2","firebase":"^9.8.1","firebase-admin":"^10.2.0","firebase-functions":"^3.21.2","react":"^18.2.0","react-dom":"^18.2.0","react-icons":"^4.3.1","react-query":"^3.39.0","react-router-dom":"^6.3.0","react-to-print":"^2.14.7","react-use-measure":"^2.1.1","table-for-react":"^0.9.0","uniqid":"^5.4.0","use-countdown-timer":"^1.3.2"},"devDependencies":{"@types/date-fns":"^2.6.0","@types/react":"^18.0.17","@types/react-dom":"^18.0.6","@types/uniqid":"^5.3.2","@vitejs/plugin-react":"^2.1.0","autoprefixer":"^10.4.8","postcss":"^8.4.16","tailwind-scrollbar":"^1.3.2","tailwindcss":"^3.1.8","typescript":"^4.6.4","vite":"^3.1.0"}}},{"status":"fulfilled","value":{"name":"sockets-client","private":true,"version":"0.0.0","scripts":{"dev":"vite","build":"tsc && vite build","preview":"vite preview","deploy":"npm run build && git add dist -f && git commit -m'hosting'  && git subtree push --prefix dist origin gh-pages"},"dependencies":{"axios":"^0.27.2","query-string":"^7.1.1","react":"^18.0.0","react-dom":"^18.0.0","react-icons":"^4.4.0","react-router-dom":"^6.3.0","socket.io-client":"^4.5.1"},"devDependencies":{"@types/react":"^18.0.0","@types/react-dom":"^18.0.0","@vitejs/plugin-react":"^1.3.0","autoprefixer":"^10.4.7","gh-pages":"^4.0.0","postcss":"^8.4.14","tailwind-scrollbar":"^1.3.1","tailwindcss":"^3.1.6","typescript":"^4.6.3","vite":"^2.9.9"}}},{"status":"fulfilled","value":{"name":"edit-table-ts","version":"0.1.0","homepage":"https://tigawanna.github.io/table-for-react-example","private":true,"dependencies":{"@testing-library/jest-dom":"^5.16.4","@testing-library/react":"^13.3.0","@testing-library/user-event":"^13.5.0","@types/jest":"^27.5.2","@types/node":"^16.11.42","@types/react":"^18.0.14","@types/react-dom":"^18.0.5","dayjs":"^1.11.3","react":"^18.2.0","react-dom":"^18.2.0","react-icons":"^4.4.0","react-scripts":"5.0.1","table-for-react":"^0.10.0","typescript":"^4.7.4","use-countdown-timer":"^1.3.2","web-vitals":"^2.1.4"},"scripts":{"start":"react-scripts start","build":"react-scripts build","test":"react-scripts test","eject":"react-scripts eject","predeploy":"npm run build","deploy":"gh-pages -d build"},"eslintConfig":{"extends":["react-app","react-app/jest"]},"browserslist":{"production":[">0.2%","not dead","not op_mini all"],"development":["last 1 chrome version","last 1 firefox version","last 1 safari version"]},"devDependencies":{"autoprefixer":"^10.4.7","gh-pages":"^4.0.0","postcss":"^8.4.14","tailwindcss":"^3.1.4"}}},{"status":"fulfilled","value":{"name":"project-manager","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite --port 3000","build":"tsc && vite build","preview":"vite preview","deploy":"npm run build && firebase deploy"},"dependencies":{"@react-query-firebase/auth":"^1.0.0-dev.1","@react-query-firebase/firestore":"^1.0.0-dev.6","@tanstack/react-query":"^4.13.0","@tanstack/react-query-devtools":"^4.13.0","@tanstack/react-table":"^8.5.15","axios":"^0.27.2","dayjs":"^1.11.5","firebase-admin":"^11.4.1","firebase-functions":"^3.21.2","pocketbase":"^0.7.4","react":"^18.2.0","react-dom":"^18.2.0","react-icons":"^4.3.1","react-router-dom":"^6.3.0","react-to-print":"^2.14.7","react-use-measure":"^2.1.1","table-for-react":"^0.9.0","uniqid":"^5.4.0","use-countdown-timer":"^1.3.2"},"devDependencies":{"@types/date-fns":"^2.6.0","@types/react":"^18.0.17","@types/react-dom":"^18.0.6","@types/uniqid":"^5.3.2","@vitejs/plugin-react":"^2.1.0","autoprefixer":"^10.4.8","postcss":"^8.4.16","tailwind-scrollbar":"^1.3.2","tailwindcss":"^3.1.8","typescript":"^4.6.4","vite":"^3.1.0"}}},{"status":"fulfilled","value":{"name":"project-manager","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite --port 3000","build":"tsc && vite build","preview":"vite preview","deploy":"npm run build && firebase deploy"},"dependencies":{"@react-query-firebase/auth":"^1.0.0-dev.1","@react-query-firebase/firestore":"^1.0.0-dev.6","axios":"^0.27.2","dayjs":"^1.11.2","firebase":"^9.8.1","firebase-admin":"^11.4.1","firebase-functions":"^3.21.2","react":"^18.2.0","react-dom":"^18.2.0","react-icons":"^4.3.1","react-query":"^3.39.0","react-router-dom":"^6.3.0","react-to-print":"^2.14.7","react-use-measure":"^2.1.1","table-for-react":"^0.9.0","uniqid":"^5.4.0","use-countdown-timer":"^1.3.2"},"devDependencies":{"@types/date-fns":"^2.6.0","@types/react":"^18.0.17","@types/react-dom":"^18.0.6","@types/uniqid":"^5.3.2","@vitejs/plugin-react":"^2.1.0","autoprefixer":"^10.4.8","postcss":"^8.4.16","tailwind-scrollbar":"^1.3.2","tailwindcss":"^3.1.8","typescript":"^4.6.4","vite":"^3.1.0"}}},{"status":"fulfilled","value":{"name":"pkgs","version":"0.0.1","main":"build/index.js","module":"build/index.esm.js","files":["build"],"types":"build/index.d.ts","description":"A skeleton to create your own React component library using Rollup,  TypeScript, tailwind and ladle","scripts":{"build":"rollup -c","test":"jest","test:watch":"jest --watch","generate":"node ./util/create-component","prepublishOnly":"npm run build","story-dev":"ladle serve --port 4123","story-build":"ladle build"},"repository":{"type":"git","url":"https://github.com/tigawanna/react-component-library-builder.git"},"keywords":["React","Component","Library","Rollup","Typescript","Tailwind","Ladle"],"author":"tigawanna","license":"MIT","bugs":{"url":"https://github.com/tigawanna/react-component-library-builder.git/issues"},"homepage":"https://github.com/tigawanna/react-component-library-builder.git#readme","peerDependencies":{"react":">=16.8.0","react-dom":">=16.8.0","@types/react-dom":"^16.9.14"},"devDependencies":{"@babel/core":"^7.15.0","@ladle/react":"^2.4.5","@rollup/plugin-commonjs":"^17.1.0","@rollup/plugin-multi-entry":"^6.0.0","@rollup/plugin-node-resolve":"^11.2.1","@testing-library/jest-dom":"^5.14.1","@testing-library/react":"^11.2.7","@types/jest":"^24.9.1","@types/react":"^16.14.14","@types/react-dom":"^16.9.14","autoprefixer":"^10.4.13","babel-loader":"^8.2.2","babel-preset-react-app":"^10.0.0","colors":"^1.4.0","identity-obj-proxy":"^3.0.0","jest":"^26.6.3","react":"^16.14.0","react-dom":"^16.14.0","rollup":"^2.56.3","rollup-plugin-copy":"^3.4.0","rollup-plugin-peer-deps-external":"^2.2.4","rollup-plugin-postcss":"^4.0.2","rollup-plugin-typescript2":"^0.29.0","tailwind-scrollbar":"^2.0.1","tailwindcss":"^3.2.4","ts-jest":"^26.5.6","typescript":"^4.8.4"},"dependencies":{"color":"^4.2.3","colors":"^1.4.0"}}},{"status":"fulfilled","value":{"name":"saucy-boi","version":"1.0.0","description":"","main":"index.js","scripts":{"build":"npx tsc","start":"nodemon dist/index.js","dev":"concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""},"keywords":[],"author":"","license":"ISC","dependencies":{"dotenv":"^16.0.3","ejs":"^3.1.8","express":"^4.18.1","node-fetch":"^2.6.7","random-name":"^0.1.2"},"devDependencies":{"@types/express":"^4.17.13","@types/node":"^17.0.39","@types/node-fetch":"^2.6.2","concurrently":"^7.2.1","nodemon":"^2.0.16","typescript":"^4.7.3"}}},{"status":"fulfilled","value":{"name":"express-typescript","version":"1.0.0","description":"","main":"index.js","scripts":{"build":"npx tsc","start":"nodemon dist/index.js","dev":"concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""},"keywords":[],"author":"","license":"ISC","dependencies":{"dotenv":"^16.0.3","express":"^4.18.1"},"devDependencies":{"@types/express":"^4.17.13","@types/node":"^17.0.39","concurrently":"^7.2.1","nodemon":"^2.0.16","typescript":"^4.7.3"}}}]
+
+[
+  {
+    "name": "kinuthia",
+    "type": "module",
+    "private": true,
+    "scripts": {
+      "dev": "rakkas --port 3000 ",
+      "build": "rakkas build",
+      "start": "node dist/server",
+      "format": "prettier --write --ignore-unknown src",
+      "test": "npm run test:typecheck && npm run test:format && npm run test:lint && npm run test:unit",
+      "test:typecheck": "tsc -p tsconfig.json --noEmit",
+      "test:format": "prettier --check --ignore-unknown src",
+      "test:lint": "eslint . --ignore-pattern dist",
+      "test:unit": "vitest run"
+    },
+    "devDependencies": {
+      "@rakkasjs/eslint-config": "0.6.20",
+      "@tailwindcss/line-clamp": "^0.4.4",
+      "@tailwindcss/typography": "^0.5.9",
+      "@types/react": "^18.0.28",
+      "@types/react-dom": "^18.0.11",
+      "autoprefixer": "^10.4.14",
+      "eslint": "^8.34.0",
+      "postcss": "^8.4.21",
+      "prettier": "^2.8.4",
+      "rakkasjs": "0.6.20",
+      "tailwind-scrollbar": "^3.0.0",
+      "tailwindcss": "^3.3.1",
+      "tailwindcss-animate": "^1.0.5",
+      "typescript": "^4.9.5",
+      "vite": "^4.1.3",
+      "vite-tsconfig-paths": "^4.0.5",
+      "vitest": "^0.28.5"
+    },
+    "dependencies": {
+      "@hattip/response": "^0.0.33",
+      "graphql-request": "^5.2.0",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-icons": "^4.8.0"
+    }
+  },
+  {
+    "name": "devhub",
+    "private": true,
+    "version": "0.0.1",
+    "type": "module",
+    "scripts": {
+      "dev": "vite --port 3000",
+      "build": "tsc && vite build",
+      "test": "vitest",
+      "coverage": "vitest run --coverage",
+      "preview": "vite preview --port 3000",
+      "upgrade-deps": "npm install -g npm-check-updates && ncu -u && npm install"
+    },
+    "dependencies": {
+      "@tanem/react-nprogress": "^5.0.25",
+      "@tanstack/react-query": "^4.20.4",
+      "dayjs": "^1.11.7",
+      "pocketbase": "^0.9.1",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-icons": "^4.7.1",
+      "react-intersection-observer": "^9.4.1",
+      "react-modal": "^3.16.1",
+      "react-router-dom": "^6.6.1",
+      "yarn": "^1.22.19",
+      "zustand": "^4.3.2"
+    },
+    "devDependencies": {
+      "@tailwindcss/line-clamp": "^0.4.2",
+      "@tailwindcss/typography": "^0.5.8",
+      "@tanstack/react-query-devtools": "^4.22.0",
+      "@testing-library/jest-dom": "^5.16.5",
+      "@testing-library/react": "^13.4.0",
+      "@testing-library/user-event": "^14.4.3",
+      "@types/react": "^18.0.26",
+      "@types/react-dom": "^18.0.10",
+      "@types/react-lazy-load-image-component": "^1.5.2",
+      "@types/react-modal": "^3.13.1",
+      "@types/react-scroll": "^1.8.6",
+      "@typescript-eslint/eslint-plugin": "^5.48.0",
+      "@typescript-eslint/parser": "^5.48.0",
+      "@vitejs/plugin-react": "^3.0.0",
+      "@vitest/coverage-c8": "^0.26.3",
+      "autoprefixer": "^10.4.13",
+      "eslint": "^8.2.0",
+      "eslint-config-airbnb": "^19.0.4",
+      "eslint-config-airbnb-typescript": "^17.0.0",
+      "eslint-config-prettier": "^8.6.0",
+      "eslint-plugin-import": "^2.25.3",
+      "eslint-plugin-jsx-a11y": "^6.5.1",
+      "eslint-plugin-prettier": "^4.2.1",
+      "eslint-plugin-react": "^7.28.0",
+      "eslint-plugin-react-hooks": "^4.3.0",
+      "jsdom": "^20.0.3",
+      "postcss": "^8.4.21",
+      "prettier": "^2.8.1",
+      "tailwind-scrollbar": "^2.1.0",
+      "tailwindcss": "^3.2.4",
+      "tailwindcss-animate": "^1.0.5",
+      "typescript": "^4.9.4",
+      "vite": "^4.0.3",
+      "vitest": "^0.26.3",
+      "zod": "^3.20.2"
+    },
+    "prettier": {
+      "arrowParens": "avoid",
+      "bracketSpacing": true,
+      "htmlWhitespaceSensitivity": "css",
+      "insertPragma": false,
+      "jsxBracketSameLine": false,
+      "jsxSingleQuote": false,
+      "printWidth": 100,
+      "proseWrap": "preserve",
+      "quoteProps": "as-needed",
+      "requirePragma": false,
+      "semi": true,
+      "singleQuote": false,
+      "tabWidth": 4,
+      "trailingComma": "none",
+      "useTabs": false,
+      "vueIndentScriptAndStyle": false,
+      "rangeStart": 0
+    }
+  },
+  {
+    "name": "awesome-notes",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+      "dev": "vite --port 3000",
+      "build": "tsc && vite build",
+      "preview": "vite preview --port 3000",
+      "test": "vitest",
+      "test:ui": "vitest --ui",
+      "coverage": "vitest run --coverage",
+      "page": "node ./scripts/newRoute.cjs",
+      "cypress": "npx cypress open",
+      "test-ct": "playwright test -c playwright-ct.config.ts"
+    },
+    "dependencies": {
+      "@tanem/react-nprogress": "^5.0.30",
+      "@tanstack/react-query": "^5.0.0-alpha.5",
+      "@tanstack/react-query-devtools": "^5.0.0-alpha.5",
+      "date-fns": "^2.29.3",
+      "dayjs": "^1.11.7",
+      "i": "^0.3.7",
+      "npm": "^9.6.2",
+      "pocketbase": "^0.13.1",
+      "react": "^18.2.0",
+      "react-calendar": "^4.0.0",
+      "react-dom": "^18.2.0",
+      "react-icons": "^4.7.1",
+      "react-modal": "^3.16.1",
+      "react-router-dom": "^6.8.2",
+      "react-select": "^5.7.0",
+      "zustand": "^4.3.4"
+    },
+    "devDependencies": {
+      "@playwright/experimental-ct-react": "^1.32.0",
+      "@playwright/test": "^1.32.0",
+      "@tailwindcss/container-queries": "^0.1.0",
+      "@tailwindcss/line-clamp": "^0.4.2",
+      "@tailwindcss/typography": "^0.5.9",
+      "@testing-library/jest-dom": "^5.16.5",
+      "@testing-library/react": "^14.0.0",
+      "@types/react": "^18.0.26",
+      "@types/react-calendar": "^3.9.0",
+      "@types/react-dom": "^18.0.9",
+      "@types/react-modal": "^3.13.1",
+      "@vitejs/plugin-react": "^3.0.0",
+      "@vitest/ui": "^0.29.1",
+      "autoprefixer": "^10.4.13",
+      "colors": "^1.4.0",
+      "cypress": "^12.8.1",
+      "cypress-dark": "^1.1.0",
+      "jsdom": "^21.1.0",
+      "postcss": "^8.4.21",
+      "prettier": "^2.8.4",
+      "tailwind-scrollbar": "^2.1.0",
+      "tailwindcss": "^3.2.7",
+      "tailwindcss-animate": "^1.0.5",
+      "typescript": "^4.9.3",
+      "vite": "^4.0.0",
+      "vitest": "^0.29.1"
+    }
+  },
+  {
+    "name": "gittyhub",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+      "relay": "yarn run relay-compiler --src './src' --schema 'schema.docs.graphql' ",
+      "dev": "yarn run relay && vite --port 3000 ",
+      "build": "tsc && vite build",
+      "preview": "vite preview",
+      "gen": "graphql-codegen --config codegen.yml"
+    },
+    "dependencies": {
+      "@tanem/react-nprogress": "^5.0.25",
+      "@tanstack/react-query": "^4.24.4",
+      "axios": "^0.27.2",
+      "babel-plugin-relay": "^14.1.0",
+      "dayjs": "^1.11.5",
+      "graphql": "^16.6.0",
+      "graphql-request": "^5.0.0",
+      "graphql-tag": "^2.12.6",
+      "pocketbase": "^0.10.1",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-icons": "^4.4.0",
+      "react-modal": "^3.16.1",
+      "react-relay": "^14.1.0",
+      "react-router-dom": "^6.8.0",
+      "relay-compiler": "^14.1.0",
+      "relay-runtime": "^14.1.0",
+      "uniqid": "^5.4.0",
+      "vite-plugin-relay": "^2.0.0",
+      "zustand": "^4.1.1",
+      "zustand-persist": "^0.4.0"
+    },
+    "devDependencies": {
+      "@graphql-codegen/cli": "2.12.1",
+      "@graphql-codegen/introspection": "2.2.1",
+      "@graphql-codegen/typescript": "^2.7.3",
+      "@graphql-codegen/typescript-operations": "^2.5.3",
+      "@graphql-codegen/typescript-react-apollo": "3.3.3",
+      "@graphql-codegen/typescript-react-query": "^4.0.1",
+      "@types/react": "^18.0.17",
+      "@types/react-dom": "^18.0.6",
+      "@types/react-modal": "^3.13.1",
+      "@types/react-relay": "^14.1.3",
+      "@types/relay-runtime": "^14.1.6",
+      "@types/uniqid": "^5.3.2",
+      "@vitejs/plugin-react": "^2.1.0",
+      "autoprefixer": "^10.4.10",
+      "postcss": "^8.4.16",
+      "prettier": "^2.8.3",
+      "prettier-plugin-tailwindcss": "^0.2.2",
+      "tailwind-scrollbar": "^2.0.1",
+      "tailwindcss": "^3.1.8",
+      "typescript": "^4.6.4",
+      "vite": "^3.1.0"
+    },
+    "relay": {
+      "src": "./src",
+      "schema": "schema.docs.graphql",
+      "language": "typescript",
+      "eagerEsModules": true,
+      "exclude": [
+        "**/node_modules/**",
+        "**/__mocks__/**",
+        "**/__generated__/**"
+      ]
+    }
+  },
+  {
+    "name": "masahmva",
+    "type": "module",
+    "private": true,
+    "scripts": {
+      "dev": "rakkas --port 3000 ",
+      "dev-debug": "set NODE_OPTIONS=--inspect && rakkas --port 3000",
+      "build": "rakkas build",
+      "start": "node dist/server",
+      "format": "prettier --write --ignore-unknown src",
+      "test": "npm run test:typecheck && npm run test:format && npm run test:lint && npm run test:unit",
+      "test:typecheck": "tsc -p tsconfig.json --noEmit",
+      "test:format": "prettier --check --ignore-unknown src",
+      "test:lint": "eslint . --ignore-pattern dist",
+      "test:unit": "vitest run"
+    },
+    "devDependencies": {
+      "@rakkasjs/eslint-config": "0.6.15",
+      "@tailwindcss/line-clamp": "^0.4.2",
+      "@types/leaflet": "^1.9.0",
+      "@types/react": "^18.0.27",
+      "@types/react-dom": "^18.0.10",
+      "@types/react-modal": "^3.13.1",
+      "autoprefixer": "^10.4.13",
+      "eslint": "^8.33.0",
+      "postcss": "^8.4.21",
+      "prettier": "^2.8.3",
+      "rakkasjs": "0.6.15",
+      "tailwind-scrollbar": "^2.1.0",
+      "tailwindcss": "^3.2.6",
+      "tailwindcss-animate": "^1.0.5",
+      "typescript": "^4.9.5",
+      "vite": "^4.1.1",
+      "vite-tsconfig-paths": "^4.0.5",
+      "vitest": "^0.28.4"
+    },
+    "dependencies": {
+      "@emotion/react": "^11.10.5",
+      "@hattip/adapter-vercel-edge": "^0.0.29",
+      "@hattip/response": "^0.0.27",
+      "@mantine/core": "^5.10.3",
+      "@mantine/hooks": "^5.10.3",
+      "@tanem/react-nprogress": "^5.0.27",
+      "leaflet": "^1.9.3",
+      "pocketbase": "^0.10.2",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-icons": "^4.7.1",
+      "react-leaflet": "^4.2.0",
+      "react-modal": "^3.16.1",
+      "react-select": "^5.7.0"
+    }
+  },
+  {
+    "name": "react-starter",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+      "dev": "vite --port 3000",
+      "build": "tsc && vite build",
+      "preview": "vite preview",
+      "upgrade-deps": "npm install -g npm-check-updates && ncu -u && npm install",
+      "page": "node ./scripts/newRoute.cjs"
+    },
+    "dependencies": {
+      "@emotion/react": "^11.10.6",
+      "@mantine/core": "^6.0.5",
+      "@mantine/hooks": "^6.0.5",
+      "@tanem/react-nprogress": "^5.0.33",
+      "@tanstack/react-query": "^5.0.0-alpha.9",
+      "@tanstack/react-query-devtools": "^5.0.0-alpha.9",
+      "dayjs": "^1.11.7",
+      "eslint-config-airbnb-typescript": "^17.0.0",
+      "pocketbase": "^0.13.1",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-icons": "^4.8.0",
+      "react-modal": "^3.16.1",
+      "react-router-dom": "^6.10.0",
+      "react-select": "^5.7.2",
+      "react-to-print": "^2.14.12",
+      "zustand": "^4.3.7"
+    },
+    "devDependencies": {
+      "@tailwindcss/line-clamp": "^0.4.4",
+      "@tailwindcss/typography": "^0.5.9",
+      "@testing-library/jest-dom": "^5.16.5",
+      "@testing-library/react": "^14.0.0",
+      "@types/react": "^18.0.31",
+      "@types/react-dom": "^18.0.11",
+      "@types/react-modal": "^3.13.1",
+      "@types/react-select": "^5.0.1",
+      "@typescript-eslint/eslint-plugin": "^5.57.0",
+      "@typescript-eslint/parser": "^5.57.0",
+      "@vitejs/plugin-react": "^3.1.0",
+      "autoprefixer": "^10.4.14",
+      "eslint": "^8.37.0",
+      "eslint-config-airbnb": "^19.0.4",
+      "eslint-config-prettier": "^8.8.0",
+      "eslint-plugin-import": "^2.27.5",
+      "eslint-plugin-jsx-a11y": "^6.7.1",
+      "eslint-plugin-prettier": "^4.2.1",
+      "eslint-plugin-react": "^7.32.2",
+      "eslint-plugin-react-hooks": "^4.6.0",
+      "postcss": "^8.4.21",
+      "prettier": "^2.8.7",
+      "tailwind-scrollbar": "^3.0.0",
+      "tailwindcss": "^3.3.1",
+      "typescript": "^5.0.3",
+      "vite": "^4.2.1",
+      "vitest": "^0.29.8"
+    }
+  },
+  {
+    "name": "kinuthia",
+    "type": "module",
+    "version": "0.0.1",
+    "scripts": {
+      "dev": "astro dev",
+      "start": "astro dev",
+      "build": "astro build",
+      "preview": "astro preview",
+      "astro": "astro"
+    },
+    "dependencies": {
+      "astro": "^2.2.0"
+    }
+  },
+  {
+    "name": "react-starter",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+      "dev": "vite --port 3000",
+      "build": "tsc && vite build",
+      "preview": "vite preview",
+      "upgrade-deps": "npm install -g npm-check-updates && ncu -u && npm install",
+      "page": "node ./scripts/newRoute.cjs"
+    },
+    "dependencies": {
+      "@denniskinuthia/tiny-pkgs": "^0.0.8",
+      "@tanstack/react-query": "^5.0.0-alpha.9",
+      "@tanstack/react-query-devtools": "^5.0.0-alpha.9",
+      "dayjs": "^1.11.7",
+      "eslint-config-airbnb-typescript": "^17.0.0",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-icons": "^4.8.0",
+      "react-router-dom": "^6.10.0"
+    },
+    "devDependencies": {
+      "@tailwindcss/line-clamp": "^0.4.4",
+      "@tailwindcss/typography": "^0.5.9",
+      "@testing-library/jest-dom": "^5.16.5",
+      "@testing-library/react": "^14.0.0",
+      "@types/react": "^18.0.31",
+      "@types/react-dom": "^18.0.11",
+      "@typescript-eslint/eslint-plugin": "^5.57.0",
+      "@typescript-eslint/parser": "^5.57.0",
+      "@vitejs/plugin-react": "^3.1.0",
+      "autoprefixer": "^10.4.14",
+      "eslint": "^8.37.0",
+      "eslint-config-airbnb": "^19.0.4",
+      "eslint-config-prettier": "^8.8.0",
+      "eslint-plugin-import": "^2.27.5",
+      "eslint-plugin-jsx-a11y": "^6.7.1",
+      "eslint-plugin-prettier": "^4.2.1",
+      "eslint-plugin-react": "^7.32.2",
+      "eslint-plugin-react-hooks": "^4.6.0",
+      "postcss": "^8.4.21",
+      "prettier": "^2.8.7",
+      "tailwind-scrollbar": "^3.0.0",
+      "tailwindcss": "^3.3.1",
+      "typescript": "^5.0.3",
+      "vite": "^4.2.1",
+      "vitest": "^0.29.8"
+    }
+  },
+  {
+    "name": "@denniskinuthia/tiny-pkgs",
+    "version": "0.0.8",
+    "main": "build/index.js",
+    "module": "build/index.esm.js",
+    "files": [
+      "build"
+    ],
+    "types": "build/index.d.ts",
+    "description": "A skeleton to create your own React component library using Rollup, TypeScript, Sass and Storybook",
+    "scripts": {
+      "build": "rollup -c",
+      "test": "jest",
+      "test:watch": "jest --watch",
+      "generate": "node ./util/create-component",
+      "prepublishOnly": "npm run build",
+      "story-dev": "ladle serve --port 4123",
+      "story-build": "ladle build"
+    },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/tigawanna/tiny-pkgs"
+    },
+    "keywords": [
+      "React",
+      "Component",
+      "Library",
+      "Rollup",
+      "Typescript"
+    ],
+    "author": "tigawanna",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/tigawanna/tiny-pkgs"
+    },
+    "homepage": "https://github.com/tigawanna/tiny-pkgs#readme",
+    "peerDependencies": {
+      "@tanstack/react-query": "^4.20.4",
+      "@types/react-modal": "^3.13.1",
+      "react-icons": "^4.7.1",
+      "react-modal": "^3.16.1",
+      "@types/react": "^18.0.26",
+      "@types/react-dom": "^18.0.10",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0"
+    },
+    "devDependencies": {
+      "@babel/core": "^7.15.0",
+      "@ladle/react": "^2.4.5",
+      "@rollup/plugin-commonjs": "^17.1.0",
+      "@rollup/plugin-node-resolve": "^11.2.1",
+      "@testing-library/jest-dom": "^5.14.1",
+      "@testing-library/react": "^11.2.7",
+      "@types/jest": "^24.9.1",
+      "@types/react": "^18.0.26",
+      "@types/react-dom": "^18.0.10",
+      "@types/react-modal": "^3.13.1",
+      "autoprefixer": "^10.4.13",
+      "babel-loader": "^8.2.2",
+      "babel-preset-react-app": "^10.0.0",
+      "colors": "^1.4.0",
+      "identity-obj-proxy": "^3.0.0",
+      "jest": "^26.6.3",
+      "postcss": "^8.4.20",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "rollup": "^2.56.3",
+      "rollup-plugin-copy": "^3.4.0",
+      "rollup-plugin-peer-deps-external": "^2.2.4",
+      "rollup-plugin-postcss": "^4.0.2",
+      "rollup-plugin-typescript2": "^0.29.0",
+      "tailwind-scrollbar": "^2.0.1",
+      "tailwindcss": "^3.2.4",
+      "ts-jest": "^26.5.6",
+      "tslib": "^2.4.1",
+      "typescript": "^4.8.4"
+    },
+    "dependencies": {
+      "@tanstack/react-query": "^4.20.4",
+      "react-icons": "^4.7.1",
+      "react-modal": "^3.16.1"
+    }
+  },
+  {
+    "name": "projects",
+    "version": "0.1.0",
+    "homepage": "https://tigawanna.github.io/projects",
+    "private": true,
+    "dependencies": {
+      "@react-query-firebase/auth": "^0.3.4",
+      "@react-query-firebase/firestore": "^0.4.2",
+      "@react-query-firebase/functions": "^0.2.2",
+      "@testing-library/jest-dom": "^5.16.4",
+      "@testing-library/react": "^13.2.0",
+      "@testing-library/user-event": "^13.5.0",
+      "@types/date-fns": "^2.6.0",
+      "@types/jest": "^27.5.1",
+      "@types/node": "^16.11.36",
+      "@types/react": "^18.0.9",
+      "@types/react-dom": "^18.0.4",
+      "@types/uniqid": "^5.3.2",
+      "axios": "^0.27.2",
+      "date-fns": "^2.28.0",
+      "dayjs": "^1.11.2",
+      "firebase": "^9.8.1",
+      "firebase-admin": "^11.4.1",
+      "firebase-functions": "^3.24.1",
+      "firebaseui": "^6.0.1",
+      "gapi": "^0.0.3",
+      "gapi-script": "^1.2.0",
+      "react": "^18.1.0",
+      "react-day-picker": "^8.0.5",
+      "react-dom": "^18.1.0",
+      "react-gapi-auth2": "^1.0.4",
+      "react-icons": "^4.3.1",
+      "react-query": "^3.39.0",
+      "react-router-dom": "^6.3.0",
+      "react-scripts": "5.0.1",
+      "typescript": "^4.6.4",
+      "uniqid": "^5.4.0",
+      "web-vitals": "^2.1.4"
+    },
+    "scripts": {
+      "start": "react-scripts start",
+      "build": "react-scripts build",
+      "test": "react-scripts test",
+      "eject": "react-scripts eject",
+      "predeploy": "npm run build",
+      "deploy": "gh-pages -d build"
+    },
+    "eslintConfig": {
+      "extends": [
+        "react-app",
+        "react-app/jest"
+      ]
+    },
+    "browserslist": {
+      "production": [
+        ">0.2%",
+        "not dead",
+        "not op_mini all"
+      ],
+      "development": [
+        "last 1 chrome version",
+        "last 1 firefox version",
+        "last 1 safari version"
+      ]
+    },
+    "devDependencies": {
+      "gh-pages": "^4.0.0",
+      "tailwindcss": "^3.0.24"
+    }
+  },
+  {
+    "name": "files_manager",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "lint": "./node_modules/.bin/eslint",
+      "check-lint": "lint [0-9]*.js",
+      "start-server": "nodemon --exec babel-node --presets @babel/preset-env ./server.js",
+      "start-worker": "nodemon --exec babel-node --presets @babel/preset-env ./worker.js",
+      "dev": "nodemon --exec babel-node --presets @babel/preset-env",
+      "test": "./node_modules/.bin/mocha --require @babel/register --exit"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "bull": "^3.16.0",
+      "chai-http": "^4.3.0",
+      "express": "^4.17.1",
+      "image-thumbnail": "^1.0.10",
+      "mime-types": "^2.1.27",
+      "mongodb": "^3.5.9",
+      "redis": "^2.8.0",
+      "sha1": "^1.1.1",
+      "uuid": "^8.2.0"
+    },
+    "devDependencies": {
+      "@babel/cli": "^7.8.0",
+      "@babel/core": "^7.8.0",
+      "@babel/node": "^7.8.0",
+      "@babel/preset-env": "^7.8.2",
+      "@babel/register": "^7.8.0",
+      "chai": "^4.2.0",
+      "chai-http": "^4.3.0",
+      "mocha": "^6.2.2",
+      "nodemon": "^2.0.2",
+      "eslint": "^6.4.0",
+      "eslint-config-airbnb-base": "^14.0.0",
+      "eslint-plugin-import": "^2.18.2",
+      "eslint-plugin-jest": "^22.17.0",
+      "request": "^2.88.0",
+      "sinon": "^7.5.0"
+    }
+  },
+  {
+    "name": "react-starter",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+      "dev": "vite --port 3000",
+      "build": "tsc && vite build",
+      "preview": "vite preview",
+      "upgrade-deps": "npm install -g npm-check-updates && ncu -u && npm install"
+    },
+    "dependencies": {
+      "@denniskinuthia/tiny-pkgs": "^0.0.8",
+      "@tanstack/react-query": "^4.20.9",
+      "dayjs": "^1.11.7",
+      "eslint-config-airbnb-typescript": "^17.0.0",
+      "pocketbase": "^0.11.0",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-icons": "^4.7.1",
+      "react-progressive-graceful-image": "^0.7.0",
+      "react-router-dom": "^6.6.1"
+    },
+    "devDependencies": {
+      "@tailwindcss/line-clamp": "^0.4.2",
+      "@tailwindcss/typography": "^0.5.8",
+      "@testing-library/jest-dom": "^5.16.5",
+      "@testing-library/react": "^13.4.0",
+      "@types/react": "^18.0.26",
+      "@types/react-dom": "^18.0.10",
+      "@typescript-eslint/eslint-plugin": "^5.48.0",
+      "@typescript-eslint/parser": "^5.48.0",
+      "@vitejs/plugin-react": "^3.0.0",
+      "autoprefixer": "^10.4.13",
+      "eslint": "^8.31.0",
+      "eslint-config-airbnb": "^19.0.4",
+      "eslint-config-prettier": "^8.6.0",
+      "eslint-plugin-import": "^2.26.0",
+      "eslint-plugin-jsx-a11y": "^6.6.1",
+      "eslint-plugin-prettier": "^4.2.1",
+      "eslint-plugin-react": "^7.31.11",
+      "eslint-plugin-react-hooks": "^4.6.0",
+      "postcss": "^8.4.20",
+      "prettier": "^2.8.1",
+      "tailwind-scrollbar": "^2.1.0",
+      "tailwindcss": "^3.2.4",
+      "tailwindcss-animate": "^1.0.5",
+      "typescript": "^4.9.4",
+      "vite": "^4.0.4",
+      "vitest": "^0.26.3",
+      "zod": "^3.20.2"
+    }
+  },
+  {
+    "name": "gitpals",
+    "private": true,
+    "version": "0.0.0",
+    "scripts": {
+      "dev": "vite",
+      "build": "tsc && vite build",
+      "preview": "vite preview",
+      "deploy": "npm run build && git add dist -f && git commit -m'hosting'  && git subtree push --prefix dist origin gh-pages",
+      "gen": "graphql-codegen --config codegen.yml"
+    },
+    "dependencies": {
+      "@genql/runtime": "^2.10.0",
+      "axios": "^0.27.2",
+      "dayjs": "^1.11.4",
+      "dayjs-ext": "^2.1.1",
+      "graphql": "^16.5.0",
+      "graphql-request": "^4.3.0",
+      "graphql-tag": "^2.12.6",
+      "query-string": "^7.1.1",
+      "react": "^18.0.0",
+      "react-dom": "^18.0.0",
+      "react-icons": "^4.4.0",
+      "react-query": "^3.39.0",
+      "react-router-dom": "^6.3.0"
+    },
+    "devDependencies": {
+      "@genql/cli": "^2.10.0",
+      "@graphql-codegen/cli": "2.11.6",
+      "@graphql-codegen/typescript": "2.7.3",
+      "@graphql-codegen/typescript-operations": "2.5.3",
+      "@graphql-codegen/typescript-react-query": "^4.0.1",
+      "@types/react": "^18.0.0",
+      "@types/react-dom": "^18.0.0",
+      "@types/react-query": "^1.2.9",
+      "@vitejs/plugin-react": "^1.3.0",
+      "autoprefixer": "^10.4.7",
+      "gh-pages": "^4.0.0",
+      "postcss": "^8.4.14",
+      "tailwind-scrollbar": "^1.3.1",
+      "tailwindcss": "^3.1.6",
+      "typescript": "^4.6.3",
+      "vite": "^2.9.9",
+      "@graphql-codegen/introspection": "2.2.1"
+    }
+  },
+  {
+    "name": "vite-client",
+    "private": true,
+    "version": "0.0.0",
+    "scripts": {
+      "dev": "vite",
+      "build": "tsc && vite build",
+      "preview": "vite preview"
+    },
+    "dependencies": {
+      "@apollo/client": "^3.6.9",
+      "dayjs": "^1.11.3",
+      "graphql": "^16.5.0",
+      "react": "^18.0.0",
+      "react-dom": "^18.0.0",
+      "react-icons": "^4.4.0",
+      "subscriptions-transport-ws": "^0.11.0",
+      "ws": "^8.8.0"
+    },
+    "devDependencies": {
+      "@graphql-codegen/cli": "^2.8.0",
+      "@graphql-codegen/typescript": "^2.7.1",
+      "@graphql-codegen/typescript-operations": "^2.5.1",
+      "@graphql-codegen/typescript-react-query": "^3.6.1",
+      "@types/react": "^18.0.0",
+      "@types/react-dom": "^18.0.0",
+      "@vitejs/plugin-react": "^1.3.0",
+      "autoprefixer": "^10.4.7",
+      "gh-pages": "^4.0.0",
+      "postcss": "^8.4.14",
+      "tailwind-scrollbar": "^1.3.1",
+      "tailwindcss": "^3.1.6",
+      "typescript": "^4.6.3",
+      "vite": "^2.9.9"
+    }
+  },
+  {
+    "name": "starter-vite",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+      "dev": "vite --port 3000",
+      "build": "tsc && vite build",
+      "preview": "vite preview",
+      "gen": "graphql-codegen --config codegen.yml"
+    },
+    "dependencies": {
+      "axios": "^0.27.2",
+      "dayjs": "^1.11.5",
+      "graphql": "^16.6.0",
+      "graphql-request": "^5.0.0",
+      "graphql-tag": "^2.12.6",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-icons": "^4.4.0",
+      "react-query": "^3.39.2",
+      "react-router-dom": "^6.4.0",
+      "react-use-measure": "^2.1.1",
+      "uniqid": "^5.4.0",
+      "use-countdown-timer": "^1.3.2"
+    },
+    "devDependencies": {
+      "@graphql-codegen/cli": "2.12.1",
+      "@graphql-codegen/introspection": "2.2.1",
+      "@graphql-codegen/typescript": "^2.7.3",
+      "@graphql-codegen/typescript-operations": "^2.5.3",
+      "@graphql-codegen/typescript-react-apollo": "3.3.3",
+      "@graphql-codegen/typescript-react-query": "^4.0.1",
+      "@types/react": "^18.0.17",
+      "@types/react-dom": "^18.0.6",
+      "@types/uniqid": "^5.3.2",
+      "@vitejs/plugin-react": "^2.1.0",
+      "autoprefixer": "^10.4.10",
+      "postcss": "^8.4.16",
+      "tailwind-scrollbar": "^2.0.1",
+      "tailwindcss": "^3.1.8",
+      "typescript": "^4.6.4",
+      "vite": "^3.1.0"
+    }
+  },
+  {
+    "name": "starter-vite",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+      "dev": "vite --port 3000",
+      "build": "tsc && vite build",
+      "preview": "vite preview",
+      "gen": "graphql-codegen --config codegen.yml"
+    },
+    "dependencies": {
+      "axios": "^0.27.2",
+      "dayjs": "^1.11.5",
+      "graphql": "^16.6.0",
+      "graphql-request": "^5.0.0",
+      "graphql-tag": "^2.12.6",
+      "pocketbase": "^0.7.1",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-icons": "^4.4.0",
+      "react-query": "^3.39.2",
+      "react-router-dom": "^6.4.2",
+      "uniqid": "^5.4.0"
+    },
+    "devDependencies": {
+      "@graphql-codegen/cli": "2.12.1",
+      "@graphql-codegen/introspection": "2.2.1",
+      "@graphql-codegen/typescript": "^2.7.3",
+      "@graphql-codegen/typescript-operations": "^2.5.3",
+      "@graphql-codegen/typescript-react-apollo": "3.3.3",
+      "@graphql-codegen/typescript-react-query": "^4.0.1",
+      "@types/react": "^18.0.17",
+      "@types/react-dom": "^18.0.6",
+      "@types/uniqid": "^5.3.2",
+      "@vitejs/plugin-react": "^2.1.0",
+      "autoprefixer": "^10.4.10",
+      "postcss": "^8.4.16",
+      "tailwind-scrollbar": "^2.0.1",
+      "tailwindcss": "^3.1.8",
+      "typescript": "^4.6.4",
+      "vite": "^3.1.0"
+    }
+  },
+  {
+    "name": "starter-vite",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+      "relay": "yarn run relay-compiler",
+      "dev": "yarn run relay && vite ",
+      "build": "tsc && vite build",
+      "preview": "vite preview",
+      "gen": "graphql-codegen --config codegen.yml"
+    },
+    "dependencies": {
+      "@tanstack/react-location": "^3.7.4",
+      "@types/react-relay": "^14.1.1",
+      "@types/relay-runtime": "^14.1.3",
+      "axios": "^0.27.2",
+      "babel-plugin-relay": "^14.1.0",
+      "dayjs": "^1.11.5",
+      "graphql": "^16.6.0",
+      "graphql-request": "^5.0.0",
+      "graphql-tag": "^2.12.6",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-icons": "^4.4.0",
+      "react-location-devtools": "^3.3.4",
+      "react-query": "^3.39.2",
+      "react-relay": "^14.1.0",
+      "relay-compiler": "^14.1.0",
+      "relay-runtime": "^14.1.0",
+      "uniqid": "^5.4.0",
+      "vite-plugin-relay": "^2.0.0",
+      "zustand": "^4.1.1",
+      "zustand-persist": "^0.4.0"
+    },
+    "devDependencies": {
+      "@graphql-codegen/cli": "2.12.1",
+      "@graphql-codegen/introspection": "2.2.1",
+      "@graphql-codegen/typescript": "^2.7.3",
+      "@graphql-codegen/typescript-operations": "^2.5.3",
+      "@graphql-codegen/typescript-react-apollo": "3.3.3",
+      "@graphql-codegen/typescript-react-query": "^4.0.1",
+      "@types/react": "^18.0.17",
+      "@types/react-dom": "^18.0.6",
+      "@types/uniqid": "^5.3.2",
+      "@vitejs/plugin-react": "^2.1.0",
+      "autoprefixer": "^10.4.10",
+      "postcss": "^8.4.16",
+      "tailwind-scrollbar": "^2.0.1",
+      "tailwindcss": "^3.1.8",
+      "typescript": "^4.6.4",
+      "vite": "^3.1.0"
+    },
+    "relay": {
+      "src": "./src",
+      "schema": "schema.docs.graphql",
+      "language": "typescript",
+      "eagerEsModules": true,
+      "exclude": [
+        "**/node_modules/**",
+        "**/__mocks__/**",
+        "**/__generated__/**"
+      ]
+    }
+  },
+  {
+    "name": "herufi",
+    "type": "module",
+    "private": true,
+    "scripts": {
+      "dev": "rakkas --port 3000",
+      "build": "rakkas build",
+      "start": "node dist/server",
+      "format": "prettier --write --ignore-unknown src",
+      "test": "npm run test:typecheck && npm run test:format && npm run test:lint && npm run test:unit",
+      "test:typecheck": "tsc -p tsconfig.json --noEmit",
+      "test:format": "prettier --check --ignore-unknown src",
+      "test:lint": "eslint . --ignore-pattern dist",
+      "test:unit": "vitest run",
+      "bat": " rakkas build && node dist/server"
+    },
+    "devDependencies": {
+      "@rakkasjs/eslint-config": "0.6.14",
+      "@types/react": "^18.0.26",
+      "@types/react-dom": "^18.0.10",
+      "@types/react-modal": "^3.13.1",
+      "autoprefixer": "^10.4.13",
+      "eslint": "^8.32.0",
+      "postcss": "^8.4.21",
+      "prettier": "^2.8.3",
+      "rakkasjs": "0.6.14",
+      "tailwindcss": "^3.2.4",
+      "typescript": "^4.9.4",
+      "vite": "^4.0.3",
+      "vite-tsconfig-paths": "^4.0.3",
+      "vitest": "^0.27.1"
+    },
+    "dependencies": {
+      "@animxyz/react": "^0.6.7",
+      "@tanem/react-nprogress": "^5.0.26",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-icons": "^4.7.1",
+      "react-modal": "^3.16.1"
+    },
+    "prettier": {
+      "arrowParens": "avoid",
+      "bracketSpacing": true,
+      "htmlWhitespaceSensitivity": "css",
+      "insertPragma": false,
+      "jsxBracketSameLine": false,
+      "jsxSingleQuote": false,
+      "printWidth": 100,
+      "proseWrap": "preserve",
+      "quoteProps": "as-needed",
+      "requirePragma": false,
+      "semi": true,
+      "singleQuote": false,
+      "tabWidth": 4,
+      "trailingComma": "none",
+      "useTabs": false,
+      "vueIndentScriptAndStyle": false,
+      "rangeStart": 0
+    }
+  },
+  {
+    "name": "sockets-rn",
+    "version": "1.0.0",
+    "main": "node_modules/expo/AppEntry.js",
+    "scripts": {
+      "start": "expo start",
+      "android": "expo start --android",
+      "ios": "expo start --ios",
+      "web": "expo start --web",
+      "eject": "expo eject"
+    },
+    "dependencies": {
+      "@react-native-async-storage/async-storage": "^1.17.7",
+      "axios": "^0.27.2",
+      "expo": "~45.0.0",
+      "expo-status-bar": "~1.3.0",
+      "expo-updates": "~0.13.3",
+      "formik": "^2.2.9",
+      "react": "17.0.2",
+      "react-dom": "17.0.2",
+      "react-native": "0.68.2",
+      "react-native-linear-gradient": "^2.6.2",
+      "react-native-web": "0.17.7",
+      "socket.io-client": "^4.5.1",
+      "use-countdown-timer": "^1.3.2",
+      "yup": "^0.32.11",
+      "expo-linear-gradient": "~11.3.0"
+    },
+    "devDependencies": {
+      "@babel/core": "^7.12.9",
+      "@types/react": "~17.0.21",
+      "@types/react-native": "~0.66.13",
+      "typescript": "~4.3.5"
+    },
+    "private": true
+  },
+  {
+    "name": "express-typescript",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "build": "npx tsc",
+      "start": "nodemon dist/index.js",
+      "watch": "tsc -w",
+      "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "dotenv": "^16.0.1",
+      "ejs": "^3.1.8",
+      "express": "^4.18.1",
+      "firebase-admin": "^11.4.1",
+      "googleapis": "^100.0.0",
+      "ioredis": "^5.0.6",
+      "nodemailer": "^6.7.5",
+      "open": "^8.4.0",
+      "redis": "^4.1.0",
+      "server-destroy": "^1.0.1"
+    },
+    "devDependencies": {
+      "@types/express": "^4.17.13",
+      "@types/node": "^17.0.39",
+      "concurrently": "^7.2.1",
+      "nodemon": "^2.0.16",
+      "typescript": "^4.7.3"
+    }
+  },
+  {
+    "name": "web",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+      "dev": "vite --port 3000",
+      "build": "tsc && vite build",
+      "preview": "vite preview",
+      "upgrade-deps": "npm install -g npm-check-updates && ncu -u && npm install"
+    },
+    "dependencies": {
+      "@jridgewell/sourcemap-codec": "^1.4.14",
+      "@supabase/supabase-js": "^2.1.1",
+      "@tanstack/react-query": "^4.17.1",
+      "dayjs": "^1.11.6",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-hook-form": "^7.41.3",
+      "react-icons": "^4.6.0",
+      "react-modal": "^3.16.1",
+      "react-router-dom": "^6.4.3",
+      "react-select": "^5.7.0",
+      "react-to-print": "^2.14.10",
+      "react-use-keypress": "^1.3.1",
+      "react-use-measure": "^2.1.1",
+      "use-countdown-timer": "^1.3.2"
+    },
+    "devDependencies": {
+      "@tailwindcss/line-clamp": "^0.4.2",
+      "@types/inline-css": "^3.0.1",
+      "@types/react": "^18.0.24",
+      "@types/react-dom": "^18.0.8",
+      "@types/react-modal": "^3.13.1",
+      "@vitejs/plugin-react": "^2.2.0",
+      "autoprefixer": "^10.4.13",
+      "postcss": "^8.4.19",
+      "supabase": "^1.17.4",
+      "tailwind-scrollbar": "^2.0.1",
+      "tailwindcss": "^3.2.4",
+      "typescript": "^4.6.4",
+      "vite": "^3.2.3"
+    }
+  },
+  {
+    "version": "0.9.0",
+    "license": "MIT",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts",
+    "files": [
+      "dist",
+      "src"
+    ],
+    "engines": {
+      "node": ">=10"
+    },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/tigawanna/table-for-react"
+    },
+    "scripts": {
+      "start": "tsdx watch",
+      "build": "tsdx build && npm run build-tailwind",
+      "test": "tsdx test --passWithNoTests",
+      "lint": "tsdx lint",
+      "prepare": "npm run build",
+      "size": "size-limit",
+      "analyze": "size-limit --why",
+      "storybook": "start-storybook -p 6006",
+      "build-storybook": "build-storybook",
+      "build-tailwind": "npx tailwindcss -o ./dist/tailwind.css --minify"
+    },
+    "peerDependencies": {
+      "react": ">=16"
+    },
+    "husky": {
+      "hooks": {
+        "pre-commit": "tsdx lint"
+      }
+    },
+    "prettier": {
+      "printWidth": 80,
+      "semi": true,
+      "singleQuote": true,
+      "trailingComma": "es5"
+    },
+    "name": "table-for-react",
+    "author": "tigawanna",
+    "module": "dist/table-for-react.esm.js",
+    "size-limit": [
+      {
+        "path": "dist/table-for-react.cjs.production.min.js",
+        "limit": "10 KB"
+      },
+      {
+        "path": "dist/table-for-react.esm.js",
+        "limit": "10 KB"
+      }
+    ],
+    "devDependencies": {
+      "@babel/core": "^7.18.6",
+      "@size-limit/preset-small-lib": "^7.0.8",
+      "@storybook/addon-essentials": "^6.5.9",
+      "@storybook/addon-info": "^5.3.21",
+      "@storybook/addon-links": "^6.5.9",
+      "@storybook/addon-postcss": "^2.0.0",
+      "@storybook/addons": "^6.5.9",
+      "@storybook/react": "^6.5.9",
+      "@types/react": "^18.0.14",
+      "@types/react-dom": "^18.0.5",
+      "autoprefixer": "^10.4.7",
+      "babel-loader": "^8.2.5",
+      "husky": "^8.0.1",
+      "postcss": "^8.4.14",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-is": "^18.2.0",
+      "size-limit": "^7.0.8",
+      "tailwindcss": "^3.1.4",
+      "tsdx": "^0.14.1",
+      "tslib": "^2.4.0",
+      "typescript": "^4.7.4"
+    },
+    "dependencies": {
+      "dayjs": "^1.11.3",
+      "react-icons": "^4.4.0",
+      "use-countdown-timer": "^1.3.2"
+    }
+  },
+  {
+    "name": "notes-app",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+      "dev": "vite",
+      "build": "tsc && vite build",
+      "preview": "vite preview"
+    },
+    "dependencies": {
+      "@tanstack/react-query": "^4.23.0",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-router-dom": "^6.7.0"
+    },
+    "devDependencies": {
+      "@tailwindcss/line-clamp": "^0.4.2",
+      "@types/react": "^18.0.26",
+      "@types/react-dom": "^18.0.9",
+      "@vitejs/plugin-react": "^3.0.0",
+      "tailwind-scrollbar": "^2.1.0",
+      "tailwindcss-animate": "^1.0.5",
+      "typescript": "^4.9.3",
+      "vite": "^4.0.0"
+    }
+  },
+  {
+    "name": "typescript-node-express-graphql-mongo",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "watch": "tsc -w",
+      "start": "nodemon dist/index.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+      "@types/express-session": "^1.17.4",
+      "@types/mongoose": "^5.11.97",
+      "nodemon": "^2.0.15",
+      "typescript": "^4.5.4"
+    },
+    "dependencies": {
+      "@graphql-tools/schema": "^8.3.1",
+      "@typegoose/typegoose": "^9.4.0",
+      "apollo-server-express": "^3.5.0",
+      "cors": "^2.8.5",
+      "dotenv": "^16.0.1",
+      "express": "^4.17.2",
+      "express-graphql": "^0.12.0",
+      "express-session": "^1.17.2",
+      "graphql": "^15.3.0",
+      "graphql-subscriptions": "^2.0.0",
+      "http": "0.0.1-security",
+      "mongoose": "^6.1.3",
+      "mongoose-paginate-v2": "^1.4.2",
+      "subscriptions-transport-ws": "^0.11.0",
+      "type-graphql": "^1.1.1",
+      "typegoose": "^5.9.1",
+      "uuid": "^8.3.2"
+    },
+    "engines": {
+      "node": "16.x",
+      "npm": "6.x"
+    }
+  },
+  {
+    "name": "allemps",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+      "dev": "vite --port 3000",
+      "build": "tsc && vite build",
+      "preview": "vite preview"
+    },
+    "dependencies": {
+      "@supabase/supabase-js": "^2.1.1",
+      "@tanstack/react-query": "^4.17.1",
+      "dayjs": "^1.11.6",
+      "pocketbase": "^0.8.3",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-icons": "^4.6.0",
+      "react-intersection-observer": "^9.4.1",
+      "react-modal": "^3.16.1",
+      "react-router-dom": "^6.4.3",
+      "react-to-print": "^2.14.10",
+      "react-use-measure": "^2.1.1",
+      "use-countdown-timer": "^1.3.2",
+      "zustand": "^4.1.5",
+      "zustand-persist": "^0.4.0"
+    },
+    "devDependencies": {
+      "@tailwindcss/line-clamp": "^0.4.2",
+      "@tailwindcss/typography": "^0.5.8",
+      "@types/inline-css": "^3.0.1",
+      "@types/react": "^18.0.24",
+      "@types/react-dom": "^18.0.8",
+      "@types/react-modal": "^3.13.1",
+      "@vitejs/plugin-react": "^2.2.0",
+      "autoprefixer": "^10.4.13",
+      "postcss": "^8.4.19",
+      "supabase": "^1.17.4",
+      "tailwind-scrollbar": "^2.0.1",
+      "tailwind-scrollbar-hide": "^1.1.7",
+      "tailwindcss": "^3.2.4",
+      "typescript": "^4.6.4",
+      "vite": "^3.2.3"
+    }
+  },
+  {
+    "name": "all-emps-vite",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+      "dev": "vite --port 3000",
+      "build": "tsc && vite build ",
+      "preview": "vite preview"
+    },
+    "dependencies": {
+      "@tanstack/react-query": "^4.16.1",
+      "@tanstack/react-query-devtools": "^4.16.1",
+      "dayjs": "^1.11.6",
+      "pocketbase": "^0.8.0",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-icons": "^4.6.0",
+      "react-intersection-observer": "^9.4.1",
+      "react-router-dom": "^6.4.3",
+      "tailwind-scrollbar": "^2.0.1"
+    },
+    "devDependencies": {
+      "@types/react": "^18.0.17",
+      "@types/react-dom": "^18.0.6",
+      "@vitejs/plugin-react": "^2.1.0",
+      "autoprefixer": "^10.4.13",
+      "postcss": "^8.4.19",
+      "tailwindcss": "^3.2.4",
+      "typescript": "^4.6.4",
+      "vite": "^3.1.0"
+    }
+  },
+  {
+    "name": "all-emps-vite",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+      "dev": "vite --port 3000",
+      "build": "tsc && vite build ",
+      "preview": "vite preview"
+    },
+    "dependencies": {
+      "@tanstack/react-query": "^4.16.1",
+      "@tanstack/react-query-devtools": "^4.16.1",
+      "dayjs": "^1.11.6",
+      "pocketbase": "^0.8.0",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-icons": "^4.6.0",
+      "react-intersection-observer": "^9.4.1",
+      "react-router-dom": "^6.4.3",
+      "tailwind-scrollbar": "^2.0.1"
+    },
+    "devDependencies": {
+      "@types/react": "^18.0.17",
+      "@types/react-dom": "^18.0.6",
+      "@vitejs/plugin-react": "^2.1.0",
+      "autoprefixer": "^10.4.13",
+      "postcss": "^8.4.19",
+      "tailwindcss": "^3.2.4",
+      "typescript": "^4.6.4",
+      "vite": "^3.1.0"
+    }
+  },
+  {
+    "name": "all-emps-vite",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+      "dev": "vite --port 3000",
+      "build": "tsc && vite build ",
+      "preview": "vite preview"
+    },
+    "dependencies": {
+      "@tanstack/react-query": "^4.16.1",
+      "@tanstack/react-query-devtools": "^4.16.1",
+      "dayjs": "^1.11.6",
+      "pocketbase": "^0.8.0",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-icons": "^4.6.0",
+      "react-intersection-observer": "^9.4.1",
+      "react-router-dom": "^6.4.3",
+      "tailwind-scrollbar": "^2.0.1"
+    },
+    "devDependencies": {
+      "@types/react": "^18.0.17",
+      "@types/react-dom": "^18.0.6",
+      "@vitejs/plugin-react": "^2.1.0",
+      "autoprefixer": "^10.4.13",
+      "postcss": "^8.4.19",
+      "tailwindcss": "^3.2.4",
+      "typescript": "^4.6.4",
+      "vite": "^3.1.0"
+    }
+  },
+  {
+    "name": "gitcircles",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+      "dev": "next dev",
+      "build": "next build",
+      "start": "next start",
+      "lint": "next lint"
+    },
+    "dependencies": {
+      "axios": "^0.27.2",
+      "dayjs": "^1.11.5",
+      "graphql": "^16.6.0",
+      "graphql-request": "^4.3.0",
+      "graphql-tag": "^2.12.6",
+      "next": "12.2.5",
+      "react": "18.2.0",
+      "react-dom": "18.2.0",
+      "react-icons": "^4.4.0",
+      "react-query": "^3.39.2"
+    },
+    "devDependencies": {
+      "@types/node": "18.7.11",
+      "@types/react": "18.0.17",
+      "@types/react-dom": "18.0.6",
+      "autoprefixer": "^10.4.8",
+      "eslint": "8.22.0",
+      "eslint-config-next": "12.2.5",
+      "postcss": "^8.4.16",
+      "tailwind-scrollbar": "^1.3.1",
+      "tailwindcss": "^3.1.8",
+      "typescript": "4.7.4"
+    }
+  },
+  {
+    "name": "pocket-base",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+      "dev": "vite --port 3000",
+      "build": "tsc && vite build",
+      "preview": "vite preview"
+    },
+    "dependencies": {
+      "axios": "^0.27.2",
+      "cross-fetch": "^3.1.5",
+      "dayjs": "^1.11.5",
+      "eventsource": "^2.0.2",
+      "pocketbase": "^0.7.0",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-icons": "^4.4.0",
+      "react-query": "^3.39.2",
+      "react-router-dom": "^6.4.0",
+      "uniqid": "^5.4.0"
+    },
+    "devDependencies": {
+      "@types/react": "^18.0.17",
+      "@types/react-dom": "^18.0.6",
+      "@types/uniqid": "^5.3.2",
+      "@vitejs/plugin-react": "^2.1.0",
+      "autoprefixer": "^10.4.10",
+      "postcss": "^8.4.16",
+      "tailwind-scrollbar": "^2.0.1",
+      "tailwindcss": "^3.1.8",
+      "typescript": "^4.6.4",
+      "vite": "^3.1.0"
+    }
+  },
+  {
+    "name": "project-manager",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+      "dev": "vite --port 3000",
+      "build": "tsc && vite build",
+      "preview": "vite preview"
+    },
+    "dependencies": {
+      "@react-query-firebase/auth": "^1.0.0-dev.1",
+      "@react-query-firebase/firestore": "^1.0.0-dev.6",
+      "axios": "^0.27.2",
+      "dayjs": "^1.11.2",
+      "firebase": "^9.8.1",
+      "firebase-admin": "^10.2.0",
+      "firebase-functions": "^3.21.2",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-icons": "^4.3.1",
+      "react-query": "^3.39.0",
+      "react-router-dom": "^6.3.0",
+      "react-to-print": "^2.14.7",
+      "react-use-measure": "^2.1.1",
+      "table-for-react": "^0.9.0",
+      "uniqid": "^5.4.0",
+      "use-countdown-timer": "^1.3.2"
+    },
+    "devDependencies": {
+      "@types/date-fns": "^2.6.0",
+      "@types/react": "^18.0.17",
+      "@types/react-dom": "^18.0.6",
+      "@types/uniqid": "^5.3.2",
+      "@vitejs/plugin-react": "^2.1.0",
+      "autoprefixer": "^10.4.8",
+      "postcss": "^8.4.16",
+      "tailwind-scrollbar": "^1.3.2",
+      "tailwindcss": "^3.1.8",
+      "typescript": "^4.6.4",
+      "vite": "^3.1.0"
+    }
+  },
+  {
+    "name": "sockets-client",
+    "private": true,
+    "version": "0.0.0",
+    "scripts": {
+      "dev": "vite",
+      "build": "tsc && vite build",
+      "preview": "vite preview",
+      "deploy": "npm run build && git add dist -f && git commit -m'hosting'  && git subtree push --prefix dist origin gh-pages"
+    },
+    "dependencies": {
+      "axios": "^0.27.2",
+      "query-string": "^7.1.1",
+      "react": "^18.0.0",
+      "react-dom": "^18.0.0",
+      "react-icons": "^4.4.0",
+      "react-router-dom": "^6.3.0",
+      "socket.io-client": "^4.5.1"
+    },
+    "devDependencies": {
+      "@types/react": "^18.0.0",
+      "@types/react-dom": "^18.0.0",
+      "@vitejs/plugin-react": "^1.3.0",
+      "autoprefixer": "^10.4.7",
+      "gh-pages": "^4.0.0",
+      "postcss": "^8.4.14",
+      "tailwind-scrollbar": "^1.3.1",
+      "tailwindcss": "^3.1.6",
+      "typescript": "^4.6.3",
+      "vite": "^2.9.9"
+    }
+  },
+  {
+    "name": "edit-table-ts",
+    "version": "0.1.0",
+    "homepage": "https://tigawanna.github.io/table-for-react-example",
+    "private": true,
+    "dependencies": {
+      "@testing-library/jest-dom": "^5.16.4",
+      "@testing-library/react": "^13.3.0",
+      "@testing-library/user-event": "^13.5.0",
+      "@types/jest": "^27.5.2",
+      "@types/node": "^16.11.42",
+      "@types/react": "^18.0.14",
+      "@types/react-dom": "^18.0.5",
+      "dayjs": "^1.11.3",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-icons": "^4.4.0",
+      "react-scripts": "5.0.1",
+      "table-for-react": "^0.10.0",
+      "typescript": "^4.7.4",
+      "use-countdown-timer": "^1.3.2",
+      "web-vitals": "^2.1.4"
+    },
+    "scripts": {
+      "start": "react-scripts start",
+      "build": "react-scripts build",
+      "test": "react-scripts test",
+      "eject": "react-scripts eject",
+      "predeploy": "npm run build",
+      "deploy": "gh-pages -d build"
+    },
+    "eslintConfig": {
+      "extends": [
+        "react-app",
+        "react-app/jest"
+      ]
+    },
+    "browserslist": {
+      "production": [
+        ">0.2%",
+        "not dead",
+        "not op_mini all"
+      ],
+      "development": [
+        "last 1 chrome version",
+        "last 1 firefox version",
+        "last 1 safari version"
+      ]
+    },
+    "devDependencies": {
+      "autoprefixer": "^10.4.7",
+      "gh-pages": "^4.0.0",
+      "postcss": "^8.4.14",
+      "tailwindcss": "^3.1.4"
+    }
+  },
+  {
+    "name": "project-manager",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+      "dev": "vite --port 3000",
+      "build": "tsc && vite build",
+      "preview": "vite preview",
+      "deploy": "npm run build && firebase deploy"
+    },
+    "dependencies": {
+      "@react-query-firebase/auth": "^1.0.0-dev.1",
+      "@react-query-firebase/firestore": "^1.0.0-dev.6",
+      "@tanstack/react-query": "^4.13.0",
+      "@tanstack/react-query-devtools": "^4.13.0",
+      "@tanstack/react-table": "^8.5.15",
+      "axios": "^0.27.2",
+      "dayjs": "^1.11.5",
+      "firebase-admin": "^11.4.1",
+      "firebase-functions": "^3.21.2",
+      "pocketbase": "^0.7.4",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-icons": "^4.3.1",
+      "react-router-dom": "^6.3.0",
+      "react-to-print": "^2.14.7",
+      "react-use-measure": "^2.1.1",
+      "table-for-react": "^0.9.0",
+      "uniqid": "^5.4.0",
+      "use-countdown-timer": "^1.3.2"
+    },
+    "devDependencies": {
+      "@types/date-fns": "^2.6.0",
+      "@types/react": "^18.0.17",
+      "@types/react-dom": "^18.0.6",
+      "@types/uniqid": "^5.3.2",
+      "@vitejs/plugin-react": "^2.1.0",
+      "autoprefixer": "^10.4.8",
+      "postcss": "^8.4.16",
+      "tailwind-scrollbar": "^1.3.2",
+      "tailwindcss": "^3.1.8",
+      "typescript": "^4.6.4",
+      "vite": "^3.1.0"
+    }
+  },
+  {
+    "name": "project-manager",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+      "dev": "vite --port 3000",
+      "build": "tsc && vite build",
+      "preview": "vite preview",
+      "deploy": "npm run build && firebase deploy"
+    },
+    "dependencies": {
+      "@react-query-firebase/auth": "^1.0.0-dev.1",
+      "@react-query-firebase/firestore": "^1.0.0-dev.6",
+      "axios": "^0.27.2",
+      "dayjs": "^1.11.2",
+      "firebase": "^9.8.1",
+      "firebase-admin": "^11.4.1",
+      "firebase-functions": "^3.21.2",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-icons": "^4.3.1",
+      "react-query": "^3.39.0",
+      "react-router-dom": "^6.3.0",
+      "react-to-print": "^2.14.7",
+      "react-use-measure": "^2.1.1",
+      "table-for-react": "^0.9.0",
+      "uniqid": "^5.4.0",
+      "use-countdown-timer": "^1.3.2"
+    },
+    "devDependencies": {
+      "@types/date-fns": "^2.6.0",
+      "@types/react": "^18.0.17",
+      "@types/react-dom": "^18.0.6",
+      "@types/uniqid": "^5.3.2",
+      "@vitejs/plugin-react": "^2.1.0",
+      "autoprefixer": "^10.4.8",
+      "postcss": "^8.4.16",
+      "tailwind-scrollbar": "^1.3.2",
+      "tailwindcss": "^3.1.8",
+      "typescript": "^4.6.4",
+      "vite": "^3.1.0"
+    }
+  },
+  {
+    "name": "pkgs",
+    "version": "0.0.1",
+    "main": "build/index.js",
+    "module": "build/index.esm.js",
+    "files": [
+      "build"
+    ],
+    "types": "build/index.d.ts",
+    "description": "A skeleton to create your own React component library using Rollup,  TypeScript, tailwind and ladle",
+    "scripts": {
+      "build": "rollup -c",
+      "test": "jest",
+      "test:watch": "jest --watch",
+      "generate": "node ./util/create-component",
+      "prepublishOnly": "npm run build",
+      "story-dev": "ladle serve --port 4123",
+      "story-build": "ladle build"
+    },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/tigawanna/react-component-library-builder.git"
+    },
+    "keywords": [
+      "React",
+      "Component",
+      "Library",
+      "Rollup",
+      "Typescript",
+      "Tailwind",
+      "Ladle"
+    ],
+    "author": "tigawanna",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/tigawanna/react-component-library-builder.git/issues"
+    },
+    "homepage": "https://github.com/tigawanna/react-component-library-builder.git#readme",
+    "peerDependencies": {
+      "react": ">=16.8.0",
+      "react-dom": ">=16.8.0",
+      "@types/react-dom": "^16.9.14"
+    },
+    "devDependencies": {
+      "@babel/core": "^7.15.0",
+      "@ladle/react": "^2.4.5",
+      "@rollup/plugin-commonjs": "^17.1.0",
+      "@rollup/plugin-multi-entry": "^6.0.0",
+      "@rollup/plugin-node-resolve": "^11.2.1",
+      "@testing-library/jest-dom": "^5.14.1",
+      "@testing-library/react": "^11.2.7",
+      "@types/jest": "^24.9.1",
+      "@types/react": "^16.14.14",
+      "@types/react-dom": "^16.9.14",
+      "autoprefixer": "^10.4.13",
+      "babel-loader": "^8.2.2",
+      "babel-preset-react-app": "^10.0.0",
+      "colors": "^1.4.0",
+      "identity-obj-proxy": "^3.0.0",
+      "jest": "^26.6.3",
+      "react": "^16.14.0",
+      "react-dom": "^16.14.0",
+      "rollup": "^2.56.3",
+      "rollup-plugin-copy": "^3.4.0",
+      "rollup-plugin-peer-deps-external": "^2.2.4",
+      "rollup-plugin-postcss": "^4.0.2",
+      "rollup-plugin-typescript2": "^0.29.0",
+      "tailwind-scrollbar": "^2.0.1",
+      "tailwindcss": "^3.2.4",
+      "ts-jest": "^26.5.6",
+      "typescript": "^4.8.4"
+    },
+    "dependencies": {
+      "color": "^4.2.3",
+      "colors": "^1.4.0"
+    }
+  },
+  {
+    "name": "saucy-boi",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "build": "npx tsc",
+      "start": "nodemon dist/index.js",
+      "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "dotenv": "^16.0.3",
+      "ejs": "^3.1.8",
+      "express": "^4.18.1",
+      "node-fetch": "^2.6.7",
+      "random-name": "^0.1.2"
+    },
+    "devDependencies": {
+      "@types/express": "^4.17.13",
+      "@types/node": "^17.0.39",
+      "@types/node-fetch": "^2.6.2",
+      "concurrently": "^7.2.1",
+      "nodemon": "^2.0.16",
+      "typescript": "^4.7.3"
+    }
+  },
+  {
+    "name": "express-typescript",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "build": "npx tsc",
+      "start": "nodemon dist/index.js",
+      "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "dotenv": "^16.0.3",
+      "express": "^4.18.1"
+    },
+    "devDependencies": {
+      "@types/express": "^4.17.13",
+      "@types/node": "^17.0.39",
+      "concurrently": "^7.2.1",
+      "nodemon": "^2.0.16",
+      "typescript": "^4.7.3"
+    }
+  }
+]
