@@ -17,9 +17,29 @@ import { json } from "@hattip/response";
 import { savePackageJsonsToRepo } from "../../../state/user-tools/user-packages";
 
 export async function get(ctx:RequestContext) {
-// const { searchParams } = new URL(ctx.request.url);
+const { searchParams } = new URL(ctx.request.url);
+const owner = searchParams.get("owner");
+const repo = searchParams.get("repo");
+const path = searchParams.get("path");
+const message = searchParams.get("message");
 
-const res = await savePackageJsonsToRepo({})
+
+if(!owner || !repo || !path || !message){
+	if(!owner){
+		throw new Error("missing params");
+	}
+	if(!repo){
+		throw new Error("missing params");
+	}
+	if(!path){
+		throw new Error("missing params");
+	}
+	if(!message){
+	throw new Error("missing params");
+}
+}
+
+const res = await savePackageJsonsToRepo({owner,repo,message,path})
 
 // const body = ctx.request
 

@@ -95,24 +95,44 @@ export async function getAllReposPkgJson() {
 
 
 interface ISavePackageJsonsToRepo {
-    owner?: string;
-    repo?: string;
-    path?: string;
-    message?: string;
+    owner: string;
+    repo: string;
+    path: string;
+    message: string;
 
 }
 
-export async function savePackageJsonsToRepo({
-    owner="tigawanna",
-    repo="tigawanna",
-    path = "user_packages.json",
-    message = "update user_packages.json list"
-}: ISavePackageJsonsToRepo) {
+interface IGetSha{
+    owner: string;
+    repo: string;
+    path: string;
+}
 
+export async function getfileSha({owner,repo,path,}:IGetSha){
+  return  fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`)
+        .then(response => response.json())
+        .then(data => {
+            const sha = data.sha
+            return sha
+        }).catch(error => {
+            console.log("error getting file sha", error)
+            throw error
+        })
+}
+
+export async function savePackageJsonsToRepo({owner,repo,path,message}: ISavePackageJsonsToRepo) {
+
+  const sha = await getfileSha({ owner, repo, path })
   const user_pkgjsons = await getAllReposPkgJson()
-  const content = JSON.stringify(user_pkgjsons);
+  const pkg_jsons_to_save = user_pkgjsons?.map((pkgjson) => {
+        // @ts-expect-error
+        return pkgjson.value
+    }) 
 
-   return fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+
+const content = JSON.stringify(pkg_jsons_to_save, null, 2);
+
+return fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
         method: 'PUT',
         headers: {
             'Accept': 'application/vnd.github+json',
@@ -122,7 +142,8 @@ export async function savePackageJsonsToRepo({
         },
         body: JSON.stringify({
             message,
-            content: Buffer.from(content).toString('base64')
+            content: Buffer.from(content).toString('base64'),
+            sha
         })
     })
         .then(response => response.json())
