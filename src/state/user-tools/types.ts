@@ -57,12 +57,38 @@ export type KeyStringObject={[key: string]: string}
 
 export interface RequiredDecodedPackageJson {
     name: string
-    private: boolean
+    private?: boolean
     version: string
-    type: string
+    type?: string
     scripts:KeyStringObject
     dependencies:KeyStringObject
     devDependencies: KeyStringObject
+    [key: string]: any | undefined;
+
 }
 
 export type DecodedPackageJson = (RequiredDecodedPackageJson & {})|BadDataGitHubError
+export type DecodedPackageJsonList = (RequiredDecodedPackageJson)
+
+
+export type DepsComBo = "React + Vite" | "React" | "Vite" | "Rakkasjs" | "Nextjs" 
+
+export interface Packageinfo {
+    name: string;
+    version: string;
+    type?: string;
+    scripts: Record<string, string> | undefined;
+    dependencies: Record<string, string> | undefined;
+    devDependencies: Record<string, string> | undefined;
+}
+
+
+export interface TPkgObjValue{
+    name: string;
+    dependencies: string[]
+    devDependencies:string[]
+    count:number;
+} 
+
+export type TPkgObjs = { [key in DepsComBo]: TPkgObjValue }
+

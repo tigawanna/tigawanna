@@ -3,6 +3,7 @@ import { ErrorOutput } from "../shared/ErrorOutput";
 import { ProgressBar } from "./ProgressBar";
 import { getViewerLangs,ViewerLang } from "../util/gql";
 import { getMostFrequentLanguages } from "../util/helper";
+import { groupPackages } from "../state/user-tools/pkgs";
 
 
 interface TechDetailsProps {
@@ -15,10 +16,10 @@ export function TechDetails({}:TechDetailsProps){
 //         return getViewerLangs()
 //     },
 //     {
-        
+
 //     }
 //     )
-    
+
 
 //     console.log("data==== ", data)
 
@@ -30,10 +31,10 @@ export function TechDetails({}:TechDetailsProps){
 
 // const language_percentages = getMostFrequentLanguages(data.data.viewer.repositories)
 
-
+// groupPackages()
 
 return (
- <div className='w-full h-full flex flex-col items-center justify-center'>
+<div className='w-full h-full flex flex-col items-center justify-center'>
 {/* <div className='w-full h-full flex flex-wrap items-center justify-center gap-2'>
 <h3 className="w-full pl-10 text-lg text-green-300  ">Most used languages in my Github projects</h3>
 {

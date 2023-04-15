@@ -3,8 +3,8 @@ import About from "../components/about";
 import { AboutLinks } from "../components/AboutLinks";
 import Intro from "../components/intro";
 import Projects from "../components/projects";
-import { TechDetails } from "../components/TechDetails";
-import { getAllReposPkgJson, getRepoPackageJson } from "../state/user-tools/user-packages";
+import { Libraries } from "../components/technoligies/Libraries";
+
 
 
 
@@ -19,7 +19,8 @@ export default function HomePage() {
 	// console.log("package.json  data ==== ", data)
 
 	
-
+	// groupPackages()
+	
 	return (
 		<main>
 			<Head title="Dennis Kinuthia"/>
@@ -28,8 +29,8 @@ export default function HomePage() {
 			">
 				<Intro />
 				<AboutLinks/>
-				<TechDetails/>
 				<About />
+				<Libraries/>
 				<Projects />
 			</main>
 		</main>
