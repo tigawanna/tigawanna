@@ -131,7 +131,15 @@ export async function queryProjectsByCondition(
     }, []);
 }
 
+const deps_list = [
+    "tailwindcss","typescript","react-router-dom","react-query","react-icons","firebase",
+    "dayjs","axios","socket.io","pocketbase","@testing-library","react-to-print","@tanstack",
+    "rollup","express","graphql","jest","vitest"
+]
 
+export function filterNoteWortyDependancies(){
+ 
+}
 
 
 export async function queryProjectByCondition(
@@ -173,6 +181,12 @@ export async function queryProjectByCondition(
             dependencies:[],
             devDependencies:[],
             count:0
+        },
+        Nodejs: {
+            name: "nodejs",
+            dependencies: [],
+            devDependencies: [],
+            count: 0
         }
     }
 
@@ -226,6 +240,11 @@ export async function getGroupedPackages(combo: DepsComBo) {
             }
             if (combo === "Nextjs" && pkg.dependencies?.next) {
                 return { combo, condition: true }
+            }
+               if (combo === "Nodejs" && 
+               (pkg.devDependencies?.nodemon || pkg.dependencies?.nodemon || pkg.dependancies?.express
+                || pkg.devDependencies['@types/node'])) {
+              return { combo, condition: true }
             }
             return { combo, condition: false }
     }

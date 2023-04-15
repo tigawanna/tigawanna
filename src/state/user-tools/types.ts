@@ -71,7 +71,7 @@ export type DecodedPackageJson = (RequiredDecodedPackageJson & {})|BadDataGitHub
 export type DecodedPackageJsonList = (RequiredDecodedPackageJson)
 
 
-export type DepsComBo = "React + Vite" | "React" | "Vite" | "Rakkasjs" | "Nextjs" 
+export type DepsComBo = "React + Vite" | "React" | "Vite" | "Rakkasjs" | "Nextjs" |"Nodejs"
 
 export interface Packageinfo {
     name: string;
