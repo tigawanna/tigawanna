@@ -1,6 +1,7 @@
 import tools from '../tools.json' 
 import PKGJSONS from '../../../user_packages.json' 
 import { DepsComBo, Packageinfo, RequiredDecodedPackageJson, TPkgObjs, TPkgObjValue } from './types'
+import { ISubDeps, subDepsArr, subDepsIcons } from './subdeps'
 
 
 export function sanitizePackageNames(){
@@ -34,111 +35,43 @@ function countPackages(arr: string[]):PackageCount  {
 
 
 
-
-
-export async function queryBuilder(pkgsjson: RequiredDecodedPackageJson[]){
-
-function depsToArray(dependacies:{[key:string]:string}){
-   return Object.keys((dependacies)).map((key)=>{
-    return key.split('^')[0]
-    })
+interface INoteWortyDependancies {
+    pkg: RequiredDecodedPackageJson
+    notable_deps_set: Set<string>
 }
 
-    type TPkg_json_obj = {
-        [key: string]: {
-            name: string,
-            dependencies: string[],
-            devDependencies: string[],
-            count: number
+export function filterNoteWortyDependancies({pkg,notable_deps_set}:INoteWortyDependancies){
+    const notable_deps:string[]=[]  
+    // const notable_deps_set = new Set<string>()
+
+
+
+    if (pkg.dependencies && notable_deps_set.size < subDepsArr.length){
+    Object.keys(pkg.dependencies).map((key)=>{
+        subDepsArr.map((sub)=>{
+
+        if (key && key === sub ){
+            // notable_deps.push(key.split('^')[0])
+            notable_deps_set.add(key.split('^')[0])
         }
+        })
+    })
+    }
+    if (pkg.devDependencies && notable_deps_set.size < subDepsArr.length) {
+        Object.keys(pkg.devDependencies).map((key) => {
+            subDepsArr.map((sub) => {
+                if (key && key === sub ) {
+                    // notable_deps.push(key.split('^')[0])
+                    notable_deps_set.add(key.split('^')[0])
+                }
+            })
+        })
     }
 
-    const pkg_json_obj: TPkg_json_obj = {}
-
-    pkgsjson.map((pkg) => {
-
-        if (pkg.devDependencies?.rakkas ) {
-            const existingDeps = pkg_json_obj["rakkas"]?.dependencies ?? [];
-            const existingDevDeps = pkg_json_obj["rakkas"]?.devDependencies ?? [];
-
-            pkg_json_obj["rakkas"] = {
-                name: pkg.name,
-                dependencies: [...existingDeps, ...depsToArray(pkg.dependencies)],
-                devDependencies: [...existingDevDeps, ...depsToArray(pkg.devDependencies)],
-                count: (pkg_json_obj["rakkas"]?.count ?? 0) + 1
-            }
-            return
-        }
-
-        if (pkg.devDependencies?.vite && pkg.dependencies["@vitejs/plugin-react"]) {
-            const existingDeps = pkg_json_obj["react+vite"]?.dependencies ?? [];
-            const existingDevDeps = pkg_json_obj["react+vite"]?.devDependencies ?? [];
-            pkg_json_obj["react+vite"] = {
-                name: pkg.name,
-                dependencies: [...existingDeps, ...depsToArray(pkg.dependencies)],
-                devDependencies: [...existingDevDeps, ...depsToArray(pkg.devDependencies)],
-                count: (pkg_json_obj["react+vite"]?.count ?? 0) + 1
-            }
-            return
-        }
-
-        if (pkg.dependencies?.react){
-            const existingDeps = pkg_json_obj["react"]?.dependencies ?? [];
-            const existingDevDeps = pkg_json_obj["react"]?.devDependencies ?? [];
-            pkg_json_obj["react"] = {
-                name: pkg.name,
-                dependencies: [...existingDeps, ...depsToArray(pkg.dependencies)],
-                devDependencies: [...existingDevDeps, ...depsToArray(pkg.devDependencies)],
-                count: (pkg_json_obj["react"]?.count ?? 0) + 1
-            }
-            return
-        }
-
-        if (pkg.devDependencies?.vite) {
-            const existingDeps = pkg_json_obj["vite"]?.dependencies ?? [];
-            const existingDevDeps = pkg_json_obj["vite"]?.devDependencies ?? [];
-            pkg_json_obj["vite"] = {
-                name: pkg.name,
-                dependencies: [...existingDeps, ...depsToArray(pkg.dependencies)],
-                devDependencies: [...existingDevDeps, ...depsToArray(pkg.devDependencies)],
-                 count: (pkg_json_obj["vite"]?.count ?? 0) + 1
-            }
-            return
-        }
-    })
-  return pkg_json_obj
-}
+    return notable_deps_set
 
 
 
-
-export async function queryProjectsByCondition(
-    filterCondition: (pkg: RequiredDecodedPackageJson) => { condition: boolean, combo: DepsComBo },
-    pkgsjson: RequiredDecodedPackageJson[])
-    : Promise<Packageinfo[]> {
-    return pkgsjson.reduce((acc: Packageinfo[], pkg: RequiredDecodedPackageJson) => {
-        if (filterCondition(pkg).condition) {
-            acc.push({
-                name: pkg.name,
-                version: pkg.version,
-                type: pkg.type,
-                scripts: pkg.scripts,
-                dependencies: pkg.dependencies,
-                devDependencies: pkg.devDependencies
-            });
-        }
-        return acc;
-    }, []);
-}
-
-const deps_list = [
-    "tailwindcss","typescript","react-router-dom","react-query","react-icons","firebase",
-    "dayjs","axios","socket.io","pocketbase","@testing-library","react-to-print","@tanstack",
-    "rollup","express","graphql","jest","vitest"
-]
-
-export function filterNoteWortyDependancies(){
- 
 }
 
 
@@ -153,39 +86,39 @@ export async function queryProjectByCondition(
     const newObj:TPkgObjs={
         "React + Vite":{
             name:"react+vite",
-            dependencies:[],
-            devDependencies:[],
+            dependencies:new Set<string>(),
+            // devDependencies:[],
             count:0
 
         },
         React:{
             name:"react",
-            dependencies:[],
-            devDependencies:[],
+            dependencies:new Set<string>(),
+            // devDependencies:[],
             count:0
         },
         Vite:{
             name:"vite",
-            dependencies:[],
-            devDependencies:[],
+            dependencies:new Set<string>(),
+            // devDependencies:[],
             count:0
         },
         Rakkasjs:{
             name:"rakkasjs",
-            dependencies:[],
-            devDependencies:[],
+            dependencies:new Set<string>(),
+            // devDependencies:[],
             count:0
         },
         Nextjs:{
             name:"nextjs",
-            dependencies:[],
-            devDependencies:[],
+            dependencies:new Set<string>(),
+            // devDependencies:[],
             count:0
         },
         Nodejs: {
             name: "nodejs",
-            dependencies: [],
-            devDependencies: [],
+            dependencies: new Set<string>(),
+            // devDependencies: [],
             count: 0
         }
     }
@@ -193,12 +126,12 @@ export async function queryProjectByCondition(
     pkgsjson.map((pkg) => {
         const {combo,condition} = filterCondition(pkg)
         // console.log("combo  === ", combo)
-        function updateDeps( deps_key: "dependencies" |"devDependencies"){
+        function updateDeps(){
             // console.log("dependancies  === ", newObj[combo])
-            if (newObj[combo][deps_key]){
-                return newObj[combo][deps_key].concat(Object.keys(pkg[deps_key]).map((key) => key.split('^')[0]))
+            if (newObj[combo].dependencies){
+                return filterNoteWortyDependancies({pkg,notable_deps_set:new Set(newObj[combo].dependencies)})
             }
-            return []
+            return new Set<string>()
             
         }
 
@@ -207,8 +140,8 @@ export async function queryProjectByCondition(
             newObj[combo] = {
                 name:combo,
                 count: (newObj[combo]?.count ?? 0) + 1,
-                dependencies: updateDeps("dependencies"),
-                devDependencies: updateDeps("devDependencies")
+                dependencies: updateDeps(),
+                // devDependencies: updateDeps("devDependencies")
             }
             
         }
@@ -242,8 +175,7 @@ export async function getGroupedPackages(combo: DepsComBo) {
                 return { combo, condition: true }
             }
                if (combo === "Nodejs" && 
-               (pkg.devDependencies?.nodemon || pkg.dependencies?.nodemon || pkg.dependancies?.express
-                || pkg.devDependencies['@types/node'])) {
+               (pkg.devDependencies?.nodemon || pkg.dependencies?.nodemon || pkg.dependancies?.express)) {
               return { combo, condition: true }
             }
             return { combo, condition: false }

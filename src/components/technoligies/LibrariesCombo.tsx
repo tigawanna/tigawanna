@@ -13,15 +13,17 @@ export function LibrariesCombo({lib_combo}:LibrariesComboProps){
     },{
         key:lib_combo
     })
+    // console.log("lib combo",lib_combo);
+    // console.log("lib combo data", data[lib_combo]);
 return (
- <div className='w-full h-full flex flex-col items-center justify-center 
-    rounded-lg border-4 border-green-400 p-5 '>
-    <div className="w-full h-full flex flex-col items-center justify-center">
-        <h2 className="font-bold">{lib_combo}</h2>
-        <h2 className="text-xl font-bold rounded-full border">{data[lib_combo]?.count}</h2>
+ <div className=' min-h-[200px] md:max-w-[40%] flex flex-col items-center justify-evenly
+    rounded-lg border border-green-400 shadow-md shadow-green-700  p-2 font-serif'>
+    <div className="h-full flex items-center justify-center gap-1">
+        <h2 className="text-lg font-bold text-center ">{data[lib_combo]?.count} </h2>
+        <h2 className="text-xl text-center font-bold">{lib_combo} projects</h2>
     </div>
+     
     <SubDependancies sub_deps={data[lib_combo].dependencies}/>
-    <SubDependancies sub_deps={data[lib_combo].devDependencies}/>
- </div>
+</div>
 );
 }

@@ -2,6 +2,7 @@ import React from 'react'
 import {  metext,frontend,backend } from '../util/aboututils';
 import Icons from './Icons' 
 import { Link } from 'rakkasjs';
+import { Libraries } from './technoligies/Libraries';
 
 
 interface introProps {
@@ -49,7 +50,7 @@ interface introProps {
 
               </div>
      
-          <ul className="p-5  flex flex-col border shadow shadow-slate-400 rounded-lg ">
+          {/* <ul className="p-5  flex flex-col border shadow shadow-slate-400 rounded-lg ">
                 <div className="text-3xl md:text-4xl text-slate-400 font-bold ">
                   Ethos
                 </div>
@@ -63,7 +64,7 @@ interface introProps {
            })
          }
     
-        </ul>
+        </ul> */}
 
       </div>
 
@@ -72,52 +73,13 @@ interface introProps {
 
      </div>
 
-    <div className="flex-center w-[90%] gap-2 flex-col md:flex-row justify-evenly ">
-
-    <div className=" h-full w-full flex flex-col  justify-evenly 
-    hover:shadow-lg p-4 border shadow shadow-slate-400 rounded-lg prose-sm"> 
-
-      <div  className="text-2xl md:text-4xl text-slate-400 font-bold">
-          Frontend
-          </div>
-          <ul  className="flex flex-wrap">
-         {
-           frontend.map((item,index)=>{
-             return(
-               <li key={index}
-               className="text-sm border border-green-500  text-slate-50 m-1 p-1 
-               rounded-lg">{item}</li>
-             )
-           })
-         }
-
-        </ul>
-      </div>
-
-      <div className="h-full w-full flex flex-col  
-       hover:shadow-lg p-4 border shadow shadow-slate-400 rounded-lg prose-sm
-      ">
-        <div  className="h-full text-2xl md:text-4xl text-slate-400 font-bold">
-          Backend 
-          </div>
-          <ul  className="flex flex-wrap mt-[5%]">
-         {
-           backend.map((item,index)=>{
-             return(
-               <li key={index}
-               className="text-sm  border border-green-500  text-slate-50 m-1 p-1 
-               rounded-lg"> {item}</li>
-             )
-           })
-         }
-
-        </ul>
-     </div>
-
-    </div>
 
     </div>
     <Icons/>
+        <div className="ml-10 text-3xl md:text-4xl text-slate-400 font-bold ">
+          Github Projects Breakdown
+        </div>
+    <Libraries/>
     </div> 
         );
 }

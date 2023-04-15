@@ -1,22 +1,28 @@
-import { IconContext, IconType } from "react-icons";
-import { SiTailwindcss } from "react-icons/si";
-import { SubDeps } from "./SubDeps";
+import { IconContext } from "react-icons";
+import { subDepsIcons } from "../../state/user-tools/subdeps";
+
 
 interface SubDependanciesProps {
-    sub_deps: string[]
+    sub_deps: Set<string>
 }
 
 export function SubDependancies({sub_deps}:SubDependanciesProps){
-
-  
+const sub_deps_arr = Array.from(sub_deps);
+//   console.log("sub_deps", sub_deps);
 return (
- <div className='w-full h-full flex items-center justify-center'>
-    <IconContext.Provider value={{ size: "40px", color: "#7CFC00", className: "m-2" }} >
-    <SpecificSubDeps Icon={SiTailwindcss} sub_dep="tailwindcss" sub_deps={sub_deps} />
-    {sub_deps.slice(0,10).map((sub_dep)=>{
-        return <SubDeps sub_dep={sub_dep}/>
-    })}
-    \</IconContext.Provider>
+ <div className='w-full h-full flex flex-wrap items-center justify-center gap-1 '>
+
+    <IconContext.Provider value={{ size: "20px", color: "#7CFC00"}} >
+        <div className='w-full h-full flex flex-wrap items-center justify-center gap-1'>
+            
+        {
+            sub_deps_arr.map((sub_dep)=>{
+                return <SpecificSubDeps sub_dep={sub_dep} sub_deps={sub_deps_arr} />
+            })
+        }
+        </div>
+
+    </IconContext.Provider>
  </div>
 );
 }
@@ -24,18 +30,19 @@ return (
 
 interface ISpecificSubDeps{
     sub_dep: string;
-     sub_deps: string[];
-      Icon: IconType
+    sub_deps: string[];
+    
 }
 
-function SpecificSubDeps({sub_dep, sub_deps, Icon}:ISpecificSubDeps){
-    if (sub_deps.includes(sub_dep)) {
+function SpecificSubDeps({sub_dep, sub_deps}:ISpecificSubDeps){
+    // @ts-ignore
+  const Icon = subDepsIcons[sub_dep].icon;
         return (
-        <div className="flex gap-1 items-center justify-center 
-         border-2 border-green-400 rounded-lg text-base">
+    <div className="flex gap-1 items-center justify-center 
+         border-2 border-green-400 rounded-lg text-lg">
         <Icon/>
         <div>{sub_dep}</div>
-        </div>)
-    }
-    return null
+    </div>)
+    
+ 
 }

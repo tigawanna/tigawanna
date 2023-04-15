@@ -85,8 +85,8 @@ export interface Packageinfo {
 
 export interface TPkgObjValue{
     name: string;
-    dependencies: string[]
-    devDependencies:string[]
+    dependencies:Set<string>
+    // devDependencies:string[]
     count:number;
 } 
 
