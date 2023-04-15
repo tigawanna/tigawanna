@@ -4,8 +4,8 @@ import { AboutLinks } from "../components/AboutLinks";
 import Intro from "../components/intro";
 import Projects from "../components/projects";
 import { TechDetails } from "../components/TechDetails";
-import { ErrorOutput } from "../shared/ErrorOutput";
-import { getAllReposPkgJson, getPackgeJson, sanitizePackageNames } from "../util/getPackge";
+import { getAllReposPkgJson, getRepoPackageJson } from "../state/user-tools/user-packages";
+
 
 
 
@@ -19,11 +19,7 @@ export default function HomePage() {
 	// console.log("package.json  data ==== ", data)
 
 	
-	// if (data?.message && data?.documentation_url) {
-	// 	return <ErrorOutput error={data}/>
-	// }
 
-sanitizePackageNames()
 	return (
 		<main>
 			<Head title="Dennis Kinuthia"/>
