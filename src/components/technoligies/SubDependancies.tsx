@@ -16,8 +16,8 @@ return (
         <div className='w-full h-full flex flex-wrap items-center justify-center gap-1'>
             
         {
-            sub_deps_arr.map((sub_dep)=>{
-                return <SpecificSubDeps sub_dep={sub_dep} sub_deps={sub_deps_arr} />
+            sub_deps_arr.map((sub_dep,idx)=>{
+                return <SpecificSubDeps key={idx} sub_dep={sub_dep} sub_deps={sub_deps_arr}/>
             })
         }
         </div>

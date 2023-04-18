@@ -26,23 +26,24 @@ const message = searchParams.get("message");
 
 if(!owner || !repo || !path || !message){
 	if(!owner){
-		throw new Error("missing params");
+		console.log("missing owner params");
+		return json(new Error("missing owner params"));
 	}
 	if(!repo){
-		throw new Error("missing params");
+		console.log("missing repo params");
+		return json(new Error("missing repo params"));
 	}
 	if(!path){
-		throw new Error("missing params");
+		console.log("missing path params");
+		return json(new Error("missing path params"));
 	}
 	if(!message){
-	throw new Error("missing params");
+		console.log("missing message params");
+		return json(new Error("missing message params"));
 }
 }
 
 const res = await savePackageJsonsToRepo({owner,repo,message,path})
-
-// const body = ctx.request
-
 return json({res});
 
 

@@ -67,7 +67,10 @@ export interface RequiredDecodedPackageJson {
 
 }
 
-export type DecodedPackageJson = (RequiredDecodedPackageJson & {})|BadDataGitHubError
+export type DecodedPackageJson = (RequiredDecodedPackageJson & {
+    alldeps?:string[],
+    pkg_type?:TPkgType
+})|BadDataGitHubError
 export type DecodedPackageJsonList = (RequiredDecodedPackageJson)
 
 
@@ -92,3 +95,4 @@ export interface TPkgObjValue{
 
 export type TPkgObjs = { [key in DepsComBo]: TPkgObjValue }
 
+export type TPkgType = "React+Vite" | "React+Relay" | "Rakkasjs" | "Nextjs" | "Nodejs" | "Others"

@@ -152,6 +152,10 @@ export async function queryProjectByCondition(
 
 }
 
+
+
+
+
 export async function getGroupedPackages(combo: DepsComBo) {
     const pkgsjson = PKGJSONS as any as RequiredDecodedPackageJson[]
     
@@ -180,10 +184,12 @@ export async function getGroupedPackages(combo: DepsComBo) {
             }
             return { combo, condition: false }
     }
+
+
 // console.log(pkgsjson)
     return queryProjectByCondition(filterCondition,pkgsjson)
     .then(res=>{
-        console.log("result === ",res)
+        // console.log("result === ",res)
         return res
 
     })

@@ -3,7 +3,7 @@ import { ErrorOutput } from "../shared/ErrorOutput";
 import { ProgressBar } from "./ProgressBar";
 import { getViewerLangs,ViewerLang } from "../util/gql";
 import { getMostFrequentLanguages } from "../util/helper";
-import { groupPackages } from "../state/user-tools/pkgs";
+
 
 
 interface TechDetailsProps {

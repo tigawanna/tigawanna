@@ -22,7 +22,7 @@ import {
 
 
 
-// export const subDepsIcons = {
+
 //     tailwindcss: SiTailwindcss,
 //     typescript: SiTypescript,
 //     "react-router-dom": SiReactrouter,

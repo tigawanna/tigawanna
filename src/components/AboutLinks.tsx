@@ -14,6 +14,7 @@ return (
             <div className='flex items-center gap-1 md:text-xl text-green-300'>
                 <img
                     src={GitHubImage}
+                    alt="GitHub"
                     height="50px"
                     width="50px"
                     className='rounded-full w-10 aspect-square' />

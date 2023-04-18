@@ -1,8 +1,9 @@
 import React from 'react'
 import {  metext,frontend,backend } from '../util/aboututils';
 import Icons from './Icons' 
-import { Link } from 'rakkasjs';
+import { Link, useSSQ } from 'rakkasjs';
 import { Libraries } from './technoligies/Libraries';
+import { getRepoPackageJson } from '../state/user-tools/user-packages';
 
 
 interface introProps {
@@ -11,7 +12,12 @@ interface introProps {
 
  const About: React.FC<introProps> = ({}) => {
   
-
+// const {data} =  useSSQ(
+//   ()=>{
+//   return  getRepoPackageJson('tigawanna/foreach')
+//   }
+// )
+// console.log("tigawanna/foreach data",data)
 
     return (
     <div className="mt-[60px] min-h-screen max-w-[99%] flex flex-col bg-slate-800 font-serif">

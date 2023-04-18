@@ -4,6 +4,7 @@ import { AboutLinks } from "../components/AboutLinks";
 import Intro from "../components/intro";
 import Projects from "../components/projects";
 import { Libraries } from "../components/technoligies/Libraries";
+import { JsonView } from "../components/JsonView";
 
 
 
@@ -28,6 +29,7 @@ export default function HomePage() {
 			bg-gradient-to-br from-green-900 via-transparent to-emerald-100
 			">
 				<Intro />
+				<JsonView/>
 				<AboutLinks/>
 				<About />
 			
