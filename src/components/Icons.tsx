@@ -14,7 +14,7 @@ import {
     SiNextdotjs,
     SiPostgresql,
     SiRedis
-}from 'react-icons/si'
+} from 'react-icons/si/index.js'
 import { IconContext } from "react-icons/lib";
 
 

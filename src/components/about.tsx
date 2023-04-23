@@ -1,8 +1,7 @@
-import React from 'react'
-import Icons from './Icons'
-import { Link, useQuery, useSSQ } from 'rakkasjs';
-import { Libraries } from './pkgs/Libraries';
 
+import Markdown from 'markdown-to-jsx';
+import { Link } from 'rakkasjs';
+import { Libraries } from './pkgs/Libraries';
 
 
 
@@ -10,20 +9,30 @@ interface introProps {
 
 }
 
-const About: React.FC<introProps> = ({ }) => {
+function About ({ }:introProps){
+
 
  return (
     <div className="mt-[60px] min-h-screen max-w-[99%] flex flex-col bg-slate-800 ">
+
+     <h2 className="w-full text-3xl p-5 md:text-4xl text-slate-400 font-bold">
+       About Me
+      </h2>
+
       <div className="flex-center w-full  flex-col justify-evenly ">
-        
+
         <div className="flex w-full  h-full flex-col md:flex-row justify-evenly ">
           <div className="flex-center flex-col  h-full w-[95%]  p-4 m-2 gap-5 ">
-            <div className="p-5   flex flex-col text-slate-50 border shadow shadow-slate-400 rounded-lg  gap-1">
-              <h3 className="w-full text-3xl  md:text-4xl text-slate-400 font-bold">About Me</h3>
+            <div className="p-5 w-[90%]  flex flex-col text-slate-50 
+                      border shadow shadow-slate-400 rounded-lg  gap-1">
 
-              <ul className=''>
+
+              <ul className='text-lg'>
                 <li>I am a passionate self-taught JavaScript/React developer .</li>
+                <li>I have been working on React and Nodejs projects for more than  3 years </li>
+                <li>My forte is mostly in the core logic and javascript/typescript parts </li>
                 <li>I have also briefly dabbled in C, Java, Kotlin, Python, and Go. </li>
+                <li>I've been enjoying explorinf relay and rakkasjs in the react space and also pocketbase as te main API for my portfolio projects</li>
                 <li>I completed the ALX software engineering program
                   where we learned the basics of programming in C, Python, and Linux.</li>
               </ul>

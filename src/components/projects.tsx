@@ -29,9 +29,9 @@ return (
   <div className="flex flex-col">
 
   <div className="flex flex-col shadow-sm shadow-slate-300 p-4 ">
-        <div  className="text-3xl md:text-4xl text-slate-400 font-bold">
+        <h2  className="text-3xl md:text-4xl text-slate-400 font-bold">
           Highlighted Projects
-          </div>
+          </h2>
           <ul  className="flex-center flex-wrap ">
           {
            projects&&projects.map((item,index)=>{

@@ -1,4 +1,4 @@
-import { FaPrint } from 'react-icons/fa';
+import { FaPrint } from 'react-icons/fa/index.js';
 import {
     SiGraphql,
     SiReact,
@@ -23,7 +23,7 @@ import {
     SiVite,
     SiJavascript
 
-} from 'react-icons/si'
+} from 'react-icons/si/index.js'
 
 
 

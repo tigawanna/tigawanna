@@ -19,7 +19,7 @@ try {
         headers: headersList
     })
     const data = await res.json() as IPkgJsons[]
-    logNormal("favdeps",data)
+    logNormal("favdeps",res.status)
     return data 
 } catch (error) {
     return error as IPkgJsons[]

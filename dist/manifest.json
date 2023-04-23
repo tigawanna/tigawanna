@@ -1,0 +1,61 @@
+{
+  "src/res/foreach.jpg": {
+    "file": "assets/foreach-62eaa14c.jpg",
+    "src": "src/res/foreach.jpg"
+  },
+  "src/res/github.jpg": {
+    "file": "assets/github-4ec849bc.jpg",
+    "src": "src/res/github.jpg"
+  },
+  "src/res/loading.svg": {
+    "file": "assets/loading-7a871f84.svg",
+    "src": "src/res/loading.svg"
+  },
+  "src/res/project.webp": {
+    "file": "assets/project-70e7bcfb.webp",
+    "src": "src/res/project.webp"
+  },
+  "src/res/real-estate.jpg": {
+    "file": "assets/real-estate-fce5b55f.jpg",
+    "src": "src/res/real-estate.jpg"
+  },
+  "src/routes/index.page.tsx": {
+    "assets": [
+      "assets/github-4ec849bc.jpg",
+      "assets/foreach-62eaa14c.jpg",
+      "assets/real-estate-fce5b55f.jpg",
+      "assets/project-70e7bcfb.webp",
+      "assets/loading-7a871f84.svg"
+    ],
+    "file": "assets/index.page-40c57350.js",
+    "imports": [
+      "virtual:rakkasjs:client-entry"
+    ],
+    "isDynamicEntry": true,
+    "src": "src/routes/index.page.tsx"
+  },
+  "src/routes/layout.css": {
+    "file": "assets/layout-310bb16f.css",
+    "src": "src/routes/layout.css"
+  },
+  "src/routes/layout.tsx": {
+    "css": [
+      "assets/layout-310bb16f.css"
+    ],
+    "file": "assets/layout-3a80699c.js",
+    "imports": [
+      "virtual:rakkasjs:client-entry"
+    ],
+    "isDynamicEntry": true,
+    "src": "src/routes/layout.tsx"
+  },
+  "virtual:rakkasjs:client-entry": {
+    "dynamicImports": [
+      "src/routes/layout.tsx",
+      "src/routes/index.page.tsx"
+    ],
+    "file": "assets/index-fe4b8255.js",
+    "isEntry": true,
+    "src": "virtual:rakkasjs:client-entry"
+  }
+}

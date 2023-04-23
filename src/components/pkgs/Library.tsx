@@ -27,10 +27,12 @@ return (
         <div className=" flex flex-wrap gap-1">
             <h2 className="w-full text-bold text-green-200 p-1">Top Dependancies</h2>
             {
-                pkg.top_favdeps.map((dep)=>{
-                    console.log("dep === ",dep)
+                pkg.top_favdeps.map((dep,idx)=>{
+                    // console.log("dep === ",dep)
                     return (
-                        <div className="flex items-center justify-center 
+                        <div 
+                        key={dep+idx}
+                        className="flex items-center justify-center 
                          px-2 border border-green-600 rounded-lg">
                             {dep}
                         </div>
