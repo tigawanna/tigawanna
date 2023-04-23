@@ -79,8 +79,7 @@ const querr = `
     return fetch('https://api.github.com/graphql', {
         method: 'POST',
         headers: {
-            //@ts-expect-error
-          "Authorization": `bearer ${import.meta.env.RAKKAS_GH_PAT}`,
+         "Authorization": `bearer ${import.meta.env.RAKKAS_GH_PAT}`,
             "Content-Type": "application/json",
             "accept":"application/vnd.github.hawkgirl-preview+json"
         },

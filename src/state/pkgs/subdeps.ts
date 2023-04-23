@@ -16,37 +16,27 @@ import {
     SiRollupdotjs,
     SiJest,
     SiVitest,
-    SiSupabase
-    
+    SiSupabase,
+    SiRelay,
+    SiNextdotjs,
+    SiNodedotjs,
+    SiVite,
+    SiJavascript
+
 } from 'react-icons/si'
 
 
 
-
-//     tailwindcss: SiTailwindcss,
-//     typescript: SiTypescript,
-//     "react-router-dom": SiReactrouter,
-//     "react-query": SiReactquery,
-//     "react-icons": SiReact,
-//     firebase: SiFirebase,
-//     dayjs: SiGooglecalendar,
-//     axios:SiAxios,
-//     "socket.io":SiSocketdotio,
-//     pocketbase:SiGoland,
-//     "@testing-library": SiTestinglibrary,
-//     "react-to-print": FaPrint,
-//     "@tanstack":SiReactquery,
-//     rollup: SiRollupdotjs,
-//     express:SiExpress,
-//     graphql: SiGraphql,
-//     jest: SiJest,
-//     vitest:SiVitest
-// };
-
 export const subDepsIcons = {
+    react:{icon:SiReact,name:"React"},
+    nodejs:{icon:SiNodedotjs,name:"Nodejs"},
+    vite:{icon:SiVite,name:"Vite"},
+    relay:{icon:SiRelay,name:"Relay"},
+    nextjs:{icon:SiNextdotjs,name:"Nextjs"},
     tailwindcss: { icon: SiTailwindcss, name: 'Tailwind CSS' },
     supabase:{icon:SiSupabase,name:"Supabase"},
     typescript: { icon: SiTypescript, name: 'TypeScript' },
+    javascript: { icon: SiJavascript, name: 'JavaScript' },
     "react-router-dom": { icon: SiReactrouter, name: 'React Router DOM' },
     "react-query": { icon: SiReactquery, name: 'React Query' },
     "react-icons": { icon: SiReact, name: 'React Icons' },
@@ -65,9 +55,7 @@ export const subDepsIcons = {
     vitest: { icon: SiVitest, name: 'Vitest' }
 };
 
-// const arr = Object.keys(subDeps) as (keyof typeof subDeps)[];
 
-// export type ISubDeps = typeof arr 
 
 type subDepsKeys = keyof typeof subDepsIcons;
 type subDepsKeysLiteral = `${subDepsKeys}`;

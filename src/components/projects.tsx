@@ -30,7 +30,7 @@ return (
 
   <div className="flex flex-col shadow-sm shadow-slate-300 p-4 ">
         <div  className="text-3xl md:text-4xl text-slate-400 font-bold">
-          Projects
+          Highlighted Projects
           </div>
           <ul  className="flex-center flex-wrap ">
           {

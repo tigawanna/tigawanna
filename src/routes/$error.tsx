@@ -1,4 +1,4 @@
-import { ErrorBoundary } from "rakkasjs";
+
 
 interface $errorProps {
 

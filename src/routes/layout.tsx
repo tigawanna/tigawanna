@@ -9,8 +9,7 @@ export default function MainLayout({ children }: LayoutProps) {
         <div>
         <ErrorBoundary
           fallbackRender={({ error, resetErrorBoundary }) =>(
-         <RakkasErrorBoundary error={error} resetErrorBoundary={resetErrorBoundary}/>
-        )}>
+         <RakkasErrorBoundary error={error} resetErrorBoundary={resetErrorBoundary}/>)}>
             <hr />
             <div>{children}</div>
             <hr />

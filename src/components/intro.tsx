@@ -26,6 +26,7 @@ export default function Intro({}:introProps){
 
         <div className='w-full md:min-w-[10%] flex justify-center'>
           <img
+          alt="Dennis Kinuthia"
           src={GitHubImage} 
           height="350px"
           width="350px"
