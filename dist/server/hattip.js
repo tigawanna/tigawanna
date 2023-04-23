@@ -31,7 +31,7 @@ const clientManifest = {
       "assets/project-70e7bcfb.webp",
       "assets/loading-7a871f84.svg"
     ],
-    file: "assets/index.page-43343a98.js",
+    file: "assets/index.page-40c57350.js",
     imports: [
       "virtual:rakkasjs:client-entry"
     ],
@@ -46,7 +46,7 @@ const clientManifest = {
     css: [
       "assets/layout-310bb16f.css"
     ],
-    file: "assets/layout-41c7876b.js",
+    file: "assets/layout-3a80699c.js",
     imports: [
       "virtual:rakkasjs:client-entry"
     ],
@@ -58,7 +58,7 @@ const clientManifest = {
       "src/routes/layout.tsx",
       "src/routes/index.page.tsx"
     ],
-    file: "assets/index-03c790e9.js",
+    file: "assets/index-fe4b8255.js",
     isEntry: true,
     src: "virtual:rakkasjs:client-entry"
   }
@@ -2652,7 +2652,7 @@ async function renderPageRoute(ctx) {
     var _a2;
     return (_a2 = hook.createPageHooks) == null ? void 0 : _a2.call(hook, ctx);
   });
-  const routes = (await import("./assets/virtual_rakkasjs_server-page-routes-f8d2710c.js")).default;
+  const routes = (await import("./assets/virtual_rakkasjs_server-page-routes-1171784e.js")).default;
   let {
     url: { pathname }
   } = ctx;
@@ -3235,7 +3235,7 @@ var runServerSideServerHooks = {
       } catch (e2) {
         return new Response("Parse error", { status: 400 });
       }
-      const manifest = await import("./assets/virtual_rakkasjs_run-server-side_manifest-6f684aca.js");
+      const manifest = await import("./assets/virtual_rakkasjs_run-server-side_manifest-4a69cf3b.js");
       const importer = manifest.default[decodeURIComponent(moduleId)];
       if (!importer)
         return;
