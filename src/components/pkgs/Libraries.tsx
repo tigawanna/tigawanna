@@ -2,6 +2,7 @@ import { useSSQ } from "rakkasjs";
 import { getFavDeps } from "../../state/pkgs/api";
 import { Suspense } from "react";
 import { Library } from "./Library";
+import { logNormal } from "../../util/general";
 
 
 interface LibrariesProps {
@@ -10,11 +11,11 @@ interface LibrariesProps {
 
 export function Libraries({}:LibrariesProps){
 
-    const {data,refetch} = useSSQ(()=>{
+const {data,refetch} = useSSQ(()=>{
         return getFavDeps(import.meta.env.RAKKAS_GH_PAT);
-    })
+})
 
-
+logNormal("data  ==== ",data)
 if(data&& "error" in data){
     return null
 } 
