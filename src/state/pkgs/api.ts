@@ -1,4 +1,4 @@
-import { logNormal } from "../../util/general";
+import { logNormal, logSuccess } from "../../util/general";
 
 
 export interface IPkgJsons {
@@ -7,21 +7,31 @@ export interface IPkgJsons {
     top_favdeps: string[];
 }
 
+export interface IPkgJsonsError{
+    error:{
+        message:string;
+        documentation_url:string;
+    }
+}
 export async function getFavDeps(viewer_token:string){
     const headersList = {
         "Accept": "*/*",
         "User-Agent": "Thunder Client (https://www.thunderclient.com)",
-        "Authorization": `Bearer ${viewer_token}`,
+        "authorization": `Bearer ${viewer_token}`,
     }
 try {
     const res = await fetch('https://mongo-project.onrender.com/github', {
         method: "GET",
         headers: headersList
     })
-    const data = await res.json() as IPkgJsons[]
+    const data = await res.json() 
+    if(data&&data?.error){
+        throw data 
+    }
     logNormal("favdeps",res.status)
-    return data 
+    logSuccess("data === ",data)
+    return data as IPkgJsons[]
 } catch (error) {
-    return error as IPkgJsons[]
+    return error as IPkgJsonsError
 }
 }

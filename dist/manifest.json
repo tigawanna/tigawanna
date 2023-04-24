@@ -27,7 +27,7 @@
       "assets/project-70e7bcfb.webp",
       "assets/loading-7a871f84.svg"
     ],
-    "file": "assets/index.page-40c57350.js",
+    "file": "assets/index.page-4baed528.js",
     "imports": [
       "virtual:rakkasjs:client-entry"
     ],
@@ -42,7 +42,7 @@
     "css": [
       "assets/layout-310bb16f.css"
     ],
-    "file": "assets/layout-3a80699c.js",
+    "file": "assets/layout-b8023d6a.js",
     "imports": [
       "virtual:rakkasjs:client-entry"
     ],
@@ -54,7 +54,7 @@
       "src/routes/layout.tsx",
       "src/routes/index.page.tsx"
     ],
-    "file": "assets/index-fe4b8255.js",
+    "file": "assets/index-c84a282d.js",
     "isEntry": true,
     "src": "virtual:rakkasjs:client-entry"
   }

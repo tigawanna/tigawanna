@@ -31,7 +31,7 @@ const clientManifest = {
       "assets/project-70e7bcfb.webp",
       "assets/loading-7a871f84.svg"
     ],
-    file: "assets/index.page-40c57350.js",
+    file: "assets/index.page-4baed528.js",
     imports: [
       "virtual:rakkasjs:client-entry"
     ],
@@ -46,7 +46,7 @@ const clientManifest = {
     css: [
       "assets/layout-310bb16f.css"
     ],
-    file: "assets/layout-3a80699c.js",
+    file: "assets/layout-b8023d6a.js",
     imports: [
       "virtual:rakkasjs:client-entry"
     ],
@@ -58,7 +58,7 @@ const clientManifest = {
       "src/routes/layout.tsx",
       "src/routes/index.page.tsx"
     ],
-    file: "assets/index-fe4b8255.js",
+    file: "assets/index-c84a282d.js",
     isEntry: true,
     src: "virtual:rakkasjs:client-entry"
   }
@@ -2354,7 +2354,7 @@ function useSSQImpl(desc, options = {}) {
         let closurePath = stringified.map(encodeFileNameSafe).join("/");
         if (closurePath)
           closurePath = "/" + closurePath;
-        const url = `/_data/${"b067eefb184"}/` + moduleId + "/" + counter + closurePath + "/d.js";
+        const url = `/_data/${"7339305a39b"}/` + moduleId + "/" + counter + closurePath + "/d.js";
         await ctx.platform.render(
           url,
           new Response(uneval(result)),
@@ -3206,7 +3206,7 @@ var runServerSideServerHooks = {
       }
       action = action || ctx.url.pathname.slice(prefix.length);
       const [buildId, moduleId, counter, ...closure] = action.split("/");
-      if (buildId !== "b067eefb184") {
+      if (buildId !== "7339305a39b") {
         return new Response("Outdated client", { status: 404 });
       }
       let closureContents;
