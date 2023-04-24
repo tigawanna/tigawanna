@@ -6,7 +6,7 @@ interface footerProps {
 
 export function MainFooter({}:footerProps){
 return (
-    <footer className="w-full flex items-center justify-evenly bg-slate-800 p-5">
+    <footer className="w-full flex flex-wrap items-center justify-evenly bg-slate-800 p-5">
         <div className='text-base md:text-lg text-slate-300 font-bold'>
             Contact me
         </div>

@@ -14,7 +14,7 @@ export default function HomePage() {
 	return (
 		<main>
 			<Head title="Dennis Kinuthia" />
-			<main className="flex w-full h-[100%] flex-col font-serif 
+			<main className="w-full h-[100%] flex  flex-col font-serif 
 			bg-gradient-to-br from-green-900 via-transparent to-emerald-100
 			">
 			<Intro />

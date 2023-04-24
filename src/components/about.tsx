@@ -1,6 +1,7 @@
 
 import Markdown from 'markdown-to-jsx';
 import { Link } from 'rakkasjs';
+import { SectionHeader } from './parts/SectionHeader';
 import { Libraries } from './pkgs/Libraries';
 
 
@@ -13,21 +14,18 @@ function About ({ }:introProps){
 
 
  return (
-    <div className="mt-[60px] min-h-screen max-w-[99%] flex flex-col bg-slate-800 ">
+    <div className="mt-[60px] min-h-screen max-w-[99%] flex flex-col ">
 
-     <h2 className="w-full text-3xl p-5 md:text-4xl text-slate-400 font-bold">
-       About Me
-      </h2>
+     <SectionHeader heading='About Me' />
 
       <div className="flex-center w-full  flex-col justify-evenly ">
 
         <div className="flex w-full  h-full flex-col md:flex-row justify-evenly ">
           <div className="flex-center flex-col  h-full w-[95%]  p-4 m-2 gap-5 ">
-            <div className="p-5 w-[90%]  flex flex-col text-slate-50 
-                      border shadow shadow-slate-400 rounded-lg  gap-1">
+            <div className="p-5 w-full md:w-[90%]  flex flex-col text-slate-50 border shadow shadow-slate-400 rounded-lg  gap-1">
 
 
-              <ul className='text-lg'>
+              <ul className='w-full text-sm md:text-base flex flex-col gap-2'>
                 <li>I am a passionate self-taught JavaScript/React developer .</li>
                 <li>I have been working on React and Nodejs projects for more than  3 years </li>
                 <li>My forte is mostly in the core logic and javascript/typescript parts </li>
