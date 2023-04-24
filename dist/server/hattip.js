@@ -31,7 +31,7 @@ const clientManifest = {
       "assets/project-70e7bcfb.webp",
       "assets/loading-7a871f84.svg"
     ],
-    file: "assets/index.page-4baed528.js",
+    file: "assets/index.page-282bee2a.js",
     imports: [
       "virtual:rakkasjs:client-entry"
     ],
@@ -46,7 +46,7 @@ const clientManifest = {
     css: [
       "assets/layout-310bb16f.css"
     ],
-    file: "assets/layout-b8023d6a.js",
+    file: "assets/layout-e1d92722.js",
     imports: [
       "virtual:rakkasjs:client-entry"
     ],
@@ -58,7 +58,7 @@ const clientManifest = {
       "src/routes/layout.tsx",
       "src/routes/index.page.tsx"
     ],
-    file: "assets/index-c84a282d.js",
+    file: "assets/index-ff693920.js",
     isEntry: true,
     src: "virtual:rakkasjs:client-entry"
   }
@@ -2354,7 +2354,7 @@ function useSSQImpl(desc, options = {}) {
         let closurePath = stringified.map(encodeFileNameSafe).join("/");
         if (closurePath)
           closurePath = "/" + closurePath;
-        const url = `/_data/${"7339305a39b"}/` + moduleId + "/" + counter + closurePath + "/d.js";
+        const url = `/_data/${"34a857b4c43"}/` + moduleId + "/" + counter + closurePath + "/d.js";
         await ctx.platform.render(
           url,
           new Response(uneval(result)),
@@ -2419,7 +2419,7 @@ function unescapeParams(params, rest) {
   return params;
 }
 async function renderApiRoute(ctx) {
-  const apiRoutes = await import("./assets/virtual_rakkasjs_api-routes-0ddd5063.js");
+  const apiRoutes = await import("./assets/virtual_rakkasjs_api-routes-b5a7799b.js");
   for (const [regex, importers, rest] of apiRoutes.default) {
     const match = regex.exec(ctx.url.pathname);
     if (!match)
@@ -2652,7 +2652,7 @@ async function renderPageRoute(ctx) {
     var _a2;
     return (_a2 = hook.createPageHooks) == null ? void 0 : _a2.call(hook, ctx);
   });
-  const routes = (await import("./assets/virtual_rakkasjs_server-page-routes-1171784e.js")).default;
+  const routes = (await import("./assets/virtual_rakkasjs_server-page-routes-28a015ca.js")).default;
   let {
     url: { pathname }
   } = ctx;
@@ -3206,7 +3206,7 @@ var runServerSideServerHooks = {
       }
       action = action || ctx.url.pathname.slice(prefix.length);
       const [buildId, moduleId, counter, ...closure] = action.split("/");
-      if (buildId !== "7339305a39b") {
+      if (buildId !== "34a857b4c43") {
         return new Response("Outdated client", { status: 404 });
       }
       let closureContents;
@@ -3235,7 +3235,7 @@ var runServerSideServerHooks = {
       } catch (e2) {
         return new Response("Parse error", { status: 400 });
       }
-      const manifest = await import("./assets/virtual_rakkasjs_run-server-side_manifest-4a69cf3b.js");
+      const manifest = await import("./assets/virtual_rakkasjs_run-server-side_manifest-4150f10e.js");
       const importer = manifest.default[decodeURIComponent(moduleId)];
       if (!importer)
         return;
