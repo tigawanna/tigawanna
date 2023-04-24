@@ -10,7 +10,7 @@ export function Library({pkg}:LibraryProps){
 return (
     <div
         key={pkg._id}
-        className="w-full md:w-[40%] h-[200px]  p-2 flex flex-col items-center
+        className="w-full lg:w-[30%] lg:h-[250px]  p-2 flex flex-col items-center
         border-2 border-green-500 rounded-xl shadow hover:brightness-150 shadow-green-300">
 
         <div className="w-full font-bold flex  items-center gap-2 p-1">
@@ -21,10 +21,12 @@ return (
                 </IconContext.Provider>
             </div>
         <div className="text-xl">{pkg._id}</div>
-            <div className="p-2 border border-green-500 rounded-full">{pkg.repo_names.length} projects</div>
+            <div className="p-2 border border-green-500 rounded-full truncate text-sm">
+                {pkg.repo_names.length} projects
+                </div>
         </div>
 
-        <div className=" flex flex-wrap gap-1">
+        <div className="w-full flex flex-wrap gap-1">
             <h2 className="w-full text-bold text-green-200 p-1">Top Dependancies</h2>
             {
                 pkg.top_favdeps.map((dep,idx)=>{

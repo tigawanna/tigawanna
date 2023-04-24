@@ -32,50 +32,67 @@ return (
         <h2  className="text-3xl md:text-4xl text-slate-400 font-bold">
           Highlighted Projects
           </h2>
-          <ul  className="flex-center flex-wrap ">
+          <ul  className="flex  flex-wrap gap-3">
           {
            projects&&projects.map((item,index)=>{
              return(
                <li key={index} 
-               className="footer-projects-li">
-
-                 <div className="font-medium text-sm w-full flex flex-col">
-
-                   <div 
-                    className="text-2xl md:text-xl text-green-300 opacacity-1 font-bold
-                     overflow-hidden p-1 m-1">
+                 className="w-full lg:max-w-[40%] sm:w-[50%] md:w-[35%] lg:w-[25%]  
+                 flex-grow p-2 flex flex-col items-center justify-center
+                  border-2 border-green-500 rounded-xl shadow  shadow-green-300">
+                 <div
+                   className="w-full text-2xl md:text-xl text-green-300 opacity-1 font-bold p-1 m-1">
                    {item.name}
-                   </div>
-                   <GoodImage
-                   props={{src:item.image}}
-                   height="700px"
-                   width="500px"
+                 </div>
+                 <div className="font-medium text-sm w-full h-full  flex flex-wrap ">
+
+      
+                   {/* <GoodImage
+                    props={{ src: item.image,
+                    className:"md:h-[40%] sm:w-auto object-cover aspect-square"}}
+                   height="200px"
+                   width="100px"
+                   /> */}
+                   <img
+                   src={item.image}
+                   alt={item.name}
+                   className="w-[30%] h-auto object-fit aspect-square rounded-xl"
+                   height='100px'
+                   width='100px'
                    />
-    
-                   <div className="text-base  my-2">
+                   <div className="w-[70%] p-2 capitalize text-base font-sans ">
+                   <div className="p-2  capitalize text-base font-sans ">
                    {item.description}
                    </div>
-                   </div>
-                   <div className="font-small text-sm w-full flex-center flex-wrap  ">
-                    {item.technologies.map((item,index)=>{
-                      return(<div key={index} 
-                      className="p-[2px] m-[2px] rounded-sm text-green-200 bg-slate-900 ">
-                        {item}</div>
-                      )
-                    })}
-                   </div>
-                   <div className="font-medium text-sm w-full flex justify-between ">
-         
-                   <div className="bg-slate-800 shadow-md shadow-white hover:shadow-green-300 rounded-sm p-1 m-1"> 
-                     <Link href={item?.hosted} target="_blank">live preview</Link>
-                   </div>    
 
-                   <div className="bg-slate-800 shadow-md shadow-white hover:shadow-green-300 rounded-sm p-1 m-1"> 
-                     <Link href={item.link} target="_blank">
-                      source code
-                   </Link>
-                   </div>  
+                     <div className="font-small text-sm w-fit max-w-[95%] 
+                    flex  flex-wrap  gap-2 truncate rounded-lg">
+                     {item.technologies.map((item, index) => {
+                       return (<div key={index}
+                         className="p-1 rounded-sm text-green-200  border border-green-400">
+                         {item}</div>
+                       )
+                     })}
                    </div>
+                   </div>
+
+                   <div className=" font-medium w-full flex justify-between p-2  ">
+
+                     <div className="h-5  border  rounded-lg p-1 hover:text-green-300 hover:underline">
+                       <Link href={item?.hosted} target="_blank">live preview</Link>
+                     </div>
+
+                     <div className="h-5  border   rounded-lg p-1 hover:text-green-300 hover:underline">
+                       <Link href={item.link} target="_blank">
+                         github repository
+                       </Link>
+                     </div>
+                   </div>
+
+                   </div>
+
+        
+    
 
                 </li>
              )

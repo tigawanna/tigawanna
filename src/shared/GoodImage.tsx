@@ -57,7 +57,7 @@ export const GoodImage = ({
         width,
         loading: "lazy",
         className:
-          props.props.className?props.props.className +"animate-in fade-in duration-500" :
+          props.props.className?props.props.className +"animate-in fade-in duration-500 rounded-xl " :
           "h-full w-full  animate-in fade-in duration-500",
         ...props,
       }}

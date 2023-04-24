@@ -87,15 +87,19 @@ body{
     items-center justify-evenly border-t bg-slate-800
 }
 .footer-projects-li{ 
-    @apply text-base md:text-lg text-slate-50 shadow-md hover:shadow-lg 
-    shadow-slate-50 hover:shadow-green-300 p-4 md:w-[25%] m-[2%] flex flex-col 
-    justify-between items-center
+    @apply text-base md:text-lg text-slate-50 shadow-md hover:brightness-150
+    shadow-slate-50 hover:shadow-green-300 p-4 md:w-[25%] m-[2%] 
+    flex flex-col justify-between items-center
 }
 
+/* .projects-card{
+  @apply w-full lg:w-[30%] lg:h-[250px]  p-2 flex flex-col items-center
+        border-2 border-green-500 rounded-xl shadow hover:brightness-150 shadow-green-300
+} */
 
 
 .gradient-text {
-  background-image: linear-gradient(to right, #d24ef3 0%, #f07969 100%);
+  background-image: linear-gradient(to bottom, #3ae788 0%, #19cece 100%);
   -webkit-background-clip: text;
   background-clip:"text";
   -webkit-text-fill-color: transparent;
