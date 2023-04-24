@@ -1,5 +1,5 @@
 import GitHubImage from '../res/github.jpg'
-import TypeAnimation from 'react-type-animation'
+import { TypeAnimation } from 'react-type-animation';
 interface introProps {}
 
 export default function Intro({}:introProps){
@@ -17,7 +17,7 @@ export default function Intro({}:introProps){
         <div className="font-sarif mt-[30px] text-3xl font-bold text-slate-200 md:text-6xl">
           <TypeAnimation
             cursor={true}
-            sequence={['African web developer and designer']}
+            sequence={['Javascript','Typescript ','React Developer']}
             wrapper="h1"
             className="text-green-300"
           />
