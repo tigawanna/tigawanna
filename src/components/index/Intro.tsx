@@ -1,7 +1,5 @@
 import GitHubImage from '../res/github.jpg'
 import { TypeAnimation } from 'react-type-animation';
-import { AboutLinks } from './about/AboutLinks';
-import { Languages } from './languages/Languages';
 interface introProps {}
 
 export default function Intro({}:introProps){
