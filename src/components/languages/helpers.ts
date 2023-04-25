@@ -124,7 +124,7 @@ export function getMostFrequentLanguages(repositories: Repositories): LanguagePe
         }
     })
 
-    languageCount["HTL+CSS+Javascript/Typescript"] = {
+    languageCount["HTML+CSS+Javascript/Typescript"] = {
         count: languageCount['HTML'].count + languageCount['CSS'].count + languageCount['JavaScript'].count + languageCount['TypeScript'].count,
         color: "#fd0cfd"
     }
