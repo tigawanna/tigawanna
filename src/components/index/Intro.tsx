@@ -1,4 +1,4 @@
-import GitHubImage from '../res/github.jpg'
+import GitHubImage from '../../res/github.jpg'
 import { TypeAnimation } from 'react-type-animation';
 interface introProps {}
 
