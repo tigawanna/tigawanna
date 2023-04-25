@@ -1,4 +1,5 @@
-import { LanguagePercentage } from "../util/helper";
+import { LanguagePercentage } from "./helpers";
+
 
 interface ProgressBarProps {
 prop:LanguagePercentage

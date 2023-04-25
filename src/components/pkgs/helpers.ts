@@ -1,4 +1,4 @@
-import { logNormal, logSuccess } from "../../util/general";
+import { logNormal } from "../../util/general";
 
 
 export interface IPkgJsons {
@@ -29,7 +29,7 @@ try {
         throw data 
     }
     logNormal("favdeps",res.status)
-    logSuccess("data === ",data)
+    // logSuccess("data === ",data)
     return data as IPkgJsons[]
 } catch (error) {
     return error as IPkgJsonsError

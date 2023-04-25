@@ -1,6 +1,6 @@
 import GitHubImage from '../res/github.jpg'
 import { TypeAnimation } from 'react-type-animation';
-import { AboutLinks } from './AboutLinks';
+import { AboutLinks } from './about/AboutLinks';
 interface introProps {}
 
 export default function Intro({}:introProps){

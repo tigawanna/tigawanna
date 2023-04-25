@@ -1,5 +1,5 @@
 import { Link } from "rakkasjs";
-import { IconContext } from "react-icons/lib";
+import { IconContext } from "react-icons";
 import { FaGithub, FaLinkedinIn, FaDev } from "react-icons/fa/index.js";
 
 interface AboutLinksProps {

@@ -1,9 +1,9 @@
 import { useSSQ } from "rakkasjs";
-import { getFavDeps } from "../../state/pkgs/api";
+import { getFavDeps } from "./helpers";
 import { Suspense } from "react";
 import { Library } from "./Library";
 import { logNormal } from "../../util/general";
-import { SectionHeader } from "../parts/SectionHeader";
+import { SectionHeader } from "../shared/SectionHeader";
 
 
 interface LibrariesProps {
@@ -13,7 +13,7 @@ interface LibrariesProps {
 export function Libraries({}:LibrariesProps){
 
 const {data,refetch} = useSSQ(()=>{
-        return getFavDeps(import.meta.env.RAKKAS_GH_PAT);
+return getFavDeps(import.meta.env.RAKKAS_GH_PAT);
 })
 
 // logNormal("data  ==== ",data)

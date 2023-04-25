@@ -1,5 +1,5 @@
 import { ErrorBoundary, Head, LayoutProps, StyledLink } from "rakkasjs";
-import { MainFooter } from "../components/footer";
+import { MainFooter } from "../components/shared/Footer";
 import { RakkasErrorBoundary } from "../shared/RakkasErrorBoundary";
 import "../styles/tailwind.css";
 

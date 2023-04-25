@@ -1,4 +1,4 @@
-import { IPkgJsons } from "../../state/pkgs/api";
+import { IPkgJsons } from "./helpers";
 import { IconContext } from "react-icons";
 import { subDepsIcons } from "../../state/pkgs/subdeps";
 

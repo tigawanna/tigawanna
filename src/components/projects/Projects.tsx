@@ -1,9 +1,6 @@
-import React from 'react'
-
 import { Link } from 'rakkasjs';
-import { projects_list } from '../util/projects';
-import { GoodImage } from '../shared/GoodImage';
-import { SectionHeader } from './parts/SectionHeader';
+import { SectionHeader } from '../shared/SectionHeader';
+import { projects_list } from './helpers';
 
 
 export interface Project {

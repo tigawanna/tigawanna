@@ -1,8 +1,6 @@
-
-import Markdown from 'markdown-to-jsx';
 import { Link } from 'rakkasjs';
-import { SectionHeader } from './parts/SectionHeader';
-import { Libraries } from './pkgs/Libraries';
+import { SectionHeader } from '../shared/SectionHeader';
+import { Libraries } from '../pkgs/Libraries';
 
 
 

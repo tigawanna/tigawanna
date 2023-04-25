@@ -1,8 +1,8 @@
 import { Head } from "rakkasjs"
-import About from "../components/about";
-import { AboutLinks } from "../components/AboutLinks";
-import Intro from "../components/intro";
-import Projects from "../components/projects";
+import About from "../components/about/About";
+import { AboutLinks } from "../components/about/AboutLinks";
+import Intro from "../components/Intro";
+import Projects from "../components/projects/Projects";
 
 
 

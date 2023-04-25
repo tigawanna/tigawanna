@@ -35,7 +35,6 @@
     "@hattip/response": "^0.0.33",
     "graphql-request": "^5.2.0",
     "kleur": "^4.1.5",
-    "markdown-to-jsx": "^7.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
