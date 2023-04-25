@@ -1,7 +1,7 @@
-import social from '../res/foreach.jpg'
-import real_estate from '../res/real-estate.jpg'
-import project from '../res/project.webp'
-import github from '../res/github.jpg'
+import social from '../../res/foreach.jpg'
+import real_estate from '../../res/real-estate.jpg'
+import project from '../../res/project.webp'
+import github from '../../res/github.jpg'
 
 
 export const projects_list =[
