@@ -1,11 +1,11 @@
 import { LanguagePercentage } from "./helpers";
 
 
-interface ProgressBarProps {
-prop:LanguagePercentage
+interface LanguagePercentageProps {
+    prop:LanguagePercentage
 }
 
-export function ProgressBar({prop}:ProgressBarProps){
+export function LanguagePercentageComponent({ prop }: LanguagePercentageProps){
 
 
 
@@ -13,7 +13,9 @@ export function ProgressBar({prop}:ProgressBarProps){
         height: '100%',
         width: `${prop.percentage}%`,
         borderRadius:70,
-        backgroundColor:prop.color,
+        // backgroundColor:prop.color,
+        border:`3px solid ${prop.color}`,
+        boxShadow: `0 5 10px ${prop.color}`,
         textAlign: 'right',
         display: 'flex',
         alignItems: 'center',
@@ -24,7 +26,7 @@ export function ProgressBar({prop}:ProgressBarProps){
 
 
 
-if(prop.percentage<1){
+if(prop.percentage < 1){
     return null
 }
 
@@ -33,7 +35,7 @@ return (
        style={fillerStyles}
         className="md:max-w-[40%] md:min-w-[10%] min-w-fit ">
         <span className="flex px-2 items-center justify-center rounded-2xl"></span>
-        <div className="font-mono px-1 min-w-fit text-sm bg-slate-600 text-green-300
+        <div className="font-mono px-1 min-w-fit  
         truncate rounded-lg flex items-end justify-center">
                 {`${prop.name} ${prop.percentage}%`}
            </div>

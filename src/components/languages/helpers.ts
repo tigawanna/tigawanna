@@ -55,7 +55,7 @@ export async function getViewerLangs() {
     const querr = `
 {
   viewer {
-    repositories(first: 100) {
+    repositories(first: 100,orderBy: {field: PUSHED_AT, direction: DESC}) {
       edges {
         node {
           id
@@ -88,10 +88,10 @@ export async function getViewerLangs() {
             // variables,
             // operationName,
         }),
-    }).then(result => result.json())
+    }).then(result => result.json() as unknown as ViewerLang)
         .catch(err => {
             console.log("error fetching viewer langs", err)
-            return err
+            return err as ViewerLang
         }
         );
 }
@@ -111,7 +111,6 @@ export function getMostFrequentLanguages(repositories: Repositories): LanguagePe
     const langsArr = repositories.edges.flatMap((edge) => edge.node.languages.edges)
     langsArr.forEach((lang) => {
         const languageName = lang.node.name;
-        // console.log("item === ", languageCount[languageName])
         if (languageCount[languageName] && languageCount[languageName]['count']) {
             languageCount[languageName] = {
                 count: languageCount[languageName]['count'] + 1,
@@ -130,23 +129,17 @@ export function getMostFrequentLanguages(repositories: Repositories): LanguagePe
         color: "#fd0cfd"
     }
 
-
-
-    // console.log("languageCount",languageCount)
-
     delete languageCount["HTML"]
     delete languageCount["CSS"]
     delete languageCount["JavaScript"]
     delete languageCount["TypeScript"]
 
-    const langsTotalCount = Object.values(languageCount).reduce((a, b) => a + b.count, 0);
-    // console.log("languagesCount",languageCount)
-
-    return Object.entries(languageCount).map(([key, value]) => {
+const langsTotalCount = Object.values(languageCount).reduce((a, b) => a + b.count, 0);
+ return Object.entries(languageCount).map(([key, value]) => {
         return {
             name: key,
             color: value.color,
-            percentage: parseInt(((value.count / langsTotalCount) * 100).toFixed(2))
+            percentage: parseInt(((value.count / langsTotalCount) * 100).toString())
         }
     }).sort((a, b) => b.percentage - a.percentage);
 

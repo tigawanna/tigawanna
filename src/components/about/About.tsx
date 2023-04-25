@@ -1,6 +1,7 @@
 import { Link } from 'rakkasjs';
 import { SectionHeader } from '../shared/SectionHeader';
 import { Libraries } from '../pkgs/Libraries';
+import { Languages } from '../languages/Languages';
 
 
 
@@ -54,9 +55,13 @@ function About ({ }:introProps){
             </div>
           </div>
         </div>
+           <Languages />
       </div>
       {/* <Icons /> */}
+     
 
+  
+ 
       <Libraries />
     </div>
   );

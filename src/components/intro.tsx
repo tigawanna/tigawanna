@@ -1,11 +1,12 @@
 import GitHubImage from '../res/github.jpg'
 import { TypeAnimation } from 'react-type-animation';
 import { AboutLinks } from './about/AboutLinks';
+import { Languages } from './languages/Languages';
 interface introProps {}
 
 export default function Intro({}:introProps){
   return (
-    <div className="p-5 flex min-h-[90vh] w-[100%] flex-col  ">
+    <div className="p-5 flex justify-between min-h-[90vh] w-[100%] flex-col  ">
       <div className="text-xl font-bold  gradient-text">
         Hi there, am
       </div>
@@ -44,16 +45,11 @@ export default function Intro({}:introProps){
       </div>
 
 
-      {/* <div className="font-sarif mt-[40px] text-sm  text-green-200 md:text-lg  ">
-        React
-        ❤️ tailwindcss
-        ❤️ react-query
-        ❤️ GraphQL
-      </div> */}
-			
+
 
 
     </div>
+
   )
 }
 
