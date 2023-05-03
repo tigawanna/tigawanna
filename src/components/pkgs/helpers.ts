@@ -28,7 +28,7 @@ try {
     if(data&&data?.error){
         throw data 
     }
-    logNormal("favdeps",res.status)
+    // logNormal("favdeps",res.status)
     // logSuccess("data === ",data)
     return data as IPkgJsons[]
 } catch (error) {
