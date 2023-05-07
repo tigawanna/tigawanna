@@ -6,7 +6,7 @@ interface introProps {}
 export default function Intro({}: introProps) {
   return (
     <div className="flex h-full min-h-[90vh] w-full flex-col  items-center justify-center p-5">
-      <div className="absolute left-[5%] top-[5%] w-full text-xl font-bold lg:w-[95%] ">
+      <div className="absolute left-[5%] top-[3%] w-full text-xl font-bold lg:w-[95%] ">
         Hi there, am
       </div>
 
@@ -20,10 +20,9 @@ export default function Intro({}: introProps) {
           </h2>
 
           <div
-            className="font-sarif mt-[30px] bg-gradient-to-r from-blue-500  via-green-500
- 
-        to-purple-500 bg-clip-text text-2xl font-bold text-transparent md:text-6xl 
-       ">
+            className="font-sarif mt-[30px] h-10 md:h-20 bg-gradient-to-r from-blue-500  via-green-500
+              to-purple-500 bg-clip-text text-4xl font-bold text-transparent md:text-6xl 
+          ">
             <TypeAnimation
               cursor={true}
               sequence={[

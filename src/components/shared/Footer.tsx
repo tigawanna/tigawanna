@@ -7,8 +7,8 @@ interface footerProps {
 
 export function MainFooter({}:footerProps){
 return (
-    <footer className="w-full flex flex-wrap items-center justify-evenly bg-slate-800 p-5">
-        <div className='text-base md:text-lg text-slate-300 font-bold'>
+    <footer className="w-full flex flex-wrap items-center justify-evenly border-t border-t-green-500 p-5 bg-green-800 bg-opacity-25">
+        <div className='text-base md:text-lg text-slate-300 font-bold '>
             Contact me
         </div>
         <div className='my-2 md:my-0 text-sm md:text-lg text-slate-300 font-mono'>
