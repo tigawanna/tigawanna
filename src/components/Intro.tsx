@@ -10,7 +10,7 @@ export default function Intro({}: introProps) {
         Hi there, am
       </div>
 
-      <div className="flex w-full flex-col items-center justify-center gap-5 md:flex-row lg:w-[95%]">
+      <div className=" md:mt-[10%] flex w-full flex-col items-center justify-center gap-5 md:flex-row lg:w-[95%]">
         <div className="lg:max-w-[60%]">
           <h2
             className="  animate-text bg-gradient-to-r  from-teal-500 
