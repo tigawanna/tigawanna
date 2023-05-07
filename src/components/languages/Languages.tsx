@@ -9,10 +9,10 @@ interface LanguagesProps {
 }
 
 export function Languages({data}:LanguagesProps){
-   if(!data || "error" in data.data){
+   if(!data || (data.data &&"error" in data.data)){
         return null
     }
-    if(data.data && !("viewer" in data.data)){
+    if (data.data && !(data.data&&"viewer" in data.data)){
         return null
     }
 const repos = data.data.viewer.repositories
