@@ -1,5 +1,3 @@
-import { logNormal } from "../../util/general";
-
 
 export interface IPkgJsons {
     _id: string;

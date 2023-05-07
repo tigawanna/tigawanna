@@ -1,6 +1,8 @@
+"use client"
 import { IPkgJsons } from "./helpers";
-import { IconContext } from "react-icons";
-import { subDepsIcons } from "../../state/pkgs/subdeps";
+import { IconContext } from "react-icons/lib";
+import { subDepsIcons } from "./subdeps";
+
 
 interface LibraryProps {
     pkg:IPkgJsons

@@ -1,9 +1,5 @@
-import { Link } from 'rakkasjs';
-import { SectionHeader } from '../shared/SectionHeader';
-import { Libraries } from '../pkgs/Libraries';
-import { Languages } from '../languages/Languages';
-
-
+import Link from "next/link";
+import { SectionHeader } from "../shared/SectionHeader";
 
 interface introProps {
 
@@ -13,10 +9,9 @@ function About ({ }:introProps){
 
 
  return (
-    <div className="mt-[60px] min-h-screen max-w-[99%] flex flex-col ">
+    <div className="mt-[10px] min-h-screen max-w-[99%] flex flex-col ">
 
      <SectionHeader heading='About Me' />
-
       <div className="flex-center w-full  flex-col justify-evenly ">
 
         <div className="flex w-full  h-full flex-col md:flex-row justify-evenly ">
@@ -55,14 +50,14 @@ function About ({ }:introProps){
             </div>
           </div>
         </div>
-           <Languages />
+           {/* <Languages /> */}
       </div>
       {/* <Icons /> */}
      
 
   
  
-      <Libraries />
+      {/* <Libraries /> */}
     </div>
   );
 }

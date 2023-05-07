@@ -1,6 +1,7 @@
-import { Link } from "rakkasjs";
-import { IconContext } from "react-icons";
-import { FaGithub, FaLinkedinIn, FaDev } from "react-icons/fa/index.js";
+"use client"
+import Link from "next/link";
+import { IconContext } from "react-icons/lib";
+import { FaGithub, FaLinkedinIn, FaDev } from "react-icons/fa";
 
 interface AboutLinksProps {
 
@@ -8,7 +9,7 @@ interface AboutLinksProps {
 
 export function AboutLinks({}:AboutLinksProps){
 return (
-    <div className="w-full flex justify-end  p-3 sticky top-0 left=10 z-50 bg-opacity-30">
+    <div className="w-full flex justify-end  p-3 sticky top-7 md:top-3  left=10 z-50 bg-opacity-30">
  
         <IconContext.Provider value={{ size: "30px"}}>
         <div className='p-1  flex text-green-400 gap-2'>

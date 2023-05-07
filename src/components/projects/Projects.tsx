@@ -1,6 +1,8 @@
-import { Link } from 'rakkasjs';
+
+import Image from 'next/image';
 import { SectionHeader } from '../shared/SectionHeader';
 import { projects_list } from './helpers';
+import Link from 'next/link';
 
 
 export interface Project {
@@ -27,9 +29,9 @@ return (
   <SectionHeader heading='Highlighted projects'/>
   
   <div className="w-full p-2 flex flex-col items-center justify-center">
-    <div className="w-full flex flex-col items-center justify-center shadow-sm shadow-slate-300 p-2 ">
+    <div className="w-full flex flex-col items-center justify-center  p-2 ">
 
-          <ul  className="flex  flex-wrap items-center justify-center gap-3">
+          <ul  className="w-full flex  flex-wrap items-center justify-center gap-3 ">
           {
            projects&&projects.map((item,index)=>{
              return(
@@ -43,12 +45,12 @@ return (
                  </div>
 
                  <div className="text-sm w-full h-full  flex flex-col md:flex-row">
-                <img
+                <Image
                    src={item.image}
                    alt={item.name}
                    className="w-full md:w-[30%] h-auto object-fit aspect-square rounded-xl"
-                   height='100px'
-                   width='100px'
+                   height={100}
+                   width={100}
                    />
                    <div className="w-full md:w-[70%] p-2 capitalize text-base font-sans ">
 

@@ -1,8 +1,3 @@
-import social from '../../res/foreach.jpg'
-import real_estate from '../../res/real-estate.jpg'
-import project from '../../res/project.webp'
-import github from '../../res/github.jpg'
-
 
 export const projects_list =[
     {
@@ -11,7 +6,7 @@ export const projects_list =[
         "link": "https://github.com/tigawanna/foreach",
         "hosted": "https://devhub-brown.vercel.app/",
         "technologies": ["React", "vite", "tailwind", "react-query", "pocketbase"],
-        "image": social
+        "image":'/foreach.jpg'
     },
     {
         "name": "Mashamba",
@@ -19,7 +14,7 @@ export const projects_list =[
         "link": "https://github.com/tigawanna/mashamba",
         "hosted": "https://mashamba.vercel.app/",
         "technologies": ["React", "rakkasjs", "tailwind", "pocketbase"],
-        "image": real_estate
+        "image":'/real-estate.jpg'
 
     },
     {
@@ -28,7 +23,7 @@ export const projects_list =[
         "link": "https://github.com/tigawanna/awesome-teams",
         "hosted": "https://awesome-notes.vercel.app/",
         "technologies": ["React", "vite", "tailwind", "react-query", "zustand", "pocketbase"],
-        "image": project
+        "image":'/project.webp'
     },
     {
         "name": "Gittyhub",
@@ -36,7 +31,7 @@ export const projects_list =[
         "link": "https://github.com/tigawanna/gittyhub",
         "hosted": "http://gittyhub.vercel.app/",
         "technologies": ["React", "vite", "tailwind", "react-location", "relay", "Github GraphQL API"],
-        "image":github
+        "image": '/github.jpg'
 
     }
 ]

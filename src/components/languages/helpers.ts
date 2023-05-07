@@ -79,7 +79,7 @@ export async function getViewerLangs() {
     return fetch('https://api.github.com/graphql', {
         method: 'POST',
         headers: {
-            "Authorization": `bearer ${import.meta.env.RAKKAS_GH_PAT}`,
+            "Authorization": `bearer ${process.env.GH_PAT}`,
             "Content-Type": "application/json",
             "accept": "application/vnd.github.hawkgirl-preview+json"
         },

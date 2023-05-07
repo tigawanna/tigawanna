@@ -33,7 +33,7 @@ if(prop.percentage < 1){
 return (
     <div 
        style={fillerStyles}
-        className="md:max-w-[40%] md:min-w-[10%] min-w-fit ">
+        className="md:max-w-[40%]  min-w-fit ">
         <span className="flex px-2 items-center justify-center rounded-2xl"></span>
         <div className="font-mono px-1 min-w-fit  
         truncate rounded-lg flex items-end justify-center">

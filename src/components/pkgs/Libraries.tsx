@@ -1,22 +1,15 @@
-import { useSSQ } from "rakkasjs";
-import { getFavDeps } from "./helpers";
+import { IPkgJsons, IPkgJsonsError, getFavDeps } from "./helpers";
 import { Suspense } from "react";
 import { Library } from "./Library";
-import { logNormal } from "../../util/general";
 import { SectionHeader } from "../shared/SectionHeader";
 
 
 interface LibrariesProps {
-
+    data: IPkgJsons[] | IPkgJsonsError
 }
 
-export function Libraries({}:LibrariesProps){
+export function Libraries({data}:LibrariesProps){
 
-const {data,refetch} = useSSQ(()=>{
-return getFavDeps(import.meta.env.RAKKAS_GH_PAT);
-})
-
-// logNormal("data  ==== ",data)
 if(data&& "error" in data){
     return null
 } 
