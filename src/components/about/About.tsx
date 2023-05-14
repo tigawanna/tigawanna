@@ -37,7 +37,7 @@ function About ({ }:introProps){
              <Link
                href="https://drive.google.com/file/d/1Np5tm5nes0njyuZ5e436wVUm80tNlaBw/view?usp=sharing"
                target="_blank" 
-               className="w-fit text-green-400 border shadow shadow-green-400 hover:scale-[101%] rounded-lg bg-slate-700 pt-5 pb-5 px-1">
+               className="max-w-[95%] w-fit text-green-400 border shadow shadow-green-400 hover:scale-[101%] rounded-lg bg-slate-700 pt-5 pb-5 px-1">
                <h2 className='text-white p-2 font-serif'>ALX Software Engineering Certificate</h2>
                <Image alt='certificate preview'
                className='aspect-video rounded-lg' 
