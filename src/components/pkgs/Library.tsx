@@ -12,7 +12,7 @@ export function Library({pkg}:LibraryProps){
 return (
     <div
         key={pkg._id}
-        className="w-[95%] lg:w-[30%] lg:h-[250px]  px-2 py-5 md:py-2 flex flex-col items-center text-slate-200 font-normal
+        className="w-full md:w-[95%] lg:w-[30%] lg:h-[250px]  px-2 py-5 md:py-2 flex flex-col items-center text-slate-200 font-normal
         border-2 border-green-500 rounded-xl shadow hover:brightness-150 shadow-green-300">
 
         

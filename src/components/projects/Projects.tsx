@@ -25,7 +25,7 @@ const projects=projects_list
 
 
 return (
-<div className="min-h-screen w-[100%] flex flex-col items-center justify-center  p-3 text-slate-300">
+<div className="min-h-screen w-[100%] flex flex-col items-center justify-center  md:p-3 text-slate-300">
   <SectionHeader heading='Highlighted projects'/>
   
   <div className="w-full p-2 flex flex-col items-center justify-center">
@@ -59,7 +59,7 @@ return (
                    </div>
 
                     
-                    <div className="font-small text-sm w-fit max-w-[95%] 
+                    <div className="font-small text-sm w-full  md:max-w-[95%] 
                     flex  flex-wrap  gap-2 truncate rounded-lg">
                      {item.technologies.map((item, index) => {
                        return (<div key={index}
