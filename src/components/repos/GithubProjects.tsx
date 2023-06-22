@@ -1,4 +1,4 @@
-import { PinnedViewerReposResponse, ViewerPinnedRepo } from "@/state/api/repos";
+import { PinnedViewerReposResponse } from "@/state/api/repos";
 import Image from "next/image";
 import Link from "next/link";
 import { Icons } from "../shared/customicons";
