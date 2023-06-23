@@ -14,7 +14,7 @@ export function LanguagePercentageComponent({ prop }: LanguagePercentageProps){
         width: `${prop.percentage}%`,
         borderRadius:70,
         // backgroundColor:prop.color,
-        border:`3px solid ${prop.color}`,
+        border:`2px solid ${prop.color}`,
         boxShadow: `0 5 10px ${prop.color}`,
         textAlign: 'right',
         display: 'flex',
@@ -35,7 +35,7 @@ return (
        style={fillerStyles}
         className="md:max-w-[40%]  min-w-fit ">
         <span className="flex px-2 items-center justify-center rounded-2xl"></span>
-        <div className="font-mono px-1 min-w-fit  
+        <div className="font-mono px-1 min-w-fit  text-xs
         truncate rounded-lg flex items-end justify-center">
                 {`${prop.name} ${prop.percentage}%`}
            </div>

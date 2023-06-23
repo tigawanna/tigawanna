@@ -10,7 +10,7 @@ interface LibrariesProps {
 
 export function Libraries({data}:LibrariesProps){
 
-if(data&& "error" in data){
+if(data && (("error" in data)||("message" in data))){
     return null
 } 
 
@@ -21,7 +21,9 @@ return (
 
     {
         data&&data?.map((pkg)=>{
-            return (<Library key={pkg._id} pkg={pkg}/>)
+            return (
+            <Library key={pkg._id} pkg={pkg}/>
+            )
         })
     }
  </div>

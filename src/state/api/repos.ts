@@ -52,34 +52,37 @@ export interface PinnedItemsNode {
   openGraphImageUrl: string
   description?: string
   descriptionHTML: string
-  homepageUrl: string
+  homepageUrl: string;
+  pushedAt:string;
 }
 
 
 export type PinnedViewerReposResponse = ViewerPinnedRepo | ViewerPinnedRepoError
 
-export const ViwerPinnedRepoQuery = `
-  query getViwerPinnedRepos {
-    viewer {
-      pinnedItems(first: 6, types: [REPOSITORY]) {
-        nodes {
-          ... on Repository {
-            name
-            url
-            openGraphImageUrl
-            description
-            descriptionHTML
-            homepageUrl
-            url
-          }
+export const ViewerPinnedRepoQuery = `
+query getViewerPinnedRepos {
+  viewer {
+    pinnedItems(first: 6, types: [REPOSITORY]) {
+      nodes {
+        ... on Repository {
+          name
+          url
+          openGraphImageUrl
+          description
+          descriptionHTML
+          homepageUrl
+          url
+          pushedAt
         }
       }
     }
   }
+}
+
 `;
 
 
-export async function getViwerPinnedRepos() {
+export async function getViewerPinnedRepos() {
 
   try {
     const res = await fetch('https://api.github.com/graphql', {
@@ -89,9 +92,10 @@ export async function getViwerPinnedRepos() {
         'Authorization': `Bearer ${process.env.GH_PAT}`,
       },
       body: JSON.stringify({
-        query: ViwerPinnedRepoQuery,
+        query: ViewerPinnedRepoQuery,
       }),
     })
+
     return await res.json() as PinnedViewerReposResponse;
 
   } catch (error) {

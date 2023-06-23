@@ -25,7 +25,7 @@ return (
         <div className=' w-full md:w-[95%] h-full p-2 md:p-5 bg-slate-900  bg-opacity-30 
         flex flex-wrap items-center justify-center text-xs md:text-base
         gap-2  rounded-xl shadow-green-700 shadow'>
-        <SectionHeader heading="My Most Used lnguages on Github" /> 
+        <SectionHeader heading="Languages Stats on Github" /> 
     {top_langs.map((lang)=>(
         <LanguagePercentageComponent key={lang.name} prop={lang}/>
     ))}

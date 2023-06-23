@@ -10,7 +10,7 @@ function About ({ }:introProps){
 
 
  return (
-    <div className="mt-[10px] min-h-screen max-w-[99%] flex flex-col ">
+    <div className="mt-[10px] min-h-screen max-w-[99%] flex flex-col w-full">
 
      <SectionHeader heading='About Me' />
       <div className="flex-center w-full  flex-col justify-evenly ">
@@ -18,12 +18,9 @@ function About ({ }:introProps){
         <div className="flex w-full  h-full flex-col md:flex-row justify-evenly ">
           <div className="flex-center flex-col  h-full w-[95%]  p-4 m-2 gap-5 ">
             <div className="p-5 w-full md:w-[90%]  flex flex-col text-slate-50 border shadow shadow-slate-400 rounded-lg  gap-1">
-              <ul className='w-full text-sm md:text-base flex flex-col gap-2'>
+              <ul className='w-full text-sm  flex flex-col gap-2'>
                 <li>I am a passionate self-taught JavaScript/React developer .</li>
                 <li>I have been working on React and Nodejs projects for more than  3 years </li>
-                <li>My forte is mostly in the core logic and javascript/typescript parts </li>
-                <li>I have also briefly dabbled in C, Java, Kotlin, Python, and Go. </li>
-                <li>I have been enjoying explorinf relay and rakkasjs in the react space and also pocketbase as te main API for my portfolio projects</li>
                 <li>I completed the ALX software engineering program
                   where we learned the basics of programming in C, Python, and Linux.</li>
               </ul>
