@@ -31,7 +31,7 @@ export function GithubProjects({ data }: GithubProjectsProps) {
                     hover:border-accent hover:shadow hover:shadow-accent
                     hover:brightness-110 ">
               <div className="m-1  w-full p-1  text-xl font-bold text-accent">{project.name}</div>
-              <p className=" p-1 font-sans text-xs">{project.description}</p>
+              <p className=" p-1 font-sans text-sm">{project.description}</p>
               <div className="flex h-full w-full  flex-col lg:flex-row lg:items-end gap-2">
                 <Image
                   width={100}
@@ -47,8 +47,8 @@ export function GithubProjects({ data }: GithubProjectsProps) {
                 lg:items-stretch  gap-1 lg:gap-4">
 
                   <div className="w-full flex flex-row lg:flex-col items-center justify-start gap-1">
-                    <h3 className="text-xs  text-center">last updated</h3>
-                    <TimeCompponent time={project.pushedAt} className="text-xs font-thin p-0 " relative />
+                    <h3 className="text-sm  text-center">last updated</h3>
+                    <TimeCompponent time={project.pushedAt} className="text-sm font-thin p-0 " relative />
                   </div>
                   
                   <div className="h-full flex  lg:flex-col justify-between p-1 text-sm  font-medium gap-2">
