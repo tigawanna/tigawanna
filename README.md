@@ -1,9 +1,10 @@
 ## Hi there 👋
 
 My name is Dennis Kinuthia . I am a JavaScript/TypeScript web developer
+
 I love React , TailwindCSS , react-query , Graphql and everything in between  
 
-
+[![My Skills](https://skillicons.dev/icons?i=typescript,react,vite,nextjs,tailwind,firebase,supabase,nodejs,deno,mongodb,postgres,graphql&theme=dark)](https://skillicons.dev)
 
 
 
@@ -16,7 +17,7 @@ I love React , TailwindCSS , react-query , Graphql and everything in between
 
 
 
-![Alt text](https://spotify-recently-played-readme.vercel.app/api?user=ux88ch98gposewxwurgcx0pho&count=10)
+<!-- ![Alt text](https://spotify-recently-played-readme.vercel.app/api?user=ux88ch98gposewxwurgcx0pho&count=10) -->
 
 How to reach me: 
 - LinkedIn: https://linkedin.com/in/dennis-kinuthia
