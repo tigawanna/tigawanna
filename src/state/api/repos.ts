@@ -53,7 +53,8 @@ export interface PinnedItemsNode {
   description?: string
   descriptionHTML: string
   homepageUrl: string;
-  pushedAt:string;
+  nameWithOwner: string;
+  pushedAt: string;
 }
 
 
@@ -71,6 +72,7 @@ query getViewerPinnedRepos {
           description
           descriptionHTML
           homepageUrl
+          nameWithOwner
           url
           pushedAt
         }

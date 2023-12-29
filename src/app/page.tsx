@@ -13,10 +13,10 @@ import { Suspense } from "react";
 
 export const revalidate = 60
 export default async function Home() {
-  const langs = await getViewerLangs()
+
   // const libs = await getFavDeps(process.env.GH_PAT);
-  const data = await getViewerPinnedRepos()
-console.log("viewer lang  === ",data)
+
+// console.log("viewer lang  === ",data)
   return (
     <main className="flex w-full min-h-screen p-2 md:p-5 flex-col items-center justify-between 
     	bg-gradient-to-tr from-green-900 via-transparent to-emerald-700 gap-5
@@ -24,10 +24,13 @@ console.log("viewer lang  === ",data)
       <Intro/>
       <AboutLinks />
       <About/>
-      <Languages data={langs}/>
+          <Suspense fallback="...">
+      <Languages />
+
+          </Suspense>
       {/* <Projects/> */}
       <Suspense fallback="...">
-      <GithubProjects data={data}/>
+      <GithubProjects />
       </Suspense>
       {/* <Libraries data={libs}/> */}
       <MainFooter/>

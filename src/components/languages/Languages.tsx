@@ -1,12 +1,11 @@
 import { SectionHeader } from "../shared/SectionHeader";
-import { ViewerLang, getMostFrequentLanguages } from "./helpers";
+import { ViewerLang, getMostFrequentLanguages, getViewerLangs } from "./helpers";
 import { LanguagePercentageComponent } from "./LanguagePercentage";
 
-interface LanguagesProps {
-  data: ViewerLang;
-}
+interface LanguagesProps {}
 
-export function Languages({ data }: LanguagesProps) {
+export async function Languages({}: LanguagesProps) {
+  const data = await getViewerLangs();
   if (!data || (data.data && "error" in data.data)) {
     return null;
   }
@@ -15,11 +14,11 @@ export function Languages({ data }: LanguagesProps) {
   }
 
   const repos = data?.data?.viewer?.repositories;
-  if(!repos){
-    return null
+  if (!repos) {
+    return null;
   }
   const top_langs = getMostFrequentLanguages(repos);
-  
+
   return (
     <div
       className=" w-full md:w-[95%] h-full p-2 md:p-5 bg-slate-900  bg-opacity-30 
