@@ -17,6 +17,7 @@ export function GithubProjects({ data }: GithubProjectsProps) {
     }
     
   const projects = data.data.viewer.pinnedItems.nodes;
+  // console.log({projects})
   return (
     <div className="flex flex-col h-full w-full items-center justify-center">
       <SectionHeader heading="Featured projects" /> 

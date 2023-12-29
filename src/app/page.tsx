@@ -9,6 +9,7 @@ import Projects from "@/components/projects/Projects";
 import { GithubProjects } from "@/components/repos/GithubProjects";
 import { MainFooter } from "@/components/shared/Footer";
 import { getViewerPinnedRepos } from "@/state/api/repos";
+import { Suspense } from "react";
 
 export const revalidate = 60
 export default async function Home() {
@@ -25,7 +26,9 @@ export default async function Home() {
       <About/>
       <Languages data={langs}/>
       {/* <Projects/> */}
+      <Suspense fallback="...">
       <GithubProjects data={data}/>
+      </Suspense>
       {/* <Libraries data={libs}/> */}
       <MainFooter/>
       
