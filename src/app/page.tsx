@@ -1,4 +1,5 @@
 import Intro from "@/components/Intro";
+import { WhatIBuild } from "@/components/WhaIBuild/WhatIBuild";
 import About from "@/components/about/About";
 import { AboutLinks } from "@/components/about/AboutLinks";
 import { Languages } from "@/components/languages/Languages";
@@ -28,6 +29,7 @@ export default async function Home() {
       <Suspense fallback="...">
         <Languages />
       </Suspense>
+      <WhatIBuild/>
       {/* <Projects/> */}
       <Suspense fallback="...">
         <GithubProjects />
