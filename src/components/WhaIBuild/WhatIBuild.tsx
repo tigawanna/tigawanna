@@ -7,6 +7,7 @@ import {
   FaTerminal,
 } from "react-icons/fa";
 import { SectionHeader } from "../shared/SectionHeader";
+import Image from "next/image";
 
 interface WhatIBuildProps {}
 
@@ -14,8 +15,10 @@ export function WhatIBuild({}: WhatIBuildProps) {
   return (
     <div className="w-full h-full   flex flex-col items-center justify-center relative ">
       <SectionHeader heading="I Build " />
-      <img
+      <Image
+        priority
         src="/blobby.svg"
+        alt="bllobby background"
         height={1000}
         width={1000}
         className="h-full w-full object-fit   absolute top-0 bottom-0 "

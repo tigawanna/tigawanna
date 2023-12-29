@@ -2,6 +2,7 @@ import { PinnedItemsNode } from "@/state/api/repos";
 import { TimeCompponent } from "../shared/TimeCompponent";
 import Link from "next/link";
 import { GithubIcon, Globe } from "lucide-react";
+import Image from "next/image"
 
 interface RepoListCardProps {
   one_repo: PinnedItemsNode;
@@ -14,7 +15,7 @@ return (
     className="card w-full sm:h-[350px] 
             md:w-[45%] lg:w-[35%] bg-base-100 shadow-accent shadow rounded-lg ">
     <figure>
-      <img
+      <Image
         src={one_repo.openGraphImageUrl}
         alt={one_repo.name}
         width={300}
@@ -60,7 +61,7 @@ return (
         </div>
         <div className="border-b  hover:text-secondary hover:underline p-2 badge badge-outline badge-secondary">
           <Link
-            href={"/one_repo/" + one_repo.nameWithOwner.replace("/", "=>")}
+            href={"/project/" + one_repo.nameWithOwner}
             className="flex items-center justify-center gap-1">
             See details
           </Link>

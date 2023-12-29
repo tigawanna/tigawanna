@@ -13,7 +13,7 @@ function About ({ }:introProps){
    <div className=" min-h-screen max-w-[99%] flex flex-col w-full">
      <div className="w-full h-full min-h-screen  flex flex-col justify-center relative">
        <SectionHeader heading="About Me" />
-       <img src="/blobby.svg" height={1000} width={1000} className="h-screen w-full object-fit  " />
+       <Image src="/blobby.svg" alt="blobby background" height={1000} width={1000} className="h-screen w-full object-fit  " />
        <div className="w-full h-full flex  absolute  top-0 left-0 right-0 p-5 ">
          <div className="w-full  flex justify-center items-center flex-col gap-7">
            {/* <h2 className="text-4xl font-bold "> About Me</h2> */}

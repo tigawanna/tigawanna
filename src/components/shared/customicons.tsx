@@ -1,6 +1,5 @@
-import { LucideProps,type Icon as LucideIcon,} from "lucide-react"
+import { LucideProps} from "lucide-react"
 
-export type Icon = LucideIcon
 
 export const Icons = {
   logo: (props: LucideProps) => (

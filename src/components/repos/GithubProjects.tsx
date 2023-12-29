@@ -1,9 +1,4 @@
 import {  getViewerPinnedRepos } from "@/state/api/repos";
-import Image from "next/image";
-import Link from "next/link";
-import { Icons } from "../shared/customicons";
-import { Globe,  } from "lucide-react";
-import { TimeCompponent } from "../shared/TimeCompponent";
 import { SectionHeader } from "../shared/SectionHeader";
 import { RepoListCard } from "./RepoListCard";
 
