@@ -1,3 +1,4 @@
+import { error } from "console"
 
 
 
@@ -88,7 +89,12 @@ export async function getViewerLangs() {
             // variables,
             // operationName,
         }),
-    }).then(result => result.json() as unknown as ViewerLang)
+    }).then(result => {
+        if(!result.ok){
+            throw new Error(result.statusText)
+        }
+        return result.json() as unknown as ViewerLang
+    })
         .catch(err => {
             console.log("error fetching viewer langs", err)
             return err as ViewerLang

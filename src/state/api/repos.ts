@@ -95,7 +95,9 @@ export async function getViewerPinnedRepos() {
         query: ViewerPinnedRepoQuery,
       }),
     })
-
+  if(!res.ok){
+    return new Error(res.statusText)
+  }
     return await res.json() as PinnedViewerReposResponse;
 
   } catch (error) {
