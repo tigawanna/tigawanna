@@ -11,30 +11,28 @@ import { MainFooter } from "@/components/shared/Footer";
 import { getViewerPinnedRepos } from "@/state/api/repos";
 import { Suspense } from "react";
 
-export const revalidate = 60
+export const revalidate = 60;
 export default async function Home() {
-
   // const libs = await getFavDeps(process.env.GH_PAT);
 
-// console.log("viewer lang  === ",data)
+  // console.log("viewer lang  === ",data)
   return (
-    <main className="flex w-full min-h-screen p-2 md:p-5 flex-col items-center justify-between 
+    <main
+      className="flex w-full min-h-screen p-2 md:p-5 flex-col items-center justify-between 
     	bg-gradient-to-tr from-green-900 via-transparent to-emerald-700 gap-5
     ">
-      <Intro/>
+      <Intro />
       <AboutLinks />
-      <About/>
-          <Suspense fallback="...">
-      <Languages />
-
-          </Suspense>
+      <About />
+      <Suspense fallback="...">
+        <Languages />
+      </Suspense>
       {/* <Projects/> */}
       <Suspense fallback="...">
-      <GithubProjects />
+        <GithubProjects />
       </Suspense>
       {/* <Libraries data={libs}/> */}
-      <MainFooter/>
-      
+      <MainFooter />
     </main>
-  )
+  );
 }

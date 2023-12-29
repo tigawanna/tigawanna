@@ -1,11 +1,12 @@
 import { SectionHeader } from "../shared/SectionHeader";
-import { ViewerLang, getMostFrequentLanguages, getViewerLangs } from "./helpers";
-import { LanguagePercentageComponent } from "./LanguagePercentage";
+import { GithubLangiagesPercentage } from "./GithubLangiagesPercentage";
+import { getMostFrequentLanguages, getViewerLangs } from "./helpers";
 
 interface LanguagesProps {}
 
 export async function Languages({}: LanguagesProps) {
   const data = await getViewerLangs();
+
   if (!data || (data.data && "error" in data.data)) {
     return null;
   }
@@ -14,20 +15,20 @@ export async function Languages({}: LanguagesProps) {
   }
 
   const repos = data?.data?.viewer?.repositories;
+
   if (!repos) {
     return null;
   }
-  const top_langs = getMostFrequentLanguages(repos);
+  const top_langs = await getMostFrequentLanguages(repos);
 
   return (
     <div
-      className=" w-full md:w-[95%] h-full p-2 md:p-5 bg-slate-900  bg-opacity-30 
+      className=" w-full  h-full  md:p-5 bg-slate-900  bg-opacity-30 
         flex flex-wrap items-center justify-center text-xs md:text-base
         gap-2  rounded-xl shadow-green-700 shadow">
       <SectionHeader heading="Languages Stats on Github" />
-      {top_langs.map((lang) => (
-        <LanguagePercentageComponent key={lang.name} prop={lang} />
-      ))}
+
+      <GithubLangiagesPercentage top_langs={top_langs} />
     </div>
   );
 }
