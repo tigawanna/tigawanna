@@ -30,10 +30,10 @@ return (
       </div>
 
       <div className="w-full flex flex-col gap-1">
-        <label htmlFor="sender_contact" className="text-sm">
+        <label htmlFor="sender_contact" className="text-xs">
           How can i reach you (optional)
         </label>
-        <input id="sender_contact" type="text" name="sender_contct" className="input" />
+        <input id="sender_contact" placeholder="contact information" type="text" name="sender_contct" className="input" />
       </div>
       <button
         // onClick={(e) => e.preventDefault()}
