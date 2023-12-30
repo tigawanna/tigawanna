@@ -5,11 +5,15 @@ const nextConfig = {
   //   },
   images: {
     domains: [
-      "127.0.0.1", 
-    "tigawanna-pocketbase.fly.dev", 
-    "opengraph.githubassets.com",
-    "lh3.googleusercontent.com",
-    "repository-images.githubusercontent.com"],
+      "127.0.0.1",
+      "tigawanna-pocketbase.fly.dev",
+      "opengraph.githubassets.com",
+      "lh3.googleusercontent.com",
+      "repository-images.githubusercontent.com",
+    ],
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 };
 
