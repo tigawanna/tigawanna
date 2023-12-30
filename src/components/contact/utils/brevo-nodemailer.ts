@@ -1,9 +1,10 @@
 "use server";
+
 const { createTransport } = require('nodemailer');
 
 
-
 export async function sendEmailwithBrevoSmtpAction(formData: FormData){
+    console.log({formData})
     const rawFormData = {
         sender_name: formData.get("sender_name"),
         sender_contact: formData.get("sender_contact"),
@@ -25,7 +26,9 @@ export async function sendEmailwithBrevoSmtpAction(formData: FormData){
         from: process.env.EMAIL_FROM,
         to:process.env.EMAIL_TO,
         subject: `Someone left a message on your site`,
-        text: `hey there, ${rawFormData.sender_name} with email: ${rawFormData.sender_contact} has reached out to you on your portfolio site. \n
+        text: `hey there, ${rawFormData.sender_name} with email: ${rawFormData.sender_contact} 
+        has reached out to you on your portfolio site. \n
+        ------------------------------------------------\n
         ${rawFormData.message}
         `
     };

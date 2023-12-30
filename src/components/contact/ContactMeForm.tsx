@@ -1,6 +1,6 @@
-
 import { SectionHeader } from "../shared/SectionHeader";
 import { sendEmailwithBrevoSmtpAction } from "./utils/brevo-nodemailer";
+
 
 
 interface ContactMeFormProps {
@@ -8,7 +8,8 @@ interface ContactMeFormProps {
 }
 
 export async function ContactMeForm({}:ContactMeFormProps){
-
+  // const [state, formAction] = useFormState(sendEmailwithBrevoSmtpAction, {});
+    // const { pending } = useFormStatus();
 return (
   <div
     id="contact"
@@ -17,9 +18,11 @@ return (
     <SectionHeader heading="Talk to me" />
     <form
       action={sendEmailwithBrevoSmtpAction}
-      className="flex flex-col justify-center items-center gap-3 min-w-[60%] h-fit glass p-5 rounded-xl">
+      className="flex flex-col justify-center items-center gap-4 min-w-[60%] h-fit glass p-5 rounded-xl ">
       <div className="w-full flex flex-col gap-1">
-        <label htmlFor="sender_name">Name</label>
+        <label htmlFor="sender_name" className="bg-base-200 rounded-xl p-1 w-fit">
+          Name
+        </label>
         <input
           id="sender_name"
           type="text"
@@ -30,12 +33,20 @@ return (
       </div>
 
       <div className="w-full flex flex-col gap-1">
-        <label htmlFor="message">Message</label>
-        <textarea id="message" name="message" required className="textarea" placeholder="Message" />
+        <label htmlFor="message" className="bg-base-200 rounded-xl p-1 w-fit">
+          Message
+        </label>
+        <textarea
+          id="message"
+          name="message"
+          required
+          className="textarea min-h-40"
+          placeholder="Message"
+        />
       </div>
 
       <div className="w-full flex flex-col gap-1">
-        <label htmlFor="sender_contact" className="text-xs">
+        <label htmlFor="sender_contact" className="text-xs bg-base-200 rounded-xl p-1 w-fit">
           How can i reach you (optional)
         </label>
         <input
@@ -49,8 +60,8 @@ return (
       <button
         // onClick={(e) => e.preventDefault()}
         type="submit"
-        className="btn btn-sm btn-wide">
-        Send
+        className="btn  btn-wide">
+        Send 
       </button>
     </form>
   </div>
