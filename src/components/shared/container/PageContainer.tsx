@@ -43,7 +43,7 @@ return (
         </Link> */}
 
         <div className="hidden menu md:flex gap-1  h-full w-full justify-center items-center ">
-          <ul className="menu menu-horizontal bg-transparent md:glass rounded-xl">
+          <ul className="menu menu-horizontal p-0 bg-transparent md:glass rounded-xl">
             {links.map((link) => (
               <li key={link.label}>
                 <Link
