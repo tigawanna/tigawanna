@@ -2,14 +2,10 @@ import Intro from "@/components/Intro";
 import { WhatIBuild } from "@/components/WhaIBuild/WhatIBuild";
 import About from "@/components/about/About";
 import { AboutLinks } from "@/components/about/AboutLinks";
+import { ContactMeForm } from "@/components/contact/ContactMeForm";
 import { Languages } from "@/components/languages/Languages";
-import { getViewerLangs } from "@/components/languages/helpers";
-import { Libraries } from "@/components/pkgs/Libraries";
-import { getFavDeps } from "@/components/pkgs/helpers";
-import Projects from "@/components/projects/Projects";
 import { GithubProjects } from "@/components/repos/GithubProjects";
 import { MainFooter } from "@/components/shared/Footer";
-import { getViewerPinnedRepos } from "@/state/api/repos";
 import { Suspense } from "react";
 
 export const revalidate = 60;
@@ -34,6 +30,7 @@ export default async function Home() {
       <Suspense fallback="...">
         <GithubProjects />
       </Suspense>
+      <ContactMeForm/>
       {/* <Libraries data={libs}/> */}
       <MainFooter />
     </main>
