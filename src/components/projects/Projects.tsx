@@ -2,6 +2,7 @@ import Image from "next/image";
 import { SectionHeader } from "../shared/SectionHeader";
 import { projects_list } from "./helpers";
 import Link from "next/link";
+import { isString } from "@/state/helpers/string";
 
 export interface Project {
   title: string;
@@ -22,7 +23,7 @@ function Projects({}: ProjectProps) {
   const projects = projects_list;
 
   return (
-    <div className="min-h-screen w-[100%] flex flex-col items-center justify-center  md:p-3 text-slate-300">
+    <div className="min-h-screen h-full w-[100%] flex flex-col items-center justify-center  md:p-3 text-slate-300">
       <SectionHeader heading="Highlighted projects" />
 
       <div className="w-full p-2 flex flex-col items-center justify-center">
@@ -70,17 +71,19 @@ function Projects({}: ProjectProps) {
                     </div>
 
                     <div className=" font-medium w-full flex justify-between p-2  text-sm">
-                      <div className="border-b  rounded-lg p-1 hover:text-green-300 hover:underline">
-                        <Link href={item?.hosted} target="_blank">
-                          live preview
-                        </Link>
-                      </div>
+                      {isString(item?.hosted) && (
+                        <div className="border-b  rounded-lg p-1 hover:text-green-300 hover:underline">
+                          <Link href={item?.hosted} target="_blank">
+                            live preview
+                          </Link>
+                        </div>
+                      )}
 
-                      <div className="border-b   rounded-lg p-1 hover:text-green-300 hover:underline">
+                       {isString(item.link) &&<div className="border-b   rounded-lg p-1 hover:text-green-300 hover:underline">
                         <Link href={item.link} target="_blank">
-                          github repository
+                          Code
                         </Link>
-                      </div>
+                      </div>}
                     </div>
                   </li>
                 );

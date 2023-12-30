@@ -12,7 +12,7 @@ export async function ContactMeForm({}:ContactMeFormProps){
 return (
   <div id="contact" className="w-full h-full flex flex-col gap-10 items-center justify-center bg-base-200  rounded-lg bg-opacity-30  ">
     <SectionHeader heading="Talk to me" />
-    <form action={sendEmailwithBrevoSmtpAction} className="flex flex-col gap-3" method="POST">
+    <form action={sendEmailwithBrevoSmtpAction} className="flex flex-col gap-3" >
       <div className="w-full flex flex-col gap-1">
         <label htmlFor="sender_name">Name</label>
         <input
