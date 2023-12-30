@@ -6,7 +6,7 @@ interface introProps {}
 
 function About({}: introProps) {
   return (
-    <div className=" min-h-screen max-w-[99%] flex flex-col w-full">
+    <div id="about" className=" min-h-screen max-w-[99%] flex flex-col w-full">
       <div className="w-full h-full min-h-screen  flex flex-col justify-center relative">
         <SectionHeader heading="About Me" />
         <Image

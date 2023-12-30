@@ -19,7 +19,7 @@ export async function GithubProjects({ }: GithubProjectsProps) {
   }
   // console.log({projects})
   return (
-    <div className="flex flex-col h-full w-full items-center justify-center">
+    <div id="projects" className="flex flex-col h-full w-full items-center justify-center">
       <SectionHeader heading="Featured projects" /> 
       <div className="flex w-[90%] h-full flex-wrap items-center justify-center gap-5 p-3">
         {projects.map((one_repo) => {

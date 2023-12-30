@@ -3,10 +3,11 @@ import { WhatIBuild } from "@/components/WhaIBuild/WhatIBuild";
 import About from "@/components/about/About";
 import { AboutLinks } from "@/components/about/AboutLinks";
 import { ContactMeForm } from "@/components/contact/ContactMeForm";
-import { Languages, LanguagesSuspenseFallback } from "@/components/languages/Languages";
+import { Languages, LanguagesSuspenseFallback } from "@/components/stats/languages/Languages";
 import { GithubProjects, ProjectsSuspenseFallback } from "@/components/repos/GithubProjects";
 import { MainFooter } from "@/components/shared/Footer";
 import { Suspense } from "react";
+import { GithubStats } from "@/components/stats/GithubStats";
 
 export const revalidate = 60;
 export default async function Home() {
@@ -19,9 +20,7 @@ export default async function Home() {
       <Intro />
       <AboutLinks />
       <About />
-      <Suspense fallback={<LanguagesSuspenseFallback />}>
-        <Languages />
-      </Suspense>
+      <GithubStats/>
       <WhatIBuild />
       {/* <Projects/> */}
       <Suspense fallback={<ProjectsSuspenseFallback />}>
