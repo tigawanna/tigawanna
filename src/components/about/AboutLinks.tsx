@@ -3,7 +3,7 @@ interface AboutLinksProps {}
 export function AboutLinks({}: AboutLinksProps) {
   return (
     <div
-      className="w-full flex justify-end  p-3 sticky top-7 md:top-3  left=10  bg-opacity-30">
+      className="w-fit justify-end hidden md:flex  sticky top-2 z-50  right-10  bg-opacity-30">
       <ContactLinks />
     </div>
   );

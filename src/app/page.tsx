@@ -6,17 +6,19 @@ import { GithubProjects, ProjectsSuspenseFallback } from "@/components/repos/Git
 import { MainFooter } from "@/components/shared/Footer";
 import { Suspense } from "react";
 import { GithubStats } from "@/components/stats/GithubStats";
-import { Navbar } from "@/components/navbar/Navbar";
+
+import { AboutLinks } from "@/components/about/AboutLinks";
 
 export const revalidate = 60;
 export default async function Home() {
  return (
    <main
-     className="flex w-full min-h-screen p-2 md:p-5 flex-col items-center justify-between 
-    	bg-gradient-to-tr from-green-900 via-transparent to-emerald-700 gap-5 
+     className="flex flex-col w-full min-h-screen h-full  lg:p-2 p-5  md:items-end 
+     gap-5 
     ">
      <Intro />
-     <Navbar />
+     {/* <Navbar /> */}
+     <AboutLinks/>
      <About />
      <GithubStats />
      <WhatIBuild />

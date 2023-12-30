@@ -23,7 +23,7 @@ function Projects({}: ProjectProps) {
   const projects = projects_list;
 
   return (
-    <div className="min-h-screen h-full w-[100%] flex flex-col items-center justify-center  md:p-3 text-slate-300">
+    <div className="h-full w-full flex flex-col items-center justify-center  md:p-3 text-slate-300">
       <SectionHeader heading="Highlighted projects" />
 
       <div className="w-full p-2 flex flex-col items-center justify-center">

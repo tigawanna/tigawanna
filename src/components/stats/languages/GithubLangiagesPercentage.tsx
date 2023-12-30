@@ -24,7 +24,7 @@ return (
           return (
             <li
               key={name + index}
-              className=" md:max-w-[70%] min-w-fit gap-1"
+              className=" md:max-w-[70%] min-w-fit gap-1 flex flex-col justify-center "
               style={{
                 width: `${percetage}%`,
               }}>

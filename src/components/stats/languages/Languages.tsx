@@ -4,7 +4,7 @@ import { getMostFrequentLanguages, getViewerLangs } from "./helpers";
 
 interface LanguagesProps {}
 
-export async function Languages({}: LanguagesProps) {
+export async function GithubLanguages({}: LanguagesProps) {
   const data = await getViewerLangs();
 
   if (!data || (data.data && "error" in data.data)) {
@@ -23,9 +23,9 @@ export async function Languages({}: LanguagesProps) {
 
   return (
     <div
-      className=" w-full  h-full  md:p-5 bg-slate-900  bg-opacity-30 
+      className=" w-full  h-full  p-5 bg-slate-900  bg-opacity-30 
         flex flex-wrap items-center justify-center text-xs md:text-base
-        gap-2  rounded-xl shadow-green-700 shadow">
+        gap-2  rounded-xl ">
       <SectionHeader heading="Languages Stats on Github" />
 
       <GithubLangiagesPercentage top_langs={top_langs} />
