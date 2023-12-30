@@ -29,3 +29,26 @@ export async function GithubProjects({ }: GithubProjectsProps) {
     </div>
   );
 }
+
+
+export function ProjectsSuspenseFallback(){
+  return (
+    <div className="w-full h-screen flex">
+      <div className="flex w-[90%] h-full flex-wrap items-center justify-center gap-5 p-3">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <div
+            key={index}
+            className="card w-full sm:h-[350px] 
+            md:w-[45%] lg:w-[35%] bg-base-100 shadow-lg shadow-base-200 rounded-xl">
+            <figure className="h-[300px] w-full skeleton bg-base-200"></figure>
+            <div className="card-body flex-wrap bg-base-100  p-3">
+              <div className="w-full flex flex-row items-center justify-end gap-1 h-5 rounded-xl skeleton bg-base-200"></div>
+              <div className="w-full flex flex-row items-center justify-end gap-1 h-5 rounded-xl skeleton bg-base-200"></div>
+              <div className="w-full flex flex-row items-center justify-end gap-1 h-5 rounded-xl skeleton bg-base-200"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

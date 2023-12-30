@@ -13,7 +13,7 @@ return (
   <div
     key={one_repo.nameWithOwner}
     className="card w-full sm:h-[350px] 
-            md:w-[45%] lg:w-[35%] bg-base-100 shadow-accent shadow rounded-lg ">
+            md:w-[45%] lg:w-[35%] bg-base-100 shadow-lg shadow-base-200 rounded-xl">
     <figure>
       <Image
         src={one_repo.openGraphImageUrl}
@@ -59,11 +59,11 @@ return (
             </Link>
           </div>
         </div>
-        <div className="border-b  hover:text-secondary hover:underline p-2 badge badge-outline badge-secondary">
+        <div className="border-b  hover:text-secondary hover:underline p-2 badge badge-lg badge-outline badge-secondary">
           <Link
-            href={"/project/" + one_repo.nameWithOwner}
+            href={"/project/" + one_repo.nameWithOwner.replace("/", "=>")}
             className="flex items-center justify-center gap-1">
-            See details
+           Project details
           </Link>
         </div>
       </div>

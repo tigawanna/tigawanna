@@ -1,6 +1,6 @@
 
 import { Suspense } from "react"
-import { OneRepo } from "../components/OneRepo"
+import { OneRepo, OneRepoSuspenseFallback } from "../components/OneRepo"
 export interface PageProps {
   params: { name: string };
 //   searchParams: {
@@ -12,7 +12,7 @@ export default function OneProjectPage({params}:PageProps) {
 
 return (
 <div className="w-full h-full min-h-screen flex flex-col  ">
-<Suspense fallback="...">
+<Suspense fallback={<OneRepoSuspenseFallback/>}>
     <OneRepo params={params?.name}/>
 </Suspense>
 </div>
