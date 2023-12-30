@@ -23,7 +23,7 @@ export async function GithubProjects({ }: GithubProjectsProps) {
       <SectionHeader heading="Featured projects" /> 
       <div className="flex w-[90%] h-full flex-wrap items-center justify-center gap-5 p-3">
         {projects.map((one_repo) => {
-          return <RepoListCard one_repo={one_repo} />
+          return <RepoListCard one_repo={one_repo} key={one_repo.nameWithOwner}/>
         })}
       </div>
     </div>

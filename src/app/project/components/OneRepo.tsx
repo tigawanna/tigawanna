@@ -7,6 +7,7 @@ import Image from "next/image";
 import { StackblitzEmbed } from "./stackblitzEmbed";
 
 
+
 export async function OneRepo({ params }: { params: string }) {
   const [owner, repo] = params.split("%3D%3E");
   const query = await getOneRepoGQL({ owner, repo });
@@ -32,7 +33,7 @@ export async function OneRepo({ params }: { params: string }) {
 }
   return (
     <div className="w-full h-full min-h-screen flex flex-col  items-center gap-5">
-      <div className="w-full h-full flex   gap-2 justify-center items-center">
+      <div className="w-full h-full flex   gap-2 justify-center items-center p-5">
         <div className="w-full p-2 px-4 h-full flex flex-col gap-2  justify-center bg-base-200">
           <div className="w-full flex flex-wrap gap-5 items-center p-5">
             <Link href={".."} className="rounded-full hover:text-seconadary">
