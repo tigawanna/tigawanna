@@ -1,5 +1,5 @@
 import {  getViewerPinnedRepos } from "@/state/api/repos";
-import { SectionHeader } from "../shared/SectionHeader";
+import { SectionHeader } from "../../shared/SectionHeader";
 import { RepoListCard } from "./RepoListCard";
 
 

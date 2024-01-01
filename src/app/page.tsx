@@ -2,7 +2,7 @@ import Intro from "@/components/Intro";
 import { WhatIBuild } from "@/components/WhaIBuild/WhatIBuild";
 import About from "@/components/about/About";
 import { ContactMeForm } from "@/components/contact/ContactMeForm";
-import { GithubProjects, ProjectsSuspenseFallback } from "@/components/repos/GithubProjects";
+import { GithubProjects, ProjectsSuspenseFallback } from "@/components/projects/repos/GithubProjects";
 import { MainFooter } from "@/components/shared/Footer";
 import { Suspense } from "react";
 import { GithubStats } from "@/components/stats/GithubStats";

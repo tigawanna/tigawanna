@@ -1,7 +1,5 @@
 export function isString(text?: string | null) {
-
-  if (!text) {
-    console.log("===== text ====", text)
+if (text == null) {
     return false;
   }
 

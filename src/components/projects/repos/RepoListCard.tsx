@@ -1,5 +1,5 @@
 import { PinnedItemsNode } from "@/state/api/repos";
-import { TimeCompponent } from "../shared/TimeCompponent";
+import { TimeCompponent } from "../../shared/TimeCompponent";
 import Link from "next/link";
 import { GithubIcon, Globe } from "lucide-react";
 import Image from "next/image"
@@ -14,7 +14,7 @@ return (
   <div
     key={one_repo.nameWithOwner}
     className="card w-full sm:h-[350px] 
-            md:w-[45%] lg:w-[28%] bg-base-100 shadow-lg shadow-base-200 rounded-xl">
+            md:w-[45%] lg:w-[28%] shadow-lg shadow-base-200 rounded-xl">
     <figure>
       <Image
         src={one_repo.openGraphImageUrl}

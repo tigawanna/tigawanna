@@ -18,7 +18,7 @@ return (
     <SectionHeader heading="Talk to me" />
     <form
       action={sendEmailwithBrevoSmtpAction}
-      className="flex flex-col justify-center items-center gap-4 min-w-[60%] h-fit glass p-5 rounded-xl ">
+      className="flex flex-col justify-center items-center gap-4 w-[95%] md:w-[70%] lg:w-[60%] min-w-[60%] h-fit glass p-5 rounded-xl ">
       <div className="w-full flex flex-col gap-1">
         <label htmlFor="sender_name" className="bg-base-200 rounded-xl p-1 w-fit">
           Name
