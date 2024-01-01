@@ -60,7 +60,7 @@ return ()=>{
 return (
   <div
     id="contact"
-    className="w-full h-full min-h-screen flex flex-col items-center justify-center   rounded-lg   ">
+    className="w-full h-full min-h-screen flex flex-col items-center justify-center   rounded-lg  animate-in fade-in zoom-in duration-500 ">
     <SectionHeader heading="Talk to me" />
     <form
       id="contact-form"
