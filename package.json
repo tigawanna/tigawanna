@@ -16,6 +16,7 @@
     "@types/react-dom": "18.2.18",
     "autoprefixer": "10.4.16",
     "dayjs": "^1.11.10",
+    "emailjs": "^4.0.3",
     "eslint": "8.56.0",
     "eslint-config-next": "14.0.4",
     "lucide-react": "^0.300.0",
@@ -31,6 +32,7 @@
     "typescript": "5.3.3"
   },
   "devDependencies": {
+    "@types/nodemailer": "^6.4.14",
     "daisify-shadcn": "^0.0.1",
     "daisyui": "^4.4.23",
     "prettier": "^3.1.1",
