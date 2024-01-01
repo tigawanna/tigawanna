@@ -40,7 +40,7 @@ return (
       <p className=" p-1 font-sans text-sm line-clamp-2">{one_repo.description}</p>
       <div className="flex flex-wrap justify-between items-center gap-3">
         <div className="flex  items-center gap-3">
-          {isString(one_repo.url)&& <div className="border-b p-1 hover:text-secondary hover:underline">
+          {isString(one_repo.homepageUrl)&& <div className="border-b p-1 hover:text-secondary hover:underline">
             <Link
               href={one_repo?.homepageUrl??""}
               target="_blank"
