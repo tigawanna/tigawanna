@@ -16,7 +16,7 @@ return (
     <div className="w-full">
       <ul className="w-full flex flex-wrap justify-center list-none m-0 p-0 gap-2 overflow-hidden ">
         {top_langs.map(({color,name,percentage}, index: number) => {
-          const percent = (percentage / 100) * 100;
+          const percent = percentage
           const percetage = percent < 5 ? percent + 8 : percent;
           if(percentage<1){
             return null
