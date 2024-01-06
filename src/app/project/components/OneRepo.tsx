@@ -32,9 +32,9 @@ export async function OneRepo({ params }: { params: string }) {
   );
 }
   return (
-    <div className="w-full h-full min-h-screen flex flex-col  items-center gap-5">
-      <div className="w-full h-full flex   gap-2 justify-center items-center p-5">
-        <div className="w-full p-2 px-4 h-full flex flex-col gap-2  justify-center bg-base-200">
+    <div className="w-full h-full min-h-screen flex flex-col  items-center gap-5 pb-5">
+      <div className="w-full h-full flex sm:max-h-[40%]   gap-2 justify-center items-center p-5">
+        <div className="w-full p-2 px-4 h-full flex flex-col gap-2  justify-center bg-base-200 rounded-xl">
           <div className="w-full flex flex-wrap gap-5 items-center p-5">
             <Link href={".."} className="rounded-full hover:text-seconadary">
               <ChevronLeft className="w-7 h-7 " />{" "}
@@ -62,7 +62,9 @@ export async function OneRepo({ params }: { params: string }) {
           <ul className="flex flex-wrap justify-center sm:justify-start items-center gap-2">
             <h2 className="font-bold">Topics:</h2>
             {data.data?.repository.repositoryTopics.edges.map((topic) => (
-              <li key={topic.node.id} className="text-sm  badge badge-ghost shadow-base-300 shadow rounded-lg">
+              <li
+                key={topic.node.id}
+                className="text-sm  badge badge-ghost shadow-base-300 shadow rounded-lg">
                 {topic.node.topic.name}
               </li>
             ))}
@@ -84,7 +86,7 @@ export async function OneRepo({ params }: { params: string }) {
           height={100}
           width={300}
           priority
-          className="w-full h-auto object-cover aspect-video hidden md:flex"
+          className="w-full h-auto  object-cover aspect-video hidden md:flex"
         />
       </div>
       <div className="w-full h-[600px] px-7">

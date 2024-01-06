@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico",
   },
-  metadataBase: new URL(getBaseUrl()),
+  metadataBase: new URL("https://tigawanna-portfolio.vercel.app"),
   twitter: {
     card: "summary",
     site: "@tigawanna", // Replace with your Twitter handle
@@ -40,7 +40,6 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-
       <body className={inter.className}>
         <PageContainer>{children}</PageContainer>
       </body>

@@ -23,7 +23,7 @@ export function WhatIBuild({}: WhatIBuildProps) {
         width={1000}
         className="h-full w-full object-fit   absolute top-0 bottom-0 "
       />
-      <div className="w-full h-full flex  left-0 right-0 p-5 bg-opacity-30 z-10">
+      <div className="w-full h-full flex  left-0 right-0 p-5 bg-opacity-30 z-10 text-sm">
         <div className="w-full  flex justify-center items-center flex-col gap-5">
           {/* <h2 className="text-4xl font-bold py-7"> I build</h2> */}
           <div className="flex flex-col items-center justify-center md:w-[60%]">
