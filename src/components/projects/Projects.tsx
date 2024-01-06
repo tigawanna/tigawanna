@@ -24,7 +24,7 @@ function Projects({}: ProjectProps) {
 
   return (
     <div className="h-full w-full flex flex-col items-center justify-center  md:p-3 text-slate-300">
-      <SectionHeader heading="Highlighted projects" />
+      <SectionHeader heading="Highlighted projects" id="projects"/>
 
       <div className="w-full p-2 flex flex-col items-center justify-center">
         <div className="w-full flex flex-col items-center justify-center  p-2 ">
