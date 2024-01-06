@@ -3,6 +3,7 @@ import { LanguagePercentage } from "./helpers";
 
 interface GithubLangiagesProps {
   top_langs: LanguagePercentage[];
+
 }
 
 export function GithubLangiagesPercentage({top_langs}:GithubLangiagesProps){
@@ -12,12 +13,12 @@ if(!top_langs){
 }
 
 return (
-  <div className="w-full h-full flex items-center justify-center">
-    <div className="w-full">
-      <ul className="w-full flex flex-wrap justify-center list-none m-0 p-0 gap-2 overflow-hidden ">
+  <div className="w-full h-full  flex items-center py-2 ">
+    <div className="w-full h-full">
+      <ul className="w-full flex flex-wrap  list-none m-0 px-5 gap-3  ">
         {top_langs.map(({color,name,percentage}, index: number) => {
           const percent = percentage
-          const percetage = percent < 5 ? percent + 8 : percent;
+          const percetage = percent < 5 ? percent + 2 : percent;
           if(percentage<1){
             return null
           }

@@ -11,7 +11,7 @@ export function GithubLanguages(props: GithubLanguagesProps) {
   if (!props.data) {
     return null;
   }
-// console.log("====== props ",props.data)
+// // no("====== props ",props.data)
   // let total = 0;
   // Object.keys(props.data).forEach((lang: string) => {
   //   total += props.data[lang];

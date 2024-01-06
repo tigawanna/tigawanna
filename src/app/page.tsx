@@ -8,20 +8,29 @@ import { Suspense } from "react";
 import { GithubStats } from "@/components/stats/GithubStats";
 
 import { AboutLinks } from "@/components/about/AboutLinks";
+import { GithubLanguages,LanguagesSuspenseFallback } from "@/components/stats/languages/Languages";
+import { TopLibrariesSuspenseFallback, TopLibraries } from "@/components/stats/libraries/TopLibraries";
 
 export const revalidate = 60;
 export default async function Home() {
  return (
    <main
-     className="flex flex-col w-full min-h-screen h-full  lg:p-2 p-5  md:items-end 
-     gap-5 
+     className="flex flex-col w-full  h-full  lg:p-2 p-5  md:items-end 
+     gap-10 
     ">
      <Intro />
      {/* <Navbar /> */}
-     <AboutLinks/>
+     <AboutLinks />
      <About />
-     <GithubStats />
+     {/* <GithubStats /> */}
      <WhatIBuild />
+     <Suspense fallback={<LanguagesSuspenseFallback />}>
+       <GithubLanguages />
+     </Suspense>
+     <Suspense fallback={<TopLibrariesSuspenseFallback />}>
+       <TopLibraries />
+     </Suspense>
+
      {/* <Projects/> */}
      <Suspense fallback={<ProjectsSuspenseFallback />}>
        <GithubProjects />

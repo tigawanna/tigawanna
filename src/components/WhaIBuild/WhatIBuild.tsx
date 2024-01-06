@@ -13,8 +13,8 @@ interface WhatIBuildProps {}
 
 export function WhatIBuild({}: WhatIBuildProps) {
   return (
-    <div id="ibuild" className="w-full h-full   flex flex-col items-center justify-center relative ">
-      <SectionHeader heading="I Build " />
+    <div  className="w-full h-full   flex flex-col items-center justify-center relative ">
+      <SectionHeader heading="I Build " id="ibuild" />
       <Image
         priority
         src="/blobby.svg"

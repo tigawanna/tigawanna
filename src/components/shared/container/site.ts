@@ -1,52 +1,25 @@
 export type SiteConfig = typeof siteConfig;
 
 const links = [
-	{
-		name: "Home",
-		href: "#",
-	},
-	{
-		name: "About",
-		href: "#about",
-	},
-	{
-		name: "Ibuild",
-		href: "#ibuild",
-	},
-	{
-		name: "Stats",
-		href: "#stats",
-	},
-	{
-		name: "Projects",
-		href: "#projects",
-	},
-	{
-		name: "Contact",
-		href: "#contact",
-	},
+	{ label: "home", href: "#", route: "" },
+	{ label: "About", href: "#about", route: "about" },
+	{ label: "Ibuild", href: "#ibuild", route: "ibuild" },
+	{ label: "Stats", href: "#stats", route: "stats" },
+
+	{ label: "Projects", href: "#projects", route: "projects" },
+	{ label: "Contact", href: "#contact", route: "contact" },
 ]
 
 export const siteConfig = {
-	name: "Better Blocks",
-	description: "Your premium property discovery platform",
-	navItems: [
-		{	label: "home",	href: "#"},
-		{	label: "About",	href: "#about"},
-		{	label: "Ibuild",	href: "#ibuild"},
-		{	label: "Stats",	href: "#stats"},
-		{	label: "Projects",	href: "#projects"},
-		{	label: "Contact",	href: "#contact"},
-	],
-	navMenuItems: [
-		{ label: "home", href: "#" },
-		{ label: "About", href: "#about" },
-		{ label: "Ibuild", href: "#ibuild" },
-		{ label: "Stats", href: "#stats" },
-		{ label: "Projects", href: "#projects" },
-		{ label: "Contact", href: "#contact" },
-	
-	],
+	name: "Dennis Kinuthia",
+	description: `Crafting exceptional web experiences with a full-stack JavaScript and TypeScript 
+	toolkit. 
+	Proficient in Node.js, Deno, React, Next.js, Express, and HonoJS. 
+	Fluent in backend technologies like Supabase, Firebase, and popular libraries such as TanStack, 
+	Tailwind CSS, Apollo , Relay and other  GraphQL tooling
+	 `,
+	navItems: links,
+	navMenuItems: links,
 	links: {
 	twitter: "https://twitter.com/betterblocks",
 	facebook: "https://facebook.com/betterblocks",
@@ -55,4 +28,4 @@ export const siteConfig = {
 	email: "betterblocks.com",
 }
 	,
-};
+} as const

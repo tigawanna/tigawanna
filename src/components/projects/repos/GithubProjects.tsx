@@ -17,13 +17,13 @@ export async function GithubProjects({ }: GithubProjectsProps) {
   if(!projects){
     return null
   }
-  // console.log({projects})
+  // // no({projects})
   return (
-    <div id="projects" className="flex flex-col h-full w-full items-center justify-center">
-      <SectionHeader heading="Featured projects" /> 
+    <div className="flex flex-col h-full w-full items-center justify-center">
+      <SectionHeader heading="Featured projects" id="projects" />
       <div className="flex w-[90%] h-full flex-wrap items-center justify-center gap-5 p-3">
         {projects.map((one_repo) => {
-          return <RepoListCard one_repo={one_repo} key={one_repo.nameWithOwner}/>
+          return <RepoListCard one_repo={one_repo} key={one_repo.nameWithOwner} />;
         })}
       </div>
     </div>

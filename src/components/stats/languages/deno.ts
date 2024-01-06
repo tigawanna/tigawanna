@@ -2,7 +2,7 @@ export async function getGithubViewerLanguages(){
     try {
   const deno_url = process.env.DENO_URL
         const pat = process.env.GH_PAT
-        console.log({pat})
+ 
         if(!deno_url || !pat) return
         const langs = await fetch(deno_url+'/stats/langs', {
             headers: {
@@ -10,13 +10,13 @@ export async function getGithubViewerLanguages(){
             }
         })
         .then(res =>{
-            console.log(" get langs resonse == ",res.statusText)
+            // // no(" get langs resonse == ",res.statusText)
             if(!res.ok){
                 throw new Error(res.statusText)
             }
             return res.json()})
         .then(data => data?.language_stats?.value) as Record<string, { color: string; count: number }>
-        console.log({ langs })
+     
         const langsTotalCount = Object.values(langs).reduce((a, b) => a + b.count, 0);
         const standard_langs = Object.entries(langs).map(([key, value]) => {
             return {
@@ -29,7 +29,7 @@ export async function getGithubViewerLanguages(){
 
         return standard_langs
     } catch (error:any) {
-        console.log("====== Error ========  ",error.message)
+        // no("====== Error ========  ",error.message)
         return
     }
 }

@@ -10,12 +10,11 @@ export async function GithubLanguages({}: LanguagesProps) {
 
   return (
     <div
-      className=" w-full  h-full min-h-fit  p-5 bg-slate-900  bg-opacity-30 
+      className=" w-full  h-full   p-5 
         flex flex-wrap items-center justify-center text-xs md:text-base
         gap-2  rounded-xl ">
-      <SectionHeader heading="Languages Stats on Github" />
-
-      <GithubLangiagesPercentage top_langs={top_langs} />
+      <SectionHeader heading="Languages Stats on Github" id="stats" />
+    <GithubLangiagesPercentage top_langs={top_langs} />
     </div>
   );
 }

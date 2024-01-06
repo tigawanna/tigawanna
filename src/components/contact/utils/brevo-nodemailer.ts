@@ -53,7 +53,7 @@ export async function sendEmailwithBrevoSmtpAction(prevState: ContactFormState, 
 //  const mailer = transporter.sendMail(mailOptions, 
 //   function (error: any, info: any) {
 //     if (error) {
-//       console.log("error sending email   =============== ", error);
+//       // no("error sending email   =============== ", error);
 //       return {
 //         message: "error sending email "+error.message,
 //         error: true,
@@ -61,7 +61,7 @@ export async function sendEmailwithBrevoSmtpAction(prevState: ContactFormState, 
 //         fieldValues: prevState.fieldValues
 //       }
 //     } else {
-//       console.log("Email sent: " + info.response);
+//       // no("Email sent: " + info.response);
 //         return {
 //           message: "Email sent: " + info.response,
 //           error: false,
@@ -80,7 +80,7 @@ export async function sendEmailwithBrevoSmtpAction(prevState: ContactFormState, 
       transporter.sendMail(mailOptions,
         function (error: any, info: any) {
           if (error) {
-            console.log("error sending email   =============== ", error);
+            // no("error sending email   =============== ", error);
             resolve(
               {
                 message: "Something went wrong",
@@ -91,7 +91,7 @@ export async function sendEmailwithBrevoSmtpAction(prevState: ContactFormState, 
             )
   
           } else {
-            console.log("Email sent: " + info.response);
+            // no("Email sent: " + info.response);
             resolve({
               message: "Successfully sent, Thank you!",
               error: false,

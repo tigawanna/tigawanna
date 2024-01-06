@@ -96,10 +96,10 @@ const operationsDoc = `
         "Authorization": `Bearer ${process.env.GH_PAT}`
     }
     })
-    // console.log(" ONE GQL REPO === ",data)
+    // // no(" ONE GQL REPO === ",data)
     return data as OneRepoGQL
     } catch (error) {
-        console.log("ONE GQL ERROR === ",{error})
+        // no("ONE GQL ERROR === ",{error})
         return error as OneRepoGQL
     }
 }

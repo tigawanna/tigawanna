@@ -22,7 +22,7 @@ export async function OneGithubRepoLanguages({ repo, owner }: OneGithubRepoLangu
     }
   }
 const data = await fetchLanguages();
-// console.log("OneGithubrepolanguage data ==== ",data)
+// // no("OneGithubrepolanguage data ==== ",data)
 if(!data){
   return null
 }

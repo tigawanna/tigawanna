@@ -77,6 +77,7 @@ export async function getViewerLangs() {
   }
 }
 `;
+
     return fetch('https://api.github.com/graphql', {
         method: 'POST',
         headers: {
@@ -96,7 +97,7 @@ export async function getViewerLangs() {
         return result.json() as unknown as ViewerLang
     })
         .catch(err => {
-            console.log("error fetching viewer langs", err)
+            // no("error fetching viewer langs", err)
             return err as ViewerLang
         }
         );
@@ -149,6 +150,6 @@ const langsTotalCount = Object.values(languageCount).reduce((a, b) => a + b.coun
         }
     }).sort((a, b) => b.percentage - a.percentage);
 
-    // console.log("langs  Percentage === ",langsPercentage)
+    // // no("langs  Percentage === ",langsPercentage)
 
 }
