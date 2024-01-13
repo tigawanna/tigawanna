@@ -2,14 +2,15 @@ import Intro from "@/components/Intro";
 import { WhatIBuild } from "@/components/WhaIBuild/WhatIBuild";
 import About from "@/components/about/About";
 import { ContactMeForm } from "@/components/contact/ContactMeForm";
-import { GithubProjects, ProjectsSuspenseFallback } from "@/components/projects/repos/GithubProjects";
+import { PinnedGithubProjects, ProjectsSuspenseFallback } from "@/components/projects/repos/PinnedGithubProjects";
 import { MainFooter } from "@/components/shared/Footer";
 import { Suspense } from "react";
-import { GithubStats } from "@/components/stats/GithubStats";
+
 
 import { AboutLinks } from "@/components/about/AboutLinks";
 import { GithubLanguages,LanguagesSuspenseFallback } from "@/components/stats/languages/Languages";
 import { TopLibrariesSuspenseFallback, TopLibraries } from "@/components/stats/libraries/TopLibraries";
+import { CurrentlyWorkingOnGithubProjects } from "@/components/projects/repos/CurrentlyWorkingOnGithubProjects";
 
 export const revalidate = 60;
 export default async function Home() {
@@ -33,7 +34,10 @@ export default async function Home() {
 
      {/* <Projects/> */}
      <Suspense fallback={<ProjectsSuspenseFallback />}>
-       <GithubProjects />
+       <PinnedGithubProjects />
+     </Suspense>
+     <Suspense fallback={<ProjectsSuspenseFallback />}>
+       <CurrentlyWorkingOnGithubProjects />
      </Suspense>
      <ContactMeForm />
      {/* <Libraries data={libs}/> */}

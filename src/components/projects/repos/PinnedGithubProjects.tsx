@@ -3,19 +3,19 @@ import { SectionHeader } from "../../shared/SectionHeader";
 import { RepoListCard } from "./RepoListCard";
 
 
-interface GithubProjectsProps {
+interface PinnedGithubProjectsProps {
 
 }
 
-export async function GithubProjects({ }: GithubProjectsProps) {
-    const data = await getViewerPinnedRepos();
-    if (data && ("errors" in data)||("message" in data)) {
-        return null
-    }
-    
+export async function PinnedGithubProjects({}: PinnedGithubProjectsProps) {
+  const data = await getViewerPinnedRepos();
+  if ((data && "errors" in data) || "message" in data) {
+    return null;
+  }
+
   const projects = data?.data?.viewer?.pinnedItems?.nodes;
-  if(!projects){
-    return null
+  if (!projects) {
+    return null;
   }
   // // no({projects})
   return (

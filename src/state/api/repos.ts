@@ -1,10 +1,5 @@
 
-/*
-This is an example snippet - you should consider tailoring it
-to your service.
 
-Note: we only handle the first operation here
-*/
 
 export interface ViewerPinnedRepoError {
   errors: Error[]
@@ -40,6 +35,7 @@ export interface ViewerPinnedRepoData {
 
 export interface Viewer {
   pinnedItems: PinnedItems
+  repositories: PinnedItems
 }
 
 export interface PinnedItems {
@@ -108,4 +104,44 @@ export async function getViewerPinnedRepos() {
 
 }
 
+export const ViewerLatsedPushedToRepos =`query getViewerRecentlyPushedRepos {
+  viewer {
+    repositories(orderBy: { field: PUSHED_AT, direction: DESC }, first: 3,  isFork: false ) {
+      nodes {
+        ... on Repository {
+          name
+          url
+          openGraphImageUrl
+          description
+          descriptionHTML
+          homepageUrl
+          nameWithOwner
+          url
+          pushedAt
+        }
+      }
+    }
+  }
+}`
 
+export async function getViewerRecentlyPushedRepos() {
+  try {
+    const res = await fetch('https://api.github.com/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.GH_PAT}`,
+      },
+      body: JSON.stringify({
+        query: ViewerLatsedPushedToRepos,
+      }),
+    })
+    if (!res.ok) {
+      return new Error(res.statusText)
+    }
+    return await res.json() as PinnedViewerReposResponse;
+
+  } catch (error) {
+    throw error
+  } 
+}
