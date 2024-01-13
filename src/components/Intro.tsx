@@ -33,7 +33,7 @@ export default function Intro({}: introProps) {
 
         <div className="flex w-[90%] min-w-[200px]  justify-center p-2 lg:w-[30%]">
           <Image
-            src="/github.jpg"
+            src="/moi.jpg"
             alt="Dennis Kinuthia"
             className="aspect-square w-[100%] h-auto rounded-2xl shadow shadow-accent "
             width={300}

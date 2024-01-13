@@ -25,6 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: siteConfig.name,
     description: siteConfig.description,
+    
   },
   icons: {
     icon: "/favicon.ico",
@@ -40,7 +41,6 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-
 
       <body className={inter.className}>
         <PageContainer>{children}</PageContainer>
