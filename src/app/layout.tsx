@@ -1,5 +1,6 @@
 import { PageContainer } from "@/components/shared/container/PageContainer";
 import "./globals.css";
+import "../state/md/markdown.css";
 import { Inter } from "next/font/google";
 import { siteConfig } from "@/components/shared/container/site";
 import { Metadata } from "next";
@@ -25,7 +26,6 @@ export const metadata: Metadata = {
   openGraph: {
     title: siteConfig.name,
     description: siteConfig.description,
-    
   },
   icons: {
     icon: "/favicon.ico",
@@ -41,7 +41,6 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-
       <body className={inter.className}>
         <PageContainer>{children}</PageContainer>
       </body>

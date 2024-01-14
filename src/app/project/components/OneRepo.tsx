@@ -5,6 +5,7 @@ import { ChevronLeft, GithubIcon, Globe, Loader } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { StackblitzEmbed } from "./stackblitzEmbed";
+import { OneGithubRepoREADME } from "./OneGithubRepoREADME";
 
 export async function OneRepo({ params, ...props }: { params: string }) {
   const [owner, repo] = params.split("%3D%3E");
@@ -29,7 +30,7 @@ export async function OneRepo({ params, ...props }: { params: string }) {
   }
   const query = await getOneRepoGQL({ owner, repo });
   const data = query;
-  console.log("==== data === ", data);
+  // console.log("==== data === ", data);
   if (!data || !data.data) {
     return (
       <div className="w-full h-screen flex flex-col  items-center gap-5 relative bg-base-300">
@@ -48,11 +49,15 @@ export async function OneRepo({ params, ...props }: { params: string }) {
       </div>
     );
   }
+
+
   const homepage_url = data?.data?.repository?.homepageUrl;
   const repo_url = data?.data?.repository?.url;
   return (
     <div className="w-full h-full min-h-screen flex flex-col  items-center gap-5 pb-5">
       <div className="w-full h-full flex sm:max-h-[40%]   gap-2 justify-center items-center p-5">
+        
+        {/* github stats */}
         <div className="w-full p-2 px-4 h-full flex flex-col gap-2  justify-center bg-base-200 rounded-xl">
           <div className="w-full flex flex-wrap gap-5 items-center p-5">
             <Link href={".."} className="rounded-full hover:text-seconadary">
@@ -93,6 +98,7 @@ export async function OneRepo({ params, ...props }: { params: string }) {
             ))}
           </ul>
 
+
           <div className="w-full p-2 h-full flex  justify-between bg-base-200">
             <Suspense fallback={<div className="w-full h-full bg-base-200 skeleton">.</div>}>
               <OneGithubRepoLanguages owner={owner} repo={repo} />
@@ -112,6 +118,13 @@ export async function OneRepo({ params, ...props }: { params: string }) {
           className="w-full h-auto  object-cover aspect-video hidden md:flex"
         />
       </div>
+
+         <div className="w-full p-2 h-full flex items-center justify-center ">
+            <Suspense fallback={<div className="w-full h-full bg-base-200 skeleton">.</div>}>
+              <OneGithubRepoREADME owner={owner} repo={repo} />
+            </Suspense>
+          </div>
+
       <div className="w-full h-[600px] px-7">
         <StackblitzEmbed owner={owner} repo={repo} />
       </div>
