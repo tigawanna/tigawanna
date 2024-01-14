@@ -117,7 +117,7 @@ export async function OneRepo({ params, ...props }: { params: string }) {
         />
       </div>
 
-      <div className="w-full p-2 h-full flex items-center justify-center ">
+      <div className="w-full  flex items-center justify-center ">
         <Suspense fallback={<div className="w-full h-full bg-base-200 skeleton">.</div>}>
           <OneGithubRepoREADME owner={owner} repo={repo} />
         </Suspense>
