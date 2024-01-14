@@ -13,9 +13,9 @@ export async function OneGithubRepoREADME({owner,repo}:OneGithubRepoREADMEProps)
     }
 
 return (
- <div className='w-[95%] md:w-[85%]  h-full flex flex-col items-center justify-center 
+ <div id="readme" className='w-[95%] md:w-[85%]  h-full  
  bg-base-200/30 p-5 rounded-xl '>
-  <h2 className="text-4xl font-bold text-start w-full capitalize">{repo} readme</h2>
+  <h2 className="text-2xl font-bold text-start w-full capitalize">{repo} readme</h2>
    <div className="markdown" dangerouslySetInnerHTML={{ __html: data}} />
  </div>
 );

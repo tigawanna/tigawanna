@@ -54,9 +54,8 @@ export async function OneRepo({ params, ...props }: { params: string }) {
   const homepage_url = data?.data?.repository?.homepageUrl;
   const repo_url = data?.data?.repository?.url;
   return (
-    <div className="w-full h-full min-h-screen flex flex-col  items-center gap-5 pb-5">
-      <div className="w-full h-full flex sm:max-h-[40%]   gap-2 justify-center items-center p-5">
-        
+    <div className="w-full flex flex-col  items-center gap-5">
+      <div className="w-full flex    gap-2 justify-center items-center p-5">
         {/* github stats */}
         <div className="w-full p-2 px-4 h-full flex flex-col gap-2  justify-center bg-base-200 rounded-xl">
           <div className="w-full flex flex-wrap gap-5 items-center p-5">
@@ -98,7 +97,6 @@ export async function OneRepo({ params, ...props }: { params: string }) {
             ))}
           </ul>
 
-
           <div className="w-full p-2 h-full flex  justify-between bg-base-200">
             <Suspense fallback={<div className="w-full h-full bg-base-200 skeleton">.</div>}>
               <OneGithubRepoLanguages owner={owner} repo={repo} />
@@ -112,18 +110,18 @@ export async function OneRepo({ params, ...props }: { params: string }) {
         <Image
           src={data?.data?.repository?.openGraphImageUrl}
           alt={data?.data?.repository?.name}
-          height={100}
+          height={400}
           width={300}
           priority
-          className="w-full h-auto  object-cover aspect-video hidden md:flex"
+          className="w-full h-auto   object-cover  hidden md:flex"
         />
       </div>
 
-         <div className="w-full p-2 h-full flex items-center justify-center ">
-            <Suspense fallback={<div className="w-full h-full bg-base-200 skeleton">.</div>}>
-              <OneGithubRepoREADME owner={owner} repo={repo} />
-            </Suspense>
-          </div>
+      <div className="w-full p-2 h-full flex items-center justify-center ">
+        <Suspense fallback={<div className="w-full h-full bg-base-200 skeleton">.</div>}>
+          <OneGithubRepoREADME owner={owner} repo={repo} />
+        </Suspense>
+      </div>
 
       <div className="w-full h-[600px] px-7">
         <StackblitzEmbed owner={owner} repo={repo} />

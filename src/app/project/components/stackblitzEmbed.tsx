@@ -32,7 +32,7 @@ export function StackblitzEmbed({owner,repo}: stackblitzEmbedProps) {
   }
 
   return (
-  <div className="w-full h-full relative">
+  <div id="stackblitz" className="w-full h-full relative">
     <button className="btn btn-sm btn-outline hover:bg-secondary absolute top-[1%] right-[2%]" 
     onClick={openProject} >
       Open in new window
