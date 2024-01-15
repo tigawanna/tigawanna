@@ -5,12 +5,11 @@ import { ContactMeForm } from "@/components/contact/ContactMeForm";
 import { PinnedGithubProjects, ProjectsSuspenseFallback } from "@/components/projects/repos/PinnedGithubProjects";
 import { MainFooter } from "@/components/shared/Footer";
 import { Suspense } from "react";
-
-
 import { AboutLinks } from "@/components/about/AboutLinks";
 import { GithubLanguages,LanguagesSuspenseFallback } from "@/components/stats/languages/Languages";
 import { TopLibrariesSuspenseFallback, TopLibraries } from "@/components/stats/libraries/TopLibraries";
 import { CurrentlyWorkingOnGithubProjects } from "@/components/projects/repos/CurrentlyWorkingOnGithubProjects";
+
 
 export const revalidate = 60;
 export default async function Home() {
@@ -31,7 +30,6 @@ export default async function Home() {
      <Suspense fallback={<TopLibrariesSuspenseFallback />}>
        <TopLibraries />
      </Suspense>
-
      {/* <Projects/> */}
      <Suspense fallback={<ProjectsSuspenseFallback />}>
        <PinnedGithubProjects />
@@ -40,6 +38,7 @@ export default async function Home() {
        <CurrentlyWorkingOnGithubProjects />
      </Suspense>
      <ContactMeForm />
+     {/* <LibraryIcons/> */}
      {/* <Libraries data={libs}/> */}
      <MainFooter />
    </main>

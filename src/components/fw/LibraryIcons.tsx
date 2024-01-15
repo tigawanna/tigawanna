@@ -1,17 +1,35 @@
 "use client";
+import { SiSolid } from "react-icons/si";
+import { FaReact } from "react-icons/fa";
+import { SiSvelte } from "react-icons/si";
+import { FaVuejs } from "react-icons/fa";
+import { SiDeno } from "react-icons/si";
+import { SiRemix } from "react-icons/si";
+import { TbBrandNextjs } from "react-icons/tb";
+import { SiNuxtdotjs } from "react-icons/si";
 
-import React from "react";
-import { ViewerLibraries } from "./helpers/api";
 import { Pack, hierarchy } from "@visx/hierarchy";
 import { ParentSize } from "@visx/responsive";
 import { twMerge } from "tailwind-merge";
+import React from "react";
+interface LibraryIconsProps {}
 
-interface TopLibrariesVisualizerProps {
-  libs: ViewerLibraries | undefined;
-}
-
+const frameworks = [
+  { name: "SolidJS", value: 3 },
+  { name: "ReactJS", value: 10 },
+  { name: "sveltejs", value: 4 },
+  { name: "VueJS", value: 7 },
+  { name: "denoland", value: 3 },
+  { name: "remix-run", value: 2 },
+  { name: "vercel", value: 7 },
+  { name: "Nuxt", value: 4 },
+  { name: "oven-sh", value: 1 },
+  { name: "BuilderIO", value: 1 },
+  { name: "withastro", value: 3 },
+  { name: "nodejs", value: 10 },
+];
 interface Circle {
-  data: { key: string; value: number };
+  data: (typeof frameworks)[number];
   depth: number;
   height: number;
   width: number;
@@ -20,20 +38,16 @@ interface Circle {
   x: number;
   y: number;
 }
-export function TopLibrariesVisualizer({ libs }: TopLibrariesVisualizerProps) {
-  const languages = Object.entries(libs?.highlighted_library_stats ?? {}).map(([key, value]) => ({
-    key,
-    value,
-  }));
 
+export function LibraryIcons({}: LibraryIconsProps) {
   const pack = React.useMemo(
     () => ({
-      children: languages,
+      children: frameworks,
       name: "root",
       radius: 0,
       distance: 0,
     }),
-    [languages]
+    [frameworks]
   );
 
   const root = React.useMemo(
@@ -41,15 +55,14 @@ export function TopLibrariesVisualizer({ libs }: TopLibrariesVisualizerProps) {
       hierarchy(pack)
         // d:{key:string;value:number}
         .sum((d: any) => {
-          // // no("sum", d?.tier?.monthlyPriceInDollars)
+          console.log("===== d ==== ", d);
           return 1 + d?.value;
         })
         .sort((a, b) => (b.value ?? 0) - (a.value ?? 0)),
     [pack]
   );
-
   return (
-    <div className="w-full h-full flex flex-col items-center gap-2 pt-2">
+    <div className="w-full h-full flex items-center justify-center">
       <div className="w-full">
         <ParentSize>
           {({ width = 600 }) => {
@@ -82,9 +95,9 @@ export function TopLibrariesVisualizer({ libs }: TopLibrariesVisualizerProps) {
                 />
                 <Pack root={root} size={[width, width]} padding={width * 0.005}>
                   {(packData) => {
-                    // // no(" ===== PACK DATA ======= ", packData);
+                    console.log(" ===== PACK DATA ======= ", packData);
                     const circles = packData.descendants().slice(1); // skip first layer
-                    // // no("========= CIRCLES DESCENDANT ======== ", circles);
+                    console.log("========= CIRCLES DESCENDANT ======== ", circles);
                     return (
                       <div>
                         {[...circles].reverse().map((circ, i) => {
@@ -95,7 +108,7 @@ export function TopLibrariesVisualizer({ libs }: TopLibrariesVisualizerProps) {
                           return (
                             <a
                               key={`circle-${i}`}
-                              href={`https://github.com/${circle.data.key}`}
+                              href={`https://github.com/${circle.data.name}`}
                               className={
                                 `spon-link ` + `absolute shadow-lg bg-white rounded-full z-0`
                               }
@@ -112,9 +125,10 @@ export function TopLibrariesVisualizer({ libs }: TopLibrariesVisualizerProps) {
                                     left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
                                     `}
                                 src={`https://avatars0.githubusercontent.com/${
-                                  circle.data.key
+                                  circle.data.name
                                 }?v=3&s=${Math.round(circle.r * 2)}`}
                               />
+
                               <div
                                 className={twMerge(
                                   `spon-tooltip absolute text-sm
@@ -131,7 +145,7 @@ export function TopLibrariesVisualizer({ libs }: TopLibrariesVisualizerProps) {
                                     ? `top-1/4 -translate-y-full`
                                     : `bottom-1/4 translate-y-full`
                                 )}>
-                                <p className={`whitespace-nowrap font-bold`}>{circle.data.key}</p>
+                                <p className={`whitespace-nowrap font-bold`}>{circle.data.name}</p>
                               </div>
                             </a>
                           );

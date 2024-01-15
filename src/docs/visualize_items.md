@@ -1,31 +1,33 @@
-"use client";
+# Visualize most Used Libraries
 
-import React from "react";
-import { ViewerLibraries } from "./helpers/api";
-import { Pack, hierarchy } from "@visx/hierarchy";
-import { ParentSize } from "@visx/responsive";
-import { twMerge } from "tailwind-merge";
+i had a list of top libraries i use and listing them in a ul didn't look appealing enought , luckily i hda seen the tanstack website and their sponsors section wher they had this coool visualization of circles that vary in sizebased on how big a contributor they are..
 
-interface TopLibrariesVisualizerProps {
-  libs: ViewerLibraries | undefined;
+We'll be using [vlsx](https://airbnb.io/visx/docs) by the people at Airbnb
+
+```sh
+npm i @visx/hierarchy @visx/responsive 
+```
+
+In my case , my  data will be in this shape
+
+```ts
+export interface ViewerLibraries {
+  highlighted_library_stats: Record<string, string>;
+  library_stats: Record<string, string>;
+  framework_stats: Record<string, string>;
 }
+```
 
-interface Circle {
-  data: { key: string; value: number };
-  depth: number;
-  height: number;
-  width: number;
-  r: number;
-  value: number;
-  x: number;
-  y: number;
-}
-export function TopLibrariesVisualizer({ libs }: TopLibrariesVisualizerProps) {
-  const languages = Object.entries(libs?.highlighted_library_stats ?? {}).map(([key, value]) => ({
+and we'll
+
+```tsx
+  const languages = Object.entries(libs?.highlighted_library_stats ?? {})
+  .map(([key, value]) => ({
     key,
     value,
   }));
 
+// initialize the pack
   const pack = React.useMemo(
     () => ({
       children: languages,
@@ -36,6 +38,7 @@ export function TopLibrariesVisualizer({ libs }: TopLibrariesVisualizerProps) {
     [languages]
   );
 
+//  initialize the root
   const root = React.useMemo(
     () =>
       hierarchy(pack)
@@ -48,7 +51,13 @@ export function TopLibrariesVisualizer({ libs }: TopLibrariesVisualizerProps) {
     [pack]
   );
 
-  return (
+```
+
+Then we'll map overthe items to display them in our components.
+
+```tsx
+
+
     <div className="w-full h-full flex flex-col items-center gap-2 pt-2">
       <div className="w-full">
         <ParentSize>
@@ -146,5 +155,9 @@ export function TopLibrariesVisualizer({ libs }: TopLibrariesVisualizerProps) {
         </ParentSize>
       </div>
     </div>
-  );
-}
+
+```
+
+ℹ️ **Info:** the library types are a little off so we hade to typecast to the correct ones 
+
+
