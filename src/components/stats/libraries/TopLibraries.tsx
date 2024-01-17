@@ -3,19 +3,18 @@ import { TopLibrariesVisualizer } from "./TopLibrariesVisualizer";
 import { ViewerLibraries, getViewerLibraries } from "./helpers/api";
 
 interface TopLibrariesProps {
-
+  libs: ViewerLibraries | undefined;
 }
 
-export async function TopLibraries({}:TopLibrariesProps){
-const libs = await getViewerLibraries();
-return (
+export function TopLibraries({libs}:TopLibrariesProps){
+  return (
   <div  className="w-full h-full flex flex-col items-center justify-center">
     <SectionHeader heading="Top libraries used" id="stats" />
     <TopLibrariesVisualizer libs={libs} />
   </div>
 );
 }
-export function TopLibrariesSuspenseFallback({}:TopLibrariesProps){
+export function TopLibrariesSuspenseFallback(){
 const libs: ViewerLibraries = {
     library_stats: {
         "loading": "40",

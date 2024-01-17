@@ -9,6 +9,7 @@ import { AboutLinks } from "@/components/about/AboutLinks";
 import { GithubLanguages,LanguagesSuspenseFallback } from "@/components/stats/languages/Languages";
 import { TopLibrariesSuspenseFallback, TopLibraries } from "@/components/stats/libraries/TopLibraries";
 import { CurrentlyWorkingOnGithubProjects } from "@/components/projects/repos/CurrentlyWorkingOnGithubProjects";
+import { GithubStats } from "@/components/stats/GithubStats";
 
 
 export const revalidate = 60;
@@ -28,7 +29,7 @@ export default async function Home() {
        <GithubLanguages />
      </Suspense>
      <Suspense fallback={<TopLibrariesSuspenseFallback />}>
-       <TopLibraries />
+       <GithubStats />
      </Suspense>
      {/* <Projects/> */}
      <Suspense fallback={<ProjectsSuspenseFallback />}>

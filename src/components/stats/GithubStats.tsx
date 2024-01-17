@@ -1,19 +1,16 @@
 import { Suspense } from "react";
-import { GithubLanguages, LanguagesSuspenseFallback } from "./languages/Languages";
-import { TopLibraries,TopLibrariesSuspenseFallback } from "./libraries/TopLibraries";
+import { TopLibraries, TopLibrariesSuspenseFallback } from "./libraries/TopLibraries";
+import { getViewerLibraries } from "./libraries/helpers/api";
+import { TopJavascriptFramewoorks } from "./frameworks/TopJavascriptFramewoorks";
 
-interface GithubStatsProps {
+interface GithubStatsProps {}
 
-}
-
-export function GithubStats({}:GithubStatsProps){
-
-return (
-  <div id="stats" className="w-full h-full flex flex-col  gap-2">
-
-        <Suspense fallback={<TopLibrariesSuspenseFallback/>}>
-          <TopLibraries/>
-        </Suspense>
-  </div>
-);
+export async function GithubStats({}: GithubStatsProps) {
+  const libs = await getViewerLibraries();
+  return (
+    <div id="stats" className="w-full h-full flex flex-col">
+      <TopLibraries libs={libs} />
+      <TopJavascriptFramewoorks libs={libs} />
+    </div>
+  );
 }
