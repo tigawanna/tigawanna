@@ -12,6 +12,7 @@ export async function OneGithubRepoREADME({owner,repo}:OneGithubRepoREADMEProps)
       return null;
     }
 
+    // console.log("====== html  ======= ",data)
 return (
  <div id="readme" className='w-[95%] md:w-[85%]  h-full  
  bg-base-200/30 p-5 rounded-xl '>

@@ -8,6 +8,7 @@ export interface PageProps {
 //     p?: number;
 //   };
 }
+export const revalidate = 60;
 export default function OneProjectPage({params}:PageProps) {
 
 return (
