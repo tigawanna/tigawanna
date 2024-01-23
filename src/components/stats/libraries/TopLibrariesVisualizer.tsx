@@ -21,7 +21,7 @@ interface Circle {
   y: number;
 }
 export function TopLibrariesVisualizer({ libs }: TopLibrariesVisualizerProps) {
-  const languages = Object.entries(libs?.highlighted_library_stats ?? {}).map(([key, value]) => ({
+  const languages = Object.entries(libs?.library_stats ?? {}).map(([key, value]) => ({
     key,
     value,
   }));
