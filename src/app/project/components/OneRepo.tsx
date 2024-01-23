@@ -53,6 +53,7 @@ export async function OneRepo({ params, ...props }: { params: string }) {
 
   const homepage_url = data?.data?.repository?.homepageUrl;
   const repo_url = data?.data?.repository?.url;
+  const topics = data.data?.repository.repositoryTopics?.edges;
   return (
     <div className="w-full flex flex-col  items-center gap-5">
       <div className="w-full flex    gap-2 justify-center items-center p-5">
@@ -85,25 +86,25 @@ export async function OneRepo({ params, ...props }: { params: string }) {
             </div>
           </div>
 
-          <div className="w-full flex flex-col sm:flex-row gp-2 items-center pt-5 pb-2"></div>
-          <ul className="flex flex-wrap justify-center sm:justify-start items-center gap-2">
+
+{(topics&&topics.length>0)&&
+    <ul className="flex flex-wrap justify-center sm:justify-start items-center gap-2">
             <h2 className="font-bold">Topics:</h2>
-            {data.data?.repository.repositoryTopics.edges.map((topic) => (
+            {topics.map((topic) => (
               <li
                 key={topic.node.id}
                 className="text-sm  badge badge-ghost shadow-base-300 shadow rounded-lg">
                 {topic.node.topic.name}
               </li>
             ))}
-          </ul>
+          </ul>}
 
           <div className="w-full p-2 h-full flex  justify-between bg-base-200">
             <Suspense fallback={<div className="w-full h-full bg-base-200 skeleton">.</div>}>
               <OneGithubRepoLanguages owner={owner} repo={repo} />
             </Suspense>
           </div>
-          <p className="p-2 px-5 lg:max-w-[60%]">
-            description
+          <p className="p-2 px-5 lg:max-w-[60%] ">
             {data.data?.repository.description}
           </p>
         </div>
