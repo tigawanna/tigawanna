@@ -10,6 +10,7 @@ import { GithubLanguages,LanguagesSuspenseFallback } from "@/components/stats/la
 import { TopLibrariesSuspenseFallback, TopLibraries } from "@/components/stats/libraries/TopLibraries";
 import { CurrentlyWorkingOnGithubProjects } from "@/components/projects/repos/CurrentlyWorkingOnGithubProjects";
 import { GithubStats } from "@/components/stats/GithubStats";
+import { DevToArticles } from "@/components/articles/DevToArticles";
 
 
 export const revalidate = 60;
@@ -38,6 +39,10 @@ export default async function Home() {
      <Suspense fallback={<ProjectsSuspenseFallback />}>
        <CurrentlyWorkingOnGithubProjects />
      </Suspense>
+     <Suspense fallback={<ProjectsSuspenseFallback />}>
+       <DevToArticles />
+     </Suspense>
+
      <ContactMeForm />
      {/* <LibraryIcons/> */}
      {/* <Libraries data={libs}/> */}

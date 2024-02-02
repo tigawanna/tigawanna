@@ -21,12 +21,17 @@ const nextConfig = {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
       },
+
+      {
+        protocol: "https",
+        hostname: "media.dev.to",
+      },
+
       {
         protocol: "https",
         hostname: "repository-images.githubusercontent.com",
       },
     ],
-
   },
 
   eslint: {
@@ -34,4 +39,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig
+module.exports = nextConfig;

@@ -4,7 +4,7 @@ import { getGithubViewerLanguages } from "./deno";
 
 interface LanguagesProps {}
 
-export async function GithubLanguages({}: LanguagesProps) {
+export  async function GithubLanguages({}: LanguagesProps) {
   const top_langs = await getGithubViewerLanguages();
   if (!top_langs) return;
 
