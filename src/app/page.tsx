@@ -13,6 +13,7 @@ import { GithubStats } from "@/components/stats/GithubStats";
 import { DevToArticles } from "@/components/articles/DevToArticles";
 
 
+
 export const revalidate = 60;
 export default async function Home() {
  return (

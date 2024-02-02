@@ -25,35 +25,38 @@ return (
       />
     </figure>
     <div className="card-body flex-wrap bg-base-200 p-3">
-      <h2 className="card-title w-full justify-between">
-        {one_repo.name}
-        <div className="w-full flex flex-row items-center justify-end gap-1">
-          <h3 className="text-sm  text-center">last updated</h3>
-          <TimeCompponent
-            time={one_repo.pushedAt}
-            className="text-sm font-thin p-0 text-secondary"
-            relative
-          />
+      <div className="w-full flex flex-wrap items-center justify-between  gap-1">
+      <h2 className="text-2xl  justify-between">{one_repo.name}</h2>
+        <div className="min-w-fit flex  items-center  gap-1">
+
+        <h3 className="text-sm  text-center">last updated</h3>
+        <TimeCompponent
+          time={one_repo.pushedAt}
+          className="text-sm font-thin p-0 text-secondary"
+          relative
+        />
         </div>
-      </h2>
+      </div>
 
       <p className=" p-1 font-sans text-sm line-clamp-2">{one_repo.description}</p>
       <div className="flex flex-wrap justify-between items-center gap-3">
         <div className="flex  items-center gap-3">
-          {isString(one_repo.homepageUrl)&& <div className="border-b p-1 hover:text-secondary hover:underline">
-            <Link
-              href={one_repo?.homepageUrl??""}
-              target="_blank"
-              className="flex items-center justify-center gap-1">
-              <Globe className="w-4 h-4" />
-              site
-            </Link>
-          </div>}
+          {isString(one_repo.homepageUrl) && (
+            <div className="border-b p-1 hover:text-secondary hover:underline">
+              <Link
+                href={one_repo?.homepageUrl ?? ""}
+                target="_blank"
+                className="flex items-center justify-center gap-1">
+                <Globe className="w-4 h-4" />
+                site
+              </Link>
+            </div>
+          )}
 
           {isString(one_repo.url) && (
             <div className="rounded-lg   border-b p-1 hover:text-secondary hover:underline">
               <Link
-                href={one_repo.url??""}
+                href={one_repo.url ?? ""}
                 target="_blank"
                 className="flex items-center justify-center gap-1">
                 <GithubIcon className="w-4 h-4" />
