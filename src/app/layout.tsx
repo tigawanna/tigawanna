@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import { PageContainer } from "@/components/shared/container/PageContainer";
 import "./globals.css";
 import "../state/md/markdown.css";
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={inter.className}>
         <PageContainer>{children}</PageContainer>
+        <Analytics />
       </body>
     </html>
   );
