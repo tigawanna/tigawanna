@@ -24,21 +24,20 @@ return (
         className="h-[200px] w-full object-cover hover:scale-150 ease-linear duration-300"
       />
     </figure>
-    <div className="card-body flex-wrap bg-base-200 p-3">
+    <div className="card-body flex-wrap  p-3">
       <div className="w-full flex flex-wrap items-center justify-between  gap-1">
-      <h2 className="text-2xl  justify-between">{one_repo.name}</h2>
+        <h2 className="text-2xl  justify-between">{one_repo.name}</h2>
         <div className="min-w-fit flex  items-center  gap-1">
-
-        <h3 className="text-sm  text-center">last updated</h3>
-        <TimeCompponent
-          time={one_repo.pushedAt}
-          className="text-sm font-thin p-0 text-secondary"
-          relative
-        />
+          <h3 className="text-xs  text-center">last updated</h3>
+          <TimeCompponent
+            time={one_repo.pushedAt}
+            className="text-sm font-thin p-0 "
+            relative
+          />
         </div>
       </div>
 
-      <p className=" p-1 font-sans text-sm line-clamp-2">{one_repo.description}</p>
+      <p className=" font-sans text-sm line-clamp-2 brightness-90">{one_repo.description}</p>
       <div className="flex flex-wrap justify-between items-center gap-3">
         <div className="flex  items-center gap-3">
           {isString(one_repo.homepageUrl) && (

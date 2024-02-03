@@ -5,7 +5,6 @@ import Image from "next/image";
 interface DevToArticlesProps {}
 
 export async function DevToArticles({}: DevToArticlesProps) {
-  
   const articles = await fetchMyLatstDevToArticles();
   // console.log("articles  ===== ",articles)
   if (!articles) return null;
@@ -29,25 +28,31 @@ export async function DevToArticles({}: DevToArticlesProps) {
                 />
               </figure>
               <div className="p-2 flex flex-col gap-1">
-                <h2 className="card-title">{article.title}</h2>
-                <p className="line-clamp-2 brightness-90">{article.description}</p>
+                <h2 className="text-2xl">{article.title}</h2>
+                <p className="font-sans text-sm line-clamp-2 brightness-90">
+                  {article.description}
+                </p>
 
                 <div className="w-full flex justify-between items-center p-2">
                   <div className="flex gap-2 items-center  ">
-                    <h3 className="text-sm text-accent">Published at:</h3>
-                    <div className="text-sm font-thin ">
+                    <h3 className="text-xs text-accent">Published at:</h3>
+                    <div className="text-xs font-thin ">
                       {new Date(article.published_at).toLocaleDateString()}
                     </div>
                   </div>
-                  <Link className="hover:text-accent" href={article.url} 
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >read more</Link>
+                  <Link
+                    className="hover:text-accent"
+                    href={article.url}
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    read more
+                  </Link>
                 </div>
               </div>
             </li>
           );
         })}
+
       </ul>
     </div>
   );
