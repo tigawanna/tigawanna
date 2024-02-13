@@ -30,20 +30,20 @@ export function WhatIBuild({}: WhatIBuildProps) {
             <div className="w-full flex flex-wrap justify-center p-5 gap-5 ">
               <div
                 className=" w-full sm:w-[45%] lg:w-[45%] h-52 rounded-lg p-1
-              border border-base-200 bg-base-300 flex flex-col justify-center items-center gap-1">
+              border border-base-200 bg-slate-700 flex flex-col justify-center items-center gap-1">
                 <span className="flex justify-center items-center gap-2">
                   <FaReact className="h-20 w-20" />
                   <FaGlobe className="h-5 w-5" />
                 </span>
                 <h2 className="text-xl font-bold">Websites</h2>
                 <p className="text-sm w-[90%] text-center">
-                  Fullstack React websites using Nextjs and Vite
+                  Fullstack React websites using Nextjs + NodeJS apis
                 </p>
               </div>
 
               <div
                 className=" w-full sm:w-[45%] lg:w-[35%] h-52 rounded-lg p-1
-              border border-base-200 bg-base-300 flex flex-col justify-center items-center gap-1">
+              border border-base-200 bg-slate-700 flex flex-col justify-center items-center gap-1">
                 <span className="flex gap-5">
                   <FaServer className="h-20 w-20" />
                 </span>
@@ -55,7 +55,7 @@ export function WhatIBuild({}: WhatIBuildProps) {
 
               <div
                 className=" w-full sm:w-[45%] lg:w-[35%] h-52 rounded-lg p-1
-              border border-base-200 bg-base-300 flex flex-col justify-center items-center gap-1">
+              border border-base-200 bg-slate-700 flex flex-col justify-center items-center gap-1">
                 <div className="flex gap-2 items-center">
                   <FaReact className="h-20 w-20" />
                   <div className="gap-2">
@@ -71,7 +71,7 @@ export function WhatIBuild({}: WhatIBuildProps) {
 
               <div
                 className=" w-full sm:w-[45%] lg:w-[35%] h-52 rounded-lg p-1
-              border border-base-200 bg-base-300 flex flex-col justify-center items-center gap-1">
+              border border-base-200 bg-slate-700 flex flex-col justify-center items-center gap-1">
                 <span className="flex gap-5">
                   <FaTerminal className="h-20 w-20" />
                 </span>
