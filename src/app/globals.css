@@ -2,12 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+/* :root {
   --foreground-rgb: rgb(0, 0, 0);
   --background-start-rgb: rgb(214, 219, 220);
   --background-end-rgb: rgb(255, 255, 255);
-    --accent-color:rgb(17, 248, 133);
+  --accent-color:rgb(17, 248, 133);
 
+} */
+:root {
+  --foreground-rgb: rgb(255, 255, 255);
+  --background-start-rgb: rgb(0, 0, 0);
+  --background-end-rgb: rgb(0, 0, 0);
+  --accent-color:rgb(17, 248, 133);
 }
 
 @media (prefers-color-scheme: dark) {
