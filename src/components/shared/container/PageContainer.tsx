@@ -21,6 +21,7 @@ export function PageContainer({ children }: pageContainerProps) {
     bg-gradient-to-tr from-green-900 via-transparent to-emerald-700">
         {/* Navbar */}
         <div className="w-full navbar  min-h-10 h-12  justify-end sticky top-0 z-50">
+         
           <div className="flex-none md:hidden ">
             <label
               htmlFor="my-drawer-3"
@@ -39,12 +40,7 @@ export function PageContainer({ children }: pageContainerProps) {
               </svg>
             </label>
           </div>
-          {/* <div className="flex-1 px-2 mx-2">Navbar Title</div> */}
-          {/* <Link
-          href="/"
-          className="text-2xl font-bold flex items-center gap-2 hover:text-secondary min-w-fit ">
-          <Castle className="text-accent fill-secondary " /> Better Blocks
-        </Link> */}
+
 
           <div className="hidden menu md:flex gap-1  h-full w-full justify-center items-center ">
             {show_navbar_links && (
