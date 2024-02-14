@@ -4,13 +4,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        accent:"var(--accent-color)",
+        accent: "var(--accent-color)",
       },
       backgroundImage: {
-        "gradient-radial":
-          "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       animation: {
         text: "text 5s ease infinite",
@@ -36,14 +34,17 @@ module.exports = {
       {
         light: {
           ...require("daisyui/src/theming/themes")["wireframe"],
-          "color-scheme": "light",
+          accent: "#343232",
           fontFamily: "",
+          "base-100": "#000000",
+          "base-200": "#0D0D0D",
+          "base-300": "#1A1919",
+          neutral: "#272626",
+          "color-scheme": "dark",
           primary: "#433922",
           secondary: "#34d399",
-          accent: "#343232",
-          neutral: "#ffe4e6",
-          info: "#62c2d5",
           accent: "#966919",
+          info: "#62c2d5",
           success: "#25bbac",
           warning: "#c88314",
           error: "#e77982",
