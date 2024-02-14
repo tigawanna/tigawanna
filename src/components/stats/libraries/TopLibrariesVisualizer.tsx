@@ -21,7 +21,7 @@ interface Circle {
   y: number;
 }
 export function TopLibrariesVisualizer({ libs }: TopLibrariesVisualizerProps) {
-  const languages = Object.entries(libs?.library_stats ?? {}).map(([key, value]) => ({
+  const languages = Object.entries(libs?.highlighted_library_stats ?? {}).map(([key, value]) => ({
     key,
     value,
   }));
@@ -107,6 +107,7 @@ export function TopLibrariesVisualizer({ libs }: TopLibrariesVisualizerProps) {
                               }}>
                               <img
                                 key={`circle-${i}`}
+                                loading="lazy"
                                 className={`absolute bg-no-repeat bg-center bg-contain rounded-full
                                     w-[95%] h-[95%] dark:w-[100.5%] dark:h-[100.5%]
                                     left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
@@ -157,7 +158,7 @@ export function TopLibrariesVisualizer({ libs }: TopLibrariesVisualizerProps) {
             strokeWidth="2"
             d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
-        <span>Images above might be inaccurate</span>
+        <span>Images above might be inaccurate as the repository names might not match the npm package name</span>
       </div>
     </div>
   );
