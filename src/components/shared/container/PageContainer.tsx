@@ -14,7 +14,7 @@ export function PageContainer({ children }: pageContainerProps) {
   const show_navbar_links = pathnaame === "/";
 
   return (
-    <div className="drawer">
+    <div className="drawer overflow-x-clip">
       <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
       <div
         className="drawer-content flex flex-col 	
