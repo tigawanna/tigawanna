@@ -17,7 +17,7 @@ return (
       md:w-[45%] lg:w-[28%] shadow-lg shadow-base-200 rounded-xl">
     <figure>
       <Image
-        src={one_repo.openGraphImageUrl}
+        src={one_repo.openGraphImageUrl?one_repo.openGraphImageUrl?.length===0?"/github.jpg":one_repo.openGraphImageUrl:""}
         alt={one_repo.name}
         width={300}
         height={200}
