@@ -24,6 +24,7 @@ export async function CurrentlyWorkingOnGithubProjects({ }: CurrentlyWorkingOnGi
       <SectionHeader heading="Currently working on" id="working_on" />
       <div className="flex w-[90%] h-full flex-wrap items-center justify-center gap-5 p-3">
         {projects.map((one_repo) => {
+          if (one_repo.isPrivate) return null;
           return <RepoListCard one_repo={one_repo} key={one_repo.nameWithOwner} />;
         })}
       </div>

@@ -43,14 +43,15 @@ export interface PinnedItems {
 }
 
 export interface PinnedItemsNode {
-  name: string
-  url: string
-  openGraphImageUrl: string
-  description?: string
-  descriptionHTML: string
+  name: string;
+  url: string;
+  openGraphImageUrl: string;
+  description?: string;
+  descriptionHTML: string;
   homepageUrl: string;
   nameWithOwner: string;
   pushedAt: string;
+  isPrivate:boolean;
 }
 
 
@@ -71,6 +72,7 @@ query getViewerPinnedRepos {
           nameWithOwner
           url
           pushedAt
+          isPrivate
         }
       }
     }
@@ -118,6 +120,7 @@ export const ViewerLatsedPushedToRepos =`query getViewerRecentlyPushedRepos {
           nameWithOwner
           url
           pushedAt
+          isPrivate
         }
       }
     }
