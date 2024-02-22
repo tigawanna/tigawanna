@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { StackblitzEmbed } from "./stackblitzEmbed";
 import { OneGithubRepoREADME } from "./OneGithubRepoREADME";
-
+import { redirect } from "next/navigation";
 export async function OneRepo({ params, ...props }: { params: string }) {
   const [owner, repo] = params.split("%3D%3E");
 
@@ -50,7 +50,9 @@ export async function OneRepo({ params, ...props }: { params: string }) {
     );
   }
 
-
+if(data.data.repository.isPrivate){
+  redirect("/")
+}
   const homepage_url = data?.data?.repository?.homepageUrl;
   const repo_url = data?.data?.repository?.url;
   const topics = data.data?.repository.repositoryTopics?.edges;
