@@ -47,7 +47,7 @@ export function TopFrameworksVisualizer({ pkgs }: TopFrameworksVisualizerProps) 
   return (
     <div className="w-full md:w-[70%] h-full flex flex-col items-center gap-2 pt-2">
       <div className="w-full">
-        <ParentSize>
+        <ParentSize >
           {({ width = 600 }) => {
             return width < 10 ? null : (
               <div
@@ -63,6 +63,7 @@ export function TopFrameworksVisualizer({ pkgs }: TopFrameworksVisualizerProps) 
               .spon-link {
                 transition: all .2s ease;
                 transform: translate(-50%, -50%);
+      
               }
 
               .spon-link:hover {
@@ -82,7 +83,7 @@ export function TopFrameworksVisualizer({ pkgs }: TopFrameworksVisualizerProps) 
                     const circles = packData.descendants().slice(1); // skip first layer
                     // // no("========= CIRCLES DESCENDANT ======== ", circles);
                     return (
-                      <div>
+                      <div >
                         {[...circles].reverse().map((circ, i) => {
                           const circle = circ as any as Circle;
                           const tooltipX = circle.x > width / 2 ? "left" : "right";

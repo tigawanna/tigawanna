@@ -21,7 +21,7 @@ interface Circle {
   y: number;
 }
 export function TopLibrariesVisualizer({ libs }: TopLibrariesVisualizerProps) {
-  const languages = Object.entries(libs?.highlighted_library_stats ?? {}).map(([key, value]) => ({
+  const languages = Object.entries(libs?.library_stats ?? {}).map(([key, value]) => ({
     key,
     value,
   }));
@@ -49,7 +49,7 @@ export function TopLibrariesVisualizer({ libs }: TopLibrariesVisualizerProps) {
   );
 
   return (
-    <div className="w-full h-full flex flex-col items-center gap-2 pt-2">
+    <div className="w-full h-full flex flex-col items-center gap-2 pt-2 lg:px-[2%]">
       <div className="w-full">
         <ParentSize>
           {({ width = 600 }) => {

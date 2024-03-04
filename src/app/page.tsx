@@ -11,6 +11,7 @@ import { TopLibrariesSuspenseFallback, TopLibraries } from "@/components/stats/l
 import { CurrentlyWorkingOnGithubProjects } from "@/components/projects/repos/CurrentlyWorkingOnGithubProjects";
 import { GithubStats } from "@/components/stats/GithubStats";
 import { DevToArticles } from "@/components/articles/DevToArticles";
+import { TechUsed } from "@/components/tech/TechUsed";
 
 
 
@@ -30,9 +31,10 @@ export default async function Home() {
      <Suspense fallback={<LanguagesSuspenseFallback />}>
        <GithubLanguages />
      </Suspense>
-     <Suspense fallback={<TopLibrariesSuspenseFallback />}>
+     {/* <Suspense fallback={<TopLibrariesSuspenseFallback />}>
        <GithubStats />
-     </Suspense>
+     </Suspense> */}
+     <TechUsed/>
      {/* <Projects/> */}
      <Suspense fallback={<ProjectsSuspenseFallback />}>
        <PinnedGithubProjects />

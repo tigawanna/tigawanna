@@ -24,7 +24,7 @@ export default function Intro({}: introProps) {
           ">
             <TypeAnimation
               cursor={true}
-              sequence={["Javascript", "Typescript ", "React Developer"]}
+              sequence={["Javascript", "Typescript ", "Fullstack React Developer"]}
               wrapper="h1"
               className=""
             />

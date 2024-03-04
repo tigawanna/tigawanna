@@ -20,7 +20,7 @@ export async function CurrentlyWorkingOnGithubProjects({ }: CurrentlyWorkingOnGi
   }
   // // no({projects})
   return (
-    <div className="flex flex-col h-full w-full items-center justify-center">
+    <div className="flex flex-col h-full w-full items-center justify-center lg:px-[10%]">
       <SectionHeader heading="Currently working on" id="working_on" />
       <div className="flex w-[90%] h-full flex-wrap items-center justify-center gap-5 p-3">
         {projects.map((one_repo) => {

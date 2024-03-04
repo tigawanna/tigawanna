@@ -14,10 +14,10 @@ export function PageContainer({ children }: pageContainerProps) {
   const show_navbar_links = pathnaame === "/";
 
   return (
-    <div className="drawer overflow-x-clip">
+    <div className="drawer overflow-x-clip ">
       <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
       <div
-        className="drawer-content flex flex-col 	
+        className="drawer-content flex flex-col
     bg-gradient-to-tr from-green-900 via-transparent to-emerald-700">
         {/* Navbar */}
         <div className="w-full navbar  min-h-10 h-12  justify-end sticky top-0 z-50">

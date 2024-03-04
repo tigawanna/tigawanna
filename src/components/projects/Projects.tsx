@@ -23,8 +23,8 @@ function Projects({}: ProjectProps) {
   const projects = projects_list;
 
   return (
-    <div className="h-full w-full flex flex-col items-center justify-center  md:p-3 text-slate-300">
-      <SectionHeader heading="Highlighted projects" id="projects"/>
+    <div className="h-full w-full flex flex-col items-center justify-center  md:p-3 text-slate-300 lg:px-[10%]">
+      <SectionHeader heading="Highlighted projects" id="projects" />
 
       <div className="w-full p-2 flex flex-col items-center justify-center">
         <div className="w-full flex flex-col items-center justify-center  p-2 ">
@@ -79,11 +79,13 @@ function Projects({}: ProjectProps) {
                         </div>
                       )}
 
-                       {isString(item.link) &&<div className="border-b   rounded-lg p-1 hover:text-green-300 hover:underline">
-                        <Link href={item.link} target="_blank">
-                          Code
-                        </Link>
-                      </div>}
+                      {isString(item.link) && (
+                        <div className="border-b   rounded-lg p-1 hover:text-green-300 hover:underline">
+                          <Link href={item.link} target="_blank">
+                            Code
+                          </Link>
+                        </div>
+                      )}
                     </div>
                   </li>
                 );

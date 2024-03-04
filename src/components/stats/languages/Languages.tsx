@@ -4,7 +4,7 @@ import { getGithubViewerLanguages } from "./deno";
 
 interface LanguagesProps {}
 
-export  async function GithubLanguages({}: LanguagesProps) {
+export async function GithubLanguages({}: LanguagesProps) {
   const top_langs = await getGithubViewerLanguages();
   if (!top_langs) return;
 
@@ -12,9 +12,9 @@ export  async function GithubLanguages({}: LanguagesProps) {
     <div
       className=" w-full  h-full   p-5 
         flex flex-wrap items-center justify-center text-xs md:text-base
-        gap-2  rounded-xl ">
+        gap-2  rounded-xl lg:px-[10%]">
       <SectionHeader heading="Languages Stats on Github" id="stats" />
-    <GithubLangiagesPercentage top_langs={top_langs} />
+      <GithubLangiagesPercentage top_langs={top_langs} />
     </div>
   );
 }

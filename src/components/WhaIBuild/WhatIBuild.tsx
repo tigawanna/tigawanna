@@ -13,7 +13,7 @@ interface WhatIBuildProps {}
 
 export function WhatIBuild({}: WhatIBuildProps) {
   return (
-    <div className="w-full h-full   flex flex-col items-center justify-center relative ">
+    <div className="w-full h-full   flex flex-col items-center justify-center relative lg:px-[10%]">
       <SectionHeader heading="I Build " id="ibuild" />
       <Image
         priority
@@ -72,7 +72,8 @@ export function WhatIBuild({}: WhatIBuildProps) {
                 </span>
                 <h2 className="text-xl font-bold">BaaS soluitons</h2>
                 <p className="text-sm w-[90%] text-center">
-                  Using Supabase and Firebase for quick MVPs and low maintainance backend solutions</p>
+                  Using Supabase and Firebase for quick MVPs and low maintainance backend solutions
+                </p>
               </div>
 
               <div

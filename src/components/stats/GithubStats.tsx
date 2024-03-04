@@ -8,7 +8,7 @@ interface GithubStatsProps {}
 export async function GithubStats({}: GithubStatsProps) {
   const libs = await getViewerLibraries();
   return (
-    <div id="stats" className="w-full h-full flex flex-col">
+    <div id="stats" className="w-full flex flex-col lg:px-[10%]">
       <TopLibraries libs={libs} />
       <TopJavascriptFramewoorks libs={libs} />
     </div>
