@@ -27,8 +27,7 @@ export default async function Home() {
      <AboutLinks />
      {/* <About /> */}
      {/* <GithubStats /> */}
-
-     <Suspense fallback={<LanguagesSuspenseFallback />}>
+      <Suspense fallback={<LanguagesSuspenseFallback />}>
        <GithubLanguages />
      </Suspense>
      {/* <Suspense fallback={<TopLibrariesSuspenseFallback />}>
