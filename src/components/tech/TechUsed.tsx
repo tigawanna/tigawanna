@@ -1,4 +1,4 @@
-"use client";
+
 import {
   SiVite,
   SiDeno,
@@ -41,7 +41,7 @@ interface Circle {
 export function TechUsed({}: TechUsedProps) {
   return (
     <div className="w-full h-full  flex flex-col items-center justify-center lg:px-[10%] px-2">
-      <SectionHeader heading="I use" id="#tech" />
+      <SectionHeader heading="Technologies" id="tech" />
       <div className="w-full h-fit flex flex-wrap items-center justify-center gap-5">
         {tech_used.map((tech, index) => {
           return (

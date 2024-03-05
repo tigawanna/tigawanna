@@ -14,7 +14,7 @@ return (
   <div
     key={one_repo.nameWithOwner}
     className="card w-full sm:h-[350px] 
-      md:w-[45%] lg:w-[35%] shadow-lg shadow-base-200 rounded-xl">
+      md:w-[45%] lg:w-[30%] shadow-lg shadow-base-200 rounded-xl">
     <figure>
       <Image
         src={one_repo.openGraphImageUrl?one_repo.openGraphImageUrl?.length===0?"/github.jpg":one_repo.openGraphImageUrl:""}
