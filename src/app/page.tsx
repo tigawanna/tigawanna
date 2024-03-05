@@ -25,16 +25,17 @@ export default async function Home() {
      <Intro />
      {/* <Navbar /> */}
      <AboutLinks />
-     <About />
+     {/* <About /> */}
      {/* <GithubStats /> */}
-     <WhatIBuild />
+
      <Suspense fallback={<LanguagesSuspenseFallback />}>
        <GithubLanguages />
      </Suspense>
      {/* <Suspense fallback={<TopLibrariesSuspenseFallback />}>
        <GithubStats />
      </Suspense> */}
-     <TechUsed/>
+     {/* <WhatIBuild /> */}
+     <TechUsed />
      {/* <Projects/> */}
      <Suspense fallback={<ProjectsSuspenseFallback />}>
        <PinnedGithubProjects />
