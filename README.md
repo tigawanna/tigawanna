@@ -20,6 +20,6 @@ I love React , TailwindCSS , the tanstack , GraphQL and everything in between
 <!-- ![Alt text](https://spotify-recently-played-readme.vercel.app/api?user=ux88ch98gposewxwurgcx0pho&count=10) -->
 
 How to reach me: 
-- LinkedIn: https://linkedin.com/in/dennis-kinuthia
+- LinkedIn: https://linkedin.com/in/dennis-kinuthia-waweru
 - Github: https://github.com/tigawanna
 - website: https://tigawanna-portfolio.vercel.app
