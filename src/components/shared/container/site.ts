@@ -23,10 +23,13 @@ export const siteConfig = {
   navItems: links,
   navMenuItems: links,
   links: {
-    twitter: "https://twitter.com/betterblocks",
-    facebook: "https://facebook.com/betterblocks",
-    instagram: "https://instagram.com/betterblocks",
-    whatsapp: "https://whatsapp.com",
-    email: "betterblocks.com",
+    twitter: "https://twitter.com/tigawanna",
+    github: "https://facebook.com/tigawanna",
+    linkedin: "https://instagram.com/dennis-kinuthia-waweru",
+    devto:"https://dev.to/tigawanna",
+    nickname: "tigawanna",
+    phone: "+254790984481",
+    email: "denniskinuthiawaweru@gmail.com",
+    whatsapp: "https://wa.me/254790984481",
   },
 } as const;
