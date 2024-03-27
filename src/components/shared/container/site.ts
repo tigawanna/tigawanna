@@ -14,8 +14,7 @@ const links = [
 
 export const siteConfig = {
   name: "Dennis Kinuthia",
-  description: `Crafting exceptional web experiences with a full-stack JavaScript and TypeScript 
-	toolkit. 
+  description: `Crafting exceptional web experiences with full-stack JavaScript and TypeScript . 
 	Proficient in Node.js, Deno, React, Next.js, Express, and HonoJS. 
 	Fluent in backend technologies like Supabase, Firebase, and popular libraries such as TanStack, 
 	Tailwind CSS, Apollo , Relay and other  GraphQL tooling
@@ -24,9 +23,9 @@ export const siteConfig = {
   navMenuItems: links,
   links: {
     twitter: "https://twitter.com/tigawanna",
-    github: "https://facebook.com/tigawanna",
-    linkedin: "https://instagram.com/dennis-kinuthia-waweru",
-    devto:"https://dev.to/tigawanna",
+    github: "https://github.com/tigawanna",
+    linkedin: "https://linkedin.com/in/dennis-kinuthia-waweru",
+    devto: "https://dev.to/tigawanna",
     nickname: "tigawanna",
     phone: "+254790984481",
     email: "denniskinuthiawaweru@gmail.com",
