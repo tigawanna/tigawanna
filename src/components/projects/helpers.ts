@@ -1,7 +1,7 @@
 export const projects_list = [
 	{
 		name: "ForEach",
-		description: `a simple social media timeline , built with react and pocketbase`,
+		description: "a simple social media timeline , built with react and pocketbase",
 		link: "https://github.com/tigawanna/foreach",
 		hosted: "https://devhub-brown.vercel.app/",
 		technologies: ["React", "vite", "tailwind", "react-query", "pocketbase"],

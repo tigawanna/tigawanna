@@ -2,13 +2,8 @@ import { getViewerPinnedRepos } from "@/state/api/repos";
 import { SectionHeader } from "../../shared/SectionHeader";
 import { RepoListCard } from "./RepoListCard";
 
-// biome-ignore lint/suspicious/noEmptyInterface: <explanation>
-interface PinnedGithubProjectsProps{
-	
-}
+interface PinnedGithubProjectsProps {}
 
-
-// biome-ignore lint/correctness/noEmptyPattern: <explanation>
 export async function PinnedGithubProjects({}: PinnedGithubProjectsProps) {
   const data = await getViewerPinnedRepos();
   if ((data && "errors" in data) || "message" in data) {

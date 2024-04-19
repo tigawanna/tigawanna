@@ -14,8 +14,7 @@ type ContactMeFormProps = {};
 
 export function ContactMeForm({}: ContactMeFormProps) {
 	// @ts-expect-error
-	const [formState, formAction] = useFormState<ContactFormState>(
-		sendEmailwithBrevoSmtpAction,
+	const [formState, formAction] = useFormState<ContactFormState>(sendEmailwithBrevoSmtpAction,
 		{
 			message: "",
 			error: false,
