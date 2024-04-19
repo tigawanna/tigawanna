@@ -17,7 +17,7 @@ export async function CurrentlyWorkingOnGithubProjects({}: CurrentlyWorkingOnGit
   if (!projects) {
     return null;
   }
-  // // no({projects})
+  
   return (
     <div className="flex flex-col h-full w-full  items-center justify-center lg:px-[10%]">
       <SectionHeader heading="Currently working on" id="working_on" />

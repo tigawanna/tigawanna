@@ -147,10 +147,10 @@ export async function OneRepo({ params, ...props }: { params: string }) {
 export function OneRepoSuspenseFallback() {
 	return (
 		<div className="w-full h-screen flex flex-col  items-center gap-5 relative bg-base-100">
-			<div className="h-44 w-full bg-base-200 skeleton"></div>
-			<span className="text-3xl font-bold h-6 rounded-xl bg-base-200 skeleton"></span>
-			<span className="text-3xl font-bold h-6 rounded-xl bg-base-200 skeleton"></span>
-			<span className="text-3xl font-bold h-6 rounded-xl bg-base-200 skeleton"></span>
+			<div className="h-44 w-full bg-base-200 skeleton" />
+			<span className="text-3xl font-bold h-6 rounded-xl bg-base-200 skeleton" />
+			<span className="text-3xl font-bold h-6 rounded-xl bg-base-200 skeleton" />
+			<span className="text-3xl font-bold h-6 rounded-xl bg-base-200 skeleton" />
 			<div className="h-full w-full flex justify-center items-center">
 				<Loader className="animate-spin" />
 			</div>
