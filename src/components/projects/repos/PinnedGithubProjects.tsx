@@ -1,12 +1,14 @@
-import {  getViewerPinnedRepos } from "@/state/api/repos";
+import { getViewerPinnedRepos } from "@/state/api/repos";
 import { SectionHeader } from "../../shared/SectionHeader";
 import { RepoListCard } from "./RepoListCard";
 
-
-interface PinnedGithubProjectsProps {
-
+// biome-ignore lint/suspicious/noEmptyInterface: <explanation>
+interface PinnedGithubProjectsProps{
+	
 }
 
+
+// biome-ignore lint/correctness/noEmptyPattern: <explanation>
 export async function PinnedGithubProjects({}: PinnedGithubProjectsProps) {
   const data = await getViewerPinnedRepos();
   if ((data && "errors" in data) || "message" in data) {
@@ -23,7 +25,7 @@ export async function PinnedGithubProjects({}: PinnedGithubProjectsProps) {
       <SectionHeader heading="Featured projects" id="projects" />
       <div className="flex w-[90%] lg:w-[95%] h-full flex-wrap items-center justify-center gap-5 p-3 lg:p-1">
         {projects.map((one_repo) => {
-          if(one_repo.isPrivate) return null
+          if (one_repo.isPrivate) return null;
           return <RepoListCard one_repo={one_repo} key={one_repo.nameWithOwner} />;
         })}
       </div>
@@ -31,21 +33,21 @@ export async function PinnedGithubProjects({}: PinnedGithubProjectsProps) {
   );
 }
 
-
-export function ProjectsSuspenseFallback(){
+export function ProjectsSuspenseFallback() {
   return (
     <div className="w-full h-screen flex">
       <div className="flex w-[90%] h-full flex-wrap items-center justify-center gap-5 p-3">
         {Array.from({ length: 3 }).map((_, index) => (
           <div
+            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
             key={index}
             className="card w-full sm:h-[350px] 
             md:w-[45%] lg:w-[35%] bg-base-100 shadow-lg shadow-base-200 rounded-xl">
-            <figure className="h-[300px] w-full skeleton bg-base-200"></figure>
+            <figure className="h-[300px] w-full skeleton bg-base-200" />
             <div className="card-body flex-wrap bg-base-100  p-3">
-              <div className="w-full flex flex-row items-center justify-end gap-1 h-5 rounded-xl skeleton bg-base-200"></div>
-              <div className="w-full flex flex-row items-center justify-end gap-1 h-5 rounded-xl skeleton bg-base-200"></div>
-              <div className="w-full flex flex-row items-center justify-end gap-1 h-5 rounded-xl skeleton bg-base-200"></div>
+              <div className="w-full flex flex-row items-center justify-end gap-1 h-5 rounded-xl skeleton bg-base-200" />
+              <div className="w-full flex flex-row items-center justify-end gap-1 h-5 rounded-xl skeleton bg-base-200" />
+              <div className="w-full flex flex-row items-center justify-end gap-1 h-5 rounded-xl skeleton bg-base-200" />
             </div>
           </div>
         ))}
