@@ -14,7 +14,8 @@ export function RepoListCard({ one_repo }: RepoListCardProps) {
     <div
       key={one_repo.nameWithOwner}
       className="card w-full sm:h-[350px] 
-      md:w-[45%] lg:w-[30%] shadow-lg shadow-base-200 rounded-xl">
+      md:w-[45%] lg:w-[30%] shadow-lg shadow-base-200 rounded-xl"
+    >
       <figure>
         <Image
           src={
@@ -35,11 +36,17 @@ export function RepoListCard({ one_repo }: RepoListCardProps) {
           <h2 className="text-2xl  justify-between">{one_repo.name}</h2>
           <div className="min-w-fit flex  items-center  gap-1">
             <h3 className="text-xs  text-center">last updated</h3>
-            <TimeCompponent time={one_repo.pushedAt} className="text-sm font-thin p-0 " relative />
+            <TimeCompponent
+              time={one_repo.pushedAt}
+              className="text-sm font-thin p-0 "
+              relative
+            />
           </div>
         </div>
 
-        <p className=" font-sans text-sm line-clamp-2 brightness-90">{one_repo.description}</p>
+        <p className=" font-sans text-sm line-clamp-2 brightness-90">
+          {one_repo.description}
+        </p>
         <div className="flex flex-wrap justify-between items-center gap-3">
           <div className="flex  items-center gap-3">
             {isString(one_repo.homepageUrl) && (
@@ -47,7 +54,8 @@ export function RepoListCard({ one_repo }: RepoListCardProps) {
                 <Link
                   href={one_repo?.homepageUrl ?? ""}
                   target="_blank"
-                  className="flex items-center justify-center gap-1">
+                  className="flex items-center justify-center gap-1"
+                >
                   <Globe className="w-4 h-4" />
                   site
                 </Link>
@@ -59,7 +67,8 @@ export function RepoListCard({ one_repo }: RepoListCardProps) {
                 <Link
                   href={one_repo.url ?? ""}
                   target="_blank"
-                  className="flex items-center justify-center gap-1">
+                  className="flex items-center justify-center gap-1"
+                >
                   <GithubIcon className="w-4 h-4" />
                   source code
                 </Link>
@@ -69,7 +78,8 @@ export function RepoListCard({ one_repo }: RepoListCardProps) {
           <div className="border-b  hover:text-secondary hover:underline p-2 badge badge-lg badge-outline badge-secondary">
             <Link
               href={`/project/${one_repo.nameWithOwner.replace("/", "=>")}`}
-              className="flex items-center justify-center gap-1">
+              className="flex items-center justify-center gap-1"
+            >
               Project details
             </Link>
           </div>

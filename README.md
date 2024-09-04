@@ -1,8 +1,8 @@
 ## Hi there 👋
 
-My name is Dennis Kinuthia . I am a JavaScript/TypeScript web developer
+My name is Dennis Kinuthia . I am a TypeScript + Go web developer
 
-I love React , TailwindCSS , the tanstack , GraphQL and everything in between  
+
 
 [![My Skills](https://skillicons.dev/icons?i=typescript,react,vite,nextjs,tailwind,firebase,supabase,nodejs,deno,mongodb,postgres,graphql&theme=dark)](https://skillicons.dev)
 

@@ -1,10 +1,13 @@
 import { fetchGraphQL } from "@/state/gql-fetch-helper";
 
 export async function getOneRepoGQL({
-	repo,
-	owner,
-}: { repo: string; owner: string }) {
-	const operationsDoc = `
+  repo,
+  owner,
+}: {
+  repo: string;
+  owner: string;
+}) {
+  const operationsDoc = `
   query OneRepo($owner: String!, $repo: String!,$firstTopics:Int!,$firstColabs:Int!,$firstLangs: Int!) {
     repository(name: $repo, owner: $owner) {
       createdAt
@@ -86,104 +89,104 @@ export async function getOneRepoGQL({
     }
   }
 `;
-	try {
-		const data = await fetchGraphQL({
-			operationsDoc,
-			variables: {
-				owner,
-				repo,
-				firstTopics: 10,
-				firstColabs: 10,
-				firstLangs: 10,
-			},
-			headers: {
-				Authorization: `Bearer ${process.env.GH_PAT}`,
-			},
-		});
-		// // no(" ONE GQL REPO === ",data)
-		return data as OneRepoGQL;
-	} catch (error) {
-		// no("ONE GQL ERROR === ",{error})
-		return error as OneRepoGQL;
-	}
+  try {
+    const data = await fetchGraphQL({
+      operationsDoc,
+      variables: {
+        owner,
+        repo,
+        firstTopics: 10,
+        firstColabs: 10,
+        firstLangs: 10,
+      },
+      headers: {
+        Authorization: `Bearer ${process.env.GH_PAT}`,
+      },
+    });
+    // // no(" ONE GQL REPO === ",data)
+    return data as OneRepoGQL;
+  } catch (error) {
+    // no("ONE GQL ERROR === ",{error})
+    return error as OneRepoGQL;
+  }
 }
 
 export interface OneRepoGQL {
-	data: Data;
+  data: Data;
 }
 
 export interface Data {
-	repository: Repository;
+  repository: Repository;
 }
 
 export interface Repository {
-	createdAt: string;
-	forkCount: number;
-	id: string;
-	homepageUrl: string;
-	isPrivate: boolean;
-	description: string;
-	isFork: boolean;
-	isEmpty: boolean;
-	isTemplate: boolean;
-	repositoryTopics: RepositoryTopics;
-	licenseInfo: any;
-	name: string;
-	nameWithOwner: string;
-	openGraphImageUrl: string;
-	updatedAt: string;
-	url: string;
-	collaborators: Collaborators;
-	languages: Languages;
+  createdAt: string;
+  forkCount: number;
+  id: string;
+  homepageUrl: string;
+  isPrivate: boolean;
+  description: string;
+  isFork: boolean;
+  isEmpty: boolean;
+  isTemplate: boolean;
+  repositoryTopics: RepositoryTopics;
+  licenseInfo: any;
+  name: string;
+  nameWithOwner: string;
+  openGraphImageUrl: string;
+  updatedAt: string;
+  url: string;
+  collaborators: Collaborators;
+  languages: Languages;
 }
 
 export interface RepositoryTopics {
-	edges: Edge[];
+  edges: Edge[];
 }
 
 export interface Edge {
-	node: Node;
+  node: Node;
 }
 
 export interface Node {
-	id: string;
-	resourcePath: string;
-	topic: Topic;
+  id: string;
+  resourcePath: string;
+  topic: Topic;
 }
 
 export interface Topic {
-	id: string;
-	name: string;
-	relatedTopics: any[];
+  id: string;
+  name: string;
+  relatedTopics: any[];
 }
 
 export interface Collaborators {
-	totalCount: number;
-	nodes: any[];
+  totalCount: number;
+  nodes: any[];
 }
 
 export interface Languages {
-	edges: Edge2[];
-	totalCount: number;
-	totalSize: number;
-	pageInfo: PageInfo;
+  edges: Edge2[];
+  totalCount: number;
+  totalSize: number;
+  pageInfo: PageInfo;
 }
 
 export interface Edge2 {
-	cursor: string;
-	size: number;
-	node: Node2;
+  cursor: string;
+  size: number;
+  node: Node2;
 }
 
 export interface Node2 {
-	color: string;
-	id: string;
-	name: string;
+  color: string;
+  id: string;
+  name: string;
 }
 
 export interface PageInfo {
-	endCursor: string;
-	hasNextPage: boolean;
-	hasPreviousPage: boolean;
-	startCursor: string;
+  endCursor: string;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  startCursor: string;
 }
