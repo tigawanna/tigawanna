@@ -1,7 +1,6 @@
 import { ImageResponse } from "next/og";
 import { getOneLesson } from "../__components/api";
-import { convertMarkdownToHtml } from "@/state/md/parse";
-const HtmlToReactParser = require("html-to-react").Parser;
+
 // Route segment config
 export const runtime = "edge";
 
