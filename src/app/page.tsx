@@ -8,12 +8,12 @@ import {
   ProjectsSuspenseFallback,
 } from "@/components/projects/repos/PinnedGithubProjects";
 import { MainFooter } from "@/components/shared/Footer";
-import {
-  GithubLanguages,
-  LanguagesSuspenseFallback,
-} from "@/components/stats/languages/Languages";
+import { SectionHeader } from "@/components/shared/SectionHeader";
+import { GithubLanguages, LanguagesSuspenseFallback } from "@/components/stats/languages/Languages";
 import { TechUsed } from "@/components/tech/TechUsed";
 import { Suspense } from "react";
+import { LessonsList } from "./lessons/__components/LessonsList";
+import { LessonsSection } from "./lessons/__components/LessonsSection";
 
 export const revalidate = 60;
 export default async function Home() {
@@ -21,8 +21,7 @@ export default async function Home() {
     <main
       className="flex flex-col w-full  h-full  lg:p-2 p-5  md:items-end 
      gap-10 
-    "
-    >
+    ">
       <Intro />
       {/* <Navbar /> */}
       <AboutLinks />
@@ -46,7 +45,8 @@ export default async function Home() {
       <Suspense fallback={<ProjectsSuspenseFallback />}>
         <DevToArticles />
       </Suspense>
-
+      {/*  lessons */}\
+        <LessonsSection/>
       <ContactMeForm />
       {/* <LibraryIcons/> */}
       {/* <Libraries data={libs}/> */}
