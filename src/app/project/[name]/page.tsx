@@ -9,9 +9,9 @@ export const revalidate = 60;
 export default function OneProjectPage({ params }: PageProps) {
   return (
     <div className="w-full h-full min-h-screen flex flex-col  ">
-      <Link className="hover:text-accent z-50 fixed top-[1%] left-[1%]" href="..">
+      {/* <Link className="hover:text-accent z-50 fixed top-[1%] left-[1%]" href="..">
         <ChevronLeft className="size-14 md:size-20" />
-      </Link>
+      </Link> */}
       <Suspense fallback={<OneRepoSuspenseFallback />}>
         <OneRepo params={params?.name} />
       </Suspense>

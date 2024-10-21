@@ -8,7 +8,7 @@ interface ContactLinksProps {
 
 export function ContactLinks({ size = 30 }: ContactLinksProps) {
   return (
-    <div className="p-1  flex  gap-4">
+    <div className="p-1  flex gap-3 glass rounded-lg px-2 z-50">
       <Link
         href={siteConfig.links.github}
         target="_blank"

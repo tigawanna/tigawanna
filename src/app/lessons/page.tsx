@@ -14,9 +14,9 @@ export default async function LessonsPage(){
 
 return (
   <div className="w-full h-full min-h-screen flex flex-col items-center justify-center">
-    <Link className="hover:text-accent fixed top-[1%] left-[1%]" href="..">
+    {/* <Link className="hover:text-accent fixed top-[1%] left-[1%]" href="..">
       <ChevronLeft className="size-14 md:size-20" />
-    </Link>
+    </Link> */}
     <header className="mb-12 text-center">
       <h1 className="mb-4 text-4xl font-extrabold leading-tight tracking-tighter md:text-5xl lg:text-6xl">
         You code you learn
