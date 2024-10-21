@@ -17,6 +17,7 @@ export interface LessonsItem {
   markdown: string;
   richtext: string;
   type: string;
+  gist?: string;
 }
 const date = new Date()
 // const year = date.getFullYear()
