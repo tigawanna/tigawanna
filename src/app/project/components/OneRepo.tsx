@@ -12,7 +12,7 @@ export async function OneRepo({ params, ...props }: { params: string }) {
 
   if (!owner || !repo) {
     return (
-      <div className="w-full h-screen flex flex-col  items-center gap-5 relative bg-base-300">
+      <div className="w-full h-screen z-10 flex flex-col  items-center gap-5 relative bg-base-300">
         <Image
           src="/blobby.svg"
           alt="blobby background"
@@ -33,7 +33,7 @@ export async function OneRepo({ params, ...props }: { params: string }) {
   // console.log("==== data === ", data);
   if (!data || !data.data) {
     return (
-      <div className="w-full h-screen flex flex-col  items-center gap-5 relative bg-base-300">
+      <div className="w-full h-screen z-10 flex flex-col  items-center gap-5 relative bg-base-300">
         <Image
           src="/blobby.svg"
           alt="blobby background"
@@ -57,7 +57,7 @@ export async function OneRepo({ params, ...props }: { params: string }) {
   const repo_url = data?.data?.repository?.url;
   const topics = data.data?.repository.repositoryTopics?.edges;
   return (
-    <div className="w-full flex flex-col  items-center gap-5">
+    <div className="w-full flex flex-col z-10 items-center gap-5">
 
       <div className="w-full flex    gap-2 justify-center items-center p-5">
         {/* github stats */}

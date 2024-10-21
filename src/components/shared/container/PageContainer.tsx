@@ -21,7 +21,7 @@ export function PageContainer({ children }: pageContainerProps) {
     bg-gradient-to-tr from-green-900 via-transparent to-emerald-700"
       >
         {/* Navbar */}
-        <div className="w-full navbar  min-h-10 h-12  justify-end sticky top-0 z-50">
+        <div className="w-full navbar  min-h-10 h-12  justify-end sticky top-0 z-30">
           <div className="flex-none md:hidden ">
             <label
               htmlFor="my-drawer-3"
@@ -66,14 +66,14 @@ export function PageContainer({ children }: pageContainerProps) {
         {/* Page content here */}
         {children}
       </div>
-      <div className="drawer-side z-50">
+      <div className="drawer-side z-30">
         <label
           htmlFor="my-drawer-3"
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
         {show_navbar_links && (
-          <ul className="menu p-4 w-80 min-h-full glass z-50  mt-10 gap-2">
+          <ul className="menu p-4 w-80 min-h-full glass z-30  mt-10 gap-2">
             {links.map((link) => (
               <li key={link.label} onClick={() => closeOnLinkClick()}>
                 <Link

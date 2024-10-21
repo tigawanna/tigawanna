@@ -14,7 +14,7 @@ export function LessonCard({ item }: { item: LessonsItem }) {
       className="card w-full sm:h-[410px] 
         md:w-[48%] lg:w-[30%] shadow-lg shadow-base-200 p-2 rounded-xl flex flex-col gap-0.5">
       <Link href={`/lessons/${item.id}`} className=" p-2 rounded-xl flex flex-col gap-0.5">
-        <h2 className="text-2xl font-bold">{item.title}</h2>{" "}
+        <h2 className="text-2xl font-bold line-clamp-1">{item.title}</h2>{" "}
         <p className="text-sm brightness-75 line-clamp-3">{item.description}</p>
         <div className="mb-4 flex items-center text-sm ">
           <span className="mr-2">
