@@ -9,7 +9,7 @@ interface LessonsSectionProps {}
 export function LessonsSection({}: LessonsSectionProps) {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center lg:px-[10%]">
-      <SectionHeader heading="Learning journey journal" id="journal" />
+      <SectionHeader heading="Cool thing i recently learned" id="journal" />
       <Suspense fallback={<ProjectsSuspenseFallback />}>
         <div className="w-full flex flex-col justify-center">
           <LessonsList perPage={6} />

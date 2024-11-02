@@ -6,7 +6,7 @@ type DevToArticlesProps = {};
 
 export async function DevToArticles({}: DevToArticlesProps) {
   const articles = await fetchMyLatstDevToArticles();
-  console.log("articles  ===== ",articles)
+
   if (!articles) return null;
   return (
     <div className="w-full h-full flex flex-col items-center justify-center lg:px-[10%]">

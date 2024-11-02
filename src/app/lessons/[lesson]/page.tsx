@@ -1,9 +1,9 @@
 import { convertMarkdownToHtml } from "@/state/md/parse";
 import { getOneLesson } from "../__components/api";
 import { redirect } from "next/navigation";
-import { CalendarRange, ChevronLeft, ExternalLink } from "lucide-react";
+import { CalendarRange, ExternalLink } from "lucide-react";
 import type { Metadata, ResolvingMetadata } from "next";
-import Link from "next/link";
+
 interface PageProps {
   params: { lesson: string };
 }
