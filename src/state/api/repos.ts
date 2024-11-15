@@ -1,3 +1,5 @@
+import { error } from "console";
+
 export interface ViewerPinnedRepoError {
   errors: Error[];
 }
@@ -100,7 +102,7 @@ export async function getViewerPinnedRepos() {
 
 export const ViewerLatsedPushedToRepos = `query getViewerRecentlyPushedRepos {
   viewer {
-    repositories(orderBy: { field: PUSHED_AT, direction: DESC }, first: 3,  isFork: false ) {
+    repositories(orderBy: { field: PUSHED_AT, direction: DESC }, first: 5,  isFork: false ) {
       nodes {
         ... on Repository {
           name
@@ -126,15 +128,23 @@ export async function getViewerRecentlyPushedRepos() {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.GH_PAT}`,
+        cache: "no-store",
       },
       body: JSON.stringify({
         query: ViewerLatsedPushedToRepos,
       }),
     });
     if (!res.ok) {
-      return new Error(res.statusText);
+      return {
+        data: null,
+        errors: [new Error(res.statusText)]
+        };
     }
-    return (await res.json()) as PinnedViewerReposResponse;
+    const data = await res.json();
+    return {
+      data: data.data as ViewerPinnedRepoData,
+      errors: data.errors as Error[],
+    };
   } catch (error) {
     throw error;
   }
