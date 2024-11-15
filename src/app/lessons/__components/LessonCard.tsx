@@ -11,7 +11,8 @@ export function LessonCard({ item }: { item: LessonsItem }) {
   });
   return (
     <div
-      className="card w-full sm:h-[410px] 
+      className="card w-full sm:h-[410px] hover:scale-[99%] transition-transform hover:text-accent 
+      hover:shadow-sm hover:shadow-accent duration-300 ease-in-out
         md:w-[48%] lg:w-[30%] shadow-lg shadow-base-200 p-2 rounded-xl flex flex-col gap-0.5">
       <Link href={`/lessons/${item.id}`} className=" p-2 rounded-xl flex flex-col gap-0.5">
         <h2 className="text-2xl font-bold line-clamp-1">{item.title}</h2>{" "}
