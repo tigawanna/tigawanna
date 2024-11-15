@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { ContactLinks } from "../ContactLinks";
 import { siteConfig } from "./site";
 import { ChevronLeft } from "lucide-react";
-
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 interface pageContainerProps {
   children: React.ReactNode;
 }
@@ -15,6 +15,7 @@ export function PageContainer({ children }: pageContainerProps) {
   const show_navbar_links = pathnaame === "/";
 
   return (
+    <NuqsAdapter>
     <div className="drawer overflow-x-clip ">
       <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
       <div
@@ -84,6 +85,7 @@ export function PageContainer({ children }: pageContainerProps) {
         <ContactLinks />
       </div>
     </div>
+    </NuqsAdapter>
   );
 }
 

@@ -11,10 +11,10 @@ export function LessonCard({ item }: { item: LessonsItem }) {
   });
   return (
     <div
-      className="card w-full sm:h-[410px] hover:scale-[99%] transition-transform hover:text-accent 
+      className="card w-full sm:h-[410px]  transition-transform hover:text-accent 
       hover:shadow-sm hover:shadow-accent duration-300 ease-in-out
-        md:w-[48%] lg:w-[30%] shadow-lg shadow-base-200 p-2 rounded-xl flex flex-col gap-0.5">
-      <Link href={`/lessons/${item.id}`} className=" p-2 rounded-xl flex flex-col gap-0.5">
+        md:w-[48%] lg:w-[30%] shadow-lg shadow-base-200 p-1 rounded-xl flex flex-col gap-0.5">
+      <Link href={`/lessons/${item.id}`} className=" p-3 rounded-xl flex flex-col gap-0.5">
         <h2 className="text-2xl font-bold line-clamp-1">{item.title}</h2>{" "}
         <p className="text-sm brightness-75 line-clamp-3">{item.description}</p>
         <div className="mb-4 flex items-center text-sm ">
@@ -30,7 +30,7 @@ export function LessonCard({ item }: { item: LessonsItem }) {
           href={item.gist}
           target="_blank"
           className="link hover:text-accent flex justify-center items-center gap-1">
-          Gist <ExternalLink className="h-4 w-4" />
+          link <ExternalLink className="h-4 w-4" />
         </a>
       )}
     </div>

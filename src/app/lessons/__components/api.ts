@@ -19,17 +19,12 @@ export interface LessonsItem {
   type: string;
   gist?: string;
 }
-const date = new Date()
-// const year = date.getFullYear()
-// const month = date.getMonth()
-// const dateToday = date.getDate()
-// const defaultDate = `${year}-${month}-${dateToday}`
-export async function getLessons(page:number,perPage:number,date:string): Promise<LessonsRoot> {
+
+export async function getLessons(page:number,perPage:number): Promise<LessonsRoot> {
   try {
     const endpoint = `${process.env.PB_URL}/api/collections/portfolio_milestones/records?sort=-created,id&page=${page}&perPage=${perPage}`;
     const res = await fetch(endpoint);
     if (!res.ok) {
-      console.log("=== error fetching lessons ===", res.statusText);
       return {
         page: 0,
         perPage: 0,
