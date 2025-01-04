@@ -3,7 +3,11 @@ import { error } from "console";
 export interface ViewerPinnedRepoError {
   errors: Error[];
 }
-
+export interface RepositoryTopic {
+  topic: {
+    name: string;
+  };
+}
 export interface Error {
   path: string[];
   extensions: Extensions;
@@ -49,6 +53,9 @@ export interface PinnedItemsNode {
   nameWithOwner: string;
   pushedAt: string;
   isPrivate: boolean;
+  repositoryTopics: {
+    nodes: RepositoryTopic[];
+  };
 }
 
 export type PinnedViewerReposResponse =
@@ -58,7 +65,7 @@ export type PinnedViewerReposResponse =
 export const ViewerPinnedRepoQuery = `
 query getViewerPinnedRepos {
   viewer {
-    pinnedItems(first: 6, types: [REPOSITORY]) {
+    pinnedItems(first: 10, types: [REPOSITORY]) {
       nodes {
         ... on Repository {
           name
@@ -71,6 +78,13 @@ query getViewerPinnedRepos {
           url
           pushedAt
           isPrivate
+          repositoryTopics(first: 10) {
+            nodes {
+              topic {
+                name
+              }
+            }
+          }
         }
       }
     }
@@ -115,6 +129,13 @@ export const ViewerLatsedPushedToRepos = `query getViewerRecentlyPushedRepos {
           url
           pushedAt
           isPrivate
+            repositoryTopics(first: 10) {
+            nodes {
+              topic {
+                name
+              }
+            }
+          }
         }
       }
     }
