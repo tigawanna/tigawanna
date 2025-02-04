@@ -53,31 +53,6 @@ export async function sendEmailwithBrevoSmtpAction(
         `,
   };
 
-  //  const mailer = transporter.sendMail(mailOptions,
-  //   function (error: any, info: any) {
-  //     if (error) {
-  //       // no("error sending email   =============== ", error);
-  //       return {
-  //         message: "error sending email "+error.message,
-  //         error: true,
-  //         success:false,
-  //         fieldValues: prevState.fieldValues
-  //       }
-  //     } else {
-  //       // no("Email sent: " + info.response);
-  //         return {
-  //           message: "Email sent: " + info.response,
-  //           error: false,
-  //           success:true,
-  //           fieldValues: {
-  //             sender_name: "",
-  //             sender_email: "",
-  //             sender_message: "",
-  //           }
-  //         }
-  //     }
-  //   });
-
   async function asyncsendMail() {
     return new Promise<ContactFormState>((resolve, reject) => {
       transporter.sendMail(mailOptions, (error: any, info: any) => {
