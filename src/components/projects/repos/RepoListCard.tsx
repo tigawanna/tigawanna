@@ -48,7 +48,7 @@ export function RepoListCard({ one_repo }: RepoListCardProps) {
           {one_repo.description}
         </p>
         <ul className="flex flex-wrap gap-2 w-full">
-          {one_repo?.repositoryTopics?.nodes?.map((topic) => {
+          {one_repo?.repositoryTopics?.nodes.slice(0, 4).map((topic) => {
             return (
               <li key={topic.topic.name} className="badge badge-outline  rounded-xl">
                 {topic?.topic?.name}
