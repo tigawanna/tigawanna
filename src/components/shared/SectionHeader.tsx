@@ -12,7 +12,7 @@ export function SectionHeader({ heading, id }: SectionHeaderProps) {
     <Link
       href={`#${id}`}
       id={id}
-      className="w-full text-2xl py-4 pl-5 md:text-4xl text-slate-400 font-bold z-40
+      className="w-full text-2xl py-4 pl-5 md:text-4xl text-slate-400 font-bold z-30
             border-t border-t-green-500 "
     >
       {heading}

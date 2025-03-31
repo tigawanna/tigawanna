@@ -10,7 +10,7 @@ export async function GithubLanguages({}: LanguagesProps) {
 
   return (
     <div
-      className=" w-full  h-full   p-5 
+      className=" w-full  h-full   p-5 z-10
         flex flex-wrap items-center justify-center text-xs md:text-base
         gap-2  rounded-xl lg:px-[10%]"
     >

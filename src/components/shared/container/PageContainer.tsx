@@ -22,7 +22,7 @@ export function PageContainer({ children }: pageContainerProps) {
         className="drawer-content flex flex-col
     bg-gradient-to-tr from-green-900 via-transparent to-emerald-700">
         {/* Navbar */}
-        <div className="w-full navbar  min-h-10 h-12   justify-between sticky top-0 ">
+        <div className="w-full navbar  min-h-10 h-12 z-40   justify-between sticky top-0 ">
          { (!show_navbar_links)&&<Link className="hover:text-accent  z-50" href="..">
             <ChevronLeft className="size-14 " />
           </Link>}
