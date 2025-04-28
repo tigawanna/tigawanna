@@ -1,7 +1,8 @@
 "use server";
 
 import { envVariables } from "@/env";
-import { createTransport } from "nodemailer";
+import { sendEmailMessage } from "@/lib/message/deno-echo";
+
 
 export interface ContactFormState {
   message: string;
@@ -15,12 +16,12 @@ export interface ContactFormState {
 }
 export async function sendEmailwithBrevoSmtpAction(
   prevState: ContactFormState,
-  formData: FormData,
+  formData: FormData
 ) {
   const mail_from = envVariables.EMAIL_FROM;
   const mail_to = envVariables.EMAIL_FROM;
-  const brevo_key = envVariables.BREVO_KEY;
-  if (!mail_from || !mail_to || !brevo_key) {
+  // const brevo_key = envVariables.BREVO_KEY;
+  if (!mail_from || !mail_to) {
     return {
       message: "Ooops something went wrong on our side, please try again later",
       error: true,
@@ -34,14 +35,14 @@ export async function sendEmailwithBrevoSmtpAction(
     sender_message: formData.get("sender_message"),
   };
 
-  const transporter = createTransport({
-    host: "smtp-relay.brevo.com",
-    port: 587,
-    auth: {
-      user: mail_to,
-      pass: brevo_key,
-    },
-  });
+  // const transporter = createTransport({
+  //   host: "smtp-relay.brevo.com",
+  //   port: 587,
+  //   auth: {
+  //     user: mail_to,
+  //     pass: brevo_key,
+  //   },
+  // });
 
   const mailOptions = {
     from: mail_from,
@@ -54,33 +55,59 @@ export async function sendEmailwithBrevoSmtpAction(
         `,
   };
 
-  async function asyncsendMail() {
-    return new Promise<ContactFormState>((resolve, reject) => {
-      transporter.sendMail(mailOptions, (error: any, info: any) => {
-        if (error) {
-          // no("error sending email   =============== ", error);
-          resolve({
-            message: "Something went wrong",
-            error: true,
-            success: false,
-            fieldValues: prevState.fieldValues,
-          });
-        } else {
-          // no("Email sent: " + info.response);
-          resolve({
-            message: "Successfully sent, Thank you!",
-            error: false,
-            success: true,
-            fieldValues: {
-              sender_name: "",
-              sender_email: "",
-              sender_message: "",
-            },
-          });
-        }
-      });
-    });
-  }
+  await sendEmailMessage({
+    clientName: "portfolio",
+    ...mailOptions,
+    tg: true,
+    persist: true,
+  }).then((res) => {
+    return {
+      message: "Successfully sent, Thank you!",
+      error: false,
+      success: true,
+      fieldValues: {
+        sender_name: "",
+        sender_email: "",
+        sender_message: "",
+      },
+    }
+  }).catch((err) => {
+    return {
+      message: "Something went wrong",
+      error: true,
+      success: false,
+      fieldValues: prevState.fieldValues,
+    }
+  })
 
-  return await asyncsendMail();
+
+  // async function asyncsendMail() {
+  //   return new Promise<ContactFormState>((resolve, reject) => {
+      // transporter.sendMail(mailOptions, (error: any, info: any) => {
+      //   if (error) {
+      //     // no("error sending email   =============== ", error);
+      //     resolve({
+      //       message: "Something went wrong",
+      //       error: true,
+      //       success: false,
+      //       fieldValues: prevState.fieldValues,
+      //     });
+      //   } else {
+      //     // no("Email sent: " + info.response);
+      //     resolve({
+      //       message: "Successfully sent, Thank you!",
+      //       error: false,
+      //       success: true,
+      //       fieldValues: {
+      //         sender_name: "",
+      //         sender_email: "",
+      //         sender_message: "",
+      //       },
+      //     });
+      //   }
+      // });
+    // });
+  // }
+
+  // return await asyncsendMail();
 }
