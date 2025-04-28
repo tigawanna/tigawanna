@@ -66,7 +66,7 @@ export type PinnedViewerReposResponse =
 export const ViewerPinnedRepoQuery = `
 query getViewerPinnedRepos {
   viewer {
-    pinnedItems(first: 10, types: [REPOSITORY]) {
+    pinnedItems(first: 3, types: [REPOSITORY]) {
       nodes {
         ... on Repository {
           name

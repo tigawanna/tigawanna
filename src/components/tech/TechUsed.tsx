@@ -22,6 +22,7 @@ import {
 import { SectionHeader } from "../shared/SectionHeader";
 
 import React from "react";
+import { TechIcons } from "../icons/tech";
 
 type TechUsedProps = {};
 
@@ -32,7 +33,7 @@ export function TechUsed({}: TechUsedProps) {
     <div className="w-full h-full  flex flex-col items-center justify-center lg:px-[10%] px-2">
       <SectionHeader heading="Technologies" id="tech" />
       <div className="w-full h-fit flex flex-wrap items-center justify-center gap-5">
-        {tech_used.map((tech, index) => {
+        {TechIcons.map((tech, index) => {
           return (
             <div key={index} className="text-center">
               <tech.icon className="h-20 w-20" />
@@ -44,25 +45,3 @@ export function TechUsed({}: TechUsedProps) {
     </div>
   );
 }
-
-const tech_used = [
-  { name: "Vite", icon: SiVite },
-  { name: "React", icon: SiReact },
-  { name: "Expo", icon: SiExpo },
-  { name: "Node", icon: SiNodedotjs },
-  { name: "TypeScript", icon: SiTypescript },
-  { name: "NestJS", icon: SiNestjs },
-  { name: "Tailwind", icon: SiTailwindcss },
-  { name: "Express", icon: SiExpress },
-  { name: "Fastify", icon: SiFastify },
-  { name: "GraphQL", icon: SiGraphql },
-  { name: "Apollo", icon: SiApollographql },
-  { name: "React Query", icon: SiReactquery },
-  { name: "Deno", icon: SiDeno },
-  { name: "SQLite", icon: SiSqlite },
-  { name: "PostgreSQL", icon: SiPostgresql },
-  { name: "MongoDB", icon: SiMongodb },
-  { name: "Firebase", icon: SiFirebase },
-  { name: "Supabase", icon: SiSupabase },
-  { name: "Pocketbase", icon: SiPocketbase },
-];

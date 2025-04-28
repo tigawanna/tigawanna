@@ -36,7 +36,7 @@ export default async function Home() {
        <GithubStats />
      </Suspense> */}
       {/* <WhatIBuild /> */}
-      <TechUsed />
+      {/* <TechUsed /> */}
       <Suspense fallback={<ProjectsSuspenseFallback />}>
         <ViewerGithubTech data={data} errors={errors} />
       </Suspense>

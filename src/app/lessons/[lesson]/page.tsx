@@ -5,13 +5,11 @@ import { CalendarRange, ExternalLink } from "lucide-react";
 import type { Metadata, ResolvingMetadata } from "next";
 
 interface PageProps {
-  params: { lesson: string };
+  params: Promise<{ lesson: string }>;
 }
 
-export async function generateMetadata(
-  { params }: PageProps,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata(props: PageProps, parent: ResolvingMetadata): Promise<Metadata> {
+  const params = await props.params;
   const item = await getOneLesson(params.lesson);
   return {
     title: item?.title,
@@ -24,7 +22,8 @@ export async function generateMetadata(
   };
 }
 export const revalidate = 10;
-export default async function page({ params }: PageProps) {
+export default async function page(props: PageProps) {
+  const params = await props.params;
   const item = await getOneLesson(params.lesson);
   if (!item) return redirect("/lessons");
 

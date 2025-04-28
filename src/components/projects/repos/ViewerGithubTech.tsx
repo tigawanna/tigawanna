@@ -47,7 +47,7 @@ export function ViewerGithubTech({ data, errors }: ViewerGithubTechProps) {
   })
   return (
     <div className="w-full h-full flex flex-col items-center justify-center">
-      {/* <SectionHeader heading="Technologies" id="tech" /> */}
+      <SectionHeader heading="Technologies" id="tech" />
       <FilterByTopics topics={topics} key={topic}/>
       <div className="flex w-[90%] lg:w-[95%] h-full flex-wrap items-center justify-center gap-5 p-3 lg:p-1">
         {filteredProjects.slice(0, 6).map((one_repo) => {
