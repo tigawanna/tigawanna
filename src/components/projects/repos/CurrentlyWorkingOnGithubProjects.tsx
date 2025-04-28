@@ -1,29 +1,30 @@
-import { getViewerRecentlyPushedRepos } from "@/state/api/repos";
+import { RequestError, ViewerPinnedRepoData } from "@/state/api/repos";
 import { SectionHeader } from "../../shared/SectionHeader";
 import { RepoListCard } from "./RepoListCard";
 import { Lock } from "lucide-react";
 import { TimeCompponent } from "@/components/shared/TimeCompponent";
 
-type CurrentlyWorkingOnGithubProjectsProps = {};
+type CurrentlyWorkingOnGithubProjectsProps = {
+  data: ViewerPinnedRepoData | null;
+  errors: RequestError[]
+};
 
-export async function CurrentlyWorkingOnGithubProjects({}: CurrentlyWorkingOnGithubProjectsProps) {
-  const { data, errors } = await getViewerRecentlyPushedRepos();
-  if (errors && errors.length > 0 && !data) {
-    return null;
-  }
-  if (!data) {
-    return null;
-  }
-  const projects = data?.viewer?.repositories?.nodes;
-  if (!projects) {
-    return null;
-  }
-
+export function CurrentlyWorkingOnGithubProjects({data,errors}: CurrentlyWorkingOnGithubProjectsProps) {
+    if (errors && errors.length > 0 && !data) {
+      return null;
+    }
+    if (!data) {
+      return null;
+    }
+    const projects = data?.viewer?.repositories?.nodes;
+    if (!projects) {
+      return null;
+    }
   return (
     <div className="flex flex-col h-full w-full  items-center justify-center lg:px-[10%]">
       <SectionHeader heading="Currently working on" id="working_on" />
       <div className="flex w-[90%] lg:w-[95%] h-full flex-wrap items-center justify-center gap-5 p-3 lg:p-1">
-        {projects.map((one_repo) => {
+        {projects.slice(0, 6).map((one_repo) => {
           if (!one_repo) {
             return null;
           }

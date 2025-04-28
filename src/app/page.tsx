@@ -12,17 +12,18 @@ import { GithubLanguages, LanguagesSuspenseFallback } from "@/components/stats/l
 import { TechUsed } from "@/components/tech/TechUsed";
 import { Suspense } from "react";
 import { LessonsSection } from "./lessons/__components/LessonsSection";
+import { getViewerRecentlyPushedRepos } from "@/state/api/repos";
+import { ViewerGithubTech } from "@/components/projects/repos/ViewerGithubTech";
 
 
 export const revalidate = 60;
 export default async function Home() {
-
+  const { data, errors } = await getViewerRecentlyPushedRepos();
   return (
     <main
       className="flex flex-col w-full  h-full  lg:p-2 p-5  md:items-end 
      gap-10 
     ">
-
       <Intro />
       {/* <Navbar /> */}
       <AboutLinks />
@@ -36,12 +37,15 @@ export default async function Home() {
      </Suspense> */}
       {/* <WhatIBuild /> */}
       <TechUsed />
+      <Suspense fallback={<ProjectsSuspenseFallback />}>
+        <ViewerGithubTech data={data} errors={errors} />
+      </Suspense>
       {/* <Projects/> */}
       <Suspense fallback={<ProjectsSuspenseFallback />}>
         <PinnedGithubProjects />
       </Suspense>
       <Suspense fallback={<ProjectsSuspenseFallback />}>
-        <CurrentlyWorkingOnGithubProjects />
+        <CurrentlyWorkingOnGithubProjects data={data} errors={errors} />
       </Suspense>
       <Suspense fallback={<ProjectsSuspenseFallback />}>
         <DevToArticles />

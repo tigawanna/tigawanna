@@ -1,15 +1,15 @@
 import { envVariables } from "@/env";
-import { error } from "console";
+
 
 export interface ViewerPinnedRepoError {
-  errors: Error[];
+  errors: RequestError[];
 }
 export interface RepositoryTopic {
   topic: {
     name: string;
   };
 }
-export interface Error {
+export interface RequestError {
   path: string[];
   extensions: Extensions;
   locations: Location[];
@@ -117,7 +117,7 @@ export async function getViewerPinnedRepos() {
 
 export const ViewerLatsedPushedToRepos = `query getViewerRecentlyPushedRepos {
   viewer {
-    repositories(orderBy: { field: PUSHED_AT, direction: DESC }, first: 5,  isFork: false ) {
+    repositories(orderBy: { field: PUSHED_AT, direction: DESC }, first: 100,  isFork: false ) {
       nodes {
         ... on Repository {
           name
@@ -143,7 +143,13 @@ export const ViewerLatsedPushedToRepos = `query getViewerRecentlyPushedRepos {
   }
 }`;
 
-export async function getViewerRecentlyPushedRepos() {
+export async function getViewerRecentlyPushedRepos():Promise<{
+    data: null;
+    errors:  RequestError[];
+} | {
+    data: ViewerPinnedRepoData;
+    errors: RequestError[];
+}> {
   try {
     const res = await fetch("https://api.github.com/graphql", {
       method: "POST",
@@ -159,13 +165,25 @@ export async function getViewerRecentlyPushedRepos() {
     if (!res.ok) {
       return {
         data: null,
-        errors: [new Error(res.statusText)]
+        errors: [{
+          message: res.statusText,
+          path: [],
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            typeName: "ViewerPinnedRepo",
+            fieldName: "getViewerRecentlyPushedRepos",
+          },
+          locations: [{
+            line: 1,
+            column: 1,
+          }],
+        }],
         };
     }
     const data = await res.json();
     return {
       data: data.data as ViewerPinnedRepoData,
-      errors: data.errors as Error[],
+      errors: data.errors as RequestError[],
     };
   } catch (error) {
     throw error;

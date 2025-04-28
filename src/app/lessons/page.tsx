@@ -1,4 +1,3 @@
-import { ListPagination } from "@/components/pagination/ReactresponsivePagination";
 import { LessonsList } from "./__components/LessonsList";
 import { Metadata } from "next";
 
@@ -20,7 +19,7 @@ return (
         You code you learn
       </h1>
       <p className="mx-auto max-w-2xl text-xl brightness-75 md:text-2xl">
-        every bug is a lesson in disguise. Here are the pearls of wisdom I've gathered along the
+        every bug is a lesson in disguise. Here are the pearls of wisdom I&apos;ve gathered along the
         way.
       </p>
     </header>
