@@ -1,3 +1,5 @@
+import { envVariables } from "@/env";
+
 export interface LessonsRoot {
   page: number;
   perPage: number;
@@ -22,7 +24,7 @@ export interface LessonsItem {
 
 export async function getLessons(page:number,perPage:number): Promise<LessonsRoot> {
   try {
-    const endpoint = `${process.env.PB_URL}/api/collections/portfolio_milestones/records?sort=-created,id&page=${page}&perPage=${perPage}`;
+    const endpoint = `${envVariables.PB_URL}/api/collections/portfolio_milestones/records?sort=-created,id&page=${page}&perPage=${perPage}`;
     const res = await fetch(endpoint);
     if (!res.ok) {
       return {
@@ -47,7 +49,7 @@ export async function getLessons(page:number,perPage:number): Promise<LessonsRoo
 }
 export async function getOneLesson(id: string): Promise<LessonsItem | undefined> {
   try {
-    const endpoint = `${process.env.PB_URL}/api/collections/portfolio_milestones/records/${id}`;
+    const endpoint = `${envVariables.PB_URL}/api/collections/portfolio_milestones/records/${id}`;
     const res = await fetch(endpoint);
     if (!res.ok) {
       console.log("=== error fetchin one lesson ===", res.statusText);

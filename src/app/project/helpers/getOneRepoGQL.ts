@@ -1,3 +1,4 @@
+import { envVariables } from "@/env";
 import { fetchGraphQL } from "@/state/gql-fetch-helper";
 
 export async function getOneRepoGQL({
@@ -100,7 +101,7 @@ export async function getOneRepoGQL({
         firstLangs: 10,
       },
       headers: {
-        Authorization: `Bearer ${process.env.GH_PAT}`,
+        Authorization: `Bearer ${envVariables.GH_PAT}`,
       },
     });
     // // no(" ONE GQL REPO === ",data)

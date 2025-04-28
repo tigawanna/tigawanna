@@ -24,9 +24,9 @@ export interface ContactFormState {
     }
 }
 export async function sendEmailwithBrevoSmtpAction(prevState: ContactFormState, formData: FormData) {
-  const mail_from = process.env.EMAIL_FROM
-  const mail_to = process.env.EMAIL_FROM
-  const brevo_key = process.env.BREVO_KEY
+  const mail_from = envVariablesEMAIL_FROM
+  const mail_to = envVariablesEMAIL_FROM
+  const brevo_key = envVariablesBREVO_KEY
   if (!mail_from || !mail_to || !brevo_key) {
     return {
       message: "Ooops something went wrong on our side, please try again later",

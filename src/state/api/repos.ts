@@ -1,3 +1,4 @@
+import { envVariables } from "@/env";
 import { error } from "console";
 
 export interface ViewerPinnedRepoError {
@@ -99,7 +100,7 @@ export async function getViewerPinnedRepos() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.GH_PAT}`,
+        Authorization: `Bearer ${envVariables.GH_PAT}`,
       },
       body: JSON.stringify({
         query: ViewerPinnedRepoQuery,
@@ -148,7 +149,7 @@ export async function getViewerRecentlyPushedRepos() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.GH_PAT}`,
+        Authorization: `Bearer ${envVariables.GH_PAT}`,
         cache: "no-store",
       },
       body: JSON.stringify({

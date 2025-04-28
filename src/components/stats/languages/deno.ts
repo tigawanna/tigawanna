@@ -1,7 +1,9 @@
+import { envVariables } from "@/env";
+
 export async function getGithubViewerLanguages() {
   try {
-    const deno_url = process.env.DENO_URL;
-    const pat = process.env.GH_PAT;
+    const deno_url = envVariables.DENO_URL;
+    const pat = envVariables.GH_PAT;
 
     if (!deno_url || !pat) return;
     const langs = (await fetch(deno_url + "/stats/langs", {

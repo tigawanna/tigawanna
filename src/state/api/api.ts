@@ -1,3 +1,5 @@
+import { envVariables } from "@/env";
+
 export function fetcherGraphQL<T>(
   operationsDoc: string,
   operationName: string,
@@ -7,7 +9,7 @@ export function fetcherGraphQL<T>(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.GH_PAT}`,
+      Authorization: `Bearer ${envVariables.GH_PAT}`,
     },
     body: JSON.stringify({
       query: operationsDoc,

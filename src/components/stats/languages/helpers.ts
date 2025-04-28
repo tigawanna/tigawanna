@@ -1,3 +1,5 @@
+import { envVariables } from "@/env";
+
 export interface ViewerLang {
   data: ViewerLangData | ViewerLangError;
 }
@@ -73,7 +75,7 @@ export async function getViewerLangs() {
   return fetch("https://api.github.com/graphql", {
     method: "POST",
     headers: {
-      Authorization: `bearer ${process.env.GH_PAT}`,
+      Authorization: `bearer ${envVariables.GH_PAT}`,
       "Content-Type": "application/json",
       accept: "application/vnd.github.hawkgirl-preview+json",
     },

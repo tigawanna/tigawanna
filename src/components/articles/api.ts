@@ -1,6 +1,8 @@
+import { envVariables } from "@/env";
+
 export async function fetchMyLatstDevToArticles() {
   try {
-    const apiKey = process.env.DEV_TO_KEY;
+    const apiKey = envVariables.DEV_TO_KEY;
     const username = "tigawanna";
 
     const articles = await fetch(

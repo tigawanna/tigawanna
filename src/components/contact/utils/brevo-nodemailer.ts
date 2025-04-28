@@ -1,5 +1,6 @@
 "use server";
 
+import { envVariables } from "@/env";
 import { createTransport } from "nodemailer";
 
 export interface ContactFormState {
@@ -16,9 +17,9 @@ export async function sendEmailwithBrevoSmtpAction(
   prevState: ContactFormState,
   formData: FormData,
 ) {
-  const mail_from = process.env.EMAIL_FROM;
-  const mail_to = process.env.EMAIL_FROM;
-  const brevo_key = process.env.BREVO_KEY;
+  const mail_from = envVariables.EMAIL_FROM;
+  const mail_to = envVariables.EMAIL_FROM;
+  const brevo_key = envVariables.BREVO_KEY;
   if (!mail_from || !mail_to || !brevo_key) {
     return {
       message: "Ooops something went wrong on our side, please try again later",
