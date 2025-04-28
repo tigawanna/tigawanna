@@ -55,7 +55,7 @@ export async function sendEmailwithBrevoSmtpAction(
         `,
   };
 
-  await sendEmailMessage({
+  return await sendEmailMessage({
     clientName: "portfolio",
     ...mailOptions,
     tg: true,
@@ -76,7 +76,7 @@ export async function sendEmailwithBrevoSmtpAction(
       message: "Something went wrong",
       error: true,
       success: false,
-      fieldValues: prevState.fieldValues,
+      fieldValues: prevState?.fieldValues,
     }
   })
 

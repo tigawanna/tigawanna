@@ -34,22 +34,27 @@ export async function sendEmailMessage(message: EmailMessagePayload) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${MESSAGE_API_KEY}`,
+        Authorization: `bearer ${MESSAGE_API_KEY}`,
       },
       body: JSON.stringify(message),
     });
 
     if (!res.ok) {
-      throw new Error(`Failed to send email: ${res.statusText}`);
+    //   throw new Error(`Failed to send email: ${res.statusText}`);
+    return
     }
     const resjson = res.json() as unknown as RequestResult
     if (resjson.type === "error") {
-      throw new Error(resjson.message);
+      return
     }
     return resjson;
   } catch (error) {
+    if (error instanceof Error) {
+      console.error("Error sending email:", error.message);
+      return
+    }
     console.error("Error sending email:", error);
-    throw error;
+    return
   }
 }
 
@@ -70,7 +75,7 @@ export async function sendTelegramMessage(message: TelegramPayload) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${MESSAGE_API_KEY}`,
+        Authorization: `bearer ${MESSAGE_API_KEY}`,
       },
       body: JSON.stringify(message),
     });
