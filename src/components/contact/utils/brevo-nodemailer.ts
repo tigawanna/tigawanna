@@ -18,6 +18,7 @@ export async function sendEmailwithBrevoSmtpAction(
   prevState: ContactFormState,
   formData: FormData
 ) {
+  // console.log({prevState, formData});
   const mail_from = envVariables.EMAIL_FROM;
   const mail_to = envVariables.EMAIL_FROM;
   // const brevo_key = envVariables.BREVO_KEY;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useActionState } from "react";
+import { useActionState, useEffect, useRef, useState, } from "react";
 import { SectionHeader } from "../shared/SectionHeader";
 import { SubmitButton } from "./SubmitButton";
 import {
@@ -15,18 +15,16 @@ export function ContactMeForm({}: ContactMeFormProps) {
 
   const [formState, formAction] = useActionState<ContactFormState>(
     // @ts-expect-error
-    sendEmailwithBrevoSmtpAction,
-    {
-      message: "",
-      error: false,
-      success: false,
-      fieldValues: {
-        sender_name: "",
-        sender_email: "",
-        sender_message: "",
-      },
+    sendEmailwithBrevoSmtpAction, {
+    message: "",
+    error: false,
+    success: false,
+    fieldValues: {
+      sender_name: "",
+      sender_email: "",
+      sender_message: "",
     },
-  );
+  });
   const [status, setStatus] = useState({
     error: formState.error,
     success: formState.success,
