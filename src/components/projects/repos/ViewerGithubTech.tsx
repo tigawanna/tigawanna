@@ -1,16 +1,19 @@
+"use client";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { TimeCompponent } from "@/components/shared/TimeCompponent";
-import {  RequestError, ViewerPinnedRepoData } from "@/state/api/repos";
+import { RequestError, ViewerPinnedRepoData } from "@/state/api/repos";
 import { RepoListCard } from "./RepoListCard";
 import { Lock } from "lucide-react";
-
+import { FilterByTopics } from "./FilterByTopics";
+import { useQueryState } from "nuqs";
 
 interface ViewerGithubTechProps {
-    data: ViewerPinnedRepoData | null;
-    errors: RequestError[]
+  data: ViewerPinnedRepoData | null;
+  errors: RequestError[];
 }
 
-export async function ViewerGithubTech({ data, errors }: ViewerGithubTechProps) {
+export function ViewerGithubTech({ data, errors }: ViewerGithubTechProps) {
+       const [topic, setTopic] = useQueryState("topic", { defaultValue: "all" });
   if (errors && errors.length > 0 && !data) {
     return null;
   }
@@ -21,11 +24,33 @@ export async function ViewerGithubTech({ data, errors }: ViewerGithubTechProps) 
   if (!projects) {
     return null;
   }
+  const topics = projects.reduce((acc: string[], project) => {
+    if (project?.repositoryTopics?.nodes) {
+      project.repositoryTopics.nodes.forEach((topic) => {
+        if (topic.topic.name && !acc.includes(topic.topic.name)) {
+          acc.push(topic.topic.name);
+        }
+      });
+    }
+    return acc;
+  }, []);
+  const filteredProjects = projects.filter((project) => {
+    if (topic === "all") {
+      return true;
+    }
+    if (project?.repositoryTopics?.nodes) {
+      return project.repositoryTopics.nodes.some(
+        (t) => t.topic?.name?.toLowerCase()?.includes(topic?.toLocaleLowerCase())
+      );
+    }
+    return false;
+  })
   return (
     <div className="w-full h-full flex flex-col items-center justify-center">
-      <SectionHeader heading="Technologies" id="tech" />
+      {/* <SectionHeader heading="Technologies" id="tech" /> */}
+      <FilterByTopics topics={topics} key={topic}/>
       <div className="flex w-[90%] lg:w-[95%] h-full flex-wrap items-center justify-center gap-5 p-3 lg:p-1">
-        {projects.slice(0, 6).map((one_repo) => {
+        {filteredProjects.slice(0, 6).map((one_repo) => {
           if (!one_repo) {
             return null;
           }
