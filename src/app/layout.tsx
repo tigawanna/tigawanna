@@ -8,6 +8,7 @@ import "./globals.css";
 import "@/components/pagination/pagination.css"
 
 
+
 const inter = Inter({ subsets: ["latin"] });
 const getBaseUrl = () => {
   if (process.env.NODE_ENV === "production") {
