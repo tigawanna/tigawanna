@@ -34,7 +34,7 @@ export default async function page(props: PageProps) {
     year: "numeric",
   });
   return (
-    <div className="w-full h-full flex flex-col items-center gap-2 justify-center">
+    <div className="w-full min-h-screen h-full flex flex-col items-center gap-2 justify-center">
       <div className="w-full  flex justify-evenly px=2 md:px-5  gap-3 pb-3">
         {/* <Link className="hover:text-accent fixed md:sticky top-[1%] left-[1%] " href="..">
           <ChevronLeft className="size-14 md:size-20" />
