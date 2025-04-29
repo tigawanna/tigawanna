@@ -3,7 +3,6 @@ export type SiteConfig = typeof siteConfig;
 const links = [
   { label: "home", href: "#", route: "" },
   { label: "About", href: "#about", route: "about" },
-  { label: "I build", href: "#ibuild", route: "ibuild" },
   { label: "Stats", href: "#stats", route: "stats" },
   { label: "Technologies", href: "#tech", route: "tech" },
   { label: "Projects", href: "#projects", route: "projects" },
