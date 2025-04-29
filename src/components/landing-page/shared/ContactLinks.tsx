@@ -3,12 +3,17 @@ import { FaDev, FaGithub, FaLinkedinIn, FaWhatsapp } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import { siteConfig } from "./container/site";
 interface ContactLinksProps {
+  navbar?: boolean;
+  footer?: boolean;
   size?: number;
+
 }
 
-export function ContactLinks({ size = 30 }: ContactLinksProps) {
+export function ContactLinks({ size = 30,navbar }: ContactLinksProps) {
   return (
-    <div className="p-1  flex gap-3 glass rounded-lg px-2 z-50">
+    <div 
+    data-navbar={navbar}
+    className="p-1  flex gap-3 glass md:data-[navbar=true]:flex-col rounded-lg px-2 z-50">
       <Link
         href={siteConfig.links.github}
         target="_blank"
