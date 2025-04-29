@@ -28,7 +28,8 @@ export const siteConfig = {
     devto: "https://dev.to/tigawanna",
     nickname: "tigawanna",
     phone: "+254790984481",
-    email: "denniskinuthiawaweru@gmail.com",
+    phoneDialer: "tel:+254790984481",
+    email: "mailto:denniskinuthiawaweru@gmail.com",
     whatsapp: "https://wa.me/254790984481",
   },
 } as const;

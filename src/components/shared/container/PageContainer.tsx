@@ -90,7 +90,7 @@ export function PageContainer({ children }: pageContainerProps) {
               ))}
             </ul>
           )}
-          <ContactLinks />
+          <ContactLinks showText />
         </div>
       </div>
     </NuqsAdapter>
