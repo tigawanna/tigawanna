@@ -1,11 +1,13 @@
+"use client";
 import { useState } from "react";
 import { Check, Copy } from "lucide-react";
 import { makeHotToast } from "./toasters";
+import toast from "react-hot-toast";
 
 
 
 
-interface ClipboardButtonProps {
+interface CopyButtonProps {
   text: string;
   displayText?: string;
   className?: string;
@@ -15,7 +17,7 @@ interface ClipboardButtonProps {
   showToast?: boolean;
 }
 
-export function ClipboardButton({
+export function CopyButton({
   text,
   displayText,
   className,
@@ -23,7 +25,7 @@ export function ClipboardButton({
   showFullText = true,
   show = true,
   showToast = true,
-}: ClipboardButtonProps) {
+}: CopyButtonProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -32,13 +34,14 @@ export function ClipboardButton({
       setCopied(true);
 
       showToast &&
-        makeHotToast({
-          title: "Copied to clipboard",
-          description: "Text has been copied to your clipboard",
-          duration: 2000,
-          position: "top-center",
-          variant: "success",
-        });
+        toast.success("Copied to clipboard")
+        // makeHotToast({
+        //   title: "Copied to clipboard",
+        //   description: "Text has been copied to your clipboard",
+        //   duration: 2000,
+        //   position: "top-center",
+        //   variant: "success",
+        // });
 
       // Reset the copied state after 2 seconds
       setTimeout(() => {
@@ -47,12 +50,13 @@ export function ClipboardButton({
     } catch (err) {
       console.error("Failed to copy text: ", err);
       showToast &&
-        makeHotToast({
-          title: "Failed to copy",
-          description: "There was an error copying to clipboard",
-          variant: "error",
-          position: "top-center",
-        });
+      toast.error("Failed to copy text")
+        // makeHotToast({
+        //   title: "Failed to copy",
+        //   description: "There was an error copying to clipboard",
+        //   variant: "error",
+        //   position: "top-center",
+        // });
     }
   };
 
@@ -66,7 +70,7 @@ export function ClipboardButton({
   return (
     <div
       className={`flex items-center gap-2 bg-primary/10 rounded-md  p-1 
-        ${copied ? "animate-pulse" : ""}`}>
+        ${copied ? "animate-pulse" : ""} ${className}`}>
       <div className="flex-1 font-mono text-sm break-all">{displayValue}</div>
       <button  onClick={handleCopy} className="flex-shrink-0 btn btn-sm">
         {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}

@@ -6,6 +6,7 @@ import { siteConfig } from "./site";
 import { ChevronLeft } from "lucide-react";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { LinkLoading } from "@/components/shared/LinkLoading";
+import { Toaster } from "react-hot-toast";
 interface pageContainerProps {
   children: React.ReactNode;
 }
@@ -92,6 +93,15 @@ export function PageContainer({ children }: pageContainerProps) {
           )}
           <ContactLinks showText />
         </div>
+        <Toaster toastOptions={{
+          className: "z-50",
+          position: "bottom-left",
+          duration: 2000,
+          style: {
+            background: "#1e293b",
+            color: "#fff",
+          },
+        }} />
       </div>
     </NuqsAdapter>
   );
