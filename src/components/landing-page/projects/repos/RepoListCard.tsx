@@ -3,7 +3,7 @@ import { isString } from "@/state/helpers/string";
 import { GithubIcon, Globe } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { TimeCompponent } from "../../shared/TimeCompponent";
+import { TimeCompponent } from "../../../shared/TimeCompponent";
 
 interface RepoListCardProps {
   one_repo: PinnedItemsNode;

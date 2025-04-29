@@ -11,7 +11,7 @@ export default function Intro({}: introProps) {
       </div>
 
       <div
-        className=" mt-[5%] md:mt-[10%] flex w-full flex-col items-center justify-center gap-5
+        className=" mt-[3%] md:mt-[5%] flex w-full flex-col items-center justify-center gap-5
        md:flex-row lg:w-[95%]">
         <div className="lg:max-w-[60%]">
           <h2
@@ -22,7 +22,7 @@ export default function Intro({}: introProps) {
           </h2>
 
           <div
-            className="font-sarif mt-[30px] h-10 md:h-20 bg-gradient-to-r from-secondary  via-secondary/80
+            className="font-sarif mt-[10px] h-10 md:h-20 bg-gradient-to-r from-secondary  via-secondary/80
               to-accent bg-clip-text text-4xl font-bold text-transparent md:text-6xl 
           ">
             <TypeAnimation
@@ -31,6 +31,19 @@ export default function Intro({}: introProps) {
               wrapper="h1"
               className=""
             />
+          </div>
+          <div className="mt-[20px] flex w-full flex-col items-start justify-start gap-5 md:flex-row">
+          <a href="#projects">
+            <button className="btn btn-secondary btn-outline text-xl ">
+              View my work
+            </button>
+          </a>
+          <a href="#contact">
+          <button className="btn btn-primary text-xl ">
+            Contact me
+          </button>
+          </a>
+
           </div>
         </div>
 

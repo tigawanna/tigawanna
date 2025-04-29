@@ -6,7 +6,7 @@ import { CurrentlyWorkingOnGithubProjects } from "@/components/landing-page/proj
 import {
   ProjectsSuspenseFallback,
 } from "@/components/landing-page/projects/repos/PinnedGithubProjects";
-import { MainFooter } from "@/components/landing-page/shared/Footer";
+import { MainFooter } from "@/components/shared/Footer";
 import { GithubLanguages, LanguagesSuspenseFallback } from "@/components/landing-page/stats/languages/Languages";
 import { Suspense } from "react";
 import { LessonsSection } from "./lessons/__components/LessonsSection";

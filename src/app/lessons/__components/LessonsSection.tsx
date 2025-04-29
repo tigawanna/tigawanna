@@ -1,5 +1,5 @@
 import { ProjectsSuspenseFallback } from "@/components/landing-page/projects/repos/CurrentlyWorkingOnGithubProjects";
-import { SectionHeader } from "@/components/landing-page/shared/SectionHeader";
+import { SectionHeader } from "@/components/shared/SectionHeader";
 import { Suspense } from "react";
 import { LessonsList } from "./LessonsList";
 import Link from "next/link";

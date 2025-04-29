@@ -1,8 +1,8 @@
 import { RequestError, ViewerPinnedRepoData } from "@/state/api/repos";
-import { SectionHeader } from "../../shared/SectionHeader";
+import { SectionHeader } from "../../../shared/SectionHeader";
 import { RepoListCard } from "./RepoListCard";
 import { Lock } from "lucide-react";
-import { TimeCompponent } from "@/components/landing-page/shared/TimeCompponent";
+import { TimeCompponent } from "@/components/shared/TimeCompponent";
 
 type CurrentlyWorkingOnGithubProjectsProps = {
   data: ViewerPinnedRepoData | null;

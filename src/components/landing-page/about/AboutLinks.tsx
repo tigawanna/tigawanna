@@ -1,4 +1,4 @@
-import { ContactLinks } from "../shared/ContactLinks";
+import { ContactLinks } from "../../shared/ContactLinks";
 type AboutLinksProps = {};
 export function AboutLinks({}: AboutLinksProps) {
   return (

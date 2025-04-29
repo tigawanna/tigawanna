@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { SectionHeader } from "../shared/SectionHeader";
+import { SectionHeader } from "../../shared/SectionHeader";
 
 type introProps = {};
 

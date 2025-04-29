@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState, } from "react";
-import { SectionHeader } from "../shared/SectionHeader";
+import { SectionHeader } from "../../shared/SectionHeader";
 import { SubmitButton } from "./SubmitButton";
 import {
   type ContactFormState,

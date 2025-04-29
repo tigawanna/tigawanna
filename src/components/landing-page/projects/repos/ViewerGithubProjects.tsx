@@ -1,6 +1,6 @@
 "use client";
-import { SectionHeader } from "@/components/landing-page/shared/SectionHeader";
-import { TimeCompponent } from "@/components/landing-page/shared/TimeCompponent";
+import { SectionHeader } from "@/components/shared/SectionHeader";
+import { TimeCompponent } from "@/components/shared/TimeCompponent";
 import { RequestError, ViewerPinnedRepoData } from "@/state/api/repos";
 import { RepoListCard } from "./RepoListCard";
 import { Lock } from "lucide-react";

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { SectionHeader } from "../shared/SectionHeader";
+import { SectionHeader } from "../../shared/SectionHeader";
 import { fetchMyLatstDevToArticles } from "./api";
 type DevToArticlesProps = {};
 

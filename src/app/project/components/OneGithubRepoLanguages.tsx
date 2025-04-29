@@ -1,4 +1,4 @@
-import { GithubLanguages } from "@/components/landing-page/shared/github-languages";
+import { GithubLanguages } from "@/components/shared/github-languages";
 
 interface OneGithubRepoLanguagesProps {
   repo: string;

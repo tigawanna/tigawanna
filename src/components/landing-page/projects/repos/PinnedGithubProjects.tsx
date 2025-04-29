@@ -1,7 +1,7 @@
 import { getViewerPinnedRepos, PinnedViewerReposResponse } from "@/state/api/repos";
 import { RepoListCard } from "./RepoListCard";
 import { Lock } from "lucide-react";
-import { TimeCompponent } from "@/components/landing-page/shared/TimeCompponent";
+import { TimeCompponent } from "@/components/shared/TimeCompponent";
 
 interface PinnedGithubProjectsProps {
   pinned:Error | PinnedViewerReposResponse

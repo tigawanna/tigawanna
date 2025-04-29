@@ -1,4 +1,4 @@
-import { SectionHeader } from "@/components/landing-page/shared/SectionHeader";
+import { SectionHeader } from "@/components/shared/SectionHeader";
 import type { ViewerLibraries } from "../libraries/helpers/api";
 import { TopFrameworksVisualizer } from "./TopLFrameworksVisualizer";
 import { pkgTypesArr } from "./helper";
