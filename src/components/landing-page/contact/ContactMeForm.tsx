@@ -7,7 +7,7 @@ import {
   type ContactFormState,
   sendEmailwithBrevoSmtpAction,
 } from "./utils/brevo-nodemailer";
-import { testAction } from "./utils/test-action";
+
 
 type ContactMeFormProps = {};
 
@@ -123,7 +123,7 @@ export function ContactMeForm({}: ContactMeFormProps) {
             id="sender_contact"
             placeholder="contact information"
             type="text"
-            name="sender_contct"
+            name="sender_contact"
             className="input"
           />
         </div>
