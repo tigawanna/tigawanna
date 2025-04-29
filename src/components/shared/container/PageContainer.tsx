@@ -22,13 +22,15 @@ export function PageContainer({ children }: pageContainerProps) {
         <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
         <div
           className="drawer-content flex flex-col
-    bg-gradient-to-tr from-green-900 via-transparent to-emerald-700">
+    bg-linear-to-tr from-base-200 via-primary/50  to-base-200">
           {/* Navbar */}
           <div className="w-full navbar  min-h-10 h-12 z-40 m-2  justify-between sticky top-0 ">
             {!show_navbar_links && (
-              <Link className="hover:text-accent  z-50 flex gap-2 justify-center items-center" href="..">
+              <Link
+                className="hover:text-accent  z-50 flex gap-2 justify-center items-center"
+                href="..">
                 <LinkLoading>
-                <ChevronLeft className="size-14 " />
+                  <ChevronLeft className="size-14 " />
                 </LinkLoading>
               </Link>
             )}
@@ -93,15 +95,17 @@ export function PageContainer({ children }: pageContainerProps) {
           )}
           <ContactLinks showText />
         </div>
-        <Toaster toastOptions={{
-          className: "z-50",
-          position: "bottom-left",
-          duration: 2000,
-          style: {
-            background: "#1e293b",
-            color: "#fff",
-          },
-        }} />
+        <Toaster
+          toastOptions={{
+            className: "z-50",
+            position: "bottom-left",
+            duration: 2000,
+            style: {
+              background: "#1e293b",
+              color: "#fff",
+            },
+          }}
+        />
       </div>
     </NuqsAdapter>
   );

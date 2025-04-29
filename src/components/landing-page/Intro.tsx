@@ -15,14 +15,14 @@ export default function Intro({}: introProps) {
        md:flex-row lg:w-[95%]">
         <div className="lg:max-w-[60%]">
           <h2
-            className="   bg-gradient-to-r  from-accent 
+            className="   bg-linear-to-r  from-accent 
         via-secondary to-primary bg-clip-text text-7xl font-black text-transparent md:text-9xl
         ">
             Dennis Kinuthia
           </h2>
 
           <div
-            className="font-sarif mt-[10px] h-10 md:h-20 bg-gradient-to-r from-secondary  via-secondary/80
+            className="font-sarif mt-[10px] h-10 md:h-20 bg-linear-to-r from-secondary  via-secondary/80
               to-accent bg-clip-text text-4xl font-bold text-transparent md:text-6xl 
           ">
             <TypeAnimation
@@ -51,7 +51,7 @@ export default function Intro({}: introProps) {
           <Image
             src="/moi.jpg"
             alt="Dennis Kinuthia"
-            className="aspect-square w-[100%] h-auto rounded-2xl shadow shadow-accent "
+            className="aspect-square w-[100%] h-auto rounded-2xl shadow-sm shadow-accent "
             width={300}
             height={300}
             priority

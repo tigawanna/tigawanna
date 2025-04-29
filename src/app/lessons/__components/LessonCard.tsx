@@ -12,7 +12,7 @@ export function LessonCard({ item }: { item: LessonsItem }) {
   return (
     <div
       className="card w-full sm:h-[410px]  transition-transform hover:text-accent 
-      hover:shadow-sm hover:shadow-accent duration-300 ease-in-out
+      hover:shadow-xs hover:shadow-accent duration-300 ease-in-out
         md:w-[48%] lg:w-[30%] shadow-lg shadow-base-200 p-1 rounded-xl flex flex-col gap-0.5"
       suppressHydrationWarning>
       <Link href={`/lessons/${item.id}`} className=" p-3 rounded-xl flex flex-col gap-0.5">

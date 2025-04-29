@@ -59,7 +59,7 @@ export function FooterContacts({ className = "" }: FooterContactsProps) {
       {contactItems.map((item, index) => (
         <div
           key={index}
-          className="group flex-grow flex flex-col items-center p-4 rounded-lg bg-base-100/30 hover:bg-base-200 transition-all hover:shadow-md">
+          className="group grow flex flex-col items-center p-4 rounded-lg bg-base-100/30 hover:bg-base-200 transition-all hover:shadow-md">
           <div className="text-2xl text-secondary group-hover:scale-110 transition-transform duration-200">
             {item.icon}
           </div>

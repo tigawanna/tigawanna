@@ -92,7 +92,7 @@ export async function OneRepo({ params, ...props }: { params: string }) {
               {topics.map((topic) => (
                 <li
                   key={topic.node.id}
-                  className="text-sm  badge badge-ghost shadow-base-300 shadow rounded-lg">
+                  className="text-sm  badge badge-ghost shadow-base-300 shadow-sm rounded-lg">
                   {topic.node.topic.name}
                 </li>
               ))}

@@ -72,7 +72,7 @@ export function CopyButton({
       className={`flex items-center gap-2 bg-primary/10 rounded-md  p-1 
         ${copied ? "animate-pulse" : ""} ${className}`}>
       <div className="flex-1 font-mono text-sm break-all">{displayValue}</div>
-      <button  onClick={handleCopy} className="flex-shrink-0 btn btn-sm">
+      <button  onClick={handleCopy} className="shrink-0 btn btn-sm">
         {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
       </button>
     </div>
