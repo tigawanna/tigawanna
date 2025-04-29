@@ -1,13 +1,14 @@
-import { getViewerPinnedRepos } from "@/state/api/repos";
-import { SectionHeader } from "../../shared/SectionHeader";
+import { getViewerPinnedRepos, PinnedViewerReposResponse } from "@/state/api/repos";
 import { RepoListCard } from "./RepoListCard";
 import { Lock } from "lucide-react";
 import { TimeCompponent } from "@/components/landing-page/shared/TimeCompponent";
 
-interface PinnedGithubProjectsProps {}
+interface PinnedGithubProjectsProps {
+  pinned:Error | PinnedViewerReposResponse
+}
 
-export async function PinnedGithubProjects({}: PinnedGithubProjectsProps) {
-  const data = await getViewerPinnedRepos();
+export function PinnedGithubProjects({pinned}: PinnedGithubProjectsProps) {
+const data = pinned
   if ((data && "errors" in data) || "message" in data) {
     return null;
   }
@@ -16,10 +17,10 @@ export async function PinnedGithubProjects({}: PinnedGithubProjectsProps) {
   if (!projects) {
     return null;
   }
-  // // no({projects})
+
   return (
     <div className="flex flex-col h-full w-full items-center justify-center lg:px-[10%]">
-      <SectionHeader heading="Featured projects" id="projects" />
+      {/* <SectionHeader heading="Featured projects" id="projects" /> */}
       <div className="flex w-[90%] lg:w-[95%] h-full flex-wrap items-center justify-center gap-5 p-3 lg:p-1">
         {projects.map((one_repo) => {
           if (one_repo.isPrivate)
