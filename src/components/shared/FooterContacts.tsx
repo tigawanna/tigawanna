@@ -11,27 +11,6 @@ interface FooterContactsProps {
 export function FooterContacts({ className = "" }: FooterContactsProps) {
   const contactItems = [
     {
-      icon: <FaGithub />,
-      title: "GitHub",
-      detail: "@" + siteConfig.links.nickname,
-      url: siteConfig.links.github,
-      label: "Follow",
-    },
-    {
-      icon: <FaLinkedinIn />,
-      title: "LinkedIn",
-      detail: "Professional Profile",
-      url: siteConfig.links.linkedin,
-      label: "Connect",
-    },
-    {
-      icon: <FaDev />,
-      title: "Dev.to",
-      detail: "@" + siteConfig.links.nickname,
-      url: siteConfig.links.devto,
-      label: "Read",
-    },
-    {
       icon: <HiOutlineMail />,
       title: "Email",
       detail: "denniskinuthiawaweru@gmail.com",
@@ -51,6 +30,27 @@ export function FooterContacts({ className = "" }: FooterContactsProps) {
       detail: siteConfig.links.phone,
       url: siteConfig.links.phoneDialer,
       label: "Call",
+    },
+    {
+      icon: <FaGithub />,
+      title: "GitHub",
+      detail: "@" + siteConfig.links.nickname,
+      url: siteConfig.links.github,
+      label: "Follow",
+    },
+    {
+      icon: <FaLinkedinIn />,
+      title: "LinkedIn",
+      detail: "Professional Profile",
+      url: siteConfig.links.linkedin,
+      label: "Connect",
+    },
+    {
+      icon: <FaDev />,
+      title: "Dev.to",
+      detail: "@" + siteConfig.links.nickname,
+      url: siteConfig.links.devto,
+      label: "Read",
     },
   ];
 

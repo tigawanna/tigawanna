@@ -11,11 +11,11 @@ export default function Intro({}: introProps) {
       </div>
 
       <div
-        className=" mt-[3%] md:mt-[5%] flex w-full flex-col items-center justify-center gap-5
+        className="background-animate mt-[3%] md:mt-[5%] flex w-full flex-col items-center justify-center gap-5
        md:flex-row lg:w-[95%]">
         <div className="lg:max-w-[60%]">
           <h2
-            className="   bg-linear-to-r  from-accent 
+            className=" bg-linear-to-r  from-primary/70 
         via-secondary to-primary bg-clip-text text-7xl font-black text-transparent md:text-9xl
         ">
             Dennis Kinuthia
@@ -33,17 +33,14 @@ export default function Intro({}: introProps) {
             />
           </div>
           <div className="mt-[20px] flex w-full flex-col items-start justify-start gap-5 md:flex-row">
-          <a href="#projects">
-            <button className="btn btn-secondary btn-outline text-xl ">
-              View my work
-            </button>
-          </a>
-          <a href="#contact">
-          <button className="btn btn-primary text-xl ">
-            Contact me
-          </button>
-          </a>
-
+            <a href="#projects">
+              <button className="btn btn-secondary btn-lg btn-outline text-xl ">
+                View my work
+              </button>
+            </a>
+            <a href="#contact">
+              <button className="btn btn-primary btn-lg text-xl ">Contact me</button>
+            </a>
           </div>
         </div>
 

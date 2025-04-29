@@ -92,7 +92,7 @@ export function ContactMeForm({}: ContactMeFormProps) {
             type="text"
             placeholder="name"
             name="sender_name"
-            className="input"
+            className="input w-full"
           />
         </div>
 
@@ -107,7 +107,7 @@ export function ContactMeForm({}: ContactMeFormProps) {
             id="sender_message"
             name="sender_message"
             required
-            className="textarea min-h-40"
+            className="textarea min-h-40 w-full"
             placeholder="Message"
           />
         </div>
@@ -124,7 +124,7 @@ export function ContactMeForm({}: ContactMeFormProps) {
             placeholder="contact information"
             type="text"
             name="sender_contact"
-            className="input"
+            className="input w-full"
           />
         </div>
         <SubmitButton />
