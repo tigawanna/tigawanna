@@ -22,7 +22,7 @@ import {
 import { SectionHeader } from "../shared/SectionHeader";
 
 import React from "react";
-import { TechIcons } from "../icons/tech";
+import { TechIcons } from "../../icons/tech";
 
 type TechUsedProps = {};
 

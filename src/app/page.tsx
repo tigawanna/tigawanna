@@ -1,19 +1,19 @@
-import Intro from "@/components/Intro";
-import { AboutLinks } from "@/components/about/AboutLinks";
-import { DevToArticles } from "@/components/articles/DevToArticles";
-import { ContactMeForm } from "@/components/contact/ContactMeForm";
-import { CurrentlyWorkingOnGithubProjects } from "@/components/projects/repos/CurrentlyWorkingOnGithubProjects";
+import Intro from "@/components/landing-page/Intro";
+import { AboutLinks } from "@/components/landing-page/about/AboutLinks";
+import { DevToArticles } from "@/components/landing-page/articles/DevToArticles";
+import { ContactMeForm } from "@/components/landing-page/contact/ContactMeForm";
+import { CurrentlyWorkingOnGithubProjects } from "@/components/landing-page/projects/repos/CurrentlyWorkingOnGithubProjects";
 import {
   PinnedGithubProjects,
   ProjectsSuspenseFallback,
-} from "@/components/projects/repos/PinnedGithubProjects";
-import { MainFooter } from "@/components/shared/Footer";
-import { GithubLanguages, LanguagesSuspenseFallback } from "@/components/stats/languages/Languages";
-import { TechUsed } from "@/components/tech/TechUsed";
+} from "@/components/landing-page/projects/repos/PinnedGithubProjects";
+import { MainFooter } from "@/components/landing-page/shared/Footer";
+import { GithubLanguages, LanguagesSuspenseFallback } from "@/components/landing-page/stats/languages/Languages";
+import { TechUsed } from "@/components/landing-page/tech/TechUsed";
 import { Suspense } from "react";
 import { LessonsSection } from "./lessons/__components/LessonsSection";
 import { getViewerRecentlyPushedRepos } from "@/state/api/repos";
-import { ViewerGithubTech } from "@/components/projects/repos/ViewerGithubTech";
+import { ViewerGithubTech } from "@/components/landing-page/projects/repos/ViewerGithubTech";
 
 
 export const revalidate = 60;

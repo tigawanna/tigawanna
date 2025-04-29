@@ -1,5 +1,5 @@
-import { PageContainer } from "@/components/shared/container/PageContainer";
-import { siteConfig } from "@/components/shared/container/site";
+import { PageContainer } from "@/components/landing-page/shared/container/PageContainer";
+import { siteConfig } from "@/components/landing-page/shared/container/site";
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
