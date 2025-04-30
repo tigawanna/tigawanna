@@ -26,7 +26,7 @@ export function FilterByTopics({ topics }: FilterByTopicsProps) {
             return (
               <button
                 key={topic}
-                className={`btn btn-secondary btn-sm   font-semibold`}
+                className={`btn btn-primary btn-sm brightness-150 font-semibold`}
                 onClick={() => {
                   setTopic(item);
                 }}>
@@ -43,7 +43,7 @@ export function FilterByTopics({ topics }: FilterByTopicsProps) {
           return (
             <button
               key={item}
-              className={`btn btn-secondary btn-sm btn-outline  font-semibold`}
+              className={`btn btn-primary btn-sm btn-outline brightness-125  font-semibold`}
               onClick={() => {
                 setTopic(item);
               }}>
