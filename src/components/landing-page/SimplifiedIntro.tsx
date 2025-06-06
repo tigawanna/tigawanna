@@ -4,6 +4,8 @@ import Image from "next/image";
 import { TypeAnimation } from "react-type-animation";
 import { motion } from "framer-motion";
 import { FadeIn } from "@/components/shared/animations/AnimatedComponents";
+import { siteConfig } from "../shared/container/site";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 
 export default function SimplifiedIntro() {
   // Simple fade-in animation variants
@@ -62,8 +64,10 @@ export default function SimplifiedIntro() {
                     "TypeScript Enthusiast",
                     1000,
                     "Next.js Developer",
-                    1000,
-                    "UI/UX Designer",
+                    300,
+                    "Node.js Developer",
+                    300,
+                    "Solutions Architect",
                     1000,
                   ]}
                   wrapper="span"
@@ -95,14 +99,7 @@ export default function SimplifiedIntro() {
             >
               Contact Me
             </a>
-            <a 
-              href="https://github.com/tigawanna" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-secondary btn-outline"
-            >
-              GitHub
-            </a>
+
           </FadeIn>
         </div>
       </div>

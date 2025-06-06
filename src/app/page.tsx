@@ -6,13 +6,12 @@ import {
   ProjectsSuspenseFallback,
 } from "@/components/landing-page/projects/repos/PinnedGithubProjects";
 import { MainFooter } from "@/components/shared/Footer";
-import { GithubLanguages, LanguagesSuspenseFallback } from "@/components/landing-page/stats/languages/Languages";
 import { Suspense } from "react";
 import { LessonsSection } from "./lessons/__components/LessonsSection";
 import { getViewerPinnedRepos, getViewerRecentlyPushedRepos } from "@/state/api/repos";
 import { ViewerGithubProjects } from "@/components/landing-page/projects/repos/ViewerGithubProjects";
 import { CondensedAbout } from "@/components/landing-page/about/CondensedAbout";
-import { SimplifiedTechStack } from "@/components/landing-page/tech/SimplifiedTechStack";
+
 
 export interface PageProps {
   params: Promise<{ topic: string }>;
@@ -28,11 +27,11 @@ export default async function Home({}: PageProps) {
       <main className="flex flex-col w-full h-full gap-6">
         <SimplifiedIntro />
         <CondensedAbout />
-        <SimplifiedTechStack />
+        {/* <SimplifiedTechStack /> */}
         
-        <Suspense fallback={<LanguagesSuspenseFallback />}>
+        {/* <Suspense fallback={<LanguagesSuspenseFallback />}>
           <GithubLanguages />
-        </Suspense>
+        </Suspense> */}
         
         {/* GitHub Projects Section */}
         <section id="projects" className="py-16">
