@@ -2,6 +2,7 @@
 
 import { envVariables } from "@/env";
 import { sendEmailMessage } from "@/lib/message/deno-echo";
+import { TelegramNotifier } from "@/lib/telegram/client";
 
 
 export interface ContactFormState {
@@ -18,6 +19,8 @@ export async function sendEmailwithBrevoSmtpAction(
   prevState: ContactFormState,
   formData: FormData
 ) {
+
+  const tg = new TelegramNotifier()
   // console.log({prevState, formData});
   const mail_from = envVariables.EMAIL_FROM;
   const mail_to = envVariables.EMAIL_FROM;

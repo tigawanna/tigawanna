@@ -7,6 +7,7 @@ import {
   type ContactFormState,
   sendEmailwithBrevoSmtpAction,
 } from "./utils/brevo-nodemailer";
+import { sendTelegramNotificationAction } from "@/lib/telegram/telegram-notifier-action";
 
 
 type ContactMeFormProps = {};
@@ -14,17 +15,19 @@ type ContactMeFormProps = {};
 export function ContactMeForm({}: ContactMeFormProps) {
 
   const [formState, formAction] = useActionState<ContactFormState>(
-    // @ts-expect-error
-    sendEmailwithBrevoSmtpAction, {
-    message: "",
-    error: false,
-    success: false,
-    fieldValues: {
-      sender_name: "",
-      sender_email: "",
-      sender_message: "",
-    },
-  });
+    // @ts-expect-error : it thimks the seocnd ar (formData doesn't exist)
+    sendTelegramNotificationAction,
+    {
+      message: "",
+      error: false,
+      success: false,
+      fieldValues: {
+        sender_name: "",
+        sender_email: "",
+        sender_message: "",
+      },
+    }
+  );
   const [status, setStatus] = useState({
     error: formState.error,
     success: formState.success,
