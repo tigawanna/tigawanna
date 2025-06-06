@@ -82,68 +82,6 @@ export function CondensedAbout() {
                 <FaLinkedin />
               </a>
             </div>
-
-            {/* Enhanced Talks Section */}
-            <FadeIn delay={0.2} className="pt-4">
-              <div className="bg-base-200/50 rounded-2xl p-5 border border-primary/10 shadow-lg">
-                <h3 className="text-xl font-bold mb-4 text-center bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                  Conference Talks & Presentations
-                </h3>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* RenderCon Talk */}
-                  <motion.a
-                    href="https://docs.google.com/presentation/d/14q3-684ay5uK7Rhtp8ysj5ZVgCk_rsWsf7k9SFPHSKk/edit?usp=drivesdk"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-4 bg-gradient-to-br from-primary/10 to-primary/30 rounded-xl hover:shadow-md transition-all duration-300 flex flex-col items-center text-center group"
-                    whileHover={{
-                      scale: 1.03,
-                      boxShadow:
-                        "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
-                    }}>
-                    <div className="w-12 h-12 flex items-center justify-center rounded-full bg-primary/20 mb-3">
-                      <Box className="size-6 text-primary" />
-                    </div>
-                    <h4 className="font-bold text-lg mb-1">RenderCon-KE</h4>
-                    <p className="text-sm text-base-content/70 mb-3">
-                      Exploring Modern React Rendering Strategies
-                    </p>
-
-                    <span className="text-primary text-sm inline-flex items-center group-hover:underline">
-                      View Presentation
-                      <ArrowRight className="size-4 text-secondary" />
-                    </span>
-                  </motion.a>
-
-                  {/* React Devs KE Presentation */}
-                  <motion.a
-                    href="https://github.com/tigawanna/ReactDevsKe-Meetup-February-2025"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-4 bg-gradient-to-br from-secondary/10 to-secondary/30 rounded-xl hover:shadow-md transition-all duration-300 flex flex-col items-center text-center group"
-                    whileHover={{
-                      scale: 1.03,
-                      boxShadow:
-                        "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
-                    }}>
-                    <div className="w-12 h-12 flex items-center justify-center rounded-full bg-secondary/20 mb-3">
-                      <CircleArrowRight className="size-6 text-secondary" />
-                    </div>
-                    <h4 className="font-bold text-lg mb-1">React Devs KE</h4>
-                    <p className="text-sm text-base-content/70 mb-3">
-                      TypeScript + React: Building Type-Safe Applications
-                    </p>
-
-                    {/* Engagement metrics */}
-                    <span className="text-secondary text-sm inline-flex items-center group-hover:underline">
-                      View Repository
-                      <ArrowRight className="size-4 text-secondary" />
-                    </span>
-                  </motion.a>
-                </div>
-              </div>
-            </FadeIn>
           </div>
         </div>
 
