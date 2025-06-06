@@ -80,7 +80,11 @@ export function ContactMeForm({}: ContactMeFormProps) {
           </div>
         )}
 
-        <div className="w-full flex flex-col gap-1">
+        <div className="
+          w-full flex flex-col gap-1
+          animate-in fade-in slide-in-from-bottom-2 duration-500 delay-100
+          @starting-style:opacity-0 @starting-style:translate-y-2
+        ">
           <label
             htmlFor="sender_name"
             className="bg-base-200 rounded-xl p-1 w-fit"
@@ -92,11 +96,15 @@ export function ContactMeForm({}: ContactMeFormProps) {
             type="text"
             placeholder="name"
             name="sender_name"
-            className="input w-full"
+            className="input w-full transition-all focus:border-primary/50 focus:shadow-md"
           />
         </div>
 
-        <div className="w-full flex flex-col gap-1">
+        <div className="
+          w-full flex flex-col gap-1
+          animate-in fade-in slide-in-from-bottom-2 duration-500 delay-200
+          @starting-style:opacity-0 @starting-style:translate-y-2
+        ">
           <label
             htmlFor="sender_message"
             className="bg-base-200 rounded-xl p-1 w-fit"

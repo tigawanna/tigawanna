@@ -1,4 +1,4 @@
-import SimplifiedIntro from "@/components/landing-page/SimplifiedIntro";
+import IntroSection from "@/components/landing-page/MainIntro";
 import { DevToArticles } from "@/components/landing-page/articles/DevToArticles";
 import { ContactMeForm } from "@/components/landing-page/contact/ContactMeForm";
 import { CurrentlyWorkingOnGithubProjects } from "@/components/landing-page/projects/repos/CurrentlyWorkingOnGithubProjects";
@@ -8,9 +8,10 @@ import { Suspense } from "react";
 import { LessonsSection } from "./lessons/__components/LessonsSection";
 import { getViewerPinnedRepos, getViewerRecentlyPushedRepos } from "@/state/api/repos";
 import { ViewerGithubProjects } from "@/components/landing-page/projects/repos/ViewerGithubProjects";
-import { CondensedAbout } from "@/components/landing-page/about/CondensedAbout";
+
 import { TalksSection } from "@/components/landing-page/talks/TalksSection";
-import { CertificateSection } from "@/components/landing-page/certificates/CertificateSection";
+import { CertificateSection } from "@/components/landing-page/certificates/CertificationSection";
+import AboutSection from "@/components/landing-page/about/AboutSection";
 
 export interface PageProps {
   params: Promise<{ topic: string }>;
@@ -23,8 +24,8 @@ export default async function Home({}: PageProps) {
 
   return (
     <main className="flex flex-col w-full h-full gap-6">
-      <SimplifiedIntro />
-      <CondensedAbout />
+      <IntroSection />
+      <AboutSection />
       <TalksSection />
       <CertificateSection />
       {/* GitHub Projects Section */}

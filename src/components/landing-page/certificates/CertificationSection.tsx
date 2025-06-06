@@ -1,25 +1,27 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Image from "next/image";
-import { FadeIn } from "@/components/shared/animations/AnimatedComponents";
+import { TailwindFadeIn } from "@/components/shared/animations/TailwindFadeIn";
 
 export function CertificateSection() {
   return (
     <section id="certificates" className="w-full py-16 bg-base-200/30">
       <div className="container mx-auto px-6">
-        <FadeIn className="mb-10">
+        <TailwindFadeIn className="mb-10">
           <h2 className="text-4xl font-bold text-center bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
             Certifications
           </h2>
-        </FadeIn>
+        </TailwindFadeIn>
 
         <div className="max-w-4xl mx-auto">
-          <FadeIn>
-            <motion.div
-              className="bg-base-100/80 rounded-2xl overflow-hidden border border-primary/10 shadow-lg"
-              whileHover={{ scale: 1.01 }}
-              transition={{ duration: 0.3 }}>
+          <TailwindFadeIn>
+            <div
+              className="
+                bg-base-100/80 rounded-2xl overflow-hidden 
+                border border-primary/10 shadow-lg
+                transition-all duration-300
+                hover:scale-[1.01]
+              ">
               <div className="relative aspect-[16/9] w-full">
                 <Image
                   src="/alx.png"
@@ -55,10 +57,11 @@ export function CertificateSection() {
                   <h4 className="font-semibold mb-2">Skills Acquired:</h4>
                   <ul className="list-disc list-inside space-y-1 text-base-content/80">
                     <li>Backend system architecture and design</li>
-                    <li>Database optimization and management</li>
+                    <li>Database optimization and management MYSQL,Postgres</li>
                     <li>API design and implementation</li>
                     <li>System scaling and performance optimization</li>
-                    <li>DevOps and deployment strategies</li>
+                    <li>Linux basics and server management shell, SSH, UFW</li>
+                    <li>DevOps and deployment strategies, Jenkins, Chef, Puppet</li>
                   </ul>
                 </div>
 
@@ -72,10 +75,15 @@ export function CertificateSection() {
                   </a>
                 </div>
               </div>
-            </motion.div>
-          </FadeIn>
+            </div>
+          </TailwindFadeIn>
 
-          <div className="mt-6 flex items-center justify-center text-center text-base-content/60 text-sm">
+          <div className="
+            mt-6 flex items-center justify-center 
+            text-center text-base-content/60 text-sm
+            animate-in fade-in duration-700 delay-300
+            @starting-style:opacity-0
+          ">
             <p>Certificate verification: Scan the QR code or visit</p>
             <a
               className="btn btn-link"

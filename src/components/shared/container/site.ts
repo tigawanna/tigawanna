@@ -30,5 +30,9 @@ export const siteConfig = {
     phoneDialer: "tel:+254790984481",
     email: "mailto:denniskinuthiawaweru@gmail.com",
     whatsapp: "https://wa.me/254790984481",
+    renderconke: "https://www.reactdevske.org",
+    renderconke_talk: "https://github.com/tigawanna/ReactDevsKe-Meetup-February-2025",
+    reactdevske: "https://www.reactdevske.org",
+    reactdevske_01_2025_talk: "https://github.com/tigawanna/ReactDevsKe-Meetup-February-2025",
   },
 } as const;

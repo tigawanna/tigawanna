@@ -1,14 +1,11 @@
 "use client";
 
 import { useRef } from "react";
-import { motion } from "framer-motion";
-import { FadeIn } from "@/components/shared/animations/AnimatedComponents";
-import { ArrowRight, Box, CircleArrowRight } from "lucide-react";
-import { siteConfig } from "@/components/shared/container/site";
+import { TailwindFadeIn } from "@/components/shared/animations/TailwindFadeIn";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { siteConfig } from "@/components/shared/container/site";
 
-
-export function CondensedAbout() {
+export function AboutSection() {
   const marqueeRef = useRef<HTMLDivElement>(null);
 
   // Skills for the marquee
@@ -34,20 +31,20 @@ export function CondensedAbout() {
   const duplicatedSkills = [...skills, ...skills];
 
   return (
-    <div className="w-full py-16" id="about">
+    <div className="w-full py-16 min-h-screen" id="about">
       <div className="container mx-auto px-6">
         {/* Section Title */}
-        <FadeIn className="mb-10">
+        <TailwindFadeIn className="mb-10">
           <h2 className="text-4xl font-bold text-center bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
             About Me
           </h2>
-        </FadeIn>
+        </TailwindFadeIn>
 
         {/* Content Grid */}
-        <div className=" flex flex-col gap-8 justify-center items-center w-full">
+        <div className="flex flex-col gap-8 justify-center items-center w-full">
           <div className="w-full space-y-6 max-w-[90%] lg:max-w-[60%]">
             {/* Bio Text */}
-            <FadeIn className="text-base-content/80 space-y-4">
+            <TailwindFadeIn className="text-base-content/80 space-y-4">
               <p>
                 TypeScript enthusiast based in Nairobi, Kenya with over 5 years of fullstack
                 development experience. I specialize in building exceptional web experiences using
@@ -63,8 +60,12 @@ export function CondensedAbout() {
                 clients like Apollo and Relay, tRPC, or service workers. My approach emphasizes type
                 safety, clean architecture, and creating truly reusable components.
               </p>
-            </FadeIn>
-            <div className="w-full p-6 flex justify-center items-center gap-6">
+            </TailwindFadeIn>
+            <div className="
+              w-full p-6 flex flex-wrap justify-center items-center gap-6
+              animate-in fade-in duration-500 delay-200
+              @starting-style:opacity-0
+            ">
               <a
                 href={siteConfig.links.github}
                 target="_blank"
@@ -85,14 +86,19 @@ export function CondensedAbout() {
           </div>
         </div>
 
-        {/* Skills Marquee - Enhanced */}
+        {/* Skills Marquee - Enhanced with Tailwind animations */}
         <div className="mt-12 overflow-hidden">
-          <FadeIn>
+          <TailwindFadeIn>
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 Technical Skills
               </h3>
-              <div className="px-3 py-1 bg-base-200/50 rounded-full text-sm text-base-content/70 border border-primary/10 animate-pulse">
+              <div className="
+                px-3 py-1 bg-base-200/50 rounded-full 
+                text-sm text-base-content/70 
+                border border-primary/10
+                animate-pulse
+              ">
                 <span className="inline-flex items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -109,10 +115,16 @@ export function CondensedAbout() {
                 </span>
               </div>
             </div>
-          </FadeIn>
+          </TailwindFadeIn>
 
           <div
-            className="relative w-full overflow-hidden py-4 before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-16 before:bg-gradient-to-r before:from-base-100 before:to-transparent after:absolute after:right-0 after:top-0 after:z-10 after:h-full after:w-16 after:bg-gradient-to-l after:from-base-100 after:to-transparent"
+            className="
+              relative w-full overflow-hidden py-4 
+              before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-16 before:bg-gradient-to-r before:from-base-100 before:to-transparent 
+              after:absolute after:right-0 after:top-0 after:z-10 after:h-full after:w-16 after:bg-gradient-to-l after:from-base-100 after:to-transparent
+              animate-in fade-in duration-700 delay-300
+              @starting-style:opacity-0
+            "
             ref={marqueeRef}>
             <div className="animate-marquee flex gap-4 whitespace-nowrap">
               {duplicatedSkills.map((skill, index) => {
@@ -121,16 +133,16 @@ export function CondensedAbout() {
                 const isPrimary = index % 3 === 0;
                 const isSecondary = index % 3 === 1;
 
-                let bgClass = "bg-base-200/70";
-                let textClass = "text-base-content/90";
+                let bgClass = "bg-base-content/10";
+                let textClass = "text-base-content";
 
-                if (isPrimary) {
-                  bgClass = "bg-primary/10";
-                  textClass = "text-primary";
-                } else if (isSecondary) {
-                  bgClass = "bg-secondary/10";
-                  textClass = "text-secondary";
-                }
+                // if (isPrimary) {
+                //   bgClass = "bg-primary-content/70";
+                //   textClass = "text-primary";
+                // } else if (isSecondary) {
+                //   bgClass = "bg-secondary/10";
+                //   textClass = "text-secondary";
+                // }
 
                 return (
                   <span
@@ -143,10 +155,9 @@ export function CondensedAbout() {
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );
 }
 
-export default CondensedAbout;
+export default AboutSection;
