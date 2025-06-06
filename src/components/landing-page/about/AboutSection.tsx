@@ -6,7 +6,7 @@ import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { siteConfig } from "@/components/shared/container/site";
 
 export function AboutSection() {
-  const marqueeRef = useRef<HTMLDivElement>(null);
+
 
   // Skills for the marquee
   const skills = [
@@ -125,29 +125,13 @@ export function AboutSection() {
               animate-in fade-in duration-700 delay-300
               @starting-style:opacity-0
             "
-            ref={marqueeRef}>
+            >
             <div className="animate-marquee flex gap-4 whitespace-nowrap">
               {duplicatedSkills.map((skill, index) => {
-                // Alternate between different styles
-                const isEven = index % 2 === 0;
-                const isPrimary = index % 3 === 0;
-                const isSecondary = index % 3 === 1;
-
-                let bgClass = "bg-base-content/10";
-                let textClass = "text-base-content";
-
-                // if (isPrimary) {
-                //   bgClass = "bg-primary-content/70";
-                //   textClass = "text-primary";
-                // } else if (isSecondary) {
-                //   bgClass = "bg-secondary/10";
-                //   textClass = "text-secondary";
-                // }
-
                 return (
                   <span
                     key={`${skill}-${index}`}
-                    className={`px-4 py-2 ${bgClass} rounded-full font-medium ${textClass} flex-shrink-0 border border-primary/5 shadow-sm ${isEven ? "shadow-primary/5" : "shadow-secondary/5"}`}>
+                    className={`px-4 py-2 bg-base-content/10 rounded-full font-medium text-base-content flex-shrink-0 border border-primary/5 shadow-sm shadow-secondary/5`}>
                     {skill}
                   </span>
                 );
