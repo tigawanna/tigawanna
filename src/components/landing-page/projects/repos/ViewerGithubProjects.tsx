@@ -53,7 +53,7 @@ export function ViewerGithubProjects({ data, errors,pinned }: ViewerGithubProjec
 
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center">
+    <div className="w-full h-full flex flex-col items-center bg-base-200/40 p-4 rounede-xl justify-center">
       <FilterByTopics topics={topics} key={topic} />
       <SectionHeader heading="Projects" id="projects" />
       {topic === "featured" ? (

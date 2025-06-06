@@ -29,7 +29,7 @@ export default async function Home({}: PageProps) {
       <TalksSection />
       <CertificateSection />
       {/* GitHub Projects Section */}
-      <section id="projects" className="w-full py-16">
+      <section id="projects" className="w-full py-16 bg-base-200/50">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold mb-12 text-center bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
             My Projects

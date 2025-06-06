@@ -17,7 +17,7 @@ export function FilterByTopics({ topics }: FilterByTopicsProps) {
     return null;
   }
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center gap-2 p-4">
+    <div className="w-full h-full  flex flex-col items-center justify-center gap-2 p-4">
       <SectionHeader heading="Technologies" id="tech" />
       <p className="text-sm text-base-content/80">select a technology to filter-by</p>
       <div className="flex flex-wrap justify-center gap-2 mt-2">
