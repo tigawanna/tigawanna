@@ -2,11 +2,11 @@
 
 import { useRef } from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import { FadeIn } from "@/components/shared/animations/AnimatedComponents";
 import { ArrowRight, Box, CircleArrowRight } from "lucide-react";
 import { siteConfig } from "@/components/shared/container/site";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
+
 
 export function CondensedAbout() {
   const marqueeRef = useRef<HTMLDivElement>(null);
@@ -205,6 +205,7 @@ export function CondensedAbout() {
             </div>
           </div>
         </div>
+
       </div>
     </div>
   );

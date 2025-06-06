@@ -8,7 +8,7 @@ interface LessonsSectionProps {}
 
 export function LessonsSection({}: LessonsSectionProps) {
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center lg:px-[10%]">
+    <div className="w-full h-full flex flex-col items-center justify-center lg:px-[1%]">
       <SectionHeader heading="Cool thing i recently learned" id="journal" />
       <Suspense fallback={<ProjectsSuspenseFallback />}>
         <div className="w-full flex flex-col justify-center">

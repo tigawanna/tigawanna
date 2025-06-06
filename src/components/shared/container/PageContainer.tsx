@@ -68,11 +68,13 @@ export function PageContainer({ children }: pageContainerProps) {
                   ))}
                 </ul>
               )}
-              {/* <ContactLinks /> */}
             </div>
           </div>
           {/* Page content here */}
           {children}
+          <div className="fixed right-[1%] top-[30%] hidden lg:flex ">
+            <ContactLinks navbar/>
+          </div>
         </div>
         <div className="drawer-side z-30">
           <label
@@ -80,7 +82,7 @@ export function PageContainer({ children }: pageContainerProps) {
             aria-label="close sidebar"
             className="drawer-overlay"></label>
           {show_navbar_links && (
-            <ul className="menu p-4 w-80 min-h-full glass z-30  mt-10 gap-2">
+            <ul className="menu p-4 w-80 min-h-full bg-base-300/80 z-30  mt-10 gap-2">
               {links.map((link) => (
                 <li key={link.label} onClick={() => closeOnLinkClick()}>
                   <Link
@@ -91,9 +93,11 @@ export function PageContainer({ children }: pageContainerProps) {
                   </Link>
                 </li>
               ))}
+              <div className="mt-6">
+              <ContactLinks  /> 
+              </div>
             </ul>
           )}
-          <ContactLinks showText />
         </div>
         <Toaster
           toastOptions={{

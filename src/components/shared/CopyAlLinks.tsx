@@ -56,7 +56,6 @@ export function CopyAllLinksButton({
       {copying ? (
         <>
           <FiCheck className="w-4 h-4" />
-          <span>Copied</span>
         </>
       ) : (
         <>

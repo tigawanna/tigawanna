@@ -21,7 +21,7 @@ export function CurrentlyWorkingOnGithubProjects({data,errors}: CurrentlyWorking
       return null;
     }
   return (
-    <div className="flex flex-col h-full w-full  items-center justify-center lg:px-[10%]">
+    <div className="flex flex-col h-full w-full  items-center justify-center lg:px-[1%]">
       <SectionHeader heading="Currently working on" id="working_on" />
       <div className="flex w-[90%] lg:w-[95%] h-full flex-wrap items-center justify-center gap-5 p-3 lg:p-1">
         {projects.slice(0, 6).map((one_repo) => {

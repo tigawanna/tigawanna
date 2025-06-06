@@ -10,7 +10,7 @@ export async function DevToArticles({}: DevToArticlesProps) {
   if (!articles) return null;
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center lg:px-[10%]">
+    <div className="w-full h-full flex flex-col items-center justify-center lg:px-[1%]">
       <SectionHeader heading="My Latest Articles" id="articles" />
       <ul className="w-full flex flex-wrap justify-center items-center gap-5">
         {articles.map((article) => {

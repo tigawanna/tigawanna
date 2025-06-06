@@ -55,7 +55,7 @@ export function ContactMeForm({}: ContactMeFormProps) {
   }, [formState]);
 
   return (
-    <div className="w-full h-full min-h-screen flex flex-col items-center justify-center lg:px-[10%]  rounded-lg  animate-in fade-in zoom-in duration-500 ">
+    <div className="w-full h-full min-h-screen flex flex-col items-center justify-center lg:px-[2%]  rounded-lg  animate-in fade-in zoom-in duration-500 ">
       <SectionHeader heading="Talk to me" id="contact" />
       <form
         id="contact-form"
