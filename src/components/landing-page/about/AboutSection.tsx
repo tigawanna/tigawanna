@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { TailwindFadeIn } from "@/components/shared/animations/TailwindFadeIn";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { siteConfig } from "@/components/shared/container/site";
+import { SkillsMMarquee } from "./SkillsMMarquee";
 
 export function AboutSection() {
 
@@ -117,7 +118,7 @@ export function AboutSection() {
             </div>
           </TailwindFadeIn>
 
-          <div
+          {/* <div
             className="
               relative w-full overflow-hidden py-4 
               before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-16 before:bg-gradient-to-r before:from-base-100 before:to-transparent 
@@ -137,7 +138,8 @@ export function AboutSection() {
                 );
               })}
             </div>
-          </div>
+          </div> */}
+            <SkillsMMarquee/>
         </div>
       </div>
     </div>

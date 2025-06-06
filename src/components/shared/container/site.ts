@@ -36,3 +36,21 @@ export const siteConfig = {
     reactdevske_01_2025_talk: "https://github.com/tigawanna/ReactDevsKe-Meetup-February-2025",
   },
 } as const;
+
+export const techSkills = [
+  "React & Next.js",
+  "TypeScript",
+  "GraphQL",
+  "Node.js",
+  "Tailwind CSS",
+  "React Native",
+  "REST APIs",
+  "Prisma & Drizzle",
+  "TanStack",
+  "Authentication",
+  "State Management",
+  "Testing",
+  "CI/CD",
+  "Performance Optimization",
+  "Accessibility",
+] as const
