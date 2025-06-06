@@ -67,8 +67,8 @@ export function FooterContacts({ className = "" }: FooterContactsProps) {
           <h3 className="mt-2 font-semibold">{item.title}</h3>
 
           <CopyButton
-            text={item.detail}
-            displayText={item.detail}
+            text={item.url}
+            displayText={item.url}
             className="text-base-content/70"
           />
           {/* <p className="text-xs text-base-content/70 text-center mt-1">{item.detail}</p> */}
