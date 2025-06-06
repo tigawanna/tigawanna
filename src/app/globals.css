@@ -8,6 +8,24 @@
   logs: false;
 }
 
+/* Import custom animation styles */
+@import '../lib/animations/animations.css';
+
+/* Marquee animation for skills */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+  will-change: transform;
+}
+
 @plugin "daisyui/theme" {
   name: "wanna";
   default: false;

@@ -1,0 +1,146 @@
+@import 'tailwindcss';
+
+@plugin 'tailwindcss-animate';
+
+@plugin "daisyui" {
+  themes: wanna --default, dark --prefersdark;
+  /* themes: all; */
+  logs: false;
+}
+
+@plugin "daisyui/theme" {
+  name: "wanna";
+  default: false;
+  prefersdark: false;
+  color-scheme: "dark";
+  --color-base-100: oklch(22% 0.035 45.911);
+  --color-base-200: oklch(18% 0.028 45.911);
+  --color-base-300: oklch(15% 0.02 45.911);
+  --color-base-content: oklch(85% 0.007 80);
+
+  --color-primary: oklch(70% 0.158 85);
+  --color-primary-content: oklch(13.955% 0.027 45);
+
+  --color-secondary: oklch(65% 0.145 170.225);
+  --color-secondary-content: oklch(15% 0.02 45.911);
+
+  --color-accent: oklch(60% 0.12 40);
+  --color-accent-content: oklch(95% 0.007 80);
+
+  --color-neutral: oklch(40% 0.065 110);
+  --color-neutral-content: oklch(88% 0.007 80);
+
+  --color-info: oklch(69.35% 0.1 257.23);
+  --color-info-content: oklch(98% 0.012 234);
+
+  --color-success: oklch(62.8% 0.12 160);
+  --color-success-content: oklch(98% 0.012 130);
+
+  --color-warning: oklch(70.827% 0.191 75);
+  --color-warning-content: oklch(15% 0.015 75);
+
+  --color-error: oklch(65.012% 0.196 22.18);
+  --color-error-content: oklch(98% 0.012 22.18);
+}
+
+@plugin "daisyui/theme" {
+  name: "dark";
+  default: false;
+  prefersdark: true;
+  color-scheme: "dark";
+
+  --color-primary: oklch(70% 0.158 85);
+  --color-primary-content: oklch(13.955% 0.027 45);
+
+  --color-secondary: oklch(65% 0.145 170.225);
+  --color-secondary-content: oklch(15% 0.02 45.911);
+
+  --color-accent: oklch(60% 0.12 40);
+  --color-accent-content: oklch(95% 0.007 80);
+
+  --color-neutral: oklch(40% 0.065 110);
+  --color-neutral-content: oklch(88% 0.007 80);
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.background-animate {
+  background-size: 400%;
+  -webkit-animation: gradient 15s ease infinite;
+  -moz-animation: gradient 15s ease infinite;
+  animation: gradient 15s ease infinite;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply tracking-tighter;
+}
+
+/* Gradient text */
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent;
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-base-300/50;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary/30 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary/60;
+}
+
+/* Glass effect */
+.glass-card {
+  @apply backdrop-blur-md bg-base-100/50 border border-base-content/10;
+}
+
+/* Animation keyframes */
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Container utilities */
+.container {
+  @apply mx-auto px-4;
+  max-width: 1280px;
+}

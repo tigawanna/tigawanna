@@ -50,9 +50,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-theme="wanna">
-      <body className={inter.className}>
-        <PageContainer>{children}</PageContainer>
+    <html lang="en" data-theme="wanna" className="!scroll-smooth">
+      <body className={`${inter.className} bg-base-100 min-h-screen`}>
+        <PageContainer>
+          {children}
+        </PageContainer>
+        <div id="portal-root"></div>
         <Analytics />
       </body>
     </html>
