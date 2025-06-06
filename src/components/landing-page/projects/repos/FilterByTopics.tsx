@@ -3,7 +3,7 @@
 import { TechIcons } from "@/components/icons/tech";
 import { useQueryState } from "nuqs";
 import { useState } from "react";
-import { SectionHeader } from "../../../shared/SectionHeader";
+import { SectionHeader } from "@/components/shared/SectionHeader";
 
 interface FilterByTopicsProps {
   topics: string[];
