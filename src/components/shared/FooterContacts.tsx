@@ -13,14 +13,14 @@ export function FooterContacts({ className = "" }: FooterContactsProps) {
     {
       icon: <HiOutlineMail />,
       title: "Email",
-      detail: "denniskinuthiawaweru@gmail.com",
-      url: siteConfig.links.email,
+      detail: siteConfig.links.email,
+      url: siteConfig.links.emailTo,
       label: "Write",
     },
     {
       icon: <FaWhatsapp />,
       title: "WhatsApp",
-      detail: siteConfig.links.phone,
+      detail: siteConfig.links.whatsappNumber,
       url: siteConfig.links.whatsapp,
       label: "Chat",
     },
@@ -34,21 +34,21 @@ export function FooterContacts({ className = "" }: FooterContactsProps) {
     {
       icon: <FaGithub />,
       title: "GitHub",
-      detail: "@" + siteConfig.links.nickname,
+      detail: siteConfig.links.github,
       url: siteConfig.links.github,
       label: "Follow",
     },
     {
       icon: <FaLinkedinIn />,
       title: "LinkedIn",
-      detail: "Professional Profile",
+      detail: siteConfig.links.linkedin,
       url: siteConfig.links.linkedin,
       label: "Connect",
     },
     {
       icon: <FaDev />,
       title: "Dev.to",
-      detail: "@" + siteConfig.links.nickname,
+      detail: siteConfig.links.devto,
       url: siteConfig.links.devto,
       label: "Read",
     },
@@ -67,7 +67,7 @@ export function FooterContacts({ className = "" }: FooterContactsProps) {
           <h3 className="mt-2 font-semibold">{item.title}</h3>
 
           <CopyButton
-            text={item.url}
+            text={item.detail}
             displayText={item.url}
             className="text-base-content/70"
           />

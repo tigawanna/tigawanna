@@ -10,29 +10,29 @@ export function AboutSection() {
 
 
   // Skills for the marquee
-  const skills = [
-    "React & Next.js",
-    "TypeScript",
-    "GraphQL",
-    "Node.js",
-    "Tailwind CSS",
-    "React Native",
-    "REST APIs",
-    "Prisma & Drizzle",
-    "TanStack",
-    "Authentication",
-    "State Management",
-    "Testing",
-    "CI/CD",
-    "Performance Optimization",
-    "Accessibility",
-  ];
+  // const skills = [
+  //   "React & Next.js",
+  //   "TypeScript",
+  //   "GraphQL",
+  //   "Node.js",
+  //   "Tailwind CSS",
+  //   "React Native",
+  //   "REST APIs",
+  //   "Prisma & Drizzle",
+  //   "TanStack",
+  //   "Authentication",
+  //   "State Management",
+  //   "Testing",
+  //   "CI/CD",
+  //   "Performance Optimization",
+  //   "Accessibility",
+  // ];
 
   // Duplicate the skills array to ensure continuous loop
-  const duplicatedSkills = [...skills, ...skills];
+  // const duplicatedSkills = [...skills, ...skills];
 
   return (
-    <div className="w-full py-16 min-h-screen" id="about">
+    <div className="w-full py-4 min-h-fit" id="about">
       <div className="container mx-auto px-6">
         {/* Section Title */}
         <TailwindFadeIn className="mb-10">
@@ -88,7 +88,7 @@ export function AboutSection() {
         </div>
 
         {/* Skills Marquee - Enhanced with Tailwind animations */}
-        <div className="mt-12 overflow-hidden">
+        {/* <div className="mt-12 overflow-hidden">
           <TailwindFadeIn>
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
@@ -118,7 +118,7 @@ export function AboutSection() {
             </div>
           </TailwindFadeIn>
 
-          {/* <div
+          <div
             className="
               relative w-full overflow-hidden py-4 
               before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-16 before:bg-gradient-to-r before:from-base-100 before:to-transparent 
@@ -127,7 +127,7 @@ export function AboutSection() {
               @starting-style:opacity-0
             "
             >
-            <div className="animate-marquee flex gap-4 whitespace-nowrap">
+            <div className="animate-marquee flex flex-wrap max-w-[50%] gap-4 whitespace-nowrap">
               {duplicatedSkills.map((skill, index) => {
                 return (
                   <span
@@ -138,9 +138,8 @@ export function AboutSection() {
                 );
               })}
             </div>
-          </div> */}
-            <SkillsMMarquee/>
-        </div>
+          </div>
+        </div> */}
       </div>
     </div>
   );

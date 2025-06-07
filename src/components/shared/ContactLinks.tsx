@@ -41,7 +41,7 @@ export function ContactLinks({
       text: "Dev.to",
     },
     {
-      href: siteConfig.links.email,
+      href: siteConfig.links.emailTo,
       title: "Email me",
       icon: <HiOutlineMail className="w-7 h-7" />,
       text: "Email",

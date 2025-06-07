@@ -23,8 +23,8 @@ export function CopyAllLinksButton({
     // Important links to copy in sequence
     const linksToCopy = [
       { name: "Phone", url: siteConfig.links.phone },
-      { name: "WhatsApp", url: siteConfig.links.whatsapp },
-      { name: "Email", url: siteConfig.links.email.replace("mailto:", "") },
+      { name: "WhatsApp", url: siteConfig.links.whatsappNumber },
+      { name: "Email", url: siteConfig.links.email},
       { name: "Portfolio", url: window.location.origin },
       { name: "GitHub", url: siteConfig.links.github },
       { name: "LinkedIn", url: siteConfig.links.linkedin },
