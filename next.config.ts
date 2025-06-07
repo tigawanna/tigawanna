@@ -45,9 +45,6 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  reactComponentAnnotation: {
-   enabled: process.env.NODE_ENV === 'development',
- },
 };
 
 module.exports = nextConfig;
