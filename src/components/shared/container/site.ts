@@ -33,9 +33,11 @@ export const siteConfig = {
     whatsappNumber: "+254790984481",
     whatsapp: "https://wa.me/254790984481",
     renderconke: "https://www.reactdevske.org",
-    renderconke_talk: "https://github.com/tigawanna/ReactDevsKe-Meetup-February-2025",
+    renderconke_talk:
+      "https://docs.google.com/presentation/d/14q3-684ay5uK7Rhtp8ysj5ZVgCk_rsWsf7k9SFPHSKk/edit?usp=sharing",
     reactdevske: "https://www.reactdevske.org",
-    reactdevske_01_2025_talk: "https://github.com/tigawanna/ReactDevsKe-Meetup-February-2025",
+    reactdevske_01_2025_talk:
+      "https://docs.google.com/presentation/d/1yFKSxNL-MHYddVMmt-dVi9wdlypw-aev2w7-I_O3aD0/edit?usp=sharing",
   },
 } as const;
 
