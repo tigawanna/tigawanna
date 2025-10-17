@@ -17,6 +17,7 @@ private readonly config: TelegramConfig;
   constructor() {
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
     const channelId = process.env.TELEGRAM_CHANNEL_ID;
+    console.log("Telegram Notifier Config:", { botToken, channelId });
     if (!botToken || botToken.trim() === "") {
         throw new Error("Telegram bot token must be provided");
     }
@@ -48,7 +49,8 @@ private readonly config: TelegramConfig;
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      await response.json();
+      const res = await response.json();
+      console.log("Telegram API Response:", res);
       return {
         success: true,
         message: "Message sent successfully",

@@ -28,18 +28,18 @@ export async function sendTelegramNotificationAction(
     };
 
     // Validate form data
-    if (!rawFormData.sender_name || !rawFormData.sender_message) {
-      return {
-        message: "Please fill in all required fields",
-        error: true,
-        success: false,
-        fieldValues: prevState?.fieldValues,
-      };
-    }
+    // if (!rawFormData.sender_name || !rawFormData.sender_message) {
+    //   return {
+    //     message: "Please fill in all required fields",
+    //     error: true,
+    //     success: false,
+    //     fieldValues: prevState?.fieldValues,
+    //   };
+    // }
 
-const emailIncluded = rawFormData.sender_email.length > 1;  
+    const emailIncluded = rawFormData.sender_email.length > 1;
     // Create message for Telegram notification
-const notificationMessage = `
+    const notificationMessage = `
 📩 New Portfolio site Contact Form Submission
 
 👤 Name: ${rawFormData.sender_name}
@@ -48,8 +48,8 @@ const notificationMessage = `
 💬 Message:
 ${rawFormData.sender_message}
 `;
-// Send the notification via Telegram
-await tg.send(`
+    // Send the notification via Telegram
+    await tg.send(`
 ${notificationMessage}
 
 
@@ -58,7 +58,9 @@ By: :${emailIncluded ? rawFormData.sender_email : "No email provided"}
 
     // Return success response
     return {
-      message: emailIncluded?"Successfully sent, Thank you!": "Successfully sent, Thank you! But no email provided so ican't reach back to you",
+      message: emailIncluded
+        ? "Successfully sent, Thank you!"
+        : "Successfully sent, Thank you! But no email provided so ican't reach back to you",
       error: false,
       success: true,
       fieldValues: {
