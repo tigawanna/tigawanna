@@ -2,21 +2,9 @@ Typescript enjoyer
 
 [![GitHub Streak](https://github-readme-streak-stats.herokuapp.com?user=tigawanna&theme=navy-gear)](https://git.io/streak-stats)
 
-
-![Alt text](https://spotify-recently-played-readme.vercel.app/api?user=ux88ch98gposewxwurgcx0pho&count=10)
-
 How to reach me: 
 - LinkedIn: https://linkedin.com/in/dennis-kinuthia-waweru
 - Github: https://github.com/tigawanna
 - website: https://tigawanna-portfolio.vercel.app
 
-
-
-
-
-
-
-<p class="note">
-<spane>Note</span>
-other text
-</p>
+![Alt text](https://spotify-recently-played-readme.vercel.app/api?user=ux88ch98gposewxwurgcx0pho&count=10)
