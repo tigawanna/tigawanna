@@ -29,63 +29,54 @@ export function LandingHero() {
     <section
       ref={sectionRef}
       data-test="landing-hero"
-      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#1a1a15] px-6 pt-32 pb-24 text-[#c5ccb4] md:pt-36"
+      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#1a1a15] px-6 pt-24 pb-20 text-[#c5ccb4] lg:pt-28"
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(104,112,84,0.14),transparent_42%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_42%_42%,rgba(104,112,84,0.14),transparent_42%)]" />
 
-      <div className="relative z-10 flex w-full max-w-5xl flex-col px-2 md:px-6">
+      <div className="relative z-10 flex w-full max-w-6xl flex-col items-center text-center">
         <h1
           data-hero-reveal
-          className="text-center font-serif text-7xl leading-[0.9] font-medium tracking-[-0.04em] md:text-8xl lg:text-9xl xl:text-[11rem]"
+          className="w-full font-serif text-7xl leading-[0.9] font-medium tracking-[-0.04em] md:text-8xl lg:text-[7rem] lg:whitespace-nowrap xl:text-[8.5rem] 2xl:text-[9rem]"
         >
           {AppConfig.name}
         </h1>
 
-        <div className="relative mt-6 w-full md:mt-8">
-          <p
-            data-hero-reveal
-            className="pl-[8%] font-serif text-xl tracking-[0.02em] text-[#c5ccb4]/85 md:pl-[12%] md:text-2xl lg:pl-[18%]"
+        <p
+          data-hero-reveal
+          className="mt-6 w-full font-serif text-xl tracking-[0.02em] text-[#c5ccb4]/85 md:mt-8 md:text-2xl lg:mt-5 lg:text-center"
+        >
+          {AppConfig.brief}
+        </p>
+
+        <div data-hero-reveal className="mt-10 w-full max-w-md md:mt-12 lg:mt-8">
+          <svg
+            viewBox="0 0 400 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="mx-auto h-6 w-full max-w-sm text-[#c5ccb4]/35"
+            aria-hidden="true"
           >
-            {AppConfig.brief}
+            <path
+              d="M0 14C60 4 120 22 200 12C280 2 340 20 400 10"
+              stroke="currentColor"
+              strokeWidth="1"
+            />
+          </svg>
+
+          <p className="mt-5 text-sm leading-7 text-[#c5ccb4]/65 md:text-base lg:max-w-sm">
+            {AppConfig.description}
           </p>
-
-          <div
-            data-hero-reveal
-            className="mt-10 ml-[12%] max-w-xs md:mt-12 md:ml-[38%] md:max-w-sm lg:ml-[42%]"
-          >
-            <svg
-              viewBox="0 0 400 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-full text-[#c5ccb4]/35"
-              aria-hidden="true"
-            >
-              <path
-                d="M0 14C60 4 120 22 200 12C280 2 340 20 400 10"
-                stroke="currentColor"
-                strokeWidth="1"
-              />
-            </svg>
-
-            <p className="mt-5 text-sm leading-7 text-[#c5ccb4]/65 md:text-base">
-              {AppConfig.description}
-            </p>
-          </div>
         </div>
 
-        <div data-hero-reveal className="mt-16 flex justify-center text-[#c5ccb4]/70 md:mt-20">
+        <div
+          data-hero-reveal
+          className="mt-14 flex w-full items-center justify-center gap-8 text-[#c5ccb4]/70 md:mt-16 lg:mt-12"
+          aria-hidden="true"
+        >
+          <div className="h-px w-16 bg-[#c5ccb4]/20 md:w-24" />
           <HeroIllustration />
+          <div className="h-px w-16 bg-[#c5ccb4]/20 md:w-24" />
         </div>
-      </div>
-
-      <div
-        data-hero-reveal
-        className="pointer-events-none absolute right-0 bottom-16 left-0 flex items-center justify-center gap-0 px-8 md:px-16"
-        aria-hidden="true"
-      >
-        <div className="h-px flex-1 bg-[#c5ccb4]/20" />
-        <div className="mx-4 size-1.5 rounded-full bg-[#c5ccb4]/30" />
-        <div className="h-px flex-1 bg-[#c5ccb4]/20" />
       </div>
 
       <a

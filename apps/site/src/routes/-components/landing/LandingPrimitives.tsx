@@ -9,6 +9,8 @@ const sectionToneClasses = {
   deep: "bg-[#151811]",
   olive: "bg-[#687054]",
   sage: "bg-[#8f9980]",
+  panel: "bg-[#1e2119]",
+  panelAlt: "bg-[#22241c]",
   cream: "bg-[#d6d0b7] text-[#1a1c14]",
 } satisfies Record<NonNullable<LandingSectionProps["tone"]>, string>;
 
@@ -18,6 +20,8 @@ const dividerToneClasses = {
   deep: "text-[#151811]",
   olive: "text-[#687054]",
   sage: "text-[#8f9980]",
+  panel: "text-[#1e2119]",
+  panelAlt: "text-[#22241c]",
   cream: "text-[#d6d0b7]",
 } satisfies Record<NonNullable<OrganicDividerProps["tone"]>, string>;
 

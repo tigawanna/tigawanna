@@ -4,11 +4,6 @@ export type InfoCard = {
   body: string;
 };
 
-export type ProseSegment = {
-  text: string;
-  emphasis: boolean;
-};
-
 export type StackCubeFace = {
   label: string;
   techs: readonly string[];
@@ -85,18 +80,4 @@ export const howIWorkCards = [
 ] as const satisfies readonly InfoCard[];
 
 export const howIWorkSummary =
-  "I own projects from architecture through deployment — designing systems teams can live with and shipping maintainable, performance-minded code. Along the way I mentor teams, collaborate across product and design, and give back to open source.";
-
-export const stackProseSegments = stackCubeFaces.flatMap((face, index) => {
-  const segments: ProseSegment[] = [
-    { text: face.label, emphasis: true },
-    { text: " — ", emphasis: false },
-    { text: face.techs.join(", "), emphasis: false },
-  ];
-
-  if (index < stackCubeFaces.length - 1) {
-    segments.push({ text: ". ", emphasis: false });
-  }
-
-  return segments;
-});
+  "I own projects from architecture through deployment, designing systems teams can live with and shipping maintainable, performance-minded code. Along the way I mentor teams, collaborate across product and design, and give back to open source.";

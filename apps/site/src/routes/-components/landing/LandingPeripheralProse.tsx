@@ -6,7 +6,7 @@ export function LandingPeripheralProse() {
   return (
     <div data-test="peripheral-cards-prose" className="relative">
       <OrganicDivider tone="deep" />
-      <ScrollHighlightProse text={howIWorkSummary} />
+      <ScrollHighlightProse title="How I work" text={howIWorkSummary} />
     </div>
   );
 }
