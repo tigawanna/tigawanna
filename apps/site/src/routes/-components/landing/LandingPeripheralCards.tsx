@@ -1,5 +1,4 @@
-import { LandingPeripheralCardsDesktop } from "./LandingPeripheralCardsDesktop";
-import { LandingPeripheralCardsMobile } from "./LandingPeripheralCardsMobile";
+import { LandingPeripheralProse } from "./LandingPeripheralProse";
 
 export function LandingPeripheralCards() {
   return (
@@ -8,13 +7,7 @@ export function LandingPeripheralCards() {
         How I work
       </h2>
 
-      <div className="lg:hidden">
-        <LandingPeripheralCardsMobile />
-      </div>
-
-      <div className="hidden lg:block">
-        <LandingPeripheralCardsDesktop />
-      </div>
+      <LandingPeripheralProse />
     </section>
   );
 }

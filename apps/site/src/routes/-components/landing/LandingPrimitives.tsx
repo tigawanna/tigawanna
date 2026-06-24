@@ -8,6 +8,7 @@ const sectionToneClasses = {
   muted: "bg-base-200",
   deep: "bg-[#151811]",
   olive: "bg-[#687054]",
+  sage: "bg-[#8f9980]",
   cream: "bg-[#d6d0b7] text-[#1a1c14]",
 } satisfies Record<NonNullable<LandingSectionProps["tone"]>, string>;
 
@@ -16,6 +17,7 @@ const dividerToneClasses = {
   muted: "text-base-200",
   deep: "text-[#151811]",
   olive: "text-[#687054]",
+  sage: "text-[#8f9980]",
   cream: "text-[#d6d0b7]",
 } satisfies Record<NonNullable<OrganicDividerProps["tone"]>, string>;
 

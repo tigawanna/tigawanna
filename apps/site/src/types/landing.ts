@@ -5,13 +5,13 @@ export type LandingSectionProps = {
   className?: string;
   dataTest?: string;
   id?: string;
-  tone?: "base" | "muted" | "deep" | "olive" | "cream";
+  tone?: "base" | "muted" | "deep" | "olive" | "sage" | "cream";
 };
 
 export type OrganicDividerProps = {
   className?: string;
   flip?: boolean;
-  tone?: "base" | "muted" | "deep" | "olive" | "cream";
+  tone?: "base" | "muted" | "deep" | "olive" | "sage" | "cream";
 };
 
 export type ScrollRevealProps = {
