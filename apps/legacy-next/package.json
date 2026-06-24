@@ -1,0 +1,64 @@
+{
+  "name": "legacy-next",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "pretty": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache"
+  },
+  "dependencies": {
+    "@stackblitz/sdk": "^1.11.0",
+    "@studio-freight/lenis": "^1.0.42",
+    "@vercel/analytics": "^1.5.0",
+    "@visx/hierarchy": "^3.3.0",
+    "@visx/responsive": "^3.3.0",
+    "dayjs": "^1.11.13",
+    "dotenv": "^16.5.0",
+    "framer-motion": "^12.16.0",
+    "gsap": "^3.13.0",
+    "highlight.js": "^11.9.0",
+    "lucide-react": "^0.503.0",
+    "next": "15.3.1",
+    "nodemailer": "^6.10.1",
+    "nuqs": "^2.4.3",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-hot-toast": "^2.5.2",
+    "react-icons": "^5.5.0",
+    "react-responsive-pagination": "^2.11.0",
+    "react-type-animation": "^3.2.0",
+    "server-only": "^0.0.1",
+    "showdown": "^2.1.0",
+    "swiper": "^11.2.8",
+    "tailwind-merge": "^3.2.0",
+    "zod": "^3.24.3"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.7.0",
+    "@tailwindcss/postcss": "^4.1.4",
+    "@types/node": "22.15.3",
+    "@types/nodemailer": "^6.4.14",
+    "@types/react": "19.1.2",
+    "@types/react-dom": "19.1.2",
+    "@types/showdown": "^2.0.6",
+    "daisify-shadcn": "^0.0.1",
+    "daisyui": "^5.0.28",
+    "eslint": "9.25.1",
+    "eslint-config-next": "15.3.1",
+    "postcss": "8.5.3",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "tailwindcss": "4.1.4",
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "5.8.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.1.2",
+      "@types/react-dom": "19.1.2"
+    }
+  }
+}
