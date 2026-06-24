@@ -1,7 +1,7 @@
 export const siteConfig = {
   name: "Dennis Waweru",
   title: "Dennis Kinuthia",
-  role: "FullStack Web Developer",
+  role: "Full Stack TypeScript Developer",
   description:
     "Crafting exceptional web experiences with full-stack TypeScript. Based in Nairobi, Kenya.",
   navItems: [

@@ -1,0 +1,80 @@
+export type InfoCard = {
+  tag: string;
+  title: string;
+  body: string;
+};
+
+export type StackCubeFace = {
+  label: string;
+  techs: readonly string[];
+};
+
+export const stackCubeFaces = [
+  {
+    label: "Web",
+    techs: [
+      "React",
+      "Next.js",
+      "TanStack Start",
+      "HTML",
+      "Tailwind CSS",
+      "TypeScript",
+      "CSS",
+      "Responsive design",
+    ],
+  },
+  {
+    label: "Mobile",
+    techs: ["React Native", "Expo", "Zustand", "Capacitor", "PWA", "TypeScript"],
+  },
+  {
+    label: "AI",
+    techs: ["RAG", "RAG pipelines", "Chatbots", "Models", "Local data preservation", "Embeddings"],
+  },
+  {
+    label: "Backend",
+    techs: [
+      "Firebase",
+      "Supabase",
+      "Node.js",
+      "Docker",
+      "AWS",
+      "GCP",
+      "Cloudflare Workers",
+      "Drizzle ORM",
+    ],
+  },
+] as const satisfies readonly StackCubeFace[];
+
+export const howIWorkCards = [
+  {
+    tag: "Ownership",
+    title: "End-to-end project ownership",
+    body: "Architecture through deployment — and the long tail after launch. I stay accountable for the whole arc, not just my slice of it.",
+  },
+  {
+    tag: "Architecture",
+    title: "System design & direction",
+    body: "Data modeling, stack decisions, and architecture reviews before you commit. I help teams choose paths they can live with.",
+  },
+  {
+    tag: "Teams",
+    title: "Team multiplier",
+    body: "Led frontend teams, mentored juniors, tightened CI, and left codebases easier to onboard than I found them.",
+  },
+  {
+    tag: "Quality",
+    title: "Maintainable by default",
+    body: "Performance-minded implementations, sensible tests, and code review habits that catch issues before they ship.",
+  },
+  {
+    tag: "Partnership",
+    title: "Cross-functional collaborator",
+    body: "Comfortable across product, design, and engineering — translating constraints in both directions so the work actually lands.",
+  },
+  {
+    tag: "Open source",
+    title: "Contributor & user",
+    body: "I enjoy open source and give back where I can — fixes, docs, and small contributions to the tools and libraries teams rely on every day.",
+  },
+] as const satisfies readonly InfoCard[];

@@ -1,85 +1,76 @@
 import { AppConfig } from "@/utils/system";
 import { Link } from "@tanstack/react-router";
-import { Menu, Sparkles, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
 
 export function LandingNavbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 right-0 left-0 z-50 border-b border-base-content/10 bg-base-300/70 backdrop-blur-xl">
-      <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="font-serif text-2xl font-semibold tracking-tight text-base-content">
+    <nav
+      data-test="landing-navbar"
+      className="fixed top-0 right-0 left-0 z-50 bg-[#1a1a15]/80 backdrop-blur-sm"
+    >
+      <div className="container flex h-20 items-center justify-between gap-6">
+        <Link
+          to="/"
+          className="shrink-0 font-serif text-lg tracking-tight text-[#c5ccb4] md:text-xl"
+        >
           tigawanna
-          <span className="text-primary">.</span>
         </Link>
 
-        <div className="hidden items-center gap-8 md:flex">
+        <div className="hidden flex-1 items-center justify-center gap-10 lg:flex">
           {AppConfig.navItems.map((item) => (
             <a
               key={item.label}
               href={item.href}
-              className="text-sm text-base-content/70 transition-colors hover:text-base-content"
+              className="text-sm tracking-wide text-[#c5ccb4]/70 transition-colors hover:text-[#c5ccb4]"
             >
               {item.label}
             </a>
           ))}
+        </div>
+
+        <div className="hidden items-center gap-6 md:flex">
+          <div className="hidden text-center xl:block">
+            <p className="text-[10px] tracking-[0.32em] text-[#c5ccb4]/45 uppercase">Based in</p>
+            <p className="font-serif text-sm text-[#c5ccb4]/80">Nairobi</p>
+          </div>
           <a
-            href={AppConfig.links.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm text-base-content/70 transition-colors hover:text-base-content"
+            href="#contact"
+            className="rounded-full border border-[#c5ccb4]/20 bg-[#c5ccb4]/8 px-5 py-2.5 text-sm text-[#c5ccb4] transition-colors hover:bg-[#c5ccb4]/14"
           >
-            GitHub
-          </a>
-          <a
-            href="#enhanced"
-            className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary hover:text-primary-content"
-          >
-            <Sparkles className="size-4" />
-            Enhanced
+            Get in touch
           </a>
         </div>
 
-        <div className="flex items-center gap-2 md:hidden">
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="text-base-content"
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          >
-            {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-          </button>
-        </div>
+        <button
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="text-[#c5ccb4] md:hidden"
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+        >
+          {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+        </button>
       </div>
 
       {mobileOpen && (
-        <div className="space-y-4 border-t border-base-content/10 bg-base-100/95 p-6 backdrop-blur-xl md:hidden">
+        <div className="space-y-4 border-t border-[#c5ccb4]/10 bg-[#1a1a15] p-6 md:hidden">
           {AppConfig.navItems.map((item) => (
             <a
               key={item.label}
               href={item.href}
               onClick={() => setMobileOpen(false)}
-              className="block text-base-content/70 transition-colors hover:text-base-content"
+              className="block text-[#c5ccb4]/75 transition-colors hover:text-[#c5ccb4]"
             >
               {item.label}
             </a>
           ))}
           <a
-            href={AppConfig.links.github}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#contact"
             onClick={() => setMobileOpen(false)}
-            className="block text-base-content/70 transition-colors hover:text-base-content"
+            className="inline-flex rounded-full border border-[#c5ccb4]/20 bg-[#c5ccb4]/8 px-5 py-2.5 text-sm text-[#c5ccb4]"
           >
-            GitHub
-          </a>
-          <a
-            href="#enhanced"
-            onClick={() => setMobileOpen(false)}
-            className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-sm font-medium text-primary"
-          >
-            <Sparkles className="size-4" />
-            Enhanced experience
+            Get in touch
           </a>
         </div>
       )}

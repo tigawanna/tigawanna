@@ -1,120 +1,100 @@
 import { AppConfig } from "@/utils/system";
-import { ArrowDown, Github, Sparkles } from "lucide-react";
-import { ScrollReveal, SectionEyebrow } from "./LandingPrimitives";
+import { animate, stagger } from "animejs";
+import { useEffect, useRef } from "react";
+import { HeroIllustration } from "./HeroIllustration";
 
 export function LandingHero() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const targets = section.querySelectorAll("[data-hero-reveal]");
+
+    const anim = animate(targets, {
+      opacity: [0, 1],
+      translateY: [28, 0],
+      duration: 1000,
+      delay: stagger(140, { start: 150 }),
+      ease: "outQuart",
+    });
+
+    return () => {
+      anim.revert();
+    };
+  }, []);
+
   return (
-    <section className="landing-shell relative flex min-h-screen items-center overflow-hidden pt-16">
-      <div className="grain-overlay" />
-      <div className="organic-grid absolute inset-x-0 top-28 h-96 opacity-30" />
-      <div className="absolute top-28 right-[8%] size-48 rounded-full bg-primary/10 blur-3xl" />
-      <div className="absolute bottom-14 left-[8%] size-56 rounded-full bg-accent/10 blur-3xl" />
+    <section
+      ref={sectionRef}
+      data-test="landing-hero"
+      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#1a1a15] px-6 pt-32 pb-24 text-[#c5ccb4] md:pt-36"
+    >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(104,112,84,0.14),transparent_42%)]" />
 
-      <div className="container relative z-10 py-20">
-        <div className="grid min-h-[calc(100vh-8rem)] items-center gap-14 lg:grid-cols-[1.08fr_0.92fr]">
-          <ScrollReveal className="max-w-4xl">
-            <SectionEyebrow>Nairobi based full-stack TypeScript developer</SectionEyebrow>
+      <div className="relative z-10 flex w-full max-w-5xl flex-col px-2 md:px-6">
+        <h1
+          data-hero-reveal
+          className="text-center font-serif text-7xl leading-[0.9] font-medium tracking-[-0.04em] md:text-8xl lg:text-9xl xl:text-[11rem]"
+        >
+          {AppConfig.name}
+        </h1>
 
-            <h1 className="text-balance font-serif text-6xl leading-[0.92] font-semibold tracking-[-0.06em] text-base-content md:text-8xl xl:text-9xl">
-              Dennis builds typed, fast, slightly weird web systems.
-            </h1>
+        <div className="relative mt-6 w-full md:mt-8">
+          <p
+            data-hero-reveal
+            className="pl-[8%] font-serif text-xl tracking-[0.02em] text-[#c5ccb4]/85 md:pl-[12%] md:text-2xl lg:pl-[18%]"
+          >
+            {AppConfig.brief}
+          </p>
 
-            <p className="mt-8 max-w-2xl text-lg leading-8 text-base-content/70 md:text-xl">
-              I work across React, TanStack, Cloudflare, databases, auth, and the messy middle where
-              products become real. The portfolio is getting less bland and more alive.
-            </p>
-
-            <div className="mt-10 flex flex-wrap items-center gap-4">
-              <a href="#projects" className="btn btn-primary px-6">
-                See the work
-              </a>
-              <a href="#enhanced" className="btn btn-outline gap-2 px-6">
-                <Sparkles className="size-4" />
-                Enhanced experience
-              </a>
-              <a
-                href={AppConfig.links.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-medium text-base-content/70 transition-colors hover:text-base-content"
-              >
-                <Github className="size-4" />
-                github.com/tigawanna
-              </a>
-            </div>
-
-            <a
-              href="#about"
-              className="mt-16 inline-flex items-center gap-3 text-sm text-base-content/55 transition-colors hover:text-base-content"
+          <div
+            data-hero-reveal
+            className="mt-10 ml-[12%] max-w-xs md:mt-12 md:ml-[38%] md:max-w-sm lg:ml-[42%]"
+          >
+            <svg
+              viewBox="0 0 400 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-full text-[#c5ccb4]/35"
+              aria-hidden="true"
             >
-              Scroll into the rebuild
-              <ArrowDown className="size-4 animate-bounce" />
-            </a>
-          </ScrollReveal>
+              <path
+                d="M0 14C60 4 120 22 200 12C280 2 340 20 400 10"
+                stroke="currentColor"
+                strokeWidth="1"
+              />
+            </svg>
 
-          <ScrollReveal delay="medium" className="relative min-h-[34rem]">
-            <div className="absolute top-8 right-6 w-56 rotate-6 rounded-[2rem] border border-base-content/10 bg-base-content/[0.04] p-5 shadow-2xl shadow-black/20 backdrop-blur-md md:w-72">
-              <p className="font-serif text-4xl leading-none text-primary">5+</p>
-              <p className="mt-3 text-sm leading-6 text-base-content/70">
-                years shipping practical TypeScript products across frontend, backend, mobile, and
-                deployment pipelines.
-              </p>
-            </div>
-
-            <div className="absolute top-36 left-0 w-64 -rotate-6 rounded-[2rem] border border-primary/20 bg-primary/10 p-5 backdrop-blur-md md:w-80">
-              <p className="text-xs tracking-[0.28em] text-primary uppercase">current stack</p>
-              <div className="mt-5 flex flex-wrap gap-2">
-                {["TanStack", "Cloudflare", "D1", "Better Auth", "Drizzle", "React 19"].map(
-                  (item) => (
-                    <span
-                      key={item}
-                      className="rounded-full border border-base-content/10 bg-base-300/50 px-3 py-1 text-xs text-base-content/75"
-                    >
-                      {item}
-                    </span>
-                  ),
-                )}
-              </div>
-            </div>
-
-            <div className="absolute right-0 bottom-16 left-12 rounded-[2.5rem] border border-accent/20 bg-accent/10 p-6 shadow-2xl shadow-black/20 backdrop-blur-md">
-              <p className="font-mono text-xs text-accent">typescript.feature.creature.ts</p>
-              <p className="mt-4 font-serif text-4xl leading-tight text-base-content md:text-5xl">
-                Oh boy, I&apos;m excited for this TypeScript.
-              </p>
-              <p className="mt-4 text-sm leading-6 text-base-content/60">
-                The normal portfolio loads first. The cinematic scroll joke waits until you opt in.
-              </p>
-            </div>
-
-            <div className="absolute top-0 left-24 size-24 animate-drift rounded-full border border-primary/20 bg-primary/15 blur-sm" />
-            <div className="absolute right-16 bottom-0 size-32 animate-float-slow rounded-full border border-accent/20 bg-accent/15 blur-sm" />
-          </ScrollReveal>
-        </div>
-
-        <div className="relative mt-8 overflow-hidden border-y border-base-content/10 py-4">
-          <div className="flex w-max animate-marquee gap-10 text-sm tracking-[0.35em] text-base-content/35 uppercase">
-            {[
-              AppConfig.brief,
-              "React",
-              "TanStack Start",
-              "Cloudflare Workers",
-              "D1",
-              "Better Auth",
-              "AI interfaces",
-              AppConfig.brief,
-              "React",
-              "TanStack Start",
-              "Cloudflare Workers",
-              "D1",
-              "Better Auth",
-              "AI interfaces",
-            ].map((item, index) => (
-              <span key={`${item}-${index}`}>{item}</span>
-            ))}
+            <p className="mt-5 text-sm leading-7 text-[#c5ccb4]/65 md:text-base">
+              {AppConfig.description}
+            </p>
           </div>
         </div>
+
+        <div data-hero-reveal className="mt-16 flex justify-center text-[#c5ccb4]/70 md:mt-20">
+          <HeroIllustration />
+        </div>
       </div>
+
+      <div
+        data-hero-reveal
+        className="pointer-events-none absolute right-0 bottom-16 left-0 flex items-center justify-center gap-0 px-8 md:px-16"
+        aria-hidden="true"
+      >
+        <div className="h-px flex-1 bg-[#c5ccb4]/20" />
+        <div className="mx-4 size-1.5 rounded-full bg-[#c5ccb4]/30" />
+        <div className="h-px flex-1 bg-[#c5ccb4]/20" />
+      </div>
+
+      <a
+        href="#about"
+        data-hero-reveal
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-xs tracking-[0.35em] text-[#c5ccb4]/40 uppercase transition-colors hover:text-[#c5ccb4]/70"
+      >
+        Scroll
+      </a>
     </section>
   );
 }

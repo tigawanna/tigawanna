@@ -6,3 +6,5 @@ export { LandingCTA } from "./LandingCTA";
 export { LandingFooter } from "./LandingFooter";
 export { LandingProjectsPreview } from "./LandingProjectsPreview";
 export { LandingEnhancedExperience } from "./LandingEnhancedExperience";
+export { StackCube } from "./StackCube";
+export { LandingPeripheralCards } from "./LandingPeripheralCards";

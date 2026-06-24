@@ -457,6 +457,248 @@
   height: 10px;
 }
 
+/* Playing cards */
+.peripheral-cards-section {
+  --playing-card-width: 7.5rem;
+}
+
+@media (min-width: 480px) {
+  .peripheral-cards-section {
+    --playing-card-width: 8.75rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .peripheral-cards-section {
+    --playing-card-width: 10.5rem;
+  }
+}
+
+@media (min-width: 1100px) {
+  .peripheral-cards-section {
+    --playing-card-width: 13.125rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .peripheral-cards-section {
+    height: 300vh;
+  }
+}
+
+@media (min-width: 1024px) {
+  .peripheral-cards-section {
+    height: 260vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .peripheral-cards-section {
+    height: auto !important;
+  }
+}
+
+.playing-deck {
+  perspective: 1400px;
+  transform-style: preserve-3d;
+}
+
+.playing-deck [data-playing-card] {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.playing-card {
+  position: relative;
+  container-type: inline-size;
+  width: var(--playing-card-width);
+  aspect-ratio: 5 / 7;
+  padding: clamp(0.75rem, 8cqi, 1.35rem) clamp(0.7rem, 7cqi, 1.15rem);
+  border-radius: 1.15rem;
+  border: 1px solid rgb(197 204 180 / 0.14);
+  background:
+    linear-gradient(145deg, rgb(34 36 28 / 0.96), rgb(22 24 18 / 0.98)),
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 8px,
+      rgb(197 204 180 / 0.025) 8px,
+      rgb(197 204 180 / 0.025) 9px
+    );
+  box-shadow:
+    0 18px 40px rgb(0 0 0 / 0.35),
+    inset 0 1px 0 rgb(255 255 255 / 0.04);
+  will-change: transform;
+}
+
+.playing-card--flat {
+  width: 100%;
+  aspect-ratio: auto;
+}
+
+.playing-card-tag {
+  font-size: clamp(0.55rem, 4.2cqi, 0.65rem);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgb(197 204 180 / 0.45);
+}
+
+.playing-card-title {
+  margin-top: 0.85rem;
+  font-family: var(--font-serif);
+  font-size: clamp(0.9rem, 9.5cqi, 1.25rem);
+  line-height: 1.15;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: rgb(197 204 180 / 0.92);
+}
+
+.playing-card-body {
+  margin-top: 0.75rem;
+  font-size: clamp(0.65rem, 6.2cqi, 0.82rem);
+  line-height: 1.5;
+  color: rgb(197 204 180 / 0.58);
+}
+
+.playing-card-index {
+  position: absolute;
+  right: 1.1rem;
+  bottom: 1rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: rgb(197 204 180 / 0.22);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .playing-deck {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 11.5rem), 1fr));
+    gap: 1rem;
+    height: auto !important;
+    max-width: 100%;
+    padding-block: 2rem;
+  }
+
+  .playing-deck [data-playing-card] {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    width: 100%;
+  }
+
+  .playing-deck > div {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    width: 100%;
+  }
+
+  .playing-card {
+    width: 100%;
+  }
+}
+
+/* 3D Cube */
+.cube-stage {
+  --cube-size: 180px;
+  display: grid;
+  place-items: center;
+  width: var(--cube-size);
+  min-height: var(--cube-size);
+  padding-bottom: calc(var(--cube-size) * 0.65);
+  margin-inline: auto;
+  margin-bottom: 0.5rem;
+}
+
+.cube-stage--compact {
+  padding-bottom: calc(var(--cube-size) * 0.2);
+}
+
+.cube-perspective {
+  perspective: 900px;
+  width: var(--cube-size);
+  height: var(--cube-size);
+}
+
+.cube-scene {
+  position: relative;
+  width: var(--cube-size);
+  height: var(--cube-size);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.cube-face {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgb(197 204 180 / 0.14);
+  backface-visibility: hidden;
+  overflow: hidden;
+}
+
+.cube-face::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  background-image:
+    radial-gradient(circle at 25% 25%, rgb(255 255 255 / 0.06) 0 1px, transparent 1px),
+    radial-gradient(circle at 75% 45%, rgb(255 255 255 / 0.04) 0 1px, transparent 1px);
+  background-size:
+    14px 14px,
+    22px 22px;
+}
+
+.cube-face::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgb(255 255 255 / 0.06) 0%, transparent 42%, rgb(0 0 0 / 0.18) 100%),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 10px,
+      rgb(197 204 180 / 0.04) 10px,
+      rgb(197 204 180 / 0.04) 11px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 10px,
+      rgb(197 204 180 / 0.04) 10px,
+      rgb(197 204 180 / 0.04) 11px
+    );
+}
+
+.cube-face--front {
+  transform: rotateY(0deg) translateZ(calc(var(--cube-size) / 2));
+  background: linear-gradient(145deg, rgb(34 36 28 / 0.95), rgb(22 24 18 / 0.98));
+}
+
+.cube-face--right {
+  transform: rotateY(90deg) translateZ(calc(var(--cube-size) / 2));
+  background: linear-gradient(160deg, rgb(30 38 30 / 0.95), rgb(20 26 20 / 0.98));
+}
+
+.cube-face--back {
+  transform: rotateY(180deg) translateZ(calc(var(--cube-size) / 2));
+  background: linear-gradient(200deg, rgb(38 34 26 / 0.95), rgb(24 22 16 / 0.98));
+}
+
+.cube-face--left {
+  transform: rotateY(270deg) translateZ(calc(var(--cube-size) / 2));
+  background: linear-gradient(125deg, rgb(28 32 38 / 0.95), rgb(18 22 28 / 0.98));
+}
+
+@media (min-width: 1024px) {
+  .cube-perspective {
+    --cube-size: 220px;
+  }
+}
+
 /* Glass effect */
 .glass-card {
   @apply bg-base-100/50 border-base-content/10 border backdrop-blur-md;

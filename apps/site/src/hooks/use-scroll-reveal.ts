@@ -1,46 +1,76 @@
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { animate, onScroll } from "animejs";
 import { useEffect, type RefObject } from "react";
-
-function prefersReducedMotion() {
-  return (
-    typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
-}
 
 interface ScrollRevealOptions {
   delay?: number;
   y?: number;
-  start?: string;
+}
+
+function revealImmediately(element: HTMLElement, y: number, delay: number) {
+  return animate(element, {
+    opacity: [0, 1],
+    translateY: [y, 0],
+    scale: [0.97, 1],
+    filter: ["blur(10px)", "blur(0px)"],
+    duration: 700,
+    delay: delay * 1000,
+    ease: "outQuart",
+  });
+}
+
+function isInView(element: HTMLElement) {
+  const rect = element.getBoundingClientRect();
+  return rect.top < window.innerHeight * 0.92 && rect.bottom > 0;
 }
 
 export function useScrollReveal(
   ref: RefObject<HTMLElement | null>,
-  { delay = 0, y = 48, start = "top 85%" }: ScrollRevealOptions = {},
+  { delay = 0, y = 48 }: ScrollRevealOptions = {},
 ) {
   useEffect(() => {
     const element = ref.current;
-    if (!element || prefersReducedMotion()) return;
+    if (!element) return;
 
-    gsap.registerPlugin(ScrollTrigger);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      element.style.opacity = "1";
+      element.style.transform = "none";
+      element.style.filter = "none";
+      return;
+    }
 
-    const context = gsap.context(() => {
-      gsap.from(element, {
-        opacity: 0,
-        y,
-        scale: 0.97,
-        filter: "blur(10px)",
-        duration: 0.85,
-        delay,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: element,
-          start,
-          once: true,
-        },
+    let anim: ReturnType<typeof animate> | undefined;
+
+    const mountReveal = () => {
+      if (isInView(element)) {
+        anim = revealImmediately(element, y, delay);
+        return;
+      }
+
+      anim = animate(element, {
+        opacity: [0, 1],
+        translateY: [y, 0],
+        scale: [0.97, 1],
+        filter: ["blur(10px)", "blur(0px)"],
+        duration: 850,
+        delay: delay * 1000,
+        ease: "outQuart",
+        autoplay: onScroll({
+          target: element,
+          enter: "top 88%",
+          leave: "top",
+          sync: false,
+          repeat: false,
+        }),
       });
-    }, element);
+    };
 
-    return () => context.revert();
-  }, [ref, delay, y, start]);
+    const frame = requestAnimationFrame(() => {
+      requestAnimationFrame(mountReveal);
+    });
+
+    return () => {
+      cancelAnimationFrame(frame);
+      anim?.revert();
+    };
+  }, [ref, delay, y]);
 }

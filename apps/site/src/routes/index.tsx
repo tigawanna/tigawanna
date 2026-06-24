@@ -3,8 +3,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import {
   LandingNavbar,
   LandingHero,
+  StackCube,
+  LandingPeripheralCards,
   LandingFeatures,
-  LandingShowcase,
   LandingProjectsPreview,
   LandingEnhancedExperience,
   LandingCTA,
@@ -19,7 +20,8 @@ function LandingPage() {
       <SmoothScroll />
       <LandingNavbar />
       <LandingHero />
-      <LandingShowcase />
+      <StackCube />
+      <LandingPeripheralCards />
       <LandingFeatures />
       <LandingProjectsPreview />
       <LandingEnhancedExperience />
