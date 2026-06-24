@@ -7,6 +7,7 @@
     "dev:site": "turbo run dev --filter=site",
     "dev:legacy": "turbo run dev --filter=legacy-next",
     "dev:all": "turbo run dev",
+    "gh": "pnpm --filter github-cli start",
     "lint": "vp lint .",
     "lint:fix": "vp lint --fix .",
     "format": "vp fmt .",
