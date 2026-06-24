@@ -20,6 +20,7 @@ export const getRouter = async () => {
       ...tanstackQueryContext,
     },
     defaultPreload: "intent",
+    defaultViewTransition: true,
   });
 
   setupRouterSsrQueryIntegration({ router, queryClient: tanstackQueryContext.queryClient });

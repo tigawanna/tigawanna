@@ -1,10 +1,7 @@
-
 import { authClient, BetterAuthSession } from "@/lib/better-auth/client";
-import { safeStringToUrl } from "@/utils/url";
 import { queryOptions, useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { redirect } from "@tanstack/react-router";
 import { createMiddleware } from "@tanstack/react-start";
-import { getRequestHeaders } from "@tanstack/react-start/server";
 
 type ViewerUser = BetterAuthSession["user"];
 type ViewerSession = BetterAuthSession["session"];
@@ -15,8 +12,6 @@ export type TViewer = {
   session?: ViewerSession;
 };
 export type TViewerLoginPayload = { email: string; password: string };
-
-
 
 export const viewerqueryOptions = queryOptions({
   queryKey: ["viewer"],
@@ -50,7 +45,7 @@ export function useViewer() {
   const logoutMutation = useMutation({
     mutationFn: async () => {
       await authClient.signOut();
-      qc.invalidateQueries(viewerqueryOptions);
+      void qc.invalidateQueries(viewerqueryOptions);
       throw redirect({ to: "/auth", search: { returnTo: "/" } });
     },
   });
@@ -66,9 +61,7 @@ export function useViewer() {
   } as const;
 }
 
-export const viewerMiddleware = createMiddleware()
-.server(async ({ next, request }) => {
-  const headers = getRequestHeaders();
+export const viewerMiddleware = createMiddleware().server(async ({ next }) => {
   // const data = await honoClient.api.viewer.$get({}, {
   //   headers,
   // });

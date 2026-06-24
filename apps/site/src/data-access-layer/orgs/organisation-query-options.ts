@@ -17,9 +17,6 @@ export const userOrgsQueryOptions = (input: TUserOrgsInput) =>
     },
   });
 
-type TActiveOrganizationInput = NonNullable<
-  Parameters<typeof authClient.organization.getActiveMember>[0]
->;
 export const activeOrganizationQueryOptions = queryOptions({
   queryKey: [queryKeyPrefixes.organizations, "active", "member"] as const,
   queryFn: async () => {
@@ -66,9 +63,6 @@ export const fullOrganizationQueryOptions = ({ query }: TFullOrganizationInput) 
     },
   });
 
-type TOrganizationMembersInput = NonNullable<
-  Parameters<typeof authClient.organization.listMembers>[0]
->;
 // organization members query moved to ./organization-members
 
 // NOTE: The following role/permission queries may require dynamic access control plugin enabled
@@ -121,7 +115,9 @@ type TOrganizationMembersInput = NonNullable<
 
 // Organization CRUD Mutations
 
-export type TCreateOrganizationInput = NonNullable<Parameters<typeof authClient.organization.create>[0]>;
+export type TCreateOrganizationInput = NonNullable<
+  Parameters<typeof authClient.organization.create>[0]
+>;
 export const createOrganizationMutationOptions = mutationOptions({
   mutationFn: async (payload: TCreateOrganizationInput) => {
     const { data, error } = await authClient.organization.create(payload);
@@ -133,7 +129,9 @@ export const createOrganizationMutationOptions = mutationOptions({
   },
 });
 
-export type TUpdateOrganizationInput = NonNullable<Parameters<typeof authClient.organization.update>[0]>;
+export type TUpdateOrganizationInput = NonNullable<
+  Parameters<typeof authClient.organization.update>[0]
+>;
 export const updateOrganizationMutationOptions = mutationOptions({
   mutationFn: async (payload: TUpdateOrganizationInput) => {
     const { data, error } = await authClient.organization.update(payload);
@@ -184,12 +182,8 @@ export const setActiveOrganizationMutationOptions = mutationOptions({
 
 // Member Mutations
 
-type TRemoveMemberInput = NonNullable<Parameters<typeof authClient.organization.removeMember>[0]>;
 // remove member mutation moved to ./organization-members
 
-type TUpdateMemberRoleInput = NonNullable<
-  Parameters<typeof authClient.organization.updateMemberRole>[0]
->;
 // update member role mutation moved to ./organization-members
 
 type TLeaveOrganizationInput = NonNullable<Parameters<typeof authClient.organization.leave>[0]>;
@@ -260,4 +254,3 @@ export const checkPermissionMutationOptions = mutationOptions({
 //     invalidates: [[queryKeyPrefixes.organizations, "roles"]],
 //   },
 // });
-

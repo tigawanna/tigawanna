@@ -10,9 +10,6 @@ const envSchema = z.object({
   FRONTEND_URL: z.string().url(),
 });
 
-
-
-
 // Validate client environment
 const { success, error, data } = envSchema.safeParse(process.env);
 
@@ -22,4 +19,3 @@ if (!success) {
 }
 
 export const serverEnv = data;
-

@@ -6,7 +6,6 @@ import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { TanstackDevtools } from "@/lib/tanstack/devtools/devtools";
-import { ThemeProvider } from "@/lib/tanstack/router/theme-provider";
 import { AppConfig } from "@/utils/system";
 import type { QueryClient } from "@tanstack/react-query";
 import { z } from "zod";
@@ -68,13 +67,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <ThemeProvider defaultTheme="system" storageKey={AppConfig.themeStorageKey}>
-          <TooltipProvider>
-            {children}
-            <TanstackDevtools />
-            <Toaster />
-          </TooltipProvider>
-        </ThemeProvider>
+        <TooltipProvider>
+          {children}
+          <TanstackDevtools />
+          <Toaster />
+        </TooltipProvider>
         <Scripts />
       </body>
     </html>

@@ -71,7 +71,11 @@ export const organizationMembersCollection = createCollection(
                 sortBy?: string;
                 sortOrder?: string;
               };
-            }) => Promise<{ ok: boolean; data: MembersApiResponse; error: { message: string } | null }>;
+            }) => Promise<{
+              ok: boolean;
+              data: MembersApiResponse;
+              error: { message: string } | null;
+            }>;
           };
         };
       };
@@ -116,7 +120,7 @@ export const organizationMembersCollection = createCollection(
       return (members ?? []).map((member: OrganizationMember) => ({ ...member, page }));
     },
     queryClient,
-    getKey: (item) => item.userId,
+    getKey: (item: OrganizationMember) => item.userId,
     onUpdate: async ({ transaction }) => {
       await Promise.all(
         transaction.mutations.map((m) => {

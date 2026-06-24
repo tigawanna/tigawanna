@@ -65,7 +65,7 @@ export function OrganicDivider({ className, flip = false, tone = "base" }: Organ
       aria-hidden="true"
       className={twMerge(
         "pointer-events-none absolute right-0 left-0 z-10 h-20 overflow-hidden",
-        flip ? "bottom-[-1px] rotate-180" : "top-[-1px]",
+        flip ? "-bottom-px rotate-180" : "-top-px",
         dividerToneClasses[tone],
         className,
       )}

@@ -8,7 +8,8 @@ interface ListingsPaginationProps {
 export function ListPagination({ total_pages }: ListingsPaginationProps) {
   const location = useLocation();
   const search = useSearch({ from: "__root__" });
-  const globalPage = "globalPage" in search ? (search as { globalPage?: number }).globalPage : undefined;
+  const globalPage =
+    "globalPage" in search ? (search as { globalPage?: number }).globalPage : undefined;
   const navigate = useNavigate({
     // @ts-expect-error
     from: location.pathname,
@@ -20,7 +21,7 @@ export function ListPagination({ total_pages }: ListingsPaginationProps) {
         current={globalPage ?? 1}
         total={total_pages}
         onPageChange={(e) => {
-          navigate({
+          void navigate({
             search: {
               // @ts-expect-error
               globalPage: e,

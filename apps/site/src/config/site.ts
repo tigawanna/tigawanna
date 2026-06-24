@@ -36,4 +36,4 @@ export const siteConfig = {
     "Performance",
     "Accessibility",
   ],
-} as const
+} as const;

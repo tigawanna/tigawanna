@@ -1,4 +1,4 @@
-import { siteConfig } from "@/config/site"
+import { siteConfig } from "@/config/site";
 
 export const AppConfig = {
   name: siteConfig.name,
@@ -13,4 +13,4 @@ export const AppConfig = {
   links: siteConfig.links,
   navItems: siteConfig.navItems,
   techSkills: siteConfig.techSkills,
-}
+};
