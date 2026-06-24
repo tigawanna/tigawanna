@@ -4,3 +4,5 @@ export { LandingFeatures } from "./LandingFeatures";
 export { LandingShowcase } from "./LandingShowcase";
 export { LandingCTA } from "./LandingCTA";
 export { LandingFooter } from "./LandingFooter";
+export { LandingProjectsPreview } from "./LandingProjectsPreview";
+export { LandingEnhancedExperience } from "./LandingEnhancedExperience";

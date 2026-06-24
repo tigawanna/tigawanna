@@ -2,7 +2,7 @@ import { defineConfig } from 'vite-plus';
 
 export default defineConfig({
   staged: {
-    "*": "vp check --fix"
+    "apps/site/**": "pnpm --filter site exec vp check --fix",
   },
   lint: {"options":{"typeAware":true,"typeCheck":true}},
 });

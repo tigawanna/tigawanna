@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,500..800,60..100,0..1&family=Space+Grotesk:wght@300..700&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -21,26 +21,26 @@
   default: true;
   prefersdark: false;
   color-scheme: "dark";
-  --color-base-100: oklch(22% 0.035 45.911);
-  --color-base-200: oklch(18% 0.028 45.911);
-  --color-base-300: oklch(15% 0.02 45.911);
-  --color-base-content: oklch(85% 0.007 80);
-  --color-primary: oklch(70% 0.158 85);
-  --color-primary-content: oklch(13.955% 0.027 45);
-  --color-secondary: oklch(65% 0.145 170.225);
-  --color-secondary-content: oklch(15% 0.02 45.911);
-  --color-accent: oklch(60% 0.12 40);
-  --color-accent-content: oklch(95% 0.007 80);
-  --color-neutral: oklch(40% 0.065 110);
-  --color-neutral-content: oklch(88% 0.007 80);
-  --color-info: oklch(55% 0.16 230);
-  --color-info-content: oklch(13% 0.02 45.911);
-  --color-success: oklch(64.8% 0.15 160);
-  --color-success-content: oklch(0% 0 0);
-  --color-warning: oklch(0% 0 0);
-  --color-warning-content: oklch(84.71% 0.199 83.87);
-  --color-error: oklch(0% 0 0);
-  --color-error-content: oklch(71.76% 0.221 22.18);
+  --color-base-100: oklch(21% 0.028 92);
+  --color-base-200: oklch(17% 0.024 92);
+  --color-base-300: oklch(13% 0.018 92);
+  --color-base-content: oklch(88% 0.035 89);
+  --color-primary: oklch(72% 0.072 91);
+  --color-primary-content: oklch(18% 0.024 92);
+  --color-secondary: oklch(56% 0.06 130);
+  --color-secondary-content: oklch(94% 0.03 92);
+  --color-accent: oklch(63% 0.12 47);
+  --color-accent-content: oklch(96% 0.03 88);
+  --color-neutral: oklch(42% 0.035 113);
+  --color-neutral-content: oklch(82% 0.03 92);
+  --color-info: oklch(62% 0.08 222);
+  --color-info-content: oklch(15% 0.02 92);
+  --color-success: oklch(64% 0.09 151);
+  --color-success-content: oklch(13% 0.02 92);
+  --color-warning: oklch(71% 0.12 74);
+  --color-warning-content: oklch(18% 0.024 92);
+  --color-error: oklch(58% 0.14 31);
+  --color-error-content: oklch(96% 0.03 88);
   --radius-selector: 1rem;
   --radius-field: 2rem;
   --radius-box: 1rem;
@@ -142,8 +142,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-sans: "DM Sans", system-ui, sans-serif;
-  --font-serif: "DM Serif Display", Georgia, serif;
+  --font-sans: "Space Grotesk", system-ui, sans-serif;
+  --font-serif: "Fraunces", Georgia, serif;
 
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
@@ -152,6 +152,8 @@
   --animate-float: float 6s ease-in-out infinite;
   --animate-float-delayed: float-delayed 8s ease-in-out infinite;
   --animate-float-slow: float-slow 10s ease-in-out infinite;
+  --animate-drift: drift 16s ease-in-out infinite;
+  --animate-marquee: marquee 28s linear infinite;
 
   --color-sidebar: oklch(var(--color-base-100));
   --color-sidebar-foreground: oklch(var(--color-base-content));
@@ -223,6 +225,35 @@
     }
     50% {
       transform: translateY(-10px) scale(1.1);
+    }
+  }
+  @keyframes drift {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) rotate(-2deg);
+    }
+    50% {
+      transform: translate3d(18px, -28px, 0) rotate(4deg);
+    }
+  }
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes reveal-up {
+    from {
+      opacity: 0;
+      transform: translateY(48px) scale(0.97);
+      filter: blur(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
     }
   }
 }
@@ -305,8 +336,7 @@
   --sidebar-accent-foreground: var(--color-accent-content);
   --sidebar-border: var(--color-base-content);
   --sidebar-ring: var(--color-neutral);
-  --sidebar:
-    hsl(0 0% 98%);
+  --sidebar: hsl(0 0% 98%);
 }
 
 @theme inline {
@@ -384,7 +414,8 @@
     @apply border-neutral;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    text-rendering: geometricPrecision;
   }
 }
 
@@ -431,9 +462,100 @@
   @apply bg-base-100/50 border-base-content/10 border backdrop-blur-md;
 }
 
+.landing-shell {
+  background:
+    radial-gradient(
+      circle at 18% 12%,
+      color-mix(in oklch, var(--color-primary) 19%, transparent),
+      transparent 28rem
+    ),
+    radial-gradient(
+      circle at 88% 3%,
+      color-mix(in oklch, var(--color-accent) 16%, transparent),
+      transparent 24rem
+    ),
+    linear-gradient(
+      180deg,
+      var(--color-base-200) 0%,
+      var(--color-base-100) 42%,
+      var(--color-base-300) 100%
+    );
+}
+
+.grain-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  mix-blend-mode: soft-light;
+  background-image:
+    radial-gradient(circle at 25% 25%, rgb(255 255 255 / 0.18) 0 1px, transparent 1px),
+    radial-gradient(circle at 75% 45%, rgb(255 255 255 / 0.12) 0 1px, transparent 1px);
+  background-size:
+    18px 18px,
+    28px 28px;
+}
+
+.scroll-reveal {
+  animation: reveal-up 0.8s both;
+}
+
+.organic-grid {
+  background-image:
+    linear-gradient(
+      color-mix(in oklch, var(--color-base-content) 9%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in oklch, var(--color-base-content) 9%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 42px 42px;
+  mask-image: radial-gradient(circle at center, black, transparent 72%);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.story-gradient {
+  background:
+    radial-gradient(circle at 28% 22%, rgb(191 161 109 / 0.22), transparent 24rem),
+    radial-gradient(circle at 78% 38%, rgb(196 91 60 / 0.14), transparent 26rem),
+    linear-gradient(135deg, #161a12 0%, #222517 45%, #11140f 100%);
+}
+
+.footer-silhouette {
+  clip-path: polygon(
+    0% 46%,
+    6% 34%,
+    11% 48%,
+    16% 29%,
+    23% 51%,
+    31% 25%,
+    38% 49%,
+    44% 32%,
+    52% 56%,
+    61% 27%,
+    69% 51%,
+    77% 33%,
+    84% 58%,
+    91% 38%,
+    100% 53%,
+    100% 100%,
+    0% 100%
+  );
+}
+
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
+  }
+
+  .scroll-reveal {
+    animation-timeline: view();
+    animation-range: entry 10% cover 34%;
   }
 }
 
@@ -456,8 +578,7 @@
   --sidebar-accent-foreground: var(--color-accent-content);
   --sidebar-border: var(--color-base-content);
   --sidebar-ring: var(--color-neutral);
-  --sidebar:
-    hsl(240 5.9% 10%);
+  --sidebar: hsl(240 5.9% 10%);
 }
 @layer base {
   * {
