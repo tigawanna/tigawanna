@@ -1,3 +1,7 @@
+import {
+  CreatureEggCapitalI,
+  CreatureEggTrigger,
+} from "@/components/creature-egg/CreatureEggTrigger";
 import { STATIC_LESSONS } from "@/data/portfolio/static";
 import type { LessonPreviewItem } from "@/types/lessons";
 import { Link } from "@tanstack/react-router";
@@ -21,9 +25,12 @@ export function LandingLessons({ items }: LandingLessonsProps) {
 
       <div className="container relative z-10">
         <div className="mx-auto mb-14 max-w-3xl text-center">
-          <SectionEyebrow>Today I learned</SectionEyebrow>
+          <SectionEyebrow>
+            Today <CreatureEggCapitalI /> learned
+          </SectionEyebrow>
           <h2 className="text-balance font-serif text-5xl leading-none font-semibold tracking-[-0.045em] md:text-7xl">
-            Cool things I recently learned.
+            Cool things <CreatureEggCapitalI /> recently learned
+            <CreatureEggTrigger data-test="creature-feature-egg-lessons-period" />
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-base-content/70">
             Small lessons, debugging wins, and notes — stored in Tirso so I can add new ones from

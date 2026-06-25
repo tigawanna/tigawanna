@@ -1,6 +1,7 @@
 import { useCreaturePanelSequence } from "@/hooks/use-creature-panel-sequence";
 import type { CreatureRevealPanel } from "@/types/creature-feature";
 import { Bug, Clapperboard, Popcorn, Skull, Sparkles, Ticket } from "lucide-react";
+import { useHotkeys } from "react-hotkeys-hook";
 import { CreatureFeatureTitle } from "./CreatureFeatureTitle";
 
 const PANELS: CreatureRevealPanel[] = [
@@ -75,6 +76,8 @@ export function CreatureRevealPanels({ onComplete }: CreatureRevealPanelsProps) 
   const handleNext = () => {
     goNext();
   };
+
+  useHotkeys(["right", "down", "space", "enter"], handleNext, { preventDefault: true }, [goNext]);
 
   const incomingIndex = transitionTargetIndex ?? activeIndex;
   const outgoingIndex = isTransitioning ? activeIndex : null;

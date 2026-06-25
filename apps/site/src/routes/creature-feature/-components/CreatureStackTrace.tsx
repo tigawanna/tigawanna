@@ -2,6 +2,7 @@ import { useStackTraceFlood } from "@/hooks/use-stack-trace-flood";
 import { getStackTraceLines } from "@/lib/creature-feature/stack-trace";
 import type { StackTraceTone } from "@/types/creature-feature";
 import { useRef, useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 import { CreatureFeatureTitle } from "./CreatureFeatureTitle";
 
 const TONE_CLASS: Record<StackTraceTone, string> = {
@@ -10,12 +11,19 @@ const TONE_CLASS: Record<StackTraceTone, string> = {
   dim: "text-red-200/30",
 };
 
-export function CreatureStackTrace() {
+interface CreatureStackTraceProps {
+  onComplete: () => void;
+}
+
+export function CreatureStackTrace({ onComplete }: CreatureStackTraceProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const streamRef = useRef<HTMLDivElement>(null);
   const [lines] = useState(getStackTraceLines);
 
-  useStackTraceFlood(streamRef, sectionRef);
+  useStackTraceFlood(streamRef, sectionRef, { onComplete });
+  useHotkeys(["right", "down", "space", "enter"], onComplete, { preventDefault: true }, [
+    onComplete,
+  ]);
 
   return (
     <section
@@ -50,6 +58,12 @@ export function CreatureStackTrace() {
             ))}
           </div>
         </div>
+      </div>
+
+      <div className="pointer-events-none sticky bottom-8 z-20 flex justify-center">
+        <span className="animate-pulse font-mono text-[10px] tracking-[0.3em] text-red-200/40 uppercase">
+          the creature is unraveling…
+        </span>
       </div>
     </section>
   );

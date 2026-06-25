@@ -1,3 +1,8 @@
+import {
+  CreatureEggCapitalI,
+  CreatureEggLowercaseI,
+  CreatureEggTrigger,
+} from "@/components/creature-egg/CreatureEggTrigger";
 import { useCurvedMarquee } from "@/hooks/use-curved-marquee";
 import { AppConfig } from "@/utils/system";
 import { Link } from "@tanstack/react-router";
@@ -55,18 +60,15 @@ export function LandingFooter() {
                 <Link to="/" className="transition-colors hover:text-primary">
                   tigawanna
                 </Link>
-                <Link
-                  to="/creature-feature"
-                  data-test="creature-feature-egg"
-                  aria-label="creature feature"
-                  className="text-primary transition-opacity hover:opacity-70"
-                >
-                  .
-                </Link>
+                <CreatureEggTrigger />
               </span>
               <p className="mt-5 max-w-xl text-base leading-7 text-base-content/55">
-                Full-stack TypeScript, warm interfaces, strict systems, and occasionally a creature
-                feature.
+                Full-stack TypeScript, warm int
+                <CreatureEggLowercaseI />
+                erfaces, strict systems, and occas
+                <CreatureEggLowercaseI />
+                ionally a creature feature
+                <CreatureEggTrigger data-test="creature-feature-egg-period" />
               </p>
             </div>
 

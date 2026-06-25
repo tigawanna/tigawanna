@@ -85,9 +85,10 @@ function LessonDetailContent({ lessonId }: { lessonId: string }) {
       </div>
 
       {html ? (
-        <div className="markdown mt-10 rounded-[2rem] border border-base-content/10 bg-base-300/40 p-6 md:p-10">
-          <div dangerouslySetInnerHTML={{ __html: html }} />
-        </div>
+        <div
+          className="markdown markdown-lesson mt-10 [&_pre.shiki]:overflow-x-auto [&_pre.shiki]:rounded-xl [&_pre.shiki]:text-sm [&_pre.shiki_code]:p-4"
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
       ) : null}
     </article>
   );

@@ -1,25 +1,37 @@
-import { useEffect, type RefObject } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 
 interface FloodOptions {
   baseSpeed?: number;
+  onComplete?: () => void;
 }
 
 export function useStackTraceFlood(
   streamRef: RefObject<HTMLElement | null>,
   sectionRef: RefObject<HTMLElement | null>,
-  { baseSpeed = 90 }: FloodOptions = {},
+  { baseSpeed = 90, onComplete }: FloodOptions = {},
 ) {
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
+
   useEffect(() => {
     const stream = streamRef.current;
     const section = sectionRef.current;
     if (!stream || !section) return;
 
+    let completed = false;
     const apply = (offset: number) => {
       stream.style.transform = `translate3d(0, ${-offset}px, 0)`;
     };
 
+    const complete = () => {
+      if (completed) return;
+      completed = true;
+      onCompleteRef.current?.();
+    };
+
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       apply(0);
+      window.setTimeout(complete, 2600);
       return;
     }
 
@@ -45,6 +57,7 @@ export function useStackTraceFlood(
         frame = requestAnimationFrame(tick);
       } else {
         frame = 0;
+        if (offset >= max) window.setTimeout(complete, 700);
       }
     };
 
