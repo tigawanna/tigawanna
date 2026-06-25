@@ -19,7 +19,7 @@ export function LessonCard({ item, className }: LessonCardProps) {
     <article
       data-test="lesson-card"
       className={twMerge(
-        "flex min-h-[360px] flex-col overflow-hidden rounded-[2rem] border border-[#f6efd7]/15 bg-[#2a2d24] shadow-xl shadow-black/20 transition-transform duration-300 hover:-translate-y-1",
+        "flex min-h-[360px] flex-col overflow-hidden rounded-[2rem] border border-[#f6efd7]/15 bg-[#2a2d24] shadow-xl shadow-black/20",
         className,
       )}
     >

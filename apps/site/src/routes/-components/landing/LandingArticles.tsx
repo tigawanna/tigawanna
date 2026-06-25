@@ -2,7 +2,7 @@ import { siteConfig } from "@/config/site";
 import { STATIC_ARTICLES } from "@/data/portfolio/static";
 import { ArrowUpRight } from "lucide-react";
 import { ArticleCard } from "./ArticleCard";
-import { LandingSection, OrganicDivider, ScrollReveal, SectionEyebrow } from "./LandingPrimitives";
+import { LandingSection, OrganicDivider, SectionEyebrow } from "./LandingPrimitives";
 
 export function LandingArticles() {
   return (
@@ -16,7 +16,7 @@ export function LandingArticles() {
       <OrganicDivider tone="darkMid" flip />
 
       <div className="container relative z-10">
-        <ScrollReveal className="mx-auto mb-14 max-w-3xl text-center">
+        <div className="mx-auto mb-14 max-w-3xl text-center">
           <SectionEyebrow>Articles</SectionEyebrow>
           <h2 className="text-balance font-serif text-5xl leading-none font-semibold tracking-[-0.045em] md:text-7xl">
             Writing from the trenches.
@@ -24,7 +24,7 @@ export function LandingArticles() {
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#c5ccb4]/70">
             Published on Dev.to.
           </p>
-        </ScrollReveal>
+        </div>
 
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
           {STATIC_ARTICLES.map((article) => (
@@ -32,7 +32,7 @@ export function LandingArticles() {
           ))}
         </div>
 
-        <ScrollReveal delay="short" className="mt-10 text-center">
+        <div className="mt-10 text-center">
           <a
             href={siteConfig.links.devto}
             target="_blank"
@@ -43,7 +43,7 @@ export function LandingArticles() {
             More on Dev.to
             <ArrowUpRight className="size-4" />
           </a>
-        </ScrollReveal>
+        </div>
       </div>
     </LandingSection>
   );

@@ -1,7 +1,7 @@
 import { STATIC_PINNED_PROJECTS, STATIC_RECENT_PROJECTS } from "@/data/portfolio/static";
 import type { GithubRepoNode } from "@/types/github";
 import { useState } from "react";
-import { LandingSection, OrganicDivider, ScrollReveal, SectionEyebrow } from "./LandingPrimitives";
+import { LandingSection, OrganicDivider, SectionEyebrow } from "./LandingPrimitives";
 import { renderProjectCard } from "./ProjectCard";
 
 type ProjectView = "featured" | "recent" | "all";
@@ -114,11 +114,9 @@ function ProjectsContent() {
       </div>
 
       {activeView === "recent" && recentRepos.length > 6 ? (
-        <ScrollReveal delay="short">
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {recentRepos.slice(6, 12).map((repo) => renderProjectCard(repo))}
-          </div>
-        </ScrollReveal>
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {recentRepos.slice(6, 12).map((repo) => renderProjectCard(repo))}
+        </div>
       ) : null}
     </div>
   );
@@ -136,7 +134,7 @@ export function LandingProjects() {
       <OrganicDivider tone="darkMid" flip />
 
       <div className="container relative z-10">
-        <ScrollReveal className="mx-auto mb-14 max-w-3xl text-center">
+        <div className="mx-auto mb-14 max-w-3xl text-center">
           <SectionEyebrow>Projects</SectionEyebrow>
           <h2 className="text-balance font-serif text-5xl leading-none font-semibold tracking-[-0.045em] md:text-7xl">
             Things I've built.
@@ -145,7 +143,7 @@ export function LandingProjects() {
             Pinned highlights, recently pushed repos, and topic filters — curated shelves until the
             admin flow lands.
           </p>
-        </ScrollReveal>
+        </div>
 
         <ProjectsContent />
       </div>

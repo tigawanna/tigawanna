@@ -3,7 +3,7 @@ import { convertMarkdownToHtml } from "@/lib/markdown/convert";
 import type { LessonPreviewItem } from "@/types/lessons";
 import { Link } from "@tanstack/react-router";
 import { LessonCard } from "./LessonCard";
-import { LandingSection, OrganicDivider, ScrollReveal, SectionEyebrow } from "./LandingPrimitives";
+import { LandingSection, OrganicDivider, SectionEyebrow } from "./LandingPrimitives";
 
 const LESSON_PREVIEW_COUNT = 6;
 
@@ -34,7 +34,7 @@ export function LandingLessons() {
       <OrganicDivider tone="panel" flip />
 
       <div className="container relative z-10">
-        <ScrollReveal className="mx-auto mb-14 max-w-3xl text-center">
+        <div className="mx-auto mb-14 max-w-3xl text-center">
           <SectionEyebrow>Today I learned</SectionEyebrow>
           <h2 className="text-balance font-serif text-5xl leading-none font-semibold tracking-[-0.045em] md:text-7xl">
             Cool things I recently learned.
@@ -43,7 +43,7 @@ export function LandingLessons() {
             Small lessons, debugging wins, and notes — stored in Tirso so I can add new ones from
             the admin panel later.
           </p>
-        </ScrollReveal>
+        </div>
 
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {lessonPreviews.map((item) => (
@@ -51,7 +51,7 @@ export function LandingLessons() {
           ))}
         </div>
 
-        <ScrollReveal delay="short" className="mt-10 text-center">
+        <div className="mt-10 text-center">
           <Link
             to="/lessons"
             search={{}}
@@ -60,7 +60,7 @@ export function LandingLessons() {
           >
             See more lessons
           </Link>
-        </ScrollReveal>
+        </div>
       </div>
     </LandingSection>
   );

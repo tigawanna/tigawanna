@@ -14,18 +14,14 @@ export function ArticleCard({ article, className }: ArticleCardProps) {
     <article
       data-test="article-card"
       className={twMerge(
-        "group relative flex flex-col overflow-hidden rounded-[1.75rem] border border-[#f6efd7]/10 bg-[#1e2119] shadow-xl shadow-black/30 transition-all duration-300 hover:-translate-y-1 hover:border-[#f6efd7]/20 hover:shadow-black/50",
+        "group relative flex flex-col overflow-hidden rounded-[1.75rem] border border-[#f6efd7]/10 bg-[#1e2119] shadow-xl shadow-black/30",
         className,
       )}
     >
       <div className="relative h-44 shrink-0 overflow-hidden">
         {imageUrl ? (
           <>
-            <img
-              src={imageUrl}
-              alt={article.title}
-              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
+            <img src={imageUrl} alt={article.title} className="h-full w-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#1e2119] via-[#1e2119]/20 to-transparent" />
           </>
         ) : (
