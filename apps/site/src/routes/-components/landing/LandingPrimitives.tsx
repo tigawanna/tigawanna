@@ -12,6 +12,7 @@ const sectionToneClasses = {
   panel: "bg-[#1e2119]",
   panelAlt: "bg-[#22241c]",
   cream: "bg-[#d6d0b7] text-[#1a1c14]",
+  darkMid: "bg-[#252920]",
 } satisfies Record<NonNullable<LandingSectionProps["tone"]>, string>;
 
 const dividerToneClasses = {
@@ -23,6 +24,7 @@ const dividerToneClasses = {
   panel: "text-[#1e2119]",
   panelAlt: "text-[#22241c]",
   cream: "text-[#d6d0b7]",
+  darkMid: "text-[#252920]",
 } satisfies Record<NonNullable<OrganicDividerProps["tone"]>, string>;
 
 const revealDelaySeconds = {

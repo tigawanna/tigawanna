@@ -18,21 +18,23 @@ export function PrivateProjectCard({ repo, className }: ProjectCardProps) {
     <article
       data-test="private-project-card"
       className={twMerge(
-        "flex min-h-[320px] flex-col items-center justify-center gap-3 rounded-[2rem] border border-[#1b1d14]/10 bg-[#f6efd7]/80 p-7 text-center shadow-xl shadow-[#1b1d14]/10",
+        "flex min-h-[320px] flex-col items-center justify-center gap-4 rounded-[1.75rem] border border-[#f6efd7]/10 bg-[#1e2119] p-7 text-center shadow-xl shadow-black/30",
         className,
       )}
     >
-      <div className="flex items-center gap-1 font-serif text-2xl text-[#1b1d14]">
-        <span>{repo.name.slice(0, 2)}</span>
-        <span className="inline-block h-3 min-w-14 rounded bg-[#1b1d14]/20" />
-        <span>{repo.name.slice(-1)}</span>
+      <div className="grid size-14 place-items-center rounded-2xl border border-[#f6efd7]/10 bg-[#f6efd7]/5 text-[#c5ccb4]/50">
+        <Lock className="size-5" />
       </div>
-      <div className="flex items-center gap-2 text-sm text-[#1b1d14]/75">
-        <span>Private project</span>
-        <Lock className="size-3" />
+      <div className="flex flex-col gap-1">
+        <p className="font-serif text-lg text-[#f6efd7]/70">Private project</p>
+        <p className="font-mono text-sm tracking-wider text-[#c5ccb4]/40">
+          {repo.name.slice(0, 3)}
+          <span className="opacity-40">•••</span>
+          {repo.name.slice(-2)}
+        </p>
       </div>
-      <div className="flex items-center gap-1 text-xs text-[#1b1d14]/65">
-        <span>Last updated</span>
+      <div className="flex items-center gap-1 text-xs text-[#c5ccb4]/40">
+        <span>Updated</span>
         <TimeCompponent time={repo.pushedAt} relative className="p-0 text-xs font-normal" />
       </div>
     </article>
@@ -47,44 +49,47 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
     <article
       data-test="project-card"
       className={twMerge(
-        "group overflow-hidden rounded-[2rem] border border-[#1b1d14]/10 bg-[#f6efd7]/80 shadow-xl shadow-[#1b1d14]/10 transition-transform duration-300 hover:-translate-y-1",
+        "group relative flex flex-col overflow-hidden rounded-[1.75rem] border border-[#f6efd7]/10 bg-[#1e2119] shadow-xl shadow-black/30 transition-all duration-300 hover:-translate-y-1 hover:border-[#f6efd7]/20 hover:shadow-black/50",
         className,
       )}
     >
-      <div className="relative h-48 overflow-hidden bg-[#1b1d14]/10">
+      <div className="relative h-48 shrink-0 overflow-hidden">
         {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={repo.name}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
+          <>
+            <img
+              src={imageUrl}
+              alt={repo.name}
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#1e2119] via-[#1e2119]/10 to-transparent" />
+          </>
         ) : (
-          <div className="grid h-full place-items-center text-[#1b1d14]/35">
-            <Github className="size-10" />
+          <div className="flex h-full items-center justify-center bg-gradient-to-br from-[#252920] to-[#191c15]">
+            <Github className="size-8 text-[#f6efd7]/15" />
           </div>
         )}
       </div>
 
-      <div className="flex flex-col gap-4 p-6">
+      <div className="flex flex-1 flex-col gap-3 p-6 pt-4">
         <div className="flex flex-wrap items-start justify-between gap-2">
-          <h3 className="font-serif text-2xl leading-tight text-[#1b1d14]">{repo.name}</h3>
+          <h3 className="font-serif text-xl leading-snug text-[#f6efd7]">{repo.name}</h3>
           <TimeCompponent
             time={repo.pushedAt}
             relative
-            className="p-0 text-xs font-normal text-[#1b1d14]/65"
+            className="p-0 text-xs font-normal text-[#c5ccb4]/45"
           />
         </div>
 
         {repo.description ? (
-          <p className="line-clamp-2 text-sm leading-6 text-[#1b1d14]/75">{repo.description}</p>
+          <p className="line-clamp-2 text-sm leading-6 text-[#c5ccb4]/80">{repo.description}</p>
         ) : null}
 
         {repo.repositoryTopics?.nodes?.length ? (
-          <ul className="flex flex-wrap gap-2">
+          <ul className="mt-auto flex flex-wrap gap-1.5 pt-1">
             {repo.repositoryTopics.nodes.slice(0, 4).map((topic) => (
               <li
                 key={topic.topic.name}
-                className="rounded-full border border-[#1b1d14]/10 bg-[#1b1d14]/5 px-3 py-1 text-xs text-[#1b1d14]/75"
+                className="rounded-md bg-[#f6efd7]/[0.06] px-2.5 py-0.5 text-xs text-[#c5ccb4]/75"
               >
                 {topic.topic.name}
               </li>
@@ -92,16 +97,16 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
           </ul>
         ) : null}
 
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-          <div className="flex flex-wrap items-center gap-3 text-sm">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#f6efd7]/8 pt-4">
+          <div className="flex items-center gap-4 text-sm">
             {repo.homepageUrl ? (
               <a
                 href={repo.homepageUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-[#1b1d14]/80 transition-colors hover:text-[#1b1d14]"
+                className="inline-flex items-center gap-1.5 text-xs text-[#c5ccb4]/60 transition-colors hover:text-[#f6efd7]"
               >
-                <Globe className="size-4" />
+                <Globe className="size-3.5" />
                 Site
               </a>
             ) : null}
@@ -109,9 +114,9 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
               href={repo.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[#1b1d14]/80 transition-colors hover:text-[#1b1d14]"
+              className="inline-flex items-center gap-1.5 text-xs text-[#c5ccb4]/60 transition-colors hover:text-[#f6efd7]"
             >
-              <Github className="size-4" />
+              <Github className="size-3.5" />
               Source
             </a>
           </div>
@@ -119,7 +124,7 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
           <Link
             to="/project/$name"
             params={{ name: projectRouteParam(repo.nameWithOwner) }}
-            className="rounded-full border border-[#1b1d14]/25 px-4 py-1.5 text-sm text-[#1b1d14]/80 transition-colors hover:border-[#1b1d14]/40 hover:bg-[#1b1d14]/5 hover:text-[#1b1d14]"
+            className="rounded-lg border border-[#f6efd7]/15 px-3.5 py-1.5 text-xs font-medium text-[#c5ccb4]/75 transition-all hover:border-[#f6efd7]/30 hover:bg-[#f6efd7]/5 hover:text-[#f6efd7]"
           >
             Details
           </Link>

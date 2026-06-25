@@ -63,8 +63,8 @@ function ProjectsTopicFilter({
             }}
             className={
               isActive
-                ? "rounded-full border border-[#1b1d14]/20 bg-[#1b1d14] px-4 py-2 text-sm text-[#f6efd7]"
-                : "rounded-full border border-[#1b1d14]/15 bg-[#1b1d14]/5 px-4 py-2 text-sm text-[#1b1d14]/70 transition-colors hover:border-[#1b1d14]/30"
+                ? "rounded-full border border-[#f6efd7]/25 bg-[#f6efd7]/15 px-4 py-2 text-sm text-[#f6efd7]"
+                : "rounded-full border border-[#f6efd7]/10 bg-transparent px-4 py-2 text-sm text-[#c5ccb4]/60 transition-colors hover:border-[#f6efd7]/20 hover:text-[#c5ccb4]"
             }
           >
             {item}
@@ -128,20 +128,20 @@ export function LandingProjects() {
   return (
     <LandingSection
       id="projects"
-      tone="cream"
-      className="text-[#1b1d14]"
+      tone="darkMid"
+      className="text-[#f6efd7]"
       dataTest="landing-projects"
     >
-      <OrganicDivider tone="cream" />
-      <OrganicDivider tone="cream" flip />
+      <OrganicDivider tone="darkMid" />
+      <OrganicDivider tone="darkMid" flip />
 
       <div className="container relative z-10">
         <ScrollReveal className="mx-auto mb-14 max-w-3xl text-center">
           <SectionEyebrow>Projects</SectionEyebrow>
           <h2 className="text-balance font-serif text-5xl leading-none font-semibold tracking-[-0.045em] md:text-7xl">
-            Shipped work, active experiments, and open source.
+            Things I've built.
           </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#1b1d14]/70">
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#c5ccb4]/70">
             Pinned highlights, recently pushed repos, and topic filters — curated shelves until the
             admin flow lands.
           </p>

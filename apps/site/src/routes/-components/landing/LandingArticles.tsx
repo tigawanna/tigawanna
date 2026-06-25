@@ -8,12 +8,12 @@ export function LandingArticles() {
   return (
     <LandingSection
       id="articles"
-      tone="base"
-      className="text-base-content"
+      tone="darkMid"
+      className="text-[#f6efd7]"
       dataTest="landing-articles"
     >
-      <OrganicDivider tone="base" />
-      <OrganicDivider tone="base" flip />
+      <OrganicDivider tone="darkMid" />
+      <OrganicDivider tone="darkMid" flip />
 
       <div className="container relative z-10">
         <ScrollReveal className="mx-auto mb-14 max-w-3xl text-center">
@@ -21,8 +21,8 @@ export function LandingArticles() {
           <h2 className="text-balance font-serif text-5xl leading-none font-semibold tracking-[-0.045em] md:text-7xl">
             Writing from the trenches.
           </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-base-content/70">
-            Tutorials, notes, and things I had to learn the hard way — published on Dev.to.
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#c5ccb4]/70">
+            Published on Dev.to.
           </p>
         </ScrollReveal>
 
