@@ -138,21 +138,9 @@ export function StackCubeDesktop() {
             ))}
           </div>
 
-          <div className="flex flex-col items-center px-10 lg:px-14">
-            <div className="cube-stage">
+          <div className="flex flex-col items-center justify-center px-10 lg:px-14">
+            <div className="cube-stage cube-stage--centered">
               <CubeVisual cubeRef={cubeRef} />
-            </div>
-
-            <div
-              className="mt-24 flex items-center gap-2 text-[#c5ccb4]/30 lg:mt-36"
-              aria-hidden="true"
-            >
-              {stackCubeFaces.map((face, index) => (
-                <div key={face.label} className="flex items-center gap-2">
-                  {index > 0 && <div className="h-px w-3 bg-current" />}
-                  <span className="text-[9px] tracking-[0.25em] uppercase">{face.label}</span>
-                </div>
-              ))}
             </div>
           </div>
 
@@ -181,7 +169,16 @@ export function StackCubeDesktop() {
           </div>
         </div>
 
-        <div className="pointer-events-none absolute right-0 bottom-10 left-0 flex justify-center">
+        <div className="pointer-events-none absolute right-0 bottom-10 left-0 flex flex-col items-center gap-4">
+          <div className="flex items-center gap-2 text-[#c5ccb4]/30" aria-hidden="true">
+            {stackCubeFaces.map((face, index) => (
+              <div key={face.label} className="flex items-center gap-2">
+                {index > 0 && <div className="h-px w-3 bg-current" />}
+                <span className="text-[9px] tracking-[0.25em] uppercase">{face.label}</span>
+              </div>
+            ))}
+          </div>
+
           <p className="text-[10px] tracking-[0.3em] text-[#c5ccb4]/25 uppercase">
             Scroll to rotate
           </p>

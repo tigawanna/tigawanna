@@ -8,6 +8,8 @@ export const siteConfig = {
     { label: "About", href: "#about" },
     { label: "Skills", href: "#skills" },
     { label: "Projects", href: "#projects" },
+    { label: "Articles", href: "#articles" },
+    { label: "Journal", href: "#journal" },
     { label: "Contact", href: "#contact" },
   ],
   links: {
@@ -36,4 +38,11 @@ export const siteConfig = {
     "Performance",
     "Accessibility",
   ],
+  assets: {
+    favicon: "/favicon.ico",
+    appleTouchIcon: "/apple-touch-icon.png",
+    icon: "/icon.png",
+    ogImage: "/opengraph-image.jpg",
+    ogImageAlt: "image of dennis kinuthia, a fullstack software developer",
+  },
 } as const;

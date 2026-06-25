@@ -13,7 +13,10 @@ import { Route as SearchRouteImport } from './routes/search'
 import { Route as AuthLayoutRouteImport } from './routes/auth/layout'
 import { Route as DashboardLayoutRouteImport } from './routes/_dashboard/layout'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LessonsIndexRouteImport } from './routes/lessons/index'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
+import { Route as ProjectNameRouteImport } from './routes/project/$name'
+import { Route as LessonsLessonIdRouteImport } from './routes/lessons/$lessonId'
 import { Route as AuthSignupRouteImport } from './routes/auth/signup'
 import { Route as DashboardProfileRouteImport } from './routes/_dashboard/profile'
 import { Route as DashboardDashboardRouteImport } from './routes/_dashboard/dashboard'
@@ -37,10 +40,25 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LessonsIndexRoute = LessonsIndexRouteImport.update({
+  id: '/lessons/',
+  path: '/lessons/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthIndexRoute = AuthIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthLayoutRoute,
+} as any)
+const ProjectNameRoute = ProjectNameRouteImport.update({
+  id: '/project/$name',
+  path: '/project/$name',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LessonsLessonIdRoute = LessonsLessonIdRouteImport.update({
+  id: '/lessons/$lessonId',
+  path: '/lessons/$lessonId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthSignupRoute = AuthSignupRouteImport.update({
   id: '/signup',
@@ -65,7 +83,10 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardDashboardRoute
   '/profile': typeof DashboardProfileRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/lessons/$lessonId': typeof LessonsLessonIdRoute
+  '/project/$name': typeof ProjectNameRoute
   '/auth/': typeof AuthIndexRoute
+  '/lessons/': typeof LessonsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -73,7 +94,10 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardDashboardRoute
   '/profile': typeof DashboardProfileRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/lessons/$lessonId': typeof LessonsLessonIdRoute
+  '/project/$name': typeof ProjectNameRoute
   '/auth': typeof AuthIndexRoute
+  '/lessons': typeof LessonsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -84,7 +108,10 @@ export interface FileRoutesById {
   '/_dashboard/dashboard': typeof DashboardDashboardRoute
   '/_dashboard/profile': typeof DashboardProfileRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/lessons/$lessonId': typeof LessonsLessonIdRoute
+  '/project/$name': typeof ProjectNameRoute
   '/auth/': typeof AuthIndexRoute
+  '/lessons/': typeof LessonsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -95,9 +122,21 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/profile'
     | '/auth/signup'
+    | '/lessons/$lessonId'
+    | '/project/$name'
     | '/auth/'
+    | '/lessons/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/search' | '/dashboard' | '/profile' | '/auth/signup' | '/auth'
+  to:
+    | '/'
+    | '/search'
+    | '/dashboard'
+    | '/profile'
+    | '/auth/signup'
+    | '/lessons/$lessonId'
+    | '/project/$name'
+    | '/auth'
+    | '/lessons'
   id:
     | '__root__'
     | '/'
@@ -107,7 +146,10 @@ export interface FileRouteTypes {
     | '/_dashboard/dashboard'
     | '/_dashboard/profile'
     | '/auth/signup'
+    | '/lessons/$lessonId'
+    | '/project/$name'
     | '/auth/'
+    | '/lessons/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -115,6 +157,9 @@ export interface RootRouteChildren {
   DashboardLayoutRoute: typeof DashboardLayoutRouteWithChildren
   AuthLayoutRoute: typeof AuthLayoutRouteWithChildren
   SearchRoute: typeof SearchRoute
+  LessonsLessonIdRoute: typeof LessonsLessonIdRoute
+  ProjectNameRoute: typeof ProjectNameRoute
+  LessonsIndexRoute: typeof LessonsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -147,12 +192,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/lessons/': {
+      id: '/lessons/'
+      path: '/lessons'
+      fullPath: '/lessons/'
+      preLoaderRoute: typeof LessonsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/': {
       id: '/auth/'
       path: '/'
       fullPath: '/auth/'
       preLoaderRoute: typeof AuthIndexRouteImport
       parentRoute: typeof AuthLayoutRoute
+    }
+    '/project/$name': {
+      id: '/project/$name'
+      path: '/project/$name'
+      fullPath: '/project/$name'
+      preLoaderRoute: typeof ProjectNameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lessons/$lessonId': {
+      id: '/lessons/$lessonId'
+      path: '/lessons/$lessonId'
+      fullPath: '/lessons/$lessonId'
+      preLoaderRoute: typeof LessonsLessonIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/auth/signup': {
       id: '/auth/signup'
@@ -211,6 +277,9 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardLayoutRoute: DashboardLayoutRouteWithChildren,
   AuthLayoutRoute: AuthLayoutRouteWithChildren,
   SearchRoute: SearchRoute,
+  LessonsLessonIdRoute: LessonsLessonIdRoute,
+  ProjectNameRoute: ProjectNameRoute,
+  LessonsIndexRoute: LessonsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

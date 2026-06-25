@@ -293,6 +293,9 @@ importers:
       gsap:
         specifier: ^3.15.0
         version: 3.15.0
+      highlight.js:
+        specifier: ^11.11.1
+        version: 11.11.1
       input-otp:
         specifier: ^1.4.2
         version: 1.4.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -332,6 +335,9 @@ importers:
       recharts:
         specifier: 3.8.0
         version: 3.8.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react-is@18.3.1)(react@19.2.7)(redux@5.0.1)
+      showdown:
+        specifier: ^2.1.0
+        version: 2.1.0
       sonner:
         specifier: ^2.0.7
         version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -369,6 +375,9 @@ importers:
       '@types/react-dom':
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.17)
+      '@types/showdown':
+        specifier: ^2.0.6
+        version: 2.0.6
       '@vitejs/plugin-react':
         specifier: ^6.0.3
         version: 6.0.3(@voidzero-dev/vite-plus-core@0.2.1(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(babel-plugin-react-compiler@1.0.0)

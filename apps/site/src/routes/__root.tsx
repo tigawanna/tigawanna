@@ -21,39 +21,51 @@ const searchparams = z.object({
   globalSearch: z.string().optional(),
 });
 
+const seoKeywords =
+  "fullstack developer, JavaScript, React, TanStack Start, TypeScript, web development, Nairobi, tigawanna";
+
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   head: () => ({
     meta: [
+      { charSet: "utf-8" },
+      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { title: AppConfig.name },
+      { name: "description", content: AppConfig.description },
+      { name: "keywords", content: seoKeywords },
+      { property: "og:title", content: AppConfig.name },
+      { property: "og:description", content: AppConfig.description },
+      { property: "og:url", content: AppConfig.links.website },
+      { property: "og:type", content: "website" },
       {
-        charSet: "utf-8",
+        property: "og:image",
+        content: AppConfig.absoluteAsset(AppConfig.assets.ogImage),
       },
+      { property: "og:image:alt", content: AppConfig.assets.ogImageAlt },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:site", content: "@tigawanna" },
+      { name: "twitter:creator", content: "@tigawanna" },
+      { name: "twitter:title", content: AppConfig.name },
+      { name: "twitter:description", content: AppConfig.description },
       {
-        name: "viewport",
-        content: "width=device-width, initial-scale=1",
-      },
-      {
-        title: AppConfig.name,
-        description: AppConfig.description,
-        keywords:
-          "fullstack developer, JavaScript, React, TanStack Start, TypeScript, web development, Nairobi, tigawanna",
-        og: {
-          title: AppConfig.name,
-          description: AppConfig.description,
-          url: AppConfig.links.website,
-          type: "website",
-        },
-        twitter: {
-          card: "summary_large_image",
-          site: "@tigawanna",
-          creator: "@tigawanna",
-        },
+        name: "twitter:image",
+        content: AppConfig.absoluteAsset(AppConfig.assets.ogImage),
       },
     ],
     links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "icon", href: AppConfig.assets.favicon, sizes: "48x48", type: "image/x-icon" },
       {
-        rel: "stylesheet",
-        href: appCss,
+        rel: "icon",
+        href: "/favicon-96x96.png",
+        sizes: "96x96",
+        type: "image/png",
       },
+      {
+        rel: "apple-touch-icon",
+        href: AppConfig.assets.appleTouchIcon,
+        sizes: "180x180",
+      },
+      { rel: "manifest", href: "/site.webmanifest" },
     ],
   }),
   validateSearch: (search) => searchparams.parse(search),

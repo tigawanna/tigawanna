@@ -81,3 +81,38 @@ export const howIWorkCards = [
 
 export const howIWorkSummary =
   "I own projects from architecture through deployment, designing systems teams can live with and shipping maintainable, performance-minded code. Along the way I mentor teams, collaborate across product and design, and give back to open source.";
+
+export const howIWorkSections = [
+  {
+    id: "ownership",
+    tag: "Ownership",
+    title: "End-to-end project ownership",
+    body: "From architecture through deployment and the long tail after launch. I stay accountable for the whole arc, not just my slice.",
+    background: "#1b2215",
+    foreground: "#d6d0b7",
+  },
+  {
+    id: "architecture",
+    tag: "Architecture",
+    title: "System design & direction",
+    body: "Data modeling, stack decisions, and reviews before you commit. I help teams choose paths they can live with.",
+    background: "#404b38",
+    foreground: "#d6d0b7",
+  },
+  {
+    id: "teams",
+    tag: "Teams",
+    title: "Team multiplier",
+    body: "I lead, mentor, and collaborate across product, design, and engineering, translating constraints so the work actually lands.",
+    background: "#2b3422",
+    foreground: "#d6d0b7",
+  },
+  {
+    id: "open-source",
+    tag: "Open source",
+    title: "Contributor & builder",
+    body: "Maintainable code by default, open source contributions, and tools built on the fly: CLIs, Chrome extensions, web apps, and MCPs that remove friction and multiply what a team can ship.",
+    background: "#4a5543",
+    foreground: "#d6d0b7",
+  },
+] as const;

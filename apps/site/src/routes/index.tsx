@@ -6,7 +6,9 @@ import {
   StackCube,
   LandingPeripheralCards,
   LandingFeatures,
-  LandingProjectsPreview,
+  LandingProjects,
+  LandingArticles,
+  LandingLessons,
   LandingEnhancedExperience,
   LandingCTA,
   LandingFooter,
@@ -23,7 +25,9 @@ function LandingPage() {
       <StackCube />
       <LandingPeripheralCards />
       <LandingFeatures />
-      <LandingProjectsPreview />
+      <LandingProjects />
+      <LandingArticles />
+      <LandingLessons />
       <LandingEnhancedExperience />
       <LandingCTA />
       <LandingFooter />

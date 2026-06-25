@@ -35,7 +35,7 @@ export const Route = createFileRoute("/auth/")({
   }),
 });
 
-export function SigninPage() {
+function SigninPage() {
   const [showSigninForm, setShowSigninForm] = useState(false);
   const { data: sessions = [], isLoading } = useQuery(deviceSessionsQueryOptions);
 

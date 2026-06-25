@@ -616,6 +616,11 @@
   padding-bottom: calc(var(--cube-size) * 0.2);
 }
 
+.cube-stage--centered {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
 .cube-perspective {
   perspective: 900px;
   width: var(--cube-size);
@@ -829,4 +834,80 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.markdown {
+  @apply text-base-content leading-relaxed break-words;
+}
+
+.markdown > * + * {
+  @apply mt-0 mb-4;
+}
+
+.markdown li + li {
+  @apply mt-1;
+}
+
+.markdown strong {
+  @apply font-semibold;
+}
+
+.markdown a {
+  @apply font-semibold text-primary underline-offset-4 hover:underline;
+}
+
+.markdown h1 {
+  @apply mt-6 mb-4 border-b pb-2 text-4xl font-semibold leading-tight;
+}
+
+.markdown h2 {
+  @apply mt-6 mb-4 border-b pb-2 text-2xl font-semibold leading-tight;
+}
+
+.markdown h3 {
+  @apply mt-6 mb-4 text-lg font-semibold leading-snug;
+}
+
+.markdown pre {
+  @apply overflow-x-auto rounded-xl bg-base-200 p-4 text-sm;
+}
+
+.markdown code {
+  @apply rounded bg-base-200 px-1 py-0.5 text-sm;
+}
+
+.markdown pre code {
+  @apply bg-transparent p-0;
+}
+
+.markdown ul {
+  @apply list-disc pl-6;
+}
+
+.markdown ol {
+  @apply list-decimal pl-6;
+}
+
+.markdown blockquote {
+  @apply border-l-4 border-primary/40 pl-4 italic text-base-content/80;
+}
+
+.markdown .note {
+  @apply border-l-4 border-info pl-4;
+}
+
+.markdown .tip {
+  @apply border-l-4 border-success pl-4;
+}
+
+.markdown .warning {
+  @apply border-l-4 border-warning pl-4;
+}
+
+.markdown .important {
+  @apply border-l-4 border-accent pl-4;
+}
+
+.markdown .caution {
+  @apply border-l-4 border-error pl-4;
 }
