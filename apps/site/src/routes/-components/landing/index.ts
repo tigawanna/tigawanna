@@ -7,6 +7,5 @@ export { LandingFooter } from "./LandingFooter";
 export { LandingProjects } from "./LandingProjects";
 export { LandingArticles } from "./LandingArticles";
 export { LandingLessons } from "./LandingLessons";
-export { LandingEnhancedExperience } from "./LandingEnhancedExperience";
 export { StackCube } from "./StackCube";
 export { LandingPeripheralCards } from "./LandingPeripheralCards";

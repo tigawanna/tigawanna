@@ -9,23 +9,20 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SearchRouteImport } from './routes/search'
 import { Route as AuthLayoutRouteImport } from './routes/auth/layout'
 import { Route as DashboardLayoutRouteImport } from './routes/_dashboard/layout'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SearchIndexRouteImport } from './routes/search/index'
 import { Route as LessonsIndexRouteImport } from './routes/lessons/index'
+import { Route as CreatureFeatureIndexRouteImport } from './routes/creature-feature/index'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
 import { Route as ProjectNameRouteImport } from './routes/project/$name'
 import { Route as LessonsLessonIdRouteImport } from './routes/lessons/$lessonId'
 import { Route as AuthSignupRouteImport } from './routes/auth/signup'
 import { Route as DashboardProfileRouteImport } from './routes/_dashboard/profile'
 import { Route as DashboardDashboardRouteImport } from './routes/_dashboard/dashboard'
+import { Route as ApiAiPortfolioSearchRouteImport } from './routes/api/ai/portfolio-search'
 
-const SearchRoute = SearchRouteImport.update({
-  id: '/search',
-  path: '/search',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthLayoutRoute = AuthLayoutRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -40,9 +37,19 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SearchIndexRoute = SearchIndexRouteImport.update({
+  id: '/search/',
+  path: '/search/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LessonsIndexRoute = LessonsIndexRouteImport.update({
   id: '/lessons/',
   path: '/lessons/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatureFeatureIndexRoute = CreatureFeatureIndexRouteImport.update({
+  id: '/creature-feature/',
+  path: '/creature-feature/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthIndexRoute = AuthIndexRouteImport.update({
@@ -75,102 +82,114 @@ const DashboardDashboardRoute = DashboardDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => DashboardLayoutRoute,
 } as any)
+const ApiAiPortfolioSearchRoute = ApiAiPortfolioSearchRouteImport.update({
+  id: '/api/ai/portfolio-search',
+  path: '/api/ai/portfolio-search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthLayoutRouteWithChildren
-  '/search': typeof SearchRoute
   '/dashboard': typeof DashboardDashboardRoute
   '/profile': typeof DashboardProfileRoute
   '/auth/signup': typeof AuthSignupRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/project/$name': typeof ProjectNameRoute
   '/auth/': typeof AuthIndexRoute
+  '/creature-feature/': typeof CreatureFeatureIndexRoute
   '/lessons/': typeof LessonsIndexRoute
+  '/search/': typeof SearchIndexRoute
+  '/api/ai/portfolio-search': typeof ApiAiPortfolioSearchRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/search': typeof SearchRoute
   '/dashboard': typeof DashboardDashboardRoute
   '/profile': typeof DashboardProfileRoute
   '/auth/signup': typeof AuthSignupRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/project/$name': typeof ProjectNameRoute
   '/auth': typeof AuthIndexRoute
+  '/creature-feature': typeof CreatureFeatureIndexRoute
   '/lessons': typeof LessonsIndexRoute
+  '/search': typeof SearchIndexRoute
+  '/api/ai/portfolio-search': typeof ApiAiPortfolioSearchRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_dashboard': typeof DashboardLayoutRouteWithChildren
   '/auth': typeof AuthLayoutRouteWithChildren
-  '/search': typeof SearchRoute
   '/_dashboard/dashboard': typeof DashboardDashboardRoute
   '/_dashboard/profile': typeof DashboardProfileRoute
   '/auth/signup': typeof AuthSignupRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/project/$name': typeof ProjectNameRoute
   '/auth/': typeof AuthIndexRoute
+  '/creature-feature/': typeof CreatureFeatureIndexRoute
   '/lessons/': typeof LessonsIndexRoute
+  '/search/': typeof SearchIndexRoute
+  '/api/ai/portfolio-search': typeof ApiAiPortfolioSearchRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/auth'
-    | '/search'
     | '/dashboard'
     | '/profile'
     | '/auth/signup'
     | '/lessons/$lessonId'
     | '/project/$name'
     | '/auth/'
+    | '/creature-feature/'
     | '/lessons/'
+    | '/search/'
+    | '/api/ai/portfolio-search'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/search'
     | '/dashboard'
     | '/profile'
     | '/auth/signup'
     | '/lessons/$lessonId'
     | '/project/$name'
     | '/auth'
+    | '/creature-feature'
     | '/lessons'
+    | '/search'
+    | '/api/ai/portfolio-search'
   id:
     | '__root__'
     | '/'
     | '/_dashboard'
     | '/auth'
-    | '/search'
     | '/_dashboard/dashboard'
     | '/_dashboard/profile'
     | '/auth/signup'
     | '/lessons/$lessonId'
     | '/project/$name'
     | '/auth/'
+    | '/creature-feature/'
     | '/lessons/'
+    | '/search/'
+    | '/api/ai/portfolio-search'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardLayoutRoute: typeof DashboardLayoutRouteWithChildren
   AuthLayoutRoute: typeof AuthLayoutRouteWithChildren
-  SearchRoute: typeof SearchRoute
   LessonsLessonIdRoute: typeof LessonsLessonIdRoute
   ProjectNameRoute: typeof ProjectNameRoute
+  CreatureFeatureIndexRoute: typeof CreatureFeatureIndexRoute
   LessonsIndexRoute: typeof LessonsIndexRoute
+  SearchIndexRoute: typeof SearchIndexRoute
+  ApiAiPortfolioSearchRoute: typeof ApiAiPortfolioSearchRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/search': {
-      id: '/search'
-      path: '/search'
-      fullPath: '/search'
-      preLoaderRoute: typeof SearchRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -192,11 +211,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/search/': {
+      id: '/search/'
+      path: '/search'
+      fullPath: '/search/'
+      preLoaderRoute: typeof SearchIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lessons/': {
       id: '/lessons/'
       path: '/lessons'
       fullPath: '/lessons/'
       preLoaderRoute: typeof LessonsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creature-feature/': {
+      id: '/creature-feature/'
+      path: '/creature-feature'
+      fullPath: '/creature-feature/'
+      preLoaderRoute: typeof CreatureFeatureIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/': {
@@ -241,6 +274,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardDashboardRouteImport
       parentRoute: typeof DashboardLayoutRoute
     }
+    '/api/ai/portfolio-search': {
+      id: '/api/ai/portfolio-search'
+      path: '/api/ai/portfolio-search'
+      fullPath: '/api/ai/portfolio-search'
+      preLoaderRoute: typeof ApiAiPortfolioSearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -276,10 +316,12 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardLayoutRoute: DashboardLayoutRouteWithChildren,
   AuthLayoutRoute: AuthLayoutRouteWithChildren,
-  SearchRoute: SearchRoute,
   LessonsLessonIdRoute: LessonsLessonIdRoute,
   ProjectNameRoute: ProjectNameRoute,
+  CreatureFeatureIndexRoute: CreatureFeatureIndexRoute,
   LessonsIndexRoute: LessonsIndexRoute,
+  SearchIndexRoute: SearchIndexRoute,
+  ApiAiPortfolioSearchRoute: ApiAiPortfolioSearchRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

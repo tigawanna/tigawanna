@@ -1,29 +1,8 @@
-import { devtoArticlesQueryOptions } from "@/data-access-layer/portfolio/query-options";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { Suspense } from "react";
+import { siteConfig } from "@/config/site";
+import { STATIC_ARTICLES } from "@/data/portfolio/static";
+import { ArrowUpRight } from "lucide-react";
 import { ArticleCard } from "./ArticleCard";
 import { LandingSection, OrganicDivider, ScrollReveal, SectionEyebrow } from "./LandingPrimitives";
-import { PortfolioGridSkeleton } from "./PortfolioGridSkeleton";
-
-function ArticlesContent() {
-  const { data: articles } = useSuspenseQuery(devtoArticlesQueryOptions);
-
-  if (!articles.length) {
-    return (
-      <p className="rounded-[2rem] border border-[#1b1d14]/10 bg-[#ece6cf]/60 p-8 text-center text-[#1b1d14]/70">
-        No articles to show yet. Configure DEV_TO_KEY to load Dev.to posts.
-      </p>
-    );
-  }
-
-  return (
-    <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-      {articles.map((article) => (
-        <ArticleCard key={article.id} article={article} />
-      ))}
-    </div>
-  );
-}
 
 export function LandingArticles() {
   return (
@@ -43,13 +22,28 @@ export function LandingArticles() {
             Writing from the trenches.
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-base-content/70">
-            Latest posts from Dev.to — tutorials, notes, and things I had to learn the hard way.
+            Tutorials, notes, and things I had to learn the hard way — published on Dev.to.
           </p>
         </ScrollReveal>
 
-        <Suspense fallback={<PortfolioGridSkeleton count={4} />}>
-          <ArticlesContent />
-        </Suspense>
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          {STATIC_ARTICLES.map((article) => (
+            <ArticleCard key={article.id} article={article} />
+          ))}
+        </div>
+
+        <ScrollReveal delay="short" className="mt-10 text-center">
+          <a
+            href={siteConfig.links.devto}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-1 rounded-full border border-primary/30 px-6 py-3 text-sm text-primary transition-colors hover:bg-primary/10"
+            data-test="articles-see-more"
+          >
+            More on Dev.to
+            <ArrowUpRight className="size-4" />
+          </a>
+        </ScrollReveal>
       </div>
     </LandingSection>
   );

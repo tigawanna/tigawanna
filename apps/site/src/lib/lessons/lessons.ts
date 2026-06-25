@@ -1,3 +1,4 @@
+import { getStaticLessonById, STATIC_LESSONS } from "@/data/portfolio/static";
 import type { LessonItem, LessonsPage, LessonsPreviewPage } from "@/types/lessons";
 import { createServerFn } from "@tanstack/react-start";
 
@@ -16,7 +17,17 @@ function getPbUrl() {
 async function fetchLessonsPage(page: number, perPage: number): Promise<LessonsPage> {
   const pbUrl = getPbUrl();
   if (!pbUrl) {
-    return emptyPage;
+    const totalItems = STATIC_LESSONS.length;
+    const totalPages = Math.max(1, Math.ceil(totalItems / perPage));
+    const safePage = Math.min(Math.max(page, 1), totalPages);
+    const start = (safePage - 1) * perPage;
+    return {
+      page: safePage,
+      perPage,
+      totalPages,
+      totalItems,
+      items: STATIC_LESSONS.slice(start, start + perPage),
+    };
   }
 
   try {
@@ -63,7 +74,7 @@ export const getLessonsPreview = createServerFn({ method: "GET" })
 async function fetchLesson(id: string): Promise<LessonItem | null> {
   const pbUrl = getPbUrl();
   if (!pbUrl) {
-    return null;
+    return getStaticLessonById(id);
   }
 
   try {

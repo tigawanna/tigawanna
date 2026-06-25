@@ -1,9 +1,9 @@
-import { drizzle } from "drizzle-orm/libsql/node";
+import { createDb } from "./create-db";
 import { serverEnv } from "@/lib/server-env";
 
-export const db = drizzle({
-  connection: {
-    url: serverEnv.DATABASE_URL,
-    authToken: serverEnv.DATABASE_AUTH_TOKEN,
-  },
+export const db = createDb({
+  url: serverEnv.DATABASE_URL,
+  authToken: serverEnv.DATABASE_AUTH_TOKEN,
 });
+
+export * from "./schema";

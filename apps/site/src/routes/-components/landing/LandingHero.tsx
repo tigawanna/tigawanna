@@ -2,6 +2,7 @@ import { AppConfig } from "@/utils/system";
 import { animate, stagger } from "animejs";
 import { useEffect, useRef } from "react";
 import { HeroIllustration } from "./HeroIllustration";
+import { LandingSearchBar } from "./LandingSearchBar";
 
 export function LandingHero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -47,6 +48,10 @@ export function LandingHero() {
         >
           {AppConfig.brief}
         </p>
+
+        <div data-hero-reveal className="mt-10 w-full max-w-2xl md:mt-12">
+          <LandingSearchBar />
+        </div>
 
         <div data-hero-reveal className="mt-10 w-full max-w-md md:mt-12 lg:mt-8">
           <svg

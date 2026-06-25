@@ -1,11 +1,6 @@
-import {
-  pinnedReposQueryOptions,
-  recentReposQueryOptions,
-} from "@/data-access-layer/portfolio/query-options";
+import { STATIC_PINNED_PROJECTS, STATIC_RECENT_PROJECTS } from "@/data/portfolio/static";
 import type { GithubRepoNode } from "@/types/github";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { Suspense, useState } from "react";
-import { PortfolioGridSkeleton } from "./PortfolioGridSkeleton";
+import { useState } from "react";
 import { LandingSection, OrganicDivider, ScrollReveal, SectionEyebrow } from "./LandingPrimitives";
 import { renderProjectCard } from "./ProjectCard";
 
@@ -84,15 +79,8 @@ function ProjectsContent() {
   const [activeView, setActiveView] = useState<ProjectView>("featured");
   const [activeTopic, setActiveTopic] = useState("all");
 
-  const { data: pinned } = useSuspenseQuery(pinnedReposQueryOptions);
-  const { data: recentResult } = useSuspenseQuery(recentReposQueryOptions);
-
-  const recentRepos = recentResult?.data?.viewer?.repositories?.nodes ?? [];
-  const pinnedRepos =
-    pinned && "data" in pinned && pinned.data?.viewer?.pinnedItems?.nodes
-      ? pinned.data.viewer.pinnedItems.nodes
-      : [];
-
+  const pinnedRepos = STATIC_PINNED_PROJECTS;
+  const recentRepos = STATIC_RECENT_PROJECTS;
   const topics = collectTopics(recentRepos);
 
   let visibleRepos: GithubRepoNode[] = [];
@@ -121,15 +109,9 @@ function ProjectsContent() {
         onViewChange={setActiveView}
       />
 
-      {visibleRepos.length > 0 ? (
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {visibleRepos.map((repo) => renderProjectCard(repo))}
-        </div>
-      ) : (
-        <p className="rounded-[2rem] border border-[#1b1d14]/10 bg-[#f6efd7]/60 p-8 text-center text-[#1b1d14]/70">
-          No projects to show yet. Configure GH_PAT to load GitHub repositories.
-        </p>
-      )}
+      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        {visibleRepos.map((repo) => renderProjectCard(repo))}
+      </div>
 
       {activeView === "recent" && recentRepos.length > 6 ? (
         <ScrollReveal delay="short">
@@ -160,13 +142,12 @@ export function LandingProjects() {
             Shipped work, active experiments, and open source.
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#1b1d14]/70">
-            Pinned highlights, recently pushed repos, and topic filters pulled straight from GitHub.
+            Pinned highlights, recently pushed repos, and topic filters — curated shelves until the
+            admin flow lands.
           </p>
         </ScrollReveal>
 
-        <Suspense fallback={<PortfolioGridSkeleton count={6} />}>
-          <ProjectsContent />
-        </Suspense>
+        <ProjectsContent />
       </div>
     </LandingSection>
   );

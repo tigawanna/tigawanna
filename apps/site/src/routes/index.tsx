@@ -9,7 +9,6 @@ import {
   LandingProjects,
   LandingArticles,
   LandingLessons,
-  LandingEnhancedExperience,
   LandingCTA,
   LandingFooter,
 } from "./-components/landing";
@@ -28,7 +27,6 @@ function LandingPage() {
       <LandingProjects />
       <LandingArticles />
       <LandingLessons />
-      <LandingEnhancedExperience />
       <LandingCTA />
       <LandingFooter />
     </div>

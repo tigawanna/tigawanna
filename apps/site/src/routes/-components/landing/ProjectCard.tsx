@@ -18,20 +18,20 @@ export function PrivateProjectCard({ repo, className }: ProjectCardProps) {
     <article
       data-test="private-project-card"
       className={twMerge(
-        "flex min-h-[320px] flex-col items-center justify-center gap-3 rounded-[2rem] border border-base-content/10 bg-base-300/60 p-7 text-center shadow-xl shadow-black/10",
+        "flex min-h-[320px] flex-col items-center justify-center gap-3 rounded-[2rem] border border-[#1b1d14]/10 bg-[#f6efd7]/80 p-7 text-center shadow-xl shadow-[#1b1d14]/10",
         className,
       )}
     >
-      <div className="flex items-center gap-1 font-serif text-2xl">
+      <div className="flex items-center gap-1 font-serif text-2xl text-[#1b1d14]">
         <span>{repo.name.slice(0, 2)}</span>
-        <span className="inline-block h-3 min-w-14 rounded bg-base-content/20" />
+        <span className="inline-block h-3 min-w-14 rounded bg-[#1b1d14]/20" />
         <span>{repo.name.slice(-1)}</span>
       </div>
-      <div className="flex items-center gap-2 text-sm text-base-content/70">
+      <div className="flex items-center gap-2 text-sm text-[#1b1d14]/75">
         <span>Private project</span>
         <Lock className="size-3" />
       </div>
-      <div className="flex items-center gap-1 text-xs text-base-content/60">
+      <div className="flex items-center gap-1 text-xs text-[#1b1d14]/65">
         <span>Last updated</span>
         <TimeCompponent time={repo.pushedAt} relative className="p-0 text-xs font-normal" />
       </div>
@@ -47,11 +47,11 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
     <article
       data-test="project-card"
       className={twMerge(
-        "group overflow-hidden rounded-[2rem] border border-base-content/10 bg-base-300/60 shadow-xl shadow-black/10 transition-transform duration-300 hover:-translate-y-1",
+        "group overflow-hidden rounded-[2rem] border border-[#1b1d14]/10 bg-[#f6efd7]/80 shadow-xl shadow-[#1b1d14]/10 transition-transform duration-300 hover:-translate-y-1",
         className,
       )}
     >
-      <div className="relative h-48 overflow-hidden bg-base-200">
+      <div className="relative h-48 overflow-hidden bg-[#1b1d14]/10">
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -59,7 +59,7 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="grid h-full place-items-center text-base-content/40">
+          <div className="grid h-full place-items-center text-[#1b1d14]/35">
             <Github className="size-10" />
           </div>
         )}
@@ -67,16 +67,16 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
 
       <div className="flex flex-col gap-4 p-6">
         <div className="flex flex-wrap items-start justify-between gap-2">
-          <h3 className="font-serif text-2xl leading-tight">{repo.name}</h3>
+          <h3 className="font-serif text-2xl leading-tight text-[#1b1d14]">{repo.name}</h3>
           <TimeCompponent
             time={repo.pushedAt}
             relative
-            className="p-0 text-xs font-normal text-base-content/60"
+            className="p-0 text-xs font-normal text-[#1b1d14]/65"
           />
         </div>
 
         {repo.description ? (
-          <p className="line-clamp-2 text-sm leading-6 text-base-content/70">{repo.description}</p>
+          <p className="line-clamp-2 text-sm leading-6 text-[#1b1d14]/75">{repo.description}</p>
         ) : null}
 
         {repo.repositoryTopics?.nodes?.length ? (
@@ -84,7 +84,7 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
             {repo.repositoryTopics.nodes.slice(0, 4).map((topic) => (
               <li
                 key={topic.topic.name}
-                className="rounded-full border border-base-content/10 bg-base-content/5 px-3 py-1 text-xs text-base-content/70"
+                className="rounded-full border border-[#1b1d14]/10 bg-[#1b1d14]/5 px-3 py-1 text-xs text-[#1b1d14]/75"
               >
                 {topic.topic.name}
               </li>
@@ -99,7 +99,7 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
                 href={repo.homepageUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-base-content/70 transition-colors hover:text-primary"
+                className="inline-flex items-center gap-1 text-[#1b1d14]/80 transition-colors hover:text-[#1b1d14]"
               >
                 <Globe className="size-4" />
                 Site
@@ -109,7 +109,7 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
               href={repo.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-base-content/70 transition-colors hover:text-primary"
+              className="inline-flex items-center gap-1 text-[#1b1d14]/80 transition-colors hover:text-[#1b1d14]"
             >
               <Github className="size-4" />
               Source
@@ -119,7 +119,7 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
           <Link
             to="/project/$name"
             params={{ name: projectRouteParam(repo.nameWithOwner) }}
-            className="rounded-full border border-primary/30 px-4 py-1.5 text-sm text-primary transition-colors hover:bg-primary/10"
+            className="rounded-full border border-[#1b1d14]/25 px-4 py-1.5 text-sm text-[#1b1d14]/80 transition-colors hover:border-[#1b1d14]/40 hover:bg-[#1b1d14]/5 hover:text-[#1b1d14]"
           >
             Details
           </Link>

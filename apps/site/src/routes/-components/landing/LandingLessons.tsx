@@ -1,30 +1,26 @@
-import { lessonsPreviewQueryOptions } from "@/data-access-layer/portfolio/query-options";
+import { STATIC_LESSONS } from "@/data/portfolio/static";
+import { convertMarkdownToHtml } from "@/lib/markdown/convert";
+import type { LessonPreviewItem } from "@/types/lessons";
 import { Link } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { Suspense } from "react";
 import { LessonCard } from "./LessonCard";
 import { LandingSection, OrganicDivider, ScrollReveal, SectionEyebrow } from "./LandingPrimitives";
-import { PortfolioGridSkeleton } from "./PortfolioGridSkeleton";
 
-function LessonsContent() {
-  const { data: lessons } = useSuspenseQuery(lessonsPreviewQueryOptions);
+const LESSON_PREVIEW_COUNT = 6;
 
-  if (!lessons.items.length) {
-    return (
-      <p className="rounded-[2rem] border border-base-content/10 bg-base-300/60 p-8 text-center text-base-content/70">
-        No TIL snippets yet. Configure PB_URL to load journal entries from PocketBase.
-      </p>
-    );
-  }
-
-  return (
-    <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-      {lessons.items.map((item) => (
-        <LessonCard key={item.id} item={item} />
-      ))}
-    </div>
-  );
-}
+const lessonPreviews: LessonPreviewItem[] = STATIC_LESSONS.slice(0, LESSON_PREVIEW_COUNT).map(
+  (item) => ({
+    id: item.id,
+    collectionId: item.collectionId,
+    collectionName: item.collectionName,
+    created: item.created,
+    updated: item.updated,
+    title: item.title,
+    description: item.description,
+    type: item.type,
+    gist: item.gist,
+    previewHtml: item.markdown ? convertMarkdownToHtml(item.markdown) : null,
+  }),
+);
 
 export function LandingLessons() {
   return (
@@ -44,14 +40,16 @@ export function LandingLessons() {
             Cool things I recently learned.
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-base-content/70">
-            Small lessons, debugging wins, and notes rendered on the server so markdown stays off
-            the wire.
+            Small lessons, debugging wins, and notes — stored in Tirso so I can add new ones from
+            the admin panel later.
           </p>
         </ScrollReveal>
 
-        <Suspense fallback={<PortfolioGridSkeleton count={6} />}>
-          <LessonsContent />
-        </Suspense>
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {lessonPreviews.map((item) => (
+            <LessonCard key={item.id} item={item} />
+          ))}
+        </div>
 
         <ScrollReveal delay="short" className="mt-10 text-center">
           <Link

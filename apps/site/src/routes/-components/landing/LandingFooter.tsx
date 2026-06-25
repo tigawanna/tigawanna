@@ -4,52 +4,29 @@ import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { useRef } from "react";
 
-const FOOTER_COLOR = "#090b08";
 const MARQUEE_PHRASE = "full-stack systems - warm interfaces - maintainable products - Nairobi - ";
 const MARQUEE_REPEAT = 8;
+const TEXT_ARC = "M0 300 A 5400 5400 0 0 1 1600 300";
 
 function FooterCurveMarquee() {
   const textPathRef = useRef<SVGTextPathElement>(null);
   useCurvedMarquee(textPathRef, { repeatCount: MARQUEE_REPEAT });
 
   return (
-    <div
-      className="pointer-events-none absolute inset-x-0 bottom-0 left-1/2 h-80 w-[150vw] -translate-x-1/2 md:h-96 lg:w-[118vw]"
-      aria-hidden="true"
-    >
+    <div className="relative h-36 overflow-hidden md:h-48 lg:h-56" aria-hidden="true">
+      <div className="pointer-events-none absolute top-16 left-1/2 aspect-square w-[720vw] -translate-x-1/2 rounded-full bg-[#090b08] md:top-24" />
+
       <svg
-        viewBox="0 0 1600 420"
+        viewBox="0 0 1600 320"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="h-full w-full"
+        className="absolute inset-x-0 top-0 h-full w-full"
         preserveAspectRatio="xMidYMax meet"
       >
         <defs>
-          <path
-            id="footer-curve-text-path"
-            d="M-80 260C160 78 354 62 568 142C770 218 848 354 1058 335C1249 318 1397 190 1680 42"
-          />
+          <path id="footer-curve-text-path" d={TEXT_ARC} />
         </defs>
-
-        <path
-          d="M-120 312C125 122 330 94 552 169C768 242 847 383 1065 370C1252 359 1412 254 1720 81V460H-120V312Z"
-          fill={FOOTER_COLOR}
-        />
-        <path
-          d="M-80 260C160 78 354 62 568 142C770 218 848 354 1058 335C1249 318 1397 190 1680 42"
-          stroke="currentColor"
-          strokeOpacity="0.22"
-          strokeWidth="2"
-        />
-        <path
-          d="M-64 304C175 145 361 130 557 194C756 259 854 382 1068 372C1256 364 1421 269 1668 130"
-          stroke="currentColor"
-          strokeDasharray="2 18"
-          strokeLinecap="round"
-          strokeOpacity="0.16"
-          strokeWidth="3"
-        />
-        <text className="font-serif text-[78px] font-semibold tracking-[0.09em] fill-current opacity-[0.38]">
+        <text className="fill-[#c5ccb4] font-serif text-[64px] font-semibold tracking-[0.09em] opacity-40">
           <textPath ref={textPathRef} href="#footer-curve-text-path" startOffset="0">
             {MARQUEE_PHRASE.repeat(MARQUEE_REPEAT)}
           </textPath>
@@ -64,28 +41,29 @@ export function LandingFooter() {
 
   return (
     <div data-test="landing-footer" className="relative">
-      <section
-        aria-hidden="true"
-        className="relative overflow-x-clip bg-base-100 pt-20 text-[#697154] md:pt-28"
-      >
-        <div className="relative h-72 md:h-96">
-          <FooterCurveMarquee />
-        </div>
+      <section aria-hidden="true" className="relative overflow-hidden bg-base-100 pt-12 md:pt-20">
+        <FooterCurveMarquee />
       </section>
 
-      <footer className="relative -mt-32 overflow-x-clip bg-[#090b08] text-base-content md:-mt-40">
+      <footer className="relative overflow-x-clip bg-[#090b08] text-base-content">
         <div className="grain-overlay" />
 
-        <div className="container relative z-10 pb-10 pt-32 md:pt-40">
+        <div className="container relative z-10 pb-10 pt-12 md:pt-16">
           <div className="grid gap-10 border-t border-base-content/10 pt-12 md:grid-cols-[1fr_auto] md:items-end">
             <div>
-              <Link
-                to="/"
-                className="font-serif text-5xl font-semibold tracking-[-0.055em] text-base-content md:text-7xl"
-              >
-                tigawanna
-                <span className="text-primary">.</span>
-              </Link>
+              <span className="font-serif text-5xl font-semibold tracking-[-0.055em] text-base-content md:text-7xl">
+                <Link to="/" className="transition-colors hover:text-primary">
+                  tigawanna
+                </Link>
+                <Link
+                  to="/creature-feature"
+                  data-test="creature-feature-egg"
+                  aria-label="creature feature"
+                  className="text-primary transition-opacity hover:opacity-70"
+                >
+                  .
+                </Link>
+              </span>
               <p className="mt-5 max-w-xl text-base leading-7 text-base-content/55">
                 Full-stack TypeScript, warm interfaces, strict systems, and occasionally a creature
                 feature.

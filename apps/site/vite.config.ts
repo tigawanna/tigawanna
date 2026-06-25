@@ -10,6 +10,12 @@ const config = defineConfig({
   server: {
     host: "::",
   },
+  optimizeDeps: {
+    include: ["@tanstack/ai", "@tanstack/ai-react", "@tanstack/ai-openrouter"],
+  },
+  ssr: {
+    noExternal: ["@tanstack/ai", "@tanstack/ai-react", "@tanstack/ai-openrouter"],
+  },
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
@@ -24,11 +30,7 @@ const config = defineConfig({
         routeToken: "layout", // <-- Add this line
       },
     }),
-    viteReact({
-      babel: {
-        plugins: ["babel-plugin-react-compiler"],
-      },
-    }),
+    viteReact(),
   ],
 });
 

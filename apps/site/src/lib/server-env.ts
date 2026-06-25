@@ -1,20 +1,19 @@
-// src/config/env.ts
 import { z } from "zod";
 
 const envSchema = z.object({
   DATABASE_URL: z.url(),
   DATABASE_AUTH_TOKEN: z.string(),
-  BETTER_AUTH_SECRET: z.string().min(32),
-  REFRESH_TOKEN_SECRET: z.string().min(32),
-  API_URL: z.url(),
   FRONTEND_URL: z.string().url(),
+  LMSTUDIO_BASE_URL: z.string().url().optional(),
+  LMSTUDIO_MODEL: z.string().optional(),
 });
 
-// Validate client environment
 const { success, error, data } = envSchema.safeParse(process.env);
 
 if (!success) {
-  const formattedErrors = error.issues.map((e) => `- ${e.path.join(".")}: ${e.message}`).join("\n");
+  const formattedErrors = error.issues
+    .map((issue) => `- ${issue.path.join(".")}: ${issue.message}`)
+    .join("\n");
   throw new Error(`Invalid environment variables:\n${formattedErrors}`);
 }
 

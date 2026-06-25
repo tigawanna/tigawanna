@@ -31,18 +31,36 @@ export function ArticleCard({ article, className }: ArticleCardProps) {
       </div>
 
       <div className="flex flex-col gap-4 p-6">
-        <h3 className="font-serif text-2xl leading-tight tracking-[-0.02em]">{article.title}</h3>
+        <h3 className="font-serif text-2xl leading-tight tracking-[-0.02em] text-[#1b1d14]">
+          {article.title}
+        </h3>
         <p className="line-clamp-2 text-sm leading-6 text-[#1b1d14]/70">{article.description}</p>
+
+        {article.tag_list.length > 0 ? (
+          <ul className="flex flex-wrap gap-2">
+            {article.tag_list.slice(0, 3).map((tag) => (
+              <li
+                key={tag}
+                className="rounded-full border border-[#1b1d14]/10 bg-[#1b1d14]/5 px-3 py-1 text-xs text-[#1b1d14]/70"
+              >
+                {tag}
+              </li>
+            ))}
+          </ul>
+        ) : null}
 
         <div className="flex items-center justify-between gap-3 pt-1 text-sm">
           <span className="text-[#1b1d14]/60">
             {new Date(article.published_at).toLocaleDateString()}
+            {article.reading_time_minutes > 0
+              ? ` · ${article.reading_time_minutes} min read`
+              : null}
           </span>
           <a
             href={article.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-[#687054] transition-colors hover:text-[#1b1d14]"
+            className="inline-flex items-center gap-1 text-[#1b1d14]/80 transition-colors hover:text-[#1b1d14]"
           >
             Read
             <ArrowUpRight className="size-4" />
