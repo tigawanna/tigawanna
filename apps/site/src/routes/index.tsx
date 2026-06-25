@@ -9,13 +9,19 @@ import {
   LandingProjects,
   LandingArticles,
   LandingLessons,
+  loadLandingLessonPreviews,
   LandingCTA,
   LandingFooter,
 } from "./-components/landing";
 
-export const Route = createFileRoute("/")({ component: LandingPage });
+export const Route = createFileRoute("/")({
+  loader: () => loadLandingLessonPreviews(),
+  component: LandingPage,
+});
 
 function LandingPage() {
+  const lessonPreviews = Route.useLoaderData();
+
   return (
     <div data-test="landing-page" className="min-h-screen">
       <SmoothScroll />
@@ -26,7 +32,7 @@ function LandingPage() {
       <LandingFeatures />
       <LandingProjects />
       <LandingArticles />
-      <LandingLessons />
+      <LandingLessons items={lessonPreviews} />
       <LandingCTA />
       <LandingFooter />
     </div>

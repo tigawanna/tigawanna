@@ -1,5 +1,6 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
+import { useState } from "react";
 import { CreatureRevealPanels } from "./-components/CreatureRevealPanels";
 import { CreatureStackTrace } from "./-components/CreatureStackTrace";
 
@@ -11,6 +12,8 @@ export const Route = createFileRoute("/creature-feature/")({
 });
 
 function CreatureFeaturePage() {
+  const [phase, setPhase] = useState<"reveal" | "flood">("reveal");
+
   return (
     <div data-test="creature-feature-page" className="bg-[#050505] text-base-content">
       <Link
@@ -22,20 +25,24 @@ function CreatureFeaturePage() {
         Exit
       </Link>
 
-      <CreatureRevealPanels />
-      <CreatureStackTrace />
-
-      <section className="flex h-svh flex-col items-center justify-center gap-6 bg-[#050505] px-8 text-center">
-        <p className="font-mono text-xs tracking-[0.3em] text-red-300/40 uppercase">
-          // exit code 0
-        </p>
-        <Link
-          to="/"
-          className="font-serif text-4xl font-semibold tracking-[-0.03em] text-[#d6d0b7] transition-colors hover:text-primary md:text-6xl"
-        >
-          back to shipped work
-        </Link>
-      </section>
+      {phase === "reveal" ? (
+        <CreatureRevealPanels onComplete={() => setPhase("flood")} />
+      ) : (
+        <>
+          <CreatureStackTrace />
+          <section className="flex h-svh flex-col items-center justify-center gap-6 bg-[#050505] px-8 text-center">
+            <p className="font-mono text-xs tracking-[0.3em] text-red-300/40 uppercase">
+              // exit code 0
+            </p>
+            <Link
+              to="/"
+              className="font-serif text-4xl font-semibold tracking-[-0.03em] text-[#d6d0b7] transition-colors hover:text-primary md:text-6xl"
+            >
+              back to shipped work
+            </Link>
+          </section>
+        </>
+      )}
     </div>
   );
 }

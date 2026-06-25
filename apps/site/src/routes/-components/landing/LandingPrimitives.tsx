@@ -56,9 +56,14 @@ export function LandingSection({
   );
 }
 
-export function ScrollReveal({ children, className, delay = "none" }: ScrollRevealProps) {
+export function ScrollReveal({
+  children,
+  className,
+  delay = "none",
+  variant = "default",
+}: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-  useScrollReveal(ref, { delay: revealDelaySeconds[delay] });
+  useScrollReveal(ref, { delay: revealDelaySeconds[delay], variant });
 
   return (
     <div ref={ref} className={twMerge(className)}>

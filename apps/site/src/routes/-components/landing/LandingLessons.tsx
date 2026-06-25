@@ -1,28 +1,14 @@
 import { STATIC_LESSONS } from "@/data/portfolio/static";
-import { convertMarkdownToHtml } from "@/lib/markdown/convert";
 import type { LessonPreviewItem } from "@/types/lessons";
 import { Link } from "@tanstack/react-router";
 import { LessonCard } from "./LessonCard";
 import { LandingSection, OrganicDivider, SectionEyebrow } from "./LandingPrimitives";
 
-const LESSON_PREVIEW_COUNT = 6;
+interface LandingLessonsProps {
+  items: LessonPreviewItem[];
+}
 
-const lessonPreviews: LessonPreviewItem[] = STATIC_LESSONS.slice(0, LESSON_PREVIEW_COUNT).map(
-  (item) => ({
-    id: item.id,
-    collectionId: item.collectionId,
-    collectionName: item.collectionName,
-    created: item.created,
-    updated: item.updated,
-    title: item.title,
-    description: item.description,
-    type: item.type,
-    gist: item.gist,
-    previewHtml: item.markdown ? convertMarkdownToHtml(item.markdown) : null,
-  }),
-);
-
-export function LandingLessons() {
+export function LandingLessons({ items }: LandingLessonsProps) {
   return (
     <LandingSection
       id="journal"
@@ -46,8 +32,8 @@ export function LandingLessons() {
         </div>
 
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {lessonPreviews.map((item) => (
-            <LessonCard key={item.id} item={item} />
+          {items.map((item, index) => (
+            <LessonCard key={item.id} item={item} tone={(index % 3) as 0 | 1 | 2} />
           ))}
         </div>
 
@@ -64,4 +50,11 @@ export function LandingLessons() {
       </div>
     </LandingSection>
   );
+}
+
+export const LESSON_PREVIEW_COUNT = 6;
+
+export async function loadLandingLessonPreviews() {
+  const { buildLessonPreviews } = await import("@/lib/lessons/build-lesson-previews");
+  return buildLessonPreviews(STATIC_LESSONS.slice(0, LESSON_PREVIEW_COUNT));
 }

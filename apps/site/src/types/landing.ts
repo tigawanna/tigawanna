@@ -18,4 +18,5 @@ export type ScrollRevealProps = {
   children: ReactNode;
   className?: string;
   delay?: "none" | "short" | "medium" | "long";
+  variant?: "default" | "fade";
 };

@@ -2,6 +2,7 @@ import { useStackTraceFlood } from "@/hooks/use-stack-trace-flood";
 import { getStackTraceLines } from "@/lib/creature-feature/stack-trace";
 import type { StackTraceTone } from "@/types/creature-feature";
 import { useRef, useState } from "react";
+import { CreatureFeatureTitle } from "./CreatureFeatureTitle";
 
 const TONE_CLASS: Record<StackTraceTone, string> = {
   base: "text-red-300/65",
@@ -30,9 +31,7 @@ export function CreatureStackTrace() {
 
         <div ref={streamRef} className="absolute inset-x-0 top-0 will-change-transform">
           <div className="flex h-svh items-center justify-center px-8">
-            <h2 className="text-center font-serif text-[18vw] leading-[0.9] font-semibold tracking-[-0.04em] text-[#ff5b51] md:text-[12vw]">
-              A creature feature.
-            </h2>
+            <CreatureFeatureTitle />
           </div>
 
           <div className="mx-auto max-w-4xl px-6 pb-[40vh] font-mono text-[11px] leading-6 md:text-sm md:leading-7">

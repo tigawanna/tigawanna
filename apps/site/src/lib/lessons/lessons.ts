@@ -1,4 +1,6 @@
 import { getStaticLessonById, STATIC_LESSONS } from "@/data/portfolio/static";
+import { buildLessonPreviews } from "@/lib/lessons/build-lesson-previews";
+import { convertMarkdownToHtmlWithShiki } from "@/lib/markdown/convert";
 import type { LessonItem, LessonsPage, LessonsPreviewPage } from "@/types/lessons";
 import { createServerFn } from "@tanstack/react-start";
 
@@ -54,19 +56,7 @@ export const getLessonsPreview = createServerFn({ method: "GET" })
       return { ...result, items: [] } satisfies LessonsPreviewPage;
     }
 
-    const { convertMarkdownToHtml } = await import("@/lib/markdown/convert");
-    const items = result.items.map((item) => ({
-      id: item.id,
-      collectionId: item.collectionId,
-      collectionName: item.collectionName,
-      created: item.created,
-      updated: item.updated,
-      title: item.title,
-      description: item.description,
-      type: item.type,
-      gist: item.gist,
-      previewHtml: item.markdown ? convertMarkdownToHtml(item.markdown) : null,
-    }));
+    const items = await buildLessonPreviews(result.items);
 
     return { ...result, items } satisfies LessonsPreviewPage;
   });
@@ -101,6 +91,5 @@ export const getLessonMarkdownHtml = createServerFn({ method: "GET" })
       return null;
     }
 
-    const { convertMarkdownToHtml } = await import("@/lib/markdown/convert");
-    return convertMarkdownToHtml(lesson.markdown);
+    return convertMarkdownToHtmlWithShiki(lesson.markdown);
   });
