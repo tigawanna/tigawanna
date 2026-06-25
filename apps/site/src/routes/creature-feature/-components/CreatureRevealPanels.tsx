@@ -7,8 +7,8 @@ const PANELS: CreatureRevealPanel[] = [
   {
     id: "excited",
     eyebrow: "A tiny TypeScript horror story",
-    title: "Boy am I excited for this TypeScript.",
-    subtitle: "Now showing in strict mode.",
+    title: "Boy am I excited for this new TypeScript.",
+    subtitle: "I exclaimed with excitement.",
     variant: "cinema",
     background: "#15180f",
     foreground: "#d6d0b7",
@@ -170,7 +170,7 @@ function CreaturePanel({
   dramatic?: boolean;
 }) {
   const Icon = panel.Icon;
-  const isCinema = panel.variant === "cinema";
+  const hasMovieFrame = !panel.isFinale;
   const exitShift = exiting ? -18 * transitionProgress : 0;
   const entranceLift = dramatic ? (1 - transitionProgress) * 42 : 0;
 
@@ -185,9 +185,9 @@ function CreaturePanel({
         opacity: visible ? 1 : 0,
       }}
     >
-      {isCinema ? <CinemaDressing /> : null}
+      {hasMovieFrame ? <CinemaDressing /> : null}
 
-      {Icon ? (
+      {Icon && !panel.isFinale ? (
         <Icon
           aria-hidden="true"
           className="pointer-events-none absolute top-[12%] right-[-8vw] size-[38vw] opacity-[0.05] md:top-[8%] md:right-[4%] md:size-[22vw]"
@@ -203,7 +203,7 @@ function CreaturePanel({
           filter: dramatic ? `blur(${(1 - transitionProgress) * 7}px)` : undefined,
         }}
       >
-        {Icon ? (
+        {Icon && !panel.isFinale ? (
           <span
             className={`grid size-14 place-items-center rounded-full md:size-16 ${panel.iconClassName ?? ""}`}
           >
@@ -246,23 +246,23 @@ function CinemaDressing() {
   return (
     <>
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/75 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-linear-to-b from-black/75 to-transparent"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/75 to-transparent"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-linear-to-t from-black/75 to-transparent"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute inset-y-0 left-0 w-[12vw] bg-gradient-to-r from-black/70 to-transparent"
+        className="pointer-events-none absolute inset-y-0 left-0 w-[12vw] bg-linear-to-r from-black/70 to-transparent"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute inset-y-0 right-0 w-[12vw] bg-gradient-to-l from-black/70 to-transparent"
+        className="pointer-events-none absolute inset-y-0 right-0 w-[12vw] bg-linear-to-l from-black/70 to-transparent"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute inset-x-[8vw] top-[12vh] bottom-[13vh] rounded-[2rem] border border-[#d6d0b7]/12 shadow-[inset_0_0_60px_rgba(0,0,0,0.45)]"
+        className="pointer-events-none absolute inset-x-[8vw] top-[12vh] bottom-[13vh] rounded-4xl border border-[#d6d0b7]/12 shadow-[inset_0_0_60px_rgba(0,0,0,0.45)]"
         aria-hidden="true"
       />
       <Popcorn
@@ -271,7 +271,7 @@ function CinemaDressing() {
         aria-hidden="true"
       />
       <Ticket
-        className="pointer-events-none absolute right-[9vw] bottom-16 size-12 rotate-[12deg] text-[#d6d0b7]/14 md:size-16"
+        className="pointer-events-none absolute right-[9vw] bottom-16 size-12 rotate-12 text-[#d6d0b7]/14 md:size-16"
         strokeWidth={1.3}
         aria-hidden="true"
       />
