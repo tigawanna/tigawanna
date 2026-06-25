@@ -1,4 +1,5 @@
 import { STATIC_PINNED_PROJECTS, STATIC_RECENT_PROJECTS } from "@/data/portfolio/static";
+import { CreatureEggLowercaseI } from "@/components/creature-egg/CreatureEggTrigger";
 import type { GithubRepoNode } from "@/types/github";
 import { useState } from "react";
 import { LandingSection, OrganicDivider, SectionEyebrow } from "./LandingPrimitives";
@@ -137,7 +138,9 @@ export function LandingProjects() {
         <div className="mx-auto mb-14 max-w-3xl text-center">
           <SectionEyebrow>Projects</SectionEyebrow>
           <h2 className="text-balance font-serif text-5xl leading-none font-semibold tracking-[-0.045em] md:text-7xl">
-            Things I've built.
+            Th
+            <CreatureEggLowercaseI />
+            ngs I&apos;ve built.
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#c5ccb4]/70">
             Pinned highlights, recently pushed repos, and topic filters — curated shelves until the

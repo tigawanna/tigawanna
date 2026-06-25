@@ -16,13 +16,18 @@ export function CurvedNumberedSections({
       {sections.map((section, index) => {
         const number = index + 1;
         const isFirst = index === 0;
+        const isLast = index === sections.length - 1;
 
         return (
           <div
             key={section.id}
             data-curved-section
             data-test={`curved-section-${number}`}
-            className="sticky top-0 flex h-svh w-full items-center"
+            className={
+              isLast
+                ? "relative flex w-full py-20 md:py-28"
+                : "sticky top-0 flex h-svh w-full items-center"
+            }
             style={{
               zIndex: index + 1,
               backgroundColor: section.background,
@@ -42,7 +47,11 @@ export function CurvedNumberedSections({
 
             <div
               data-curved-inner
-              className="relative mx-auto flex w-full max-w-7xl items-end justify-between gap-8 px-6 will-change-transform sm:px-10 lg:items-center lg:px-16"
+              className={
+                isLast
+                  ? "relative mx-auto flex w-full max-w-7xl items-start justify-between gap-8 px-6 sm:px-10 lg:px-16"
+                  : "relative mx-auto flex w-full max-w-7xl items-end justify-between gap-8 px-6 will-change-transform sm:px-10 lg:items-center lg:px-16"
+              }
             >
               <div data-curved-content className="relative z-10 max-w-2xl lg:max-w-3xl">
                 <p className="mb-4 font-sans text-xs font-medium tracking-[0.4em] uppercase opacity-55 sm:mb-5">

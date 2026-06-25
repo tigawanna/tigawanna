@@ -1,4 +1,5 @@
 import { siteConfig } from "@/config/site";
+import { CreatureEggLowercaseI } from "@/components/creature-egg/CreatureEggTrigger";
 import { STATIC_ARTICLES } from "@/data/portfolio/static";
 import { ArrowUpRight } from "lucide-react";
 import { ArticleCard } from "./ArticleCard";
@@ -19,7 +20,9 @@ export function LandingArticles() {
         <div className="mx-auto mb-14 max-w-3xl text-center">
           <SectionEyebrow>Articles</SectionEyebrow>
           <h2 className="text-balance font-serif text-5xl leading-none font-semibold tracking-[-0.045em] md:text-7xl">
-            Writing from the trenches.
+            Wr
+            <CreatureEggLowercaseI />
+            ting from the trenches.
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#c5ccb4]/70">
             Published on Dev.to.

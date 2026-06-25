@@ -2,13 +2,14 @@ import { useEffect, useRef, type RefObject } from "react";
 
 interface FloodOptions {
   baseSpeed?: number;
+  maxDurationMs?: number;
   onComplete?: () => void;
 }
 
 export function useStackTraceFlood(
   streamRef: RefObject<HTMLElement | null>,
   sectionRef: RefObject<HTMLElement | null>,
-  { baseSpeed = 90, onComplete }: FloodOptions = {},
+  { baseSpeed = 150, maxDurationMs = 8000, onComplete }: FloodOptions = {},
 ) {
   const onCompleteRef = useRef(onComplete);
   onCompleteRef.current = onComplete;
@@ -39,25 +40,29 @@ export function useStackTraceFlood(
     let frame = 0;
     let last = 0;
     let active = false;
+    let startedAt = 0;
 
     const maxOffset = () => Math.max(0, stream.scrollHeight - window.innerHeight * 0.42);
 
     const tick = (now: number) => {
+      if (!startedAt) startedAt = now;
       const max = maxOffset();
       const dt = last ? Math.min((now - last) / 1000, 0.05) : 0;
       last = now;
 
       const progress = max > 0 ? offset / max : 1;
-      const taper = Math.pow(1 - progress, 1.7);
-      const speed = baseSpeed * (0.16 + 0.84 * taper);
+      const taper = Math.pow(1 - progress, 1.4);
+      const speed = baseSpeed * (0.4 + 0.6 * taper);
       offset = Math.min(max, offset + speed * dt);
       apply(offset);
 
-      if (active && offset < max) {
+      const timeUp = now - startedAt >= maxDurationMs;
+
+      if (active && offset < max && !timeUp) {
         frame = requestAnimationFrame(tick);
       } else {
         frame = 0;
-        if (offset >= max) window.setTimeout(complete, 700);
+        if (offset >= max || timeUp) window.setTimeout(complete, 600);
       }
     };
 
@@ -96,5 +101,5 @@ export function useStackTraceFlood(
       observer.disconnect();
       if (frame) cancelAnimationFrame(frame);
     };
-  }, [streamRef, sectionRef, baseSpeed]);
+  }, [streamRef, sectionRef, baseSpeed, maxDurationMs]);
 }

@@ -21,9 +21,15 @@ export function CreatureStackTrace({ onComplete }: CreatureStackTraceProps) {
   const [lines] = useState(getStackTraceLines);
 
   useStackTraceFlood(streamRef, sectionRef, { onComplete });
-  useHotkeys(["right", "down", "space", "enter"], onComplete, { preventDefault: true }, [
-    onComplete,
-  ]);
+  useHotkeys(
+    ["right", "down", "space", "enter"],
+    (event) => {
+      if (event.repeat) return;
+      onComplete();
+    },
+    { preventDefault: true },
+    [onComplete],
+  );
 
   return (
     <section

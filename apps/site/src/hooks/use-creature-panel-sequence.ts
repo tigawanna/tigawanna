@@ -62,6 +62,7 @@ export function useCreaturePanelSequence({
   const runTransition = (targetIndex: number) => {
     if (frameRef.current) cancelAnimationFrame(frameRef.current);
     clearHoldTimer();
+    isTransitioningRef.current = true;
     setIsTransitioning(true);
     setTransitionTargetIndex(targetIndex);
     setRevealProgress(0);

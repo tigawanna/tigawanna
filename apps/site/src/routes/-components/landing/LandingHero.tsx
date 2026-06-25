@@ -1,3 +1,4 @@
+import { CreatureEggLowercaseI } from "@/components/creature-egg/CreatureEggTrigger";
 import { AppConfig } from "@/utils/system";
 import { animate, stagger } from "animejs";
 import { useEffect, useRef } from "react";
@@ -39,7 +40,8 @@ export function LandingHero() {
           data-hero-reveal
           className="w-full font-serif text-7xl leading-[0.9] font-medium tracking-[-0.04em] md:text-8xl lg:text-[7rem] lg:whitespace-nowrap xl:text-[8.5rem] 2xl:text-[9rem]"
         >
-          {AppConfig.name}
+          Denn
+          <CreatureEggLowercaseI />s Waweru
         </h1>
 
         <p

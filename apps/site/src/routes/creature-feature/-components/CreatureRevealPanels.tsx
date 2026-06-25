@@ -1,6 +1,8 @@
 import { useCreaturePanelSequence } from "@/hooks/use-creature-panel-sequence";
 import type { CreatureRevealPanel } from "@/types/creature-feature";
+import { animate } from "animejs";
 import { Bug, Clapperboard, Popcorn, Skull, Sparkles, Ticket } from "lucide-react";
+import { useEffect, useRef } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { CreatureFeatureTitle } from "./CreatureFeatureTitle";
 
@@ -60,6 +62,7 @@ interface CreatureRevealPanelsProps {
 }
 
 export function CreatureRevealPanels({ onComplete }: CreatureRevealPanelsProps) {
+  const rootRef = useRef<HTMLDivElement>(null);
   const {
     activeIndex,
     isTransitioning,
@@ -73,18 +76,56 @@ export function CreatureRevealPanels({ onComplete }: CreatureRevealPanelsProps) 
     onComplete,
   });
 
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const content = root.querySelector<HTMLElement>("[data-creature-panel-content]");
+    if (!content) return;
+
+    content.style.opacity = "0";
+    content.style.transform = "translate3d(0, 36px, 0) scale(0.94)";
+    content.style.filter = "blur(10px)";
+
+    const anim = animate(content, {
+      opacity: [0, 1],
+      translateY: [36, 0],
+      scale: [0.94, 1],
+      filter: ["blur(10px)", "blur(0px)"],
+      duration: 1600,
+      ease: "outQuart",
+      delay: 400,
+    });
+
+    return () => {
+      anim.revert();
+    };
+  }, []);
+
   const handleNext = () => {
     goNext();
   };
 
-  useHotkeys(["right", "down", "space", "enter"], handleNext, { preventDefault: true }, [goNext]);
+  useHotkeys(
+    ["right", "down", "space", "enter"],
+    (event) => {
+      if (event.repeat) return;
+      handleNext();
+    },
+    { preventDefault: true },
+    [goNext],
+  );
 
   const incomingIndex = transitionTargetIndex ?? activeIndex;
   const outgoingIndex = isTransitioning ? activeIndex : null;
   const isFinalTransition = isTransitioning && incomingIndex === PANELS.length - 1;
 
   return (
-    <div data-test="creature-reveal" className="relative h-svh w-full overflow-hidden">
+    <div
+      ref={rootRef}
+      data-test="creature-reveal"
+      className="relative h-svh w-full overflow-hidden"
+    >
       <div
         className="pointer-events-none absolute inset-0 z-40 opacity-20 mix-blend-screen"
         style={{
@@ -200,6 +241,7 @@ function CreaturePanel({
 
       <div
         className="relative flex w-full max-w-3xl flex-col items-center gap-6 text-center will-change-transform"
+        data-creature-panel-content={panel.id === "excited" ? true : undefined}
         style={{
           opacity: contentOpacity,
           transform: `translate3d(0, ${exitShift + entranceLift}px, 0) scale(${0.9 + contentOpacity * 0.1})`,

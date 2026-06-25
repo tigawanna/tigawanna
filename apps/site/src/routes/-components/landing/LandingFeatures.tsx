@@ -1,6 +1,6 @@
 import { AppConfig } from "@/utils/system";
 import { Code2, Database, Gauge, Smartphone } from "lucide-react";
-import { LandingSection, OrganicDivider, ScrollReveal, SectionEyebrow } from "./LandingPrimitives";
+import { LandingSection, ScrollReveal, SectionEyebrow } from "./LandingPrimitives";
 
 export function LandingFeatures() {
   const featuredStacks = [
@@ -27,10 +27,7 @@ export function LandingFeatures() {
   ] as const;
 
   return (
-    <LandingSection id="skills" tone="olive" className="text-[#f2ead2]">
-      <OrganicDivider tone="olive" />
-      <OrganicDivider tone="olive" flip />
-
+    <LandingSection id="skills" tone="olive" className="pt-16 text-[#f2ead2] md:pt-20">
       <div className="container relative z-10">
         <ScrollReveal className="mx-auto mb-16 max-w-3xl text-center">
           <SectionEyebrow>Tools with dirt under the nails</SectionEyebrow>
