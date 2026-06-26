@@ -1,17 +1,9 @@
-interface SiteIconProps {
-  className?: string;
+import { TigawannaMarkIcon } from "@/components/icon/TigawannaMarkIcon";
+
+interface SiteIconProps extends React.ComponentProps<typeof TigawannaMarkIcon> {
   size?: number;
 }
 
-export function SiteIcon({ className, size = 24 }: SiteIconProps) {
-  return (
-    <img
-      src="/icon.png"
-      alt=""
-      width={size}
-      height={size}
-      className={className}
-      aria-hidden="true"
-    />
-  );
+export function SiteIcon({ className, size = 24, ...props }: SiteIconProps) {
+  return <TigawannaMarkIcon size={size} className={className} {...props} />;
 }

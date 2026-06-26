@@ -27,7 +27,7 @@ export function LandingArticles() {
           <p className="landing-section-lead">Published on Dev.to.</p>
         </div>
 
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {STATIC_ARTICLES.map((article) => (
             <ArticleCard key={article.id} article={article} />
           ))}

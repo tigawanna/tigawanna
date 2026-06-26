@@ -43,21 +43,21 @@ export function LessonCard({ item, className, tone = 0 }: LessonCardProps) {
         className,
       )}
     >
-      <div className="flex flex-col gap-3 p-6 pb-4">
-        <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-1 flex-col gap-3 p-6 pt-4">
+        <div className="flex items-center justify-between gap-2">
           <span className="text-[0.65rem] font-semibold tracking-[0.22em] text-landing-olive uppercase">
             {item.type}
           </span>
           <time className="text-xs text-landing-sage/45">{formattedDate}</time>
         </div>
 
-        <h3 className="line-clamp-2 font-serif text-xl leading-snug tracking-[-0.02em] text-landing-cream">
+        <h3 className="line-clamp-2 font-serif text-xl leading-snug text-landing-cream">
           {item.title}
         </h3>
 
-        <p className="line-clamp-2 text-sm leading-6 text-landing-sage/75">{item.description}</p>
+        <p className="line-clamp-2 text-sm leading-6 text-landing-sage/80">{item.description}</p>
 
-        <div className="flex items-center justify-between gap-3 pt-1">
+        <div className="flex items-center justify-between gap-3 border-t border-landing-cream/8 pt-4">
           <Link
             to="/lessons/$lessonId"
             params={{ lessonId: item.id }}
@@ -89,7 +89,7 @@ export function LessonCard({ item, className, tone = 0 }: LessonCardProps) {
           aria-label={`Read lesson: ${item.title}`}
         >
           <div
-            className="markdown markdown-on-panel max-h-30 overflow-hidden [&_blockquote]:hidden [&_h2]:hidden [&_li]:hidden [&_p]:hidden [&_pre:has(>code.hljs)]:rounded-none [&_pre:has(>code.hljs)]:p-0 [&_pre_code.hljs]:rounded-none [&_pre_code.hljs]:border-0 [&_pre_code.hljs]:p-0 [&_pre_code.hljs]:text-[0.6rem] [&_pre_code.hljs]:leading-[1.35] [&_pre_code.hljs]:pt-2"
+            className="markdown markdown-on-panel max-h-24 overflow-hidden [&_blockquote]:hidden [&_h2]:hidden [&_li]:hidden [&_p]:hidden"
             dangerouslySetInnerHTML={{ __html: item.previewHtml }}
           />
           <div

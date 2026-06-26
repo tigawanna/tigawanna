@@ -21,7 +21,7 @@ export function ArticleCard({ article, className }: ArticleCardProps) {
       data-test="article-card"
       className={twMerge("landing-card group relative flex flex-col overflow-hidden", className)}
     >
-      <div className="landing-card-media relative h-44 shrink-0 overflow-hidden">
+      <div className="landing-card-media relative h-48 shrink-0 overflow-hidden">
         {imageUrl ? (
           <>
             <img
@@ -37,14 +37,14 @@ export function ArticleCard({ article, className }: ArticleCardProps) {
       </div>
 
       <div className="flex flex-1 flex-col gap-3 p-6 pt-4">
-        <h3 className="font-serif text-xl leading-snug tracking-[-0.02em] text-landing-cream">
+        <h3 className="line-clamp-2 font-serif text-xl leading-snug text-landing-cream">
           {article.title}
         </h3>
         <p className="line-clamp-2 text-sm leading-6 text-landing-sage/80">{article.description}</p>
 
         {article.tag_list.length > 0 ? (
           <ul className="mt-auto flex flex-wrap gap-1.5 pt-1">
-            {article.tag_list.slice(0, 3).map((tag) => (
+            {article.tag_list.slice(0, 4).map((tag) => (
               <li key={tag} className="landing-card-tag">
                 {tag}
               </li>

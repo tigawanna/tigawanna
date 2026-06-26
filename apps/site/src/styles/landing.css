@@ -189,13 +189,47 @@
   @apply text-landing-cream/90;
 }
 
-.markdown-on-panel pre,
-.markdown-on-panel code {
+.markdown-on-panel pre:not(.shiki),
+.markdown-on-panel :not(pre) > code {
   @apply bg-landing-panel text-landing-cream/95;
+}
+
+.markdown-on-panel pre.shiki {
+  @apply overflow-hidden rounded-none border-0 p-0;
+}
+
+.markdown-on-panel pre.shiki.github-dark {
+  background-color: #0d1117 !important;
+  color: #e6edf3;
+}
+
+.markdown-on-panel pre.shiki code {
+  @apply block bg-transparent p-2.5 font-mono text-[0.65rem] leading-[1.35];
+}
+
+.markdown-on-panel pre.shiki .line {
+  display: block;
 }
 
 .markdown-on-panel blockquote {
   @apply text-landing-cream/80;
+}
+
+.markdown pre.shiki {
+  @apply overflow-x-auto rounded-none bg-transparent p-0 text-sm;
+}
+
+.markdown pre.shiki.github-dark {
+  background-color: #0d1117 !important;
+  color: #e6edf3;
+}
+
+.markdown pre.shiki code {
+  @apply block bg-transparent p-3 font-mono text-sm leading-relaxed;
+}
+
+.markdown pre.shiki .line {
+  display: block;
 }
 
 @media (prefers-reduced-motion: reduce) {
