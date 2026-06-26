@@ -24,15 +24,15 @@ export function LandingSearchBar() {
 
   return (
     <div className="flex w-full max-w-2xl flex-col gap-3 sm:flex-row">
-      <div className="flex flex-1 items-center gap-3 rounded-2xl border border-[#c5ccb4]/15 bg-[#c5ccb4]/8 px-4 py-3 backdrop-blur-md">
-        <Sparkles className="size-5 shrink-0 text-[#d8deca]" />
+      <div className="flex flex-1 items-center gap-3 rounded-2xl border border-landing-sage/15 bg-landing-sage/8 px-4 py-3 backdrop-blur-md">
+        <Sparkles className="size-5 shrink-0 text-landing-sage-light" />
         <input
           type="text"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Ask about my projects, stacks, or domains…"
-          className="w-full bg-transparent text-sm text-[#f6efd7] outline-none placeholder:text-[#c5ccb4]/45"
+          className="w-full bg-transparent text-sm text-landing-cream outline-none placeholder:text-landing-sage/45"
           data-test="landing-search-input"
         />
       </div>

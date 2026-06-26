@@ -2,10 +2,9 @@ import { STATIC_PINNED_PROJECTS, STATIC_RECENT_PROJECTS } from "@/data/portfolio
 import { CreatureEggLowercaseI } from "@/components/creature-egg/CreatureEggTrigger";
 import type { GithubRepoNode } from "@/types/github";
 import { useState } from "react";
-import { LandingSection, OrganicDivider, SectionEyebrow } from "./LandingPrimitives";
-import { renderProjectCard } from "./ProjectCard";
-
-type ProjectView = "featured" | "recent" | "all";
+import { renderProjectCard } from "../../cards/ProjectCard";
+import { LandingSection, OrganicDivider, SectionEyebrow } from "../../primitives";
+import { ProjectsTopicFilter, type ProjectView } from "./ProjectsTopicFilter";
 
 function collectTopics(repos: GithubRepoNode[]) {
   const topics = new Set<string>();
@@ -17,63 +16,6 @@ function collectTopics(repos: GithubRepoNode[]) {
     }
   }
   return Array.from(topics).sort();
-}
-
-function ProjectsTopicFilter({
-  topics,
-  activeTopic,
-  activeView,
-  onTopicChange,
-  onViewChange,
-}: {
-  topics: string[];
-  activeTopic: string;
-  activeView: ProjectView;
-  onTopicChange: (topic: string) => void;
-  onViewChange: (view: ProjectView) => void;
-}) {
-  const filters = ["featured", "recent", "all", ...topics] as const;
-
-  return (
-    <div className="flex flex-wrap gap-2" data-test="projects-topic-filter">
-      {filters.map((item) => {
-        const isActive =
-          item === "featured"
-            ? activeView === "featured"
-            : item === "recent"
-              ? activeView === "recent"
-              : item === "all"
-                ? activeView === "all" && activeTopic === "all"
-                : activeView === "all" && activeTopic === item;
-
-        return (
-          <button
-            key={item}
-            type="button"
-            onClick={() => {
-              if (item === "featured") {
-                onViewChange("featured");
-                return;
-              }
-              if (item === "recent") {
-                onViewChange("recent");
-                return;
-              }
-              onViewChange("all");
-              onTopicChange(item);
-            }}
-            className={
-              isActive
-                ? "rounded-full border border-[#f6efd7]/25 bg-[#f6efd7]/15 px-4 py-2 text-sm text-[#f6efd7]"
-                : "rounded-full border border-[#f6efd7]/10 bg-transparent px-4 py-2 text-sm text-[#c5ccb4]/60 transition-colors hover:border-[#f6efd7]/20 hover:text-[#c5ccb4]"
-            }
-          >
-            {item}
-          </button>
-        );
-      })}
-    </div>
-  );
 }
 
 function ProjectsContent() {
@@ -128,7 +70,7 @@ export function LandingProjects() {
     <LandingSection
       id="projects"
       tone="darkMid"
-      className="text-[#f6efd7]"
+      className="text-landing-cream"
       dataTest="landing-projects"
     >
       <OrganicDivider tone="darkMid" />
@@ -137,12 +79,12 @@ export function LandingProjects() {
       <div className="container relative z-10">
         <div className="mx-auto mb-14 max-w-3xl text-center">
           <SectionEyebrow>Projects</SectionEyebrow>
-          <h2 className="text-balance font-serif text-5xl leading-none font-semibold tracking-[-0.045em] md:text-7xl">
+          <h2 className="landing-section-heading">
             Th
             <CreatureEggLowercaseI />
             ngs I&apos;ve built.
           </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#c5ccb4]/70">
+          <p className="landing-section-lead">
             Pinned highlights, recently pushed repos, and topic filters — curated shelves until the
             admin flow lands.
           </p>

@@ -1,4 +1,4 @@
-import { animate, onScroll } from "animejs";
+import { animate } from "animejs";
 import { useEffect, type RefObject } from "react";
 
 interface ScrollRevealOptions {
@@ -39,6 +39,16 @@ function isInView(element: HTMLElement) {
   return rect.top < window.innerHeight * 0.92 && rect.bottom > 0;
 }
 
+function primeHiddenState(element: HTMLElement, y: number, variant: "default" | "fade") {
+  element.style.opacity = "0";
+  if (variant === "fade") {
+    element.style.transform = "translateY(10px)";
+    return;
+  }
+  element.style.transform = `translateY(${y}px) scale(0.97)`;
+  element.style.filter = "blur(10px)";
+}
+
 export function useScrollReveal(
   ref: RefObject<HTMLElement | null>,
   { delay = 0, y = 48, variant = "default" }: ScrollRevealOptions = {},
@@ -55,55 +65,40 @@ export function useScrollReveal(
     }
 
     let anim: ReturnType<typeof animate> | undefined;
+    let revealed = false;
 
-    const mountReveal = () => {
-      if (isInView(element)) {
-        anim = revealImmediately(element, y, delay, variant);
-        return;
-      }
-
-      if (variant === "fade") {
-        anim = animate(element, {
-          opacity: [0, 1],
-          translateY: [10, 0],
-          duration: 500,
-          ease: "outCubic",
-          delay: delay * 1000,
-          autoplay: onScroll({
-            target: element,
-            enter: "top 88%",
-            leave: "top",
-            sync: false,
-            repeat: false,
-          }),
-        });
-        return;
-      }
-
-      anim = animate(element, {
-        opacity: [0, 1],
-        translateY: [y, 0],
-        scale: [0.97, 1],
-        filter: ["blur(10px)", "blur(0px)"],
-        duration: 700,
-        ease: "outQuart",
-        delay: delay * 1000,
-        autoplay: onScroll({
-          target: element,
-          enter: "top 88%",
-          leave: "top",
-          sync: false,
-          repeat: false,
-        }),
-      });
+    const reveal = () => {
+      if (revealed) return;
+      revealed = true;
+      anim = revealImmediately(element, y, delay, variant);
     };
 
-    const frame = requestAnimationFrame(() => {
-      requestAnimationFrame(mountReveal);
-    });
+    if (isInView(element)) {
+      reveal();
+      return () => {
+        anim?.revert();
+      };
+    }
+
+    primeHiddenState(element, y, variant);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            reveal();
+            observer.disconnect();
+            break;
+          }
+        }
+      },
+      { rootMargin: "0px 0px -12% 0px", threshold: 0 },
+    );
+
+    observer.observe(element);
 
     return () => {
-      cancelAnimationFrame(frame);
+      observer.disconnect();
       anim?.revert();
     };
   }, [ref, delay, y, variant]);

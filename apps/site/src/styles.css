@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,500..800,60..100,0..1&family=Space+Grotesk:wght@300..700&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "./styles/landing.css";
 
 /* DaisyUI */
 /* @plugin "daisyui" {
@@ -838,30 +839,6 @@
 
 .markdown {
   @apply text-base-content leading-relaxed break-words;
-}
-
-.markdown-on-panel {
-  @apply text-[#f6efd7]/90;
-}
-
-.markdown-on-panel h1,
-.markdown-on-panel h2,
-.markdown-on-panel h3,
-.markdown-on-panel p,
-.markdown-on-panel li {
-  @apply text-[#f6efd7]/90;
-}
-
-.markdown-on-panel pre {
-  @apply bg-[#1e2119] text-[#f6efd7]/95;
-}
-
-.markdown-on-panel code {
-  @apply bg-[#1e2119] text-[#f6efd7]/95;
-}
-
-.markdown-on-panel blockquote {
-  @apply text-[#f6efd7]/80;
 }
 
 .markdown > * + * {

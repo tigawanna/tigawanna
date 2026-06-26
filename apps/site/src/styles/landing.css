@@ -1,0 +1,132 @@
+@theme {
+  --color-landing-void: #1a1a15;
+  --color-landing-sage: #c5ccb4;
+  --color-landing-sage-light: #d8deca;
+  --color-landing-cream: #f6efd7;
+  --color-landing-cream-warm: #f2ead2;
+  --color-landing-cream-highlight: #fff7dc;
+  --color-landing-deep: #151811;
+  --color-landing-olive: #687054;
+  --color-landing-sage-bg: #8f9980;
+  --color-landing-panel: #1e2119;
+  --color-landing-panel-alt: #22241c;
+  --color-landing-panel-mid: #1f241c;
+  --color-landing-dark-mid: #252920;
+  --color-landing-cream-bg: #d6d0b7;
+  --color-landing-cream-dark: #1a1c14;
+  --color-landing-footer: #090b08;
+  --color-landing-ink: #1b1d14;
+  --color-landing-word-start: #3a4038;
+  --color-landing-face-1: #1b2215;
+  --color-landing-face-2: #404b38;
+  --color-landing-face-3: #2b3422;
+  --color-landing-face-4: #4a5543;
+  --color-landing-gradient-from: #2a2d24;
+  --color-landing-gradient-to: #1a1d16;
+  --color-landing-gradient-mid-from: #252920;
+  --color-landing-gradient-mid-to: #191c15;
+}
+
+@utility landing-card {
+  @apply rounded-[1.75rem] border border-landing-cream/10 bg-landing-panel shadow-xl shadow-black/30;
+}
+
+@utility landing-card-tag {
+  @apply rounded-md bg-landing-cream/[0.06] px-2.5 py-0.5 text-xs text-landing-sage/75;
+}
+
+@utility landing-section-heading {
+  @apply text-balance font-serif text-5xl leading-none font-semibold tracking-[-0.045em] md:text-7xl;
+}
+
+@utility landing-section-lead {
+  @apply mx-auto mt-6 max-w-2xl text-lg leading-8 text-landing-sage/70;
+}
+
+@utility landing-void-surface {
+  @apply bg-landing-void text-landing-sage;
+}
+
+@utility landing-filter-pill-active {
+  @apply rounded-full border border-landing-cream/25 bg-landing-cream/15 px-4 py-2 text-sm text-landing-cream;
+}
+
+@utility landing-filter-pill-inactive {
+  @apply rounded-full border border-landing-cream/10 bg-transparent px-4 py-2 text-sm text-landing-sage/60 transition-colors hover:border-landing-cream/20 hover:text-landing-sage;
+}
+
+.landing-hero-glow {
+  background: radial-gradient(
+    circle at 42% 42%,
+    color-mix(in oklch, var(--color-landing-olive) 14%, transparent),
+    transparent 42%
+  );
+}
+
+.landing-void-glow-top {
+  background: radial-gradient(
+    circle at 50% 12%,
+    color-mix(in oklch, var(--color-landing-olive) 10%, transparent),
+    transparent 50%
+  );
+}
+
+.landing-void-glow-center {
+  background: radial-gradient(
+    circle at 50% 50%,
+    color-mix(in oklch, var(--color-landing-olive) 8%, transparent),
+    transparent 55%
+  );
+}
+
+.landing-void-glow-soft {
+  background: radial-gradient(
+    circle at 50% 12%,
+    color-mix(in oklch, var(--color-landing-olive) 6%, transparent),
+    transparent 50%
+  );
+}
+
+.cube-face {
+  border-color: color-mix(in oklch, var(--color-landing-sage) 14%, transparent);
+}
+
+.cube-face::after {
+  background:
+    linear-gradient(135deg, rgb(255 255 255 / 0.06) 0%, transparent 42%, rgb(0 0 0 / 0.18) 100%),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 10px,
+      color-mix(in oklch, var(--color-landing-sage) 4%, transparent) 10px,
+      color-mix(in oklch, var(--color-landing-sage) 4%, transparent) 11px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 10px,
+      color-mix(in oklch, var(--color-landing-sage) 4%, transparent) 10px,
+      color-mix(in oklch, var(--color-landing-sage) 4%, transparent) 11px
+    );
+}
+
+.markdown-on-panel {
+  @apply text-landing-cream/90;
+}
+
+.markdown-on-panel h1,
+.markdown-on-panel h2,
+.markdown-on-panel h3,
+.markdown-on-panel p,
+.markdown-on-panel li {
+  @apply text-landing-cream/90;
+}
+
+.markdown-on-panel pre,
+.markdown-on-panel code {
+  @apply bg-landing-panel text-landing-cream/95;
+}
+
+.markdown-on-panel blockquote {
+  @apply text-landing-cream/80;
+}

@@ -1,8 +1,8 @@
 import { createTimeline, onScroll } from "animejs";
 import { useEffect, useRef } from "react";
 
-const WORD_START = "#3a4038";
-const WORD_END = "#c5ccb4";
+const WORD_START = "var(--color-landing-word-start)";
+const WORD_END = "var(--color-landing-sage)";
 
 type ScrollHighlightProseProps = {
   title: string;
@@ -58,16 +58,13 @@ export function ScrollHighlightProse({ title, text }: ScrollHighlightProseProps)
     <section
       ref={sectionRef}
       data-test="scroll-highlight-prose"
-      className="relative bg-[#1a1a15] text-[#c5ccb4]"
+      className="landing-void-surface relative"
       style={{ height: "180vh" }}
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(104,112,84,0.1),transparent_55%)]" />
+      <div className="landing-void-glow-center pointer-events-none absolute inset-0" />
 
       <div className="sticky top-0 flex h-screen flex-col items-center justify-center px-6 lg:px-12">
-        <h2
-          id="how-i-work-heading"
-          className="mb-10 font-serif text-3xl font-medium tracking-[-0.03em] text-[#c5ccb4]/55 sm:mb-12 sm:text-4xl lg:text-5xl"
-        >
+        <h2 className="mb-10 font-serif text-3xl font-medium tracking-[-0.03em] text-landing-sage/55 sm:mb-12 sm:text-4xl lg:text-5xl">
           {title}
         </h2>
 

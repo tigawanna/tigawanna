@@ -13,10 +13,13 @@ const howIWorkCurvedSections = howIWorkSections.map(
   }),
 );
 
-export function LandingPeripheralProse() {
+export function LandingHowIWork() {
   return (
-    <div data-test="peripheral-cards-prose" className="relative">
+    <section id="about" data-test="landing-how-i-work" aria-labelledby="how-i-work-heading">
+      <h2 id="how-i-work-heading" className="sr-only">
+        How I work
+      </h2>
       <CurvedNumberedSections sections={howIWorkCurvedSections} />
-    </div>
+    </section>
   );
 }

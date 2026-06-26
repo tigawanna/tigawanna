@@ -1,7 +1,7 @@
 import { AppConfig } from "@/utils/system";
 import { ExternalLink, Layers, ShieldCheck, Workflow } from "lucide-react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
-import { LandingSection, OrganicDivider, ScrollReveal, SectionEyebrow } from "./LandingPrimitives";
+import { LandingSection, OrganicDivider, ScrollReveal, SectionEyebrow } from "../../primitives";
 
 export function LandingShowcase() {
   return (
@@ -13,7 +13,7 @@ export function LandingShowcase() {
         <div className="grid gap-14 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
           <ScrollReveal>
             <SectionEyebrow>About the build style</SectionEyebrow>
-            <h2 className="text-balance font-serif text-5xl leading-[0.95] font-semibold tracking-[-0.045em] md:text-7xl">
+            <h2 className="landing-section-heading">
               Calm interfaces, strict types, useful systems.
             </h2>
             <div className="mt-8 space-y-5 text-lg leading-8 text-base-content/70">
@@ -72,7 +72,7 @@ export function LandingShowcase() {
 
               return (
                 <ScrollReveal key={item.title} delay={index === 0 ? "short" : "medium"}>
-                  <article className="group rounded-[2rem] border border-base-content/10 bg-base-content/[0.045] p-6 backdrop-blur-md transition-transform duration-300 hover:-translate-y-1">
+                  <article className="group rounded-4xl border border-base-content/10 bg-base-content/4.5 p-6 backdrop-blur-md transition-transform duration-300 hover:-translate-y-1">
                     <div className="mb-8 flex items-center justify-between">
                       <span className="grid size-12 place-items-center rounded-full bg-primary/15 text-primary">
                         <Icon className="size-5" />

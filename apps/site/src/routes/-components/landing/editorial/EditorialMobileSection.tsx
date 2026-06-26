@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
-import { OrganicDivider } from "./LandingPrimitives";
+import { OrganicDivider } from "../primitives";
 
 type EditorialTone = "panel" | "panelAlt";
 
 const toneClasses = {
-  panel: "bg-[#1e2119] text-[#c5ccb4]",
-  panelAlt: "bg-[#22241c] text-[#c5ccb4]",
+  panel: "bg-landing-panel text-landing-sage",
+  panelAlt: "bg-landing-panel-alt text-landing-sage",
 } satisfies Record<EditorialTone, string>;
 
 type EditorialMobileSectionProps = {
@@ -37,10 +37,10 @@ export function EditorialMobileSection({
     >
       {showDivider ? <OrganicDivider tone={tone} /> : null}
 
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_12%,rgba(104,112,84,0.06),transparent_50%)]" />
+      <div className="landing-void-glow-soft pointer-events-none absolute inset-0" />
 
       <div className="relative z-10 mx-auto w-full max-w-4xl">
-        <h3 className="mb-10 text-center font-serif text-4xl leading-[0.95] font-medium tracking-[-0.04em] text-[#c5ccb4]/80 sm:mb-12 sm:text-5xl lg:mb-14 lg:text-6xl">
+        <h3 className="mb-10 text-center font-serif text-4xl leading-[0.95] font-medium tracking-[-0.04em] text-landing-sage/80 sm:mb-12 sm:text-5xl lg:mb-14 lg:text-6xl">
           {title}
         </h3>
 

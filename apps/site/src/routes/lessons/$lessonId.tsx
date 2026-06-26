@@ -1,6 +1,6 @@
 import { getLesson, getLessonMarkdownHtml } from "@/lib/lessons/lessons";
-import { LandingNavbar } from "@/routes/-components/landing/LandingNavbar";
-import { LandingFooter } from "@/routes/-components/landing/LandingFooter";
+import { LandingFooter } from "@/routes/-components/landing/layout/LandingFooter";
+import { LandingNavbar } from "@/routes/-components/landing/layout/LandingNavbar";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, redirect } from "@tanstack/react-router";
 import { CalendarRange, ExternalLink } from "lucide-react";

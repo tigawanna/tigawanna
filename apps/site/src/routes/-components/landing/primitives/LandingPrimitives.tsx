@@ -6,25 +6,25 @@ import { twMerge } from "tailwind-merge";
 const sectionToneClasses = {
   base: "bg-base-100",
   muted: "bg-base-200",
-  deep: "bg-[#151811]",
-  olive: "bg-[#687054]",
-  sage: "bg-[#8f9980]",
-  panel: "bg-[#1e2119]",
-  panelAlt: "bg-[#22241c]",
-  cream: "bg-[#d6d0b7] text-[#1a1c14]",
-  darkMid: "bg-[#252920]",
+  deep: "bg-landing-deep",
+  olive: "bg-landing-olive",
+  sage: "bg-landing-sage-bg",
+  panel: "bg-landing-panel",
+  panelAlt: "bg-landing-panel-alt",
+  cream: "bg-landing-cream-bg text-landing-cream-dark",
+  darkMid: "bg-landing-dark-mid",
 } satisfies Record<NonNullable<LandingSectionProps["tone"]>, string>;
 
 const dividerToneClasses = {
   base: "text-base-100",
   muted: "text-base-200",
-  deep: "text-[#151811]",
-  olive: "text-[#687054]",
-  sage: "text-[#8f9980]",
-  panel: "text-[#1e2119]",
-  panelAlt: "text-[#22241c]",
-  cream: "text-[#d6d0b7]",
-  darkMid: "text-[#252920]",
+  deep: "text-landing-deep",
+  olive: "text-landing-olive",
+  sage: "text-landing-sage-bg",
+  panel: "text-landing-panel",
+  panelAlt: "text-landing-panel-alt",
+  cream: "text-landing-cream-bg",
+  darkMid: "text-landing-dark-mid",
 } satisfies Record<NonNullable<OrganicDividerProps["tone"]>, string>;
 
 const revealDelaySeconds = {

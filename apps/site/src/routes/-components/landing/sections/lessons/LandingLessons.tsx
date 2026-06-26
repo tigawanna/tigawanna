@@ -5,8 +5,8 @@ import {
 import { STATIC_LESSONS } from "@/data/portfolio/static";
 import type { LessonPreviewItem } from "@/types/lessons";
 import { Link } from "@tanstack/react-router";
-import { LessonCard } from "./LessonCard";
-import { LandingSection, OrganicDivider, SectionEyebrow } from "./LandingPrimitives";
+import { LessonCard } from "../../cards/LessonCard";
+import { LandingSection, OrganicDivider, SectionEyebrow } from "../../primitives";
 
 interface LandingLessonsProps {
   items: LessonPreviewItem[];
@@ -28,7 +28,7 @@ export function LandingLessons({ items }: LandingLessonsProps) {
           <SectionEyebrow>
             Today <CreatureEggCapitalI /> learned
           </SectionEyebrow>
-          <h2 className="text-balance font-serif text-5xl leading-none font-semibold tracking-[-0.045em] md:text-7xl">
+          <h2 className="landing-section-heading">
             Cool things <CreatureEggCapitalI /> recently learned
             <CreatureEggTrigger data-test="creature-feature-egg-lessons-period" />
           </h2>

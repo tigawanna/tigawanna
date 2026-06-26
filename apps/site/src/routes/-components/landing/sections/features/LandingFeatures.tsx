@@ -1,6 +1,6 @@
 import { AppConfig } from "@/utils/system";
 import { Code2, Database, Gauge, Smartphone } from "lucide-react";
-import { LandingSection, ScrollReveal, SectionEyebrow } from "./LandingPrimitives";
+import { LandingSection, ScrollReveal, SectionEyebrow } from "../../primitives";
 
 export function LandingFeatures() {
   const featuredStacks = [
@@ -27,14 +27,16 @@ export function LandingFeatures() {
   ] as const;
 
   return (
-    <LandingSection id="skills" tone="olive" className="pt-16 text-[#f2ead2] md:pt-20">
+    <LandingSection
+      id="skills"
+      tone="olive"
+      className="bg-landing-face-3 pt-16 text-landing-cream md:pt-20"
+    >
       <div className="container relative z-10">
         <ScrollReveal className="mx-auto mb-16 max-w-3xl text-center">
           <SectionEyebrow>Tools with dirt under the nails</SectionEyebrow>
-          <h2 className="text-balance font-serif text-5xl leading-none font-semibold tracking-[-0.045em] md:text-7xl">
-            The stack changes, the discipline stays.
-          </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#f2ead2]/70">
+          <h2 className="landing-section-heading">The stack changes, the discipline stays.</h2>
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-landing-cream/80">
             These are the things I reach for when I need a portfolio, dashboard, API, mobile shell,
             or strange AI-backed interaction to actually ship.
           </p>
@@ -46,8 +48,8 @@ export function LandingFeatures() {
 
             return (
               <ScrollReveal key={group.title} delay={index < 2 ? "short" : "medium"}>
-                <article className="min-h-full rounded-[2rem] border border-[#f2ead2]/15 bg-[#1d2118]/50 p-6 shadow-2xl shadow-black/10 backdrop-blur-md">
-                  <span className="grid size-12 place-items-center rounded-full bg-[#f2ead2]/10 text-primary">
+                <article className="min-h-full rounded-4xl border border-landing-cream/20 bg-landing-panel p-6 shadow-2xl shadow-black/25">
+                  <span className="grid size-12 place-items-center rounded-full bg-landing-cream/10 text-primary">
                     <Icon className="size-5" />
                   </span>
                   <h3 className="mt-8 font-serif text-3xl leading-tight">{group.title}</h3>
@@ -55,7 +57,7 @@ export function LandingFeatures() {
                     {group.items.map((item) => (
                       <span
                         key={item}
-                        className="rounded-full border border-[#f2ead2]/10 bg-[#f2ead2]/10 px-3 py-1.5 text-xs text-[#f2ead2]/75"
+                        className="rounded-full border border-landing-cream/15 bg-landing-panel-alt px-3 py-1.5 text-xs text-landing-cream/85"
                       >
                         {item}
                       </span>
@@ -72,7 +74,7 @@ export function LandingFeatures() {
             {AppConfig.techSkills.map((skill) => (
               <span
                 key={skill}
-                className="rounded-full border border-[#f2ead2]/10 bg-[#f2ead2]/10 px-4 py-2 text-sm text-[#f2ead2]/70 transition-colors hover:border-primary/40 hover:bg-primary/15 hover:text-[#fff7dc]"
+                className="rounded-full border border-landing-cream/15 bg-landing-panel-alt px-4 py-2 text-sm text-landing-cream/80 transition-colors hover:border-primary/40 hover:bg-primary/15 hover:text-landing-cream-highlight"
               >
                 {skill}
               </span>

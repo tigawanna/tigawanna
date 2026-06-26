@@ -5,10 +5,26 @@ import { useRef } from "react";
 import { CubeVisual } from "./CubeVisual";
 
 const FACE_META = [
-  { background: "#1b2215", foreground: "#d6d0b7", Icon: Code2 },
-  { background: "#404b38", foreground: "#d6d0b7", Icon: Smartphone },
-  { background: "#2b3422", foreground: "#d6d0b7", Icon: Bot },
-  { background: "#4a5543", foreground: "#d6d0b7", Icon: Server },
+  {
+    background: "var(--color-landing-face-1)",
+    foreground: "var(--color-landing-cream-bg)",
+    Icon: Code2,
+  },
+  {
+    background: "var(--color-landing-face-2)",
+    foreground: "var(--color-landing-cream-bg)",
+    Icon: Smartphone,
+  },
+  {
+    background: "var(--color-landing-face-3)",
+    foreground: "var(--color-landing-cream-bg)",
+    Icon: Bot,
+  },
+  {
+    background: "var(--color-landing-face-4)",
+    foreground: "var(--color-landing-cream-bg)",
+    Icon: Server,
+  },
 ] as const;
 
 type FaceMeta = {
@@ -23,11 +39,11 @@ export function StackCubeMobile() {
 
   return (
     <div data-test="stack-cube-mobile">
-      <div className="relative bg-[#1a1a15] px-6 py-14 text-[#c5ccb4] sm:px-8 sm:py-18">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_12%,rgba(104,112,84,0.1),transparent_50%)]" />
+      <div className="landing-void-surface relative px-6 py-14 sm:px-8 sm:py-18">
+        <div className="landing-void-glow-top pointer-events-none absolute inset-0" />
 
         <div className="relative z-10 mx-auto flex w-full max-w-lg flex-col items-center">
-          <p className="font-serif text-3xl font-medium tracking-[-0.03em] text-[#c5ccb4]/90 sm:text-4xl">
+          <p className="font-serif text-3xl font-medium tracking-[-0.03em] text-landing-sage/90 sm:text-4xl">
             What I build with
           </p>
 
@@ -37,7 +53,7 @@ export function StackCubeMobile() {
             </div>
           </div>
 
-          <p className="mt-4 text-[10px] tracking-[0.3em] text-[#c5ccb4]/25 uppercase">
+          <p className="mt-4 text-[10px] tracking-[0.3em] text-landing-sage/25 uppercase">
             Scroll to explore
           </p>
         </div>

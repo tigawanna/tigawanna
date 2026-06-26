@@ -1,8 +1,8 @@
 import { lessonsListQueryOptions } from "@/data-access-layer/portfolio/query-options";
-import { LandingNavbar } from "@/routes/-components/landing/LandingNavbar";
-import { LandingFooter } from "@/routes/-components/landing/LandingFooter";
-import { LessonCard } from "@/routes/-components/landing/LessonCard";
-import { PortfolioGridSkeleton } from "@/routes/-components/landing/PortfolioGridSkeleton";
+import { LessonCard } from "@/routes/-components/landing/cards/LessonCard";
+import { PortfolioGridSkeleton } from "@/routes/-components/landing/cards/PortfolioGridSkeleton";
+import { LandingFooter } from "@/routes/-components/landing/layout/LandingFooter";
+import { LandingNavbar } from "@/routes/-components/landing/layout/LandingNavbar";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { Suspense } from "react";

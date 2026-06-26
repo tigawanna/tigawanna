@@ -19,7 +19,7 @@ function FooterCurveMarquee() {
 
   return (
     <div className="relative h-36 overflow-hidden md:h-48 lg:h-56" aria-hidden="true">
-      <div className="pointer-events-none absolute top-16 left-1/2 aspect-square w-[720vw] -translate-x-1/2 rounded-full bg-[#090b08] md:top-24" />
+      <div className="pointer-events-none absolute top-16 left-1/2 aspect-square w-[720vw] -translate-x-1/2 rounded-full bg-landing-footer md:top-24" />
 
       <svg
         viewBox="0 0 1600 320"
@@ -31,7 +31,7 @@ function FooterCurveMarquee() {
         <defs>
           <path id="footer-curve-text-path" d={TEXT_ARC} />
         </defs>
-        <text className="fill-[#c5ccb4] font-serif text-[64px] font-semibold tracking-[0.09em] opacity-40">
+        <text className="fill-landing-sage font-serif text-[64px] font-semibold tracking-[0.09em] opacity-40">
           <textPath ref={textPathRef} href="#footer-curve-text-path" startOffset="0">
             {MARQUEE_PHRASE.repeat(MARQUEE_REPEAT)}
           </textPath>
@@ -50,7 +50,7 @@ export function LandingFooter() {
         <FooterCurveMarquee />
       </section>
 
-      <footer className="relative overflow-x-clip bg-[#090b08] text-base-content">
+      <footer className="relative overflow-x-clip bg-landing-footer text-base-content">
         <div className="grain-overlay" />
 
         <div className="container relative z-10 pb-10 pt-12 md:pt-16">

@@ -4,8 +4,8 @@ import { AppConfig } from "@/utils/system";
 import { Check, Copy, Mail } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { LandingSection, SectionEyebrow } from "../../primitives";
 import { ContactForm } from "./ContactForm";
-import { LandingSection, SectionEyebrow } from "./LandingPrimitives";
 
 export function LandingCTA() {
   const [emailCopied, setEmailCopied] = useState(false);
@@ -29,7 +29,7 @@ export function LandingCTA() {
         <div className="mx-auto grid max-w-5xl gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start lg:gap-16">
           <div>
             <SectionEyebrow>Contact</SectionEyebrow>
-            <h2 className="font-serif text-5xl leading-none font-semibold tracking-[-0.045em] md:text-7xl">
+            <h2 className="landing-section-heading">
               Let&apos;s make the next system less haunted.
             </h2>
             <p className="mt-6 max-w-md text-lg leading-8 text-base-content/70">

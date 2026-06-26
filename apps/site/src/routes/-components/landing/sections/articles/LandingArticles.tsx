@@ -2,15 +2,15 @@ import { siteConfig } from "@/config/site";
 import { CreatureEggLowercaseI } from "@/components/creature-egg/CreatureEggTrigger";
 import { STATIC_ARTICLES } from "@/data/portfolio/static";
 import { ArrowUpRight } from "lucide-react";
-import { ArticleCard } from "./ArticleCard";
-import { LandingSection, OrganicDivider, SectionEyebrow } from "./LandingPrimitives";
+import { ArticleCard } from "../../cards/ArticleCard";
+import { LandingSection, OrganicDivider, SectionEyebrow } from "../../primitives";
 
 export function LandingArticles() {
   return (
     <LandingSection
       id="articles"
       tone="darkMid"
-      className="text-[#f6efd7]"
+      className="text-landing-cream"
       dataTest="landing-articles"
     >
       <OrganicDivider tone="darkMid" />
@@ -19,14 +19,12 @@ export function LandingArticles() {
       <div className="container relative z-10">
         <div className="mx-auto mb-14 max-w-3xl text-center">
           <SectionEyebrow>Articles</SectionEyebrow>
-          <h2 className="text-balance font-serif text-5xl leading-none font-semibold tracking-[-0.045em] md:text-7xl">
+          <h2 className="landing-section-heading">
             Wr
             <CreatureEggLowercaseI />
             ting from the trenches.
           </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#c5ccb4]/70">
-            Published on Dev.to.
-          </p>
+          <p className="landing-section-lead">Published on Dev.to.</p>
         </div>
 
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">

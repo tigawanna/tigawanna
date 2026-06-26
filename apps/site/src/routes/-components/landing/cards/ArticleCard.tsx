@@ -13,43 +13,37 @@ export function ArticleCard({ article, className }: ArticleCardProps) {
   return (
     <article
       data-test="article-card"
-      className={twMerge(
-        "group relative flex flex-col overflow-hidden rounded-[1.75rem] border border-[#f6efd7]/10 bg-[#1e2119] shadow-xl shadow-black/30",
-        className,
-      )}
+      className={twMerge("landing-card group relative flex flex-col overflow-hidden", className)}
     >
       <div className="relative h-44 shrink-0 overflow-hidden">
         {imageUrl ? (
           <>
             <img src={imageUrl} alt={article.title} className="h-full w-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#1e2119] via-[#1e2119]/20 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-landing-panel via-landing-panel/20 to-transparent" />
           </>
         ) : (
-          <div className="h-full bg-gradient-to-br from-[#2a2d24] to-[#1a1d16]" />
+          <div className="h-full bg-linear-to-br from-landing-gradient-from to-landing-gradient-to" />
         )}
       </div>
 
       <div className="flex flex-1 flex-col gap-3 p-6 pt-4">
-        <h3 className="font-serif text-xl leading-snug tracking-[-0.02em] text-[#f6efd7]">
+        <h3 className="font-serif text-xl leading-snug tracking-[-0.02em] text-landing-cream">
           {article.title}
         </h3>
-        <p className="line-clamp-2 text-sm leading-6 text-[#c5ccb4]/80">{article.description}</p>
+        <p className="line-clamp-2 text-sm leading-6 text-landing-sage/80">{article.description}</p>
 
         {article.tag_list.length > 0 ? (
           <ul className="mt-auto flex flex-wrap gap-1.5 pt-1">
             {article.tag_list.slice(0, 3).map((tag) => (
-              <li
-                key={tag}
-                className="rounded-md bg-[#f6efd7]/[0.06] px-2.5 py-0.5 text-xs text-[#c5ccb4]/75"
-              >
+              <li key={tag} className="landing-card-tag">
                 {tag}
               </li>
             ))}
           </ul>
         ) : null}
 
-        <div className="flex items-center justify-between gap-3 border-t border-[#f6efd7]/8 pt-4 text-sm">
-          <span className="text-xs text-[#c5ccb4]/50">
+        <div className="flex items-center justify-between gap-3 border-t border-landing-cream/8 pt-4 text-sm">
+          <span className="text-xs text-landing-sage/50">
             {new Date(article.published_at).toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",
@@ -61,7 +55,7 @@ export function ArticleCard({ article, className }: ArticleCardProps) {
             href={article.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs font-medium text-[#c5ccb4] transition-colors hover:text-[#f6efd7]"
+            className="inline-flex items-center gap-1 text-xs font-medium text-landing-sage transition-colors hover:text-landing-cream"
           >
             Read
             <ArrowUpRight className="size-3.5" />

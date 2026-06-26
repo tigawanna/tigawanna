@@ -9,7 +9,7 @@ import { toGithubRepoNode } from "@/types/portfolio-search";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2, SendHorizontal, Sparkles, Square, WandSparkles } from "lucide-react";
 import type { UIMessage } from "@tanstack/ai-react";
-import { renderProjectCard } from "../../-components/landing/ProjectCard";
+import { renderProjectCard } from "@/routes/-components/landing/cards/ProjectCard";
 import { usePortfolioSearchChat } from "./usePortfolioSearchChat";
 
 interface PortfolioSearchExperienceProps {
