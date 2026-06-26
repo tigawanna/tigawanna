@@ -25,6 +25,10 @@ export interface GithubRepoNode {
   nameWithOwner: string;
   pushedAt: string;
   isPrivate: boolean;
+  isFork?: boolean;
+  isArchived?: boolean;
+  stargazerCount?: number;
+  forkCount?: number;
   repositoryTopics: {
     nodes: RepositoryTopic[];
   };

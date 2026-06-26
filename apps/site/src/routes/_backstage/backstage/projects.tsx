@@ -1,9 +1,12 @@
 import { isAdminUser } from "@/data-access-layer/auth/auth-utils";
-import { backstageProjectsQueryOptions } from "@/data-access-layer/backstage/projects-query-options";
+import {
+  backstageGithubReposQueryOptions,
+  backstageProjectsQueryOptions,
+} from "@/data-access-layer/backstage/projects-query-options";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
+import { BackstageProjectRow } from "./-components/BackstageProjectRow";
 
 export const Route = createFileRoute("/_backstage/backstage/projects")({
   beforeLoad: ({ context }) => {
@@ -11,16 +14,21 @@ export const Route = createFileRoute("/_backstage/backstage/projects")({
       throw redirect({ to: "/backstage" });
     }
   },
-  loader: ({ context }) => context.queryClient.ensureQueryData(backstageProjectsQueryOptions),
+  loader: ({ context }) =>
+    Promise.all([
+      context.queryClient.ensureQueryData(backstageProjectsQueryOptions),
+      context.queryClient.ensureQueryData(backstageGithubReposQueryOptions),
+    ]),
   component: BackstageProjectsPage,
 });
 
-function attendanceLabel(attendance: string) {
-  return attendance.replaceAll("_", " ");
-}
-
 function BackstageProjectsPage() {
   const { data: projects } = useSuspenseQuery(backstageProjectsQueryOptions);
+  const { data: githubData } = useSuspenseQuery(backstageGithubReposQueryOptions);
+
+  const visibilityByRepo = new Map(
+    githubData.repos.map((repo) => [repo.nameWithOwner, repo.isPrivate] as const),
+  );
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6" data-test="backstage-projects">
@@ -64,44 +72,11 @@ function BackstageProjectsPage() {
           </CardHeader>
           <CardContent className="divide-base-content/10 divide-y rounded-lg border border-base-content/10 p-0">
             {projects.map((project) => (
-              <div
+              <BackstageProjectRow
                 key={project.githubRepoId}
-                className="flex flex-wrap items-start justify-between gap-3 px-4 py-3"
-                data-test="project-row"
-              >
-                <div className="min-w-0 flex-1">
-                  <a
-                    href={`https://github.com/${project.repoFullName}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="font-medium hover:underline"
-                  >
-                    {project.repoFullName}
-                  </a>
-                  <p className="text-base-content/60 mt-1 text-sm">
-                    {project.currentDescription || "(no description)"}
-                  </p>
-                  {project.currentTopics.length > 0 ? (
-                    <p className="text-base-content/45 mt-1 text-xs">
-                      {project.currentTopics.join(" · ")}
-                    </p>
-                  ) : null}
-                  <p className="text-base-content/40 mt-2 text-xs">
-                    {attendanceLabel(project.attendance)} · synced{" "}
-                    {format(new Date(project.lastGithubSyncAt), "PP")}
-                  </p>
-                </div>
-                {project.currentHomepage ? (
-                  <a
-                    href={project.currentHomepage}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="btn btn-ghost btn-sm"
-                  >
-                    Homepage
-                  </a>
-                ) : null}
-              </div>
+                project={project}
+                isPrivate={visibilityByRepo.get(project.repoFullName) ?? null}
+              />
             ))}
           </CardContent>
         </Card>

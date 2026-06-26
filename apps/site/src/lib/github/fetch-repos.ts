@@ -15,6 +15,10 @@ const RECENT_REPOS_QUERY = `query getViewerRecentlyPushedRepos {
           nameWithOwner
           pushedAt
           isPrivate
+          isFork
+          isArchived
+          stargazerCount
+          forkCount
           repositoryTopics(first: 10) {
             nodes {
               topic { name }

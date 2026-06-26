@@ -2,8 +2,8 @@ import { isAdminUser } from "@/data-access-layer/auth/auth-utils";
 import {
   backstageGithubReposQueryOptions,
   backstageProjectsQueryOptions,
+  backstageRepoMutationInvalidates,
 } from "@/data-access-layer/backstage/projects-query-options";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -11,8 +11,9 @@ import { importProjectRepo } from "@/lib/backstage/projects.functions";
 import { unwrapUnknownError } from "@/utils/errors";
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { BackstageRepoRow } from "./-components/BackstageRepoRow";
 
 export const Route = createFileRoute("/_backstage/backstage/repos")({
   beforeLoad: ({ context }) => {
@@ -29,10 +30,25 @@ export const Route = createFileRoute("/_backstage/backstage/repos")({
 });
 
 function BackstageReposPage() {
-  const { data: githubRepos } = useSuspenseQuery(backstageGithubReposQueryOptions);
+  const { data: githubData } = useSuspenseQuery(backstageGithubReposQueryOptions);
   const { data: projects } = useSuspenseQuery(backstageProjectsQueryOptions);
+  const githubRepos = githubData.repos;
+  const githubErrors = githubData.errors;
   const [runEnrichmentOnImport, setRunEnrichmentOnImport] = useState(false);
   const [importingRepo, setImportingRepo] = useState<string | null>(null);
+  const githubErrorsWarned = useRef(false);
+
+  useEffect(() => {
+    if (githubErrorsWarned.current || githubErrors.length === 0) {
+      return;
+    }
+    githubErrorsWarned.current = true;
+    const description =
+      githubErrors.length > 1
+        ? `${githubErrors[0]} (+${githubErrors.length - 1} more)`
+        : githubErrors[0];
+    toast.warning("Some repos could not be loaded from GitHub", { description });
+  }, [githubErrors]);
 
   const trackedNames = new Set(projects.map((project) => project.repoFullName));
 
@@ -55,10 +71,7 @@ function BackstageReposPage() {
       setImportingRepo(null);
     },
     meta: {
-      invalidates: [
-        ["backstage", "projects"],
-        ["backstage", "project-enrichment"],
-      ],
+      invalidates: backstageRepoMutationInvalidates,
     },
   });
 
@@ -72,7 +85,7 @@ function BackstageReposPage() {
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Repos</h1>
         <p className="text-base-content/60 mt-2 text-sm">
-          Your 100 most recently pushed public repos on GitHub. Quick-import into projects.
+          Your 100 most recently pushed repos on GitHub. Import, change visibility, or delete.
         </p>
       </div>
 
@@ -98,46 +111,22 @@ function BackstageReposPage() {
         </CardHeader>
         <CardContent className="divide-base-content/10 divide-y rounded-lg border border-base-content/10 p-0">
           {githubRepos.length === 0 ? (
-            <p className="text-base-content/50 px-4 py-6 text-sm">No public repos found.</p>
+            <p className="text-base-content/50 px-4 py-6 text-sm">
+              {githubErrors.length > 0
+                ? "No accessible repos returned. Org-restricted repos are skipped when your PAT exceeds the org token lifetime policy."
+                : "No repos found."}
+            </p>
           ) : (
-            githubRepos.map((repo) => {
-              const isTracked = trackedNames.has(repo.nameWithOwner);
-              const isImporting = importingRepo === repo.nameWithOwner && importMutation.isPending;
-
-              return (
-                <div
-                  key={repo.id}
-                  className="flex flex-wrap items-start justify-between gap-3 px-4 py-3"
-                  data-test="github-repo-row"
-                >
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <p className="font-medium">{repo.nameWithOwner}</p>
-                      {isTracked ? (
-                        <span className="bg-base-200 text-base-content/70 rounded px-2 py-0.5 text-xs">
-                          In projects
-                        </span>
-                      ) : null}
-                    </div>
-                    <p className="text-base-content/60 mt-1 text-sm">
-                      {repo.description || "(no description)"}
-                    </p>
-                    {repo.topics.length > 0 ? (
-                      <p className="text-base-content/45 mt-1 text-xs">{repo.topics.join(" · ")}</p>
-                    ) : null}
-                  </div>
-                  <Button
-                    data-test="import-repo"
-                    variant={isTracked ? "outline" : "default"}
-                    size="sm"
-                    disabled={importMutation.isPending}
-                    onClick={() => handleImport(repo.nameWithOwner)}
-                  >
-                    {isImporting ? "Importing…" : isTracked ? "Re-import" : "Import"}
-                  </Button>
-                </div>
-              );
-            })
+            githubRepos.map((repo) => (
+              <BackstageRepoRow
+                key={repo.id}
+                repo={repo}
+                isTracked={trackedNames.has(repo.nameWithOwner)}
+                isImporting={importingRepo === repo.nameWithOwner && importMutation.isPending}
+                onImport={() => handleImport(repo.nameWithOwner)}
+                disabled={importMutation.isPending}
+              />
+            ))
           )}
         </CardContent>
       </Card>

@@ -95,8 +95,8 @@ async function githubGraphql<T>(token: string, query: string, variables?: Record
     throw new Error(`GitHub GraphQL failed: ${res.status} ${res.statusText}`);
   }
 
-  const json = (await res.json()) as T & { errors?: { message: string }[] };
-  if (json.errors?.length) {
+  const json = (await res.json()) as T & { errors?: { message: string }[]; data?: unknown };
+  if (json.errors?.length && json.data == null) {
     throw new Error(json.errors.map((error) => error.message).join("; "));
   }
 
