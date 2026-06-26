@@ -50,16 +50,6 @@ export function LandingHero() {
           {AppConfig.brief}
         </p>
 
-        <div data-hero-reveal className="mt-10 w-full max-w-2xl md:mt-12">
-          <a
-            href="#projects"
-            className="btn btn-primary rounded-2xl px-8 text-base shadow-lg shadow-primary/30"
-            data-test="landing-view-projects"
-          >
-            View projects
-          </a>
-        </div>
-
         <div data-hero-reveal className="mt-10 w-full max-w-md md:mt-12 lg:mt-8">
           <svg
             viewBox="0 0 400 24"

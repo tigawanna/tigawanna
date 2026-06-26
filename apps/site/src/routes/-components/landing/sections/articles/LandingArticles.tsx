@@ -22,7 +22,7 @@ export function LandingArticles() {
           <h2 className="landing-section-heading">
             Wr
             <CreatureEggLowercaseI />
-            ting from the trenches.
+            ting in public.
           </h2>
           <p className="landing-section-lead">Published on Dev.to.</p>
         </div>
