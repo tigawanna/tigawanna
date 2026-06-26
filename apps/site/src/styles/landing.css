@@ -30,7 +30,7 @@
 }
 
 @utility landing-card {
-  @apply relative rounded-[1.75rem] border border-landing-cream/10 bg-landing-panel shadow-xl shadow-black/30;
+  @apply relative rounded-none border border-landing-cream/10 bg-landing-panel shadow-xl shadow-black/30;
 }
 
 @utility landing-card-tag {

@@ -72,7 +72,7 @@ export function LandingShowcase() {
 
               return (
                 <ScrollReveal key={item.title} delay={index === 0 ? "short" : "medium"}>
-                  <article className="group rounded-4xl border border-base-content/10 bg-base-content/4.5 p-6 backdrop-blur-md transition-transform duration-300 hover:-translate-y-1">
+                  <article className="group rounded-none border border-base-content/10 bg-base-content/4.5 p-6 backdrop-blur-md transition-transform duration-300 hover:-translate-y-1">
                     <div className="mb-8 flex items-center justify-between">
                       <span className="grid size-12 place-items-center rounded-full bg-primary/15 text-primary">
                         <Icon className="size-5" />

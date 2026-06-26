@@ -28,7 +28,7 @@ export function PrivateProjectCard({ repo, className }: ProjectCardProps) {
         className,
       )}
     >
-      <div className="grid size-14 place-items-center rounded-2xl border border-landing-cream/10 bg-landing-cream/5 text-landing-sage/50">
+      <div className="grid size-14 place-items-center rounded-none border border-landing-cream/10 bg-landing-cream/5 text-landing-sage/50">
         <Lock className="size-5" />
       </div>
       <div className="flex flex-col gap-1">
@@ -128,7 +128,7 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
           <Link
             to="/project/$name"
             params={{ name: projectRouteParam(repo.nameWithOwner) }}
-            className="rounded-lg border border-landing-cream/15 px-3.5 py-1.5 text-xs font-medium text-landing-sage/75 transition-all hover:border-landing-cream/30 hover:bg-landing-cream/5 hover:text-landing-cream"
+            className="rounded-none border border-landing-cream/15 px-3.5 py-1.5 text-xs font-medium text-landing-sage/75 transition-all hover:border-landing-cream/30 hover:bg-landing-cream/5 hover:text-landing-cream"
           >
             Details
           </Link>

@@ -6,7 +6,7 @@ export function PortfolioGridSkeleton({ count = 3 }: { count?: number }) {
       {Array.from({ length: count }).map((_, index) => (
         <div
           key={index}
-          className="overflow-hidden rounded-[2rem] border border-base-content/10 bg-base-300/40 p-0"
+          className="overflow-hidden rounded-none border border-base-content/10 bg-base-300/40 p-0"
         >
           <Skeleton className="h-48 w-full rounded-none" />
           <div className="space-y-3 p-6">

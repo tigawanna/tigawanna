@@ -48,7 +48,7 @@ export function LandingFeatures() {
 
             return (
               <ScrollReveal key={group.title} delay={index < 2 ? "short" : "medium"}>
-                <article className="min-h-full rounded-4xl border border-landing-cream/20 bg-landing-panel p-6 shadow-2xl shadow-black/25">
+                <article className="min-h-full rounded-none border border-landing-cream/20 bg-landing-panel p-6 shadow-2xl shadow-black/25">
                   <span className="grid size-12 place-items-center rounded-full bg-landing-cream/10 text-primary">
                     <Icon className="size-5" />
                   </span>

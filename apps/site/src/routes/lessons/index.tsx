@@ -36,9 +36,9 @@ function LessonsGrid({ page }: { page: number }) {
   return (
     <>
       <ul className="grid w-full gap-5 md:grid-cols-2 xl:grid-cols-3">
-        {lessons.items.map((item) => (
+        {lessons.items.map((item, index) => (
           <li key={item.id}>
-            <LessonCard item={item} />
+            <LessonCard item={item} tone={(index % 3) as 0 | 1 | 2} />
           </li>
         ))}
       </ul>
