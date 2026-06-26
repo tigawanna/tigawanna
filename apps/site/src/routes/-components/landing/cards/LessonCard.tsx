@@ -89,7 +89,7 @@ export function LessonCard({ item, className, tone = 0 }: LessonCardProps) {
           aria-label={`Read lesson: ${item.title}`}
         >
           <div
-            className="markdown markdown-on-panel max-h-30 overflow-hidden [&_blockquote]:hidden [&_h2]:hidden [&_li]:hidden [&_p]:hidden [&_pre.hljs]:rounded-none [&_pre.hljs]:border-0 [&_pre.hljs]:p-0 [&_pre.hljs]:text-[0.6rem] [&_pre.hljs]:leading-[1.35] [&_pre.hljs_code]:block [&_pre.hljs_code]:px-0 [&_pre.hljs_code]:pt-2 [&_pre.hljs_code]:pb-0 [&_pre]:rounded-none [&_pre]:p-0"
+            className="markdown markdown-on-panel max-h-30 overflow-hidden [&_blockquote]:hidden [&_h2]:hidden [&_li]:hidden [&_p]:hidden [&_pre:has(>code.hljs)]:rounded-none [&_pre:has(>code.hljs)]:p-0 [&_pre_code.hljs]:rounded-none [&_pre_code.hljs]:border-0 [&_pre_code.hljs]:p-0 [&_pre_code.hljs]:text-[0.6rem] [&_pre_code.hljs]:leading-[1.35] [&_pre_code.hljs]:pt-2"
             dangerouslySetInnerHTML={{ __html: item.previewHtml }}
           />
           <div

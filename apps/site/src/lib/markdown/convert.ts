@@ -20,7 +20,8 @@ showdown.extension("highlight", () => [
         rightPart: string,
       ): string => {
         const decoded = htmlUnencode(match);
-        const lang = (leftPart.match(/class="([^ "]+)/) || [])[1];
+        const rawLang = (leftPart.match(/class="([^ "]+)/) || [])[1];
+        const lang = rawLang?.replace(/^language-/, "");
         const updatedLeft = leftPart.slice(0, 18) + "hljs " + leftPart.slice(18);
         if (lang && hljs.getLanguage(lang)) {
           return updatedLeft + hljs.highlight(decoded, { language: lang }).value + rightPart;

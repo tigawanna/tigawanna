@@ -1,0 +1,34 @@
+@import "highlight.js/styles/github-dark.css";
+
+.markdown pre:has(> code.hljs) {
+  overflow-x: auto;
+  border-radius: 0.75rem;
+  padding: 0;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.markdown pre:not(:has(> code.hljs)) {
+  overflow-x: auto;
+  border-radius: 0.75rem;
+  background-color: var(--color-base-200);
+  padding: 1rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.markdown :not(pre) > code {
+  border-radius: 0.25rem;
+  background-color: var(--color-base-200);
+  padding: 0.125rem 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.markdown pre code.hljs {
+  display: block;
+  border-radius: 0.75rem;
+  background-color: #0d1117;
+  color: #c9d1d9;
+  padding: 1em;
+}

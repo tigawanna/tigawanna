@@ -86,7 +86,7 @@ function LessonDetailContent({ lessonId }: { lessonId: string }) {
 
       {html ? (
         <div
-          className="markdown markdown-lesson mt-10 [&_pre.hljs]:overflow-x-auto [&_pre.hljs]:rounded-xl [&_pre.hljs]:text-sm [&_pre.hljs_code]:p-4"
+          className="markdown markdown-lesson mt-10 [&_pre:has(>code.hljs)]:overflow-x-auto [&_pre_code.hljs]:rounded-xl [&_pre_code.hljs]:text-sm"
           dangerouslySetInnerHTML={{ __html: html }}
         />
       ) : null}
