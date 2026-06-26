@@ -1,14 +1,39 @@
-import { backstageProjectsWithGithubLiveQuery } from "@/data-access-layer/backstage/collections/live-queries";
+import {
+  backstageGithubReposCollection,
+  backstageProjectsCollection,
+} from "@/data-access-layer/backstage/collections";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "@tanstack/react-router";
+import { eq } from "@tanstack/db";
 import { useLiveSuspenseQuery } from "@tanstack/react-db";
 import { BackstageProjectRow } from "./BackstageProjectRow";
 
 export function BackstageProjectsContent() {
-  const { data: projects } = useLiveSuspenseQuery(backstageProjectsWithGithubLiveQuery);
+  const { data: projects } = useLiveSuspenseQuery((q) =>
+    q
+      .from({ projects: backstageProjectsCollection })
+      .leftJoin({ github: backstageGithubReposCollection }, ({ projects, github }) =>
+        eq(projects.repoFullName, github.nameWithOwner),
+      )
+      .select(({ projects, github }) => ({
+        project: projects,
+        isPrivate: github == null ? null : github.isPrivate,
+      })),
+  );
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6" data-test="backstage-projects">
+      <Card data-test="backstage-projects-debug">
+        <CardHeader>
+          <CardTitle>Live query results (experiment)</CardTitle>
+          <CardDescription>Raw rows from the inline join query.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <pre className="bg-base-200 max-h-96 overflow-auto rounded-lg p-4 text-xs">
+            {JSON.stringify(projects, null, 2)}
+          </pre>
+        </CardContent>
+      </Card>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Projects</h1>

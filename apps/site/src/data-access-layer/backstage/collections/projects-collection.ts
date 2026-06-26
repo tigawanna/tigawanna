@@ -3,7 +3,7 @@ import { listProjectRepos } from "@/lib/backstage/projects-enrichment.functions"
 import { removeProjectRepo } from "@/lib/backstage/projects.functions";
 
 import type { BackstageProject } from "@/types/backstage";
-import { createCollection } from "@tanstack/db";
+import { createCollection, BasicIndex } from "@tanstack/db";
 import { queryCollectionOptions } from "@tanstack/query-db-collection";
 
 import { getTanstackQueryContext } from "@/lib/tanstack/query/query-provider";
@@ -18,6 +18,7 @@ export const backstageProjectsCollection = createCollection(
       return listProjectRepos();
     },
     queryClient,
+    defaultIndexType: BasicIndex,
     getKey: (item: BackstageProject) => item.githubRepoId,
     onDelete: async ({ transaction }) => {
       await Promise.all(

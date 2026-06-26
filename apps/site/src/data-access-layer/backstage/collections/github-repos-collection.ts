@@ -5,7 +5,7 @@ import {
   setGithubRepoVisibilityForBackstage,
 } from "@/lib/backstage/projects.functions";
 import type { BackstageGithubRepo } from "@/types/backstage";
-import { createCollection } from "@tanstack/db";
+import { createCollection, BasicIndex } from "@tanstack/db";
 import { queryCollectionOptions } from "@tanstack/query-db-collection";
 import { backstageProjectsCollection } from "./projects-collection";
 
@@ -19,6 +19,7 @@ export const backstageGithubReposCollection = createCollection(
     queryFn: () => listGithubReposForBackstage(),
     select: (data) => data.repos,
     queryClient,
+    defaultIndexType: BasicIndex,
     getKey: (item: BackstageGithubRepo) => item.nameWithOwner,
     onUpdate: async ({ transaction }) => {
       await Promise.all(
