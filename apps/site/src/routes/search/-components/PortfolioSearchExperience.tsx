@@ -53,7 +53,7 @@ export function PortfolioSearchExperience({ query }: PortfolioSearchExperiencePr
       />
 
       <div className="grid gap-8 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-        <section className="overflow-hidden rounded-[2rem] border border-base-content/10 bg-base-200/40 shadow-xl shadow-black/5">
+        <section className="overflow-hidden rounded-4xl border border-base-content/10 bg-base-200/40 shadow-xl shadow-black/5">
           <div className="flex items-center gap-3 border-b border-base-content/10 px-5 py-4">
             <div className="flex size-10 items-center justify-center rounded-2xl bg-primary/12 text-primary">
               <WandSparkles className="size-5" />
@@ -68,9 +68,9 @@ export function PortfolioSearchExperience({ query }: PortfolioSearchExperiencePr
             </div>
           </div>
 
-          <div className="flex min-h-[28rem] flex-col gap-4 px-5 py-5">
+          <div className="flex min-h-112 flex-col gap-4 px-5 py-5">
             {chat.messages.length === 0 ? (
-              <div className="flex flex-1 flex-col items-center justify-center rounded-[1.5rem] border border-dashed border-base-content/15 bg-base-100/50 px-6 py-10 text-center">
+              <div className="flex flex-1 flex-col items-center justify-center rounded-3xl border border-dashed border-base-content/15 bg-base-100/50 px-6 py-10 text-center">
                 <div className="mb-4 flex size-12 items-center justify-center rounded-2xl bg-primary/12 text-primary">
                   <Sparkles className="size-5" />
                 </div>
@@ -99,8 +99,8 @@ export function PortfolioSearchExperience({ query }: PortfolioSearchExperiencePr
                     key={message.id}
                     className={
                       message.role === "user"
-                        ? "ml-auto max-w-[85%] rounded-[1.5rem] rounded-br-md bg-primary px-4 py-3 text-sm leading-6 text-primary-content"
-                        : "max-w-[92%] rounded-[1.5rem] rounded-bl-md border border-base-content/10 bg-base-100 px-4 py-3 text-sm leading-7 text-base-content/85"
+                        ? "ml-auto max-w-[85%] rounded-3xl rounded-br-md bg-primary px-4 py-3 text-sm leading-6 text-primary-content"
+                        : "max-w-[92%] rounded-3xl rounded-bl-md border border-base-content/10 bg-base-100 px-4 py-3 text-sm leading-7 text-base-content/85"
                     }
                   >
                     {getMessageText(message) || (chat.isLoading ? "Thinking…" : "")}
@@ -174,14 +174,14 @@ export function PortfolioSearchExperience({ query }: PortfolioSearchExperiencePr
           </div>
 
           {directSearch.isLoading && visibleResults.length === 0 ? (
-            <div className="flex items-center gap-3 rounded-[1.5rem] border border-base-content/10 bg-base-200/40 px-5 py-8 text-base-content/60">
+            <div className="flex items-center gap-3 rounded-3xl border border-base-content/10 bg-base-200/40 px-5 py-8 text-base-content/60">
               <Loader2 className="size-5 animate-spin text-primary" />
               Finding relevant repositories…
             </div>
           ) : null}
 
           {directSearch.data?.mode === "empty-index" && visibleResults.length === 0 ? (
-            <div className="rounded-[1.5rem] border border-base-content/10 bg-base-200/40 px-5 py-6 text-sm leading-6 text-base-content/70">
+            <div className="rounded-3xl border border-base-content/10 bg-base-200/40 px-5 py-6 text-sm leading-6 text-base-content/70">
               The search index is empty. Run{" "}
               <code className="rounded bg-base-300 px-2 py-1 text-xs">
                 pnpm sync:repo-embeddings
@@ -195,7 +195,7 @@ export function PortfolioSearchExperience({ query }: PortfolioSearchExperiencePr
               {visibleResults.map((result) => renderProjectCard(toGithubRepoNode(result)))}
             </div>
           ) : query && !directSearch.isLoading && directSearch.data?.mode !== "empty-index" ? (
-            <div className="rounded-[1.5rem] border border-base-content/10 bg-base-200/40 px-5 py-6 text-sm text-base-content/65">
+            <div className="rounded-3xl border border-base-content/10 bg-base-200/40 px-5 py-6 text-sm text-base-content/65">
               No strong matches yet. Try a broader question or configure your key and ask in chat.
             </div>
           ) : null}

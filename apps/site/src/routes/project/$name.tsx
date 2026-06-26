@@ -61,7 +61,7 @@ function ProjectDetailContent({ owner, repo }: { owner: string; repo: string }) 
         Back to projects
       </Link>
 
-      <div className="overflow-hidden rounded-[2rem] border border-base-content/10 bg-base-300/40">
+      <div className="overflow-hidden rounded-4xl border border-base-content/10 bg-base-300/40">
         {project.openGraphImageUrl ? (
           <img
             src={project.openGraphImageUrl}
@@ -142,7 +142,7 @@ function ProjectDetailContent({ owner, repo }: { owner: string; repo: string }) 
       </div>
 
       {readmeHtml ? (
-        <section className="markdown rounded-[2rem] border border-base-content/10 bg-base-300/40 p-6 md:p-10">
+        <section className="markdown rounded-4xl border border-base-content/10 bg-base-300/40 p-6 md:p-10">
           <div dangerouslySetInnerHTML={{ __html: readmeHtml }} />
         </section>
       ) : null}
@@ -165,8 +165,8 @@ function ProjectDetailPage() {
         <Suspense
           fallback={
             <div className="mx-auto max-w-5xl animate-pulse space-y-4">
-              <div className="h-72 rounded-[2rem] bg-base-300" />
-              <div className="h-40 rounded-[2rem] bg-base-300" />
+              <div className="h-72 rounded-4xl bg-base-300" />
+              <div className="h-40 rounded-4xl bg-base-300" />
             </div>
           }
         >
