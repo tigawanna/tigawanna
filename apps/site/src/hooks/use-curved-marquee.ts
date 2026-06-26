@@ -17,9 +17,8 @@ export function useCurvedMarquee(
     let frame = 0;
     let offset = 0;
     let last = performance.now();
-
-    const unit = node.getComputedTextLength() / repeatCount;
-    if (!unit || !Number.isFinite(unit)) return;
+    let unit = 0;
+    let cancelled = false;
 
     const tick = (now: number) => {
       const delta = (now - last) / 1000;
@@ -30,8 +29,22 @@ export function useCurvedMarquee(
       frame = requestAnimationFrame(tick);
     };
 
-    frame = requestAnimationFrame(tick);
+    const init = () => {
+      if (cancelled) return;
+      unit = node.getComputedTextLength() / repeatCount;
+      if (!unit || !Number.isFinite(unit)) {
+        frame = requestAnimationFrame(init);
+        return;
+      }
+      last = performance.now();
+      frame = requestAnimationFrame(tick);
+    };
 
-    return () => cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(init);
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(frame);
+    };
   }, [ref, repeatCount, speed]);
 }
