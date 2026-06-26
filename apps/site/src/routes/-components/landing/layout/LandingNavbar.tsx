@@ -1,5 +1,5 @@
 import { AppConfig } from "@/utils/system";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 
@@ -10,6 +10,9 @@ const ctaClass =
 
 export function LandingNavbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const isLandingRoute = useRouterState({
+    select: (state) => state.location.pathname === "/",
+  });
 
   return (
     <nav
@@ -24,34 +27,42 @@ export function LandingNavbar() {
           tigawanna
         </Link>
 
-        <div className="hidden flex-1 items-center justify-center gap-10 lg:flex">
-          {AppConfig.navItems.map((item) => (
-            <a key={item.label} href={item.href} className={navLinkClass}>
-              {item.label}
-            </a>
-          ))}
-        </div>
+        {isLandingRoute ? (
+          <div className="hidden flex-1 items-center justify-center gap-10 lg:flex">
+            {AppConfig.navItems.map((item) => (
+              <a key={item.label} href={item.href} className={navLinkClass}>
+                {item.label}
+              </a>
+            ))}
+          </div>
+        ) : (
+          <div className="hidden flex-1 lg:block" />
+        )}
 
         <div className="hidden items-center gap-6 md:flex">
           <div className="hidden text-center xl:block">
             <p className="text-[10px] tracking-[0.32em] text-landing-sage/45 uppercase">Based in</p>
             <p className="font-serif text-sm text-landing-sage/80">Nairobi</p>
           </div>
-          <a href="#contact" className={ctaClass}>
-            Get in touch
-          </a>
+          {isLandingRoute ? (
+            <a href="#contact" className={ctaClass}>
+              Get in touch
+            </a>
+          ) : null}
         </div>
 
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="text-landing-sage md:hidden"
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
-        >
-          {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-        </button>
+        {isLandingRoute ? (
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="text-landing-sage md:hidden"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          >
+            {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
+        ) : null}
       </div>
 
-      {mobileOpen && (
+      {isLandingRoute && mobileOpen ? (
         <div className="space-y-4 border-t border-landing-sage/10 bg-landing-void p-6 md:hidden">
           {AppConfig.navItems.map((item) => (
             <a
@@ -71,7 +82,7 @@ export function LandingNavbar() {
             Get in touch
           </a>
         </div>
-      )}
+      ) : null}
     </nav>
   );
 }

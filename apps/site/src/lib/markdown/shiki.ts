@@ -39,7 +39,49 @@ function decodeHtmlEntities(text: string) {
     .replace(/&#39;/g, "'");
 }
 
-const CODE_BLOCK_RE = /<pre><code(?: class="language-([^"]+)")?>([\s\S]*?)<\/code><\/pre>/g;
+const LANG_ALIASES: Record<string, string> = {
+  ts: "typescript",
+  js: "javascript",
+  sh: "bash",
+  shell: "bash",
+  yml: "yaml",
+};
+
+function extractLanguage(classAttr: string | undefined) {
+  if (!classAttr) {
+    return undefined;
+  }
+
+  const classes = classAttr.split(/\s+/).filter(Boolean);
+  const prefixed = classes.find((className) => className.startsWith("language-"));
+  const raw = prefixed?.slice("language-".length) ?? classes[0];
+  if (!raw) {
+    return undefined;
+  }
+
+  return LANG_ALIASES[raw] ?? raw;
+}
+
+function resolveLanguage(highlighter: Highlighter, classAttr: string | undefined) {
+  const language = extractLanguage(classAttr);
+  if (!language) {
+    return "plaintext";
+  }
+
+  const loaded = highlighter.getLoadedLanguages();
+  if (loaded.includes(language)) {
+    return language;
+  }
+
+  const aliased = LANG_ALIASES[language];
+  if (aliased && loaded.includes(aliased)) {
+    return aliased;
+  }
+
+  return "plaintext";
+}
+
+const CODE_BLOCK_RE = /<pre><code(?: class="([^"]+)")?>([\s\S]*?)<\/code><\/pre>/g;
 
 export async function highlightHtmlCodeBlocks(html: string) {
   const highlighter = await getHighlighter();
@@ -50,9 +92,9 @@ export async function highlightHtmlCodeBlocks(html: string) {
 
   let result = html;
   for (const match of matches) {
-    const [whole, lang, encoded] = match;
+    const [whole, classAttr, encoded] = match;
     const code = decodeHtmlEntities(encoded ?? "");
-    const language = lang && highlighter.getLoadedLanguages().includes(lang) ? lang : "plaintext";
+    const language = resolveLanguage(highlighter, classAttr);
     const highlighted = highlighter.codeToHtml(code, {
       lang: language,
       theme: SHIKI_THEME,

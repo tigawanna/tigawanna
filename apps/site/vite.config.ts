@@ -4,10 +4,14 @@ import viteReact from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
 import { fileURLToPath, URL } from "url";
 import { defineConfig } from "vite-plus";
+import { workflow } from "workflow/vite";
 
 import tailwindcss from "@tailwindcss/vite";
 
 const config = defineConfig({
+  fmt: {
+    ignorePatterns: ["**/routeTree.gen.ts"],
+  },
   server: {
     host: "::",
   },
@@ -17,6 +21,7 @@ const config = defineConfig({
     },
   },
   plugins: [
+    workflow(),
     devtools(),
     tanstackStart({
       router: {

@@ -17,6 +17,8 @@ import { Route as ProjectNameRouteImport } from './routes/project/$name'
 import { Route as LessonsLessonIdRouteImport } from './routes/lessons/$lessonId'
 import { Route as BackstageSignInRouteImport } from './routes/backstage/sign-in'
 import { Route as BackstageBackstageIndexRouteImport } from './routes/_backstage/backstage/index'
+import { Route as ApiProjectEnrichmentTriggerRouteImport } from './routes/api/project-enrichment/trigger'
+import { Route as BackstageBackstageProjectsEnrichmentRouteImport } from './routes/_backstage/backstage/projects-enrichment'
 import { Route as BackstageBackstageProjectsRouteImport } from './routes/_backstage/backstage/projects'
 import { Route as BackstageBackstageMessagesRouteImport } from './routes/_backstage/backstage/messages'
 
@@ -59,6 +61,18 @@ const BackstageBackstageIndexRoute = BackstageBackstageIndexRouteImport.update({
   path: '/backstage/',
   getParentRoute: () => BackstageLayoutRoute,
 } as any)
+const ApiProjectEnrichmentTriggerRoute =
+  ApiProjectEnrichmentTriggerRouteImport.update({
+    id: '/api/project-enrichment/trigger',
+    path: '/api/project-enrichment/trigger',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const BackstageBackstageProjectsEnrichmentRoute =
+  BackstageBackstageProjectsEnrichmentRouteImport.update({
+    id: '/backstage/projects-enrichment',
+    path: '/backstage/projects-enrichment',
+    getParentRoute: () => BackstageLayoutRoute,
+  } as any)
 const BackstageBackstageProjectsRoute =
   BackstageBackstageProjectsRouteImport.update({
     id: '/backstage/projects',
@@ -81,6 +95,8 @@ export interface FileRoutesByFullPath {
   '/lessons/': typeof LessonsIndexRoute
   '/backstage/messages': typeof BackstageBackstageMessagesRoute
   '/backstage/projects': typeof BackstageBackstageProjectsRoute
+  '/backstage/projects-enrichment': typeof BackstageBackstageProjectsEnrichmentRoute
+  '/api/project-enrichment/trigger': typeof ApiProjectEnrichmentTriggerRoute
   '/backstage/': typeof BackstageBackstageIndexRoute
 }
 export interface FileRoutesByTo {
@@ -92,6 +108,8 @@ export interface FileRoutesByTo {
   '/lessons': typeof LessonsIndexRoute
   '/backstage/messages': typeof BackstageBackstageMessagesRoute
   '/backstage/projects': typeof BackstageBackstageProjectsRoute
+  '/backstage/projects-enrichment': typeof BackstageBackstageProjectsEnrichmentRoute
+  '/api/project-enrichment/trigger': typeof ApiProjectEnrichmentTriggerRoute
   '/backstage': typeof BackstageBackstageIndexRoute
 }
 export interface FileRoutesById {
@@ -105,6 +123,8 @@ export interface FileRoutesById {
   '/lessons/': typeof LessonsIndexRoute
   '/_backstage/backstage/messages': typeof BackstageBackstageMessagesRoute
   '/_backstage/backstage/projects': typeof BackstageBackstageProjectsRoute
+  '/_backstage/backstage/projects-enrichment': typeof BackstageBackstageProjectsEnrichmentRoute
+  '/api/project-enrichment/trigger': typeof ApiProjectEnrichmentTriggerRoute
   '/_backstage/backstage/': typeof BackstageBackstageIndexRoute
 }
 export interface FileRouteTypes {
@@ -118,6 +138,8 @@ export interface FileRouteTypes {
     | '/lessons/'
     | '/backstage/messages'
     | '/backstage/projects'
+    | '/backstage/projects-enrichment'
+    | '/api/project-enrichment/trigger'
     | '/backstage/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -129,6 +151,8 @@ export interface FileRouteTypes {
     | '/lessons'
     | '/backstage/messages'
     | '/backstage/projects'
+    | '/backstage/projects-enrichment'
+    | '/api/project-enrichment/trigger'
     | '/backstage'
   id:
     | '__root__'
@@ -141,6 +165,8 @@ export interface FileRouteTypes {
     | '/lessons/'
     | '/_backstage/backstage/messages'
     | '/_backstage/backstage/projects'
+    | '/_backstage/backstage/projects-enrichment'
+    | '/api/project-enrichment/trigger'
     | '/_backstage/backstage/'
   fileRoutesById: FileRoutesById
 }
@@ -152,6 +178,7 @@ export interface RootRouteChildren {
   ProjectNameRoute: typeof ProjectNameRoute
   CreatureFeatureIndexRoute: typeof CreatureFeatureIndexRoute
   LessonsIndexRoute: typeof LessonsIndexRoute
+  ApiProjectEnrichmentTriggerRoute: typeof ApiProjectEnrichmentTriggerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -212,6 +239,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BackstageBackstageIndexRouteImport
       parentRoute: typeof BackstageLayoutRoute
     }
+    '/api/project-enrichment/trigger': {
+      id: '/api/project-enrichment/trigger'
+      path: '/api/project-enrichment/trigger'
+      fullPath: '/api/project-enrichment/trigger'
+      preLoaderRoute: typeof ApiProjectEnrichmentTriggerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_backstage/backstage/projects-enrichment': {
+      id: '/_backstage/backstage/projects-enrichment'
+      path: '/backstage/projects-enrichment'
+      fullPath: '/backstage/projects-enrichment'
+      preLoaderRoute: typeof BackstageBackstageProjectsEnrichmentRouteImport
+      parentRoute: typeof BackstageLayoutRoute
+    }
     '/_backstage/backstage/projects': {
       id: '/_backstage/backstage/projects'
       path: '/backstage/projects'
@@ -232,12 +273,15 @@ declare module '@tanstack/react-router' {
 interface BackstageLayoutRouteChildren {
   BackstageBackstageMessagesRoute: typeof BackstageBackstageMessagesRoute
   BackstageBackstageProjectsRoute: typeof BackstageBackstageProjectsRoute
+  BackstageBackstageProjectsEnrichmentRoute: typeof BackstageBackstageProjectsEnrichmentRoute
   BackstageBackstageIndexRoute: typeof BackstageBackstageIndexRoute
 }
 
 const BackstageLayoutRouteChildren: BackstageLayoutRouteChildren = {
   BackstageBackstageMessagesRoute: BackstageBackstageMessagesRoute,
   BackstageBackstageProjectsRoute: BackstageBackstageProjectsRoute,
+  BackstageBackstageProjectsEnrichmentRoute:
+    BackstageBackstageProjectsEnrichmentRoute,
   BackstageBackstageIndexRoute: BackstageBackstageIndexRoute,
 }
 
@@ -253,6 +297,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProjectNameRoute: ProjectNameRoute,
   CreatureFeatureIndexRoute: CreatureFeatureIndexRoute,
   LessonsIndexRoute: LessonsIndexRoute,
+  ApiProjectEnrichmentTriggerRoute: ApiProjectEnrichmentTriggerRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

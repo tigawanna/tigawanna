@@ -17,6 +17,7 @@ import { Helmet } from "@/components/wrappers/custom-helmet";
 import { TSRBreadCrumbs } from "@/lib/tanstack/router/TSRBreadCrumbs";
 import { AppConfig } from "@/utils/system";
 import { Outlet } from "@tanstack/react-router";
+import { BackstageBotIdInit } from "../BackstageBotIdInit";
 import { BackstageSidebarFooter } from "./BackstageSidebarFooter";
 import { BackstageSidebarHeader } from "./BackstageSidebarHeader";
 
@@ -35,6 +36,7 @@ export function BackstageLayout({
 }: BackstageLayoutProps) {
   return (
     <SidebarProvider defaultOpen={false}>
+      <BackstageBotIdInit />
       <Helmet title={`${AppConfig.name} | Backstage`} description="Site controls" />
       <Sidebar collapsible="icon">
         <SidebarHeader>
