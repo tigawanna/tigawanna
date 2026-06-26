@@ -9,4 +9,5 @@ export const queryKeyPrefixes = {
   lessons: "lessons",
   github: "github",
   backstage: "backstage",
+  openrouter: "openrouter",
 } as const;

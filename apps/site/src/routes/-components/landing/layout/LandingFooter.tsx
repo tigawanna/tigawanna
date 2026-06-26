@@ -1,5 +1,4 @@
 import {
-  CreatureEggCapitalI,
   CreatureEggLowercaseI,
   CreatureEggTrigger,
 } from "@/components/creature-egg/CreatureEggTrigger";

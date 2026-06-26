@@ -212,9 +212,9 @@ importers:
       '@base-ui/react':
         specifier: ^1.6.0
         version: 1.6.0(@date-fns/tz@1.5.0)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@libsql/client':
-        specifier: ^0.15.15
-        version: 0.15.15
+      '@repo/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@repo/isomorphic':
         specifier: workspace:*
         version: link:../../packages/isomorphic
@@ -281,15 +281,12 @@ importers:
       date-fns:
         specifier: ^4.4.0
         version: 4.4.0
-      drizzle-orm:
-        specifier: ^0.45.2
-        version: 0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.15.15)(@types/pg@8.20.0)(kysely@0.29.2)
       embla-carousel-react:
         specifier: ^8.6.0
         version: 8.6.0(react@19.2.7)
       evlog:
         specifier: ^2.19.2
-        version: 2.19.2(@tanstack/start-client-core@1.170.12)(@voidzero-dev/vite-plus-core@0.2.1(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(nitro-nightly@3.0.1-20260626-071224-83acc441(@libsql/client@0.15.15)(@voidzero-dev/vite-plus-core@0.2.1(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(chokidar@5.0.0)(dotenv@16.6.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.15.15)(@types/pg@8.20.0)(kysely@0.29.2))(jiti@2.7.0)(lru-cache@11.5.1)(miniflare@4.20260625.0)(wrangler@4.105.0(@cloudflare/workers-types@4.20260626.1)))(ofetch@2.0.0-alpha.3)(react@19.2.7)
+        version: 2.19.2(@tanstack/start-client-core@1.170.12)(@voidzero-dev/vite-plus-core@0.2.1(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(nitro-nightly@3.0.1-20260626-071224-83acc441(@libsql/client@0.17.4)(@voidzero-dev/vite-plus-core@0.2.1(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(chokidar@5.0.0)(dotenv@16.6.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.17.4)(@types/pg@8.20.0)(kysely@0.29.2))(jiti@2.7.0)(lru-cache@11.5.1)(miniflare@4.20260625.0)(wrangler@4.105.0(@cloudflare/workers-types@4.20260626.1)))(ofetch@2.0.0-alpha.3)(react@19.2.7)
       gsap:
         specifier: ^3.15.0
         version: 3.15.0
@@ -307,7 +304,7 @@ importers:
         version: 0.4.6(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       nitro:
         specifier: npm:nitro-nightly@latest
-        version: nitro-nightly@3.0.1-20260626-071224-83acc441(@libsql/client@0.15.15)(@voidzero-dev/vite-plus-core@0.2.1(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(chokidar@5.0.0)(dotenv@16.6.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.15.15)(@types/pg@8.20.0)(kysely@0.29.2))(jiti@2.7.0)(lru-cache@11.5.1)(miniflare@4.20260625.0)(wrangler@4.105.0(@cloudflare/workers-types@4.20260626.1))
+        version: nitro-nightly@3.0.1-20260626-071224-83acc441(@libsql/client@0.17.4)(@voidzero-dev/vite-plus-core@0.2.1(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(chokidar@5.0.0)(dotenv@16.6.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.17.4)(@types/pg@8.20.0)(kysely@0.29.2))(jiti@2.7.0)(lru-cache@11.5.1)(miniflare@4.20260625.0)(wrangler@4.105.0(@cloudflare/workers-types@4.20260626.1))
       radix-ui:
         specifier: ^1.6.0
         version: 1.6.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -393,15 +390,6 @@ importers:
       dotenv:
         specifier: ^16.6.1
         version: 16.6.1
-      drizzle-kit:
-        specifier: ^0.31.10
-        version: 0.31.10
-      drizzle-query-logger:
-        specifier: ^1.1.2
-        version: 1.1.2(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.15.15)(@types/pg@8.20.0)(kysely@0.29.2))(typescript@6.0.3)
-      drizzle-seed:
-        specifier: ^0.3.1
-        version: 0.3.1(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.15.15)(@types/pg@8.20.0)(kysely@0.29.2))
       tsx:
         specifier: ^4.20.7
         version: 4.22.4
@@ -423,6 +411,28 @@ importers:
       web-vitals:
         specifier: ^5.3.0
         version: 5.3.0
+
+  packages/db:
+    dependencies:
+      '@libsql/client':
+        specifier: ^0.15.15
+        version: 0.15.15
+      drizzle-orm:
+        specifier: ^0.45.2
+        version: 0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.15.15)(@types/pg@8.20.0)(kysely@0.29.2)
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      dotenv:
+        specifier: ^16.6.1
+        version: 16.6.1
+      drizzle-kit:
+        specifier: ^0.31.10
+        version: 0.31.10
+      typescript:
+        specifier: '*'
+        version: 6.0.3
 
   packages/isomorphic:
     dependencies:
@@ -3082,9 +3092,6 @@ packages:
   '@speed-highlight/core@1.2.17':
     resolution: {integrity: sha512-Z92FwKpCtfaW1V0jTU/fh3QzYEZN8wDwrzRIBoADCJfn4mJCNcJN/XegifX7BDrQ8/h9Xh/JnbyMchL0FqXrkg==}
 
-  '@sqltools/formatter@1.2.5':
-    resolution: {integrity: sha512-Uy0+khmZqUrUGm5dmMqVlnvufZRSK0FbYzVgp0UMstm+F5+W2/jnEEQyc9vo1ZR/E5ZI/B1WjjoTqBqwJL6Krw==}
-
   '@stackblitz/sdk@1.11.0':
     resolution: {integrity: sha512-DFQGANNkEZRzFk1/rDP6TcFdM82ycHE+zfl9C/M/jXlH68jiqHWHFMQURLELoD8koxvu/eW5uhg94NSAZlYrUQ==}
 
@@ -5144,20 +5151,6 @@ packages:
       sqlite3:
         optional: true
 
-  drizzle-query-logger@1.1.2:
-    resolution: {integrity: sha512-/VyJOlC5BDnENuhdQws1CfKwBEUK6qycpsZiCmDfEjVc3P/x7vpyY5C9wz/hDkPu/GHAiQPz2OTnpv8/AFEItA==}
-    peerDependencies:
-      drizzle-orm: '>=0.44.3 <1.0.0'
-      typescript: ^5
-
-  drizzle-seed@0.3.1:
-    resolution: {integrity: sha512-F/0lgvfOAsqlYoHM/QAGut4xXIOXoE5VoAdv2FIl7DpGYVXlAzKuJO+IphkKUFK3Dz+rFlOsQLnMNrvoQ0cx7g==}
-    peerDependencies:
-      drizzle-orm: '>=0.36.4'
-    peerDependenciesMeta:
-      drizzle-orm:
-        optional: true
-
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
     engines: {node: '>= 0.4'}
@@ -7050,9 +7043,6 @@ packages:
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
-
-  pure-rand@6.1.0:
-    resolution: {integrity: sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA==}
 
   qs@6.5.5:
     resolution: {integrity: sha512-mzR4sElr1bfCaPJe7m8ilJ6ZXdDaGoObcYR0ZHSsktM/Lt21MVHj5De30GQH2eiZ1qGRTO7LCAzQsUeXTNexWQ==}
@@ -10608,8 +10598,6 @@ snapshots:
   '@speed-highlight/core@1.2.17':
     optional: true
 
-  '@sqltools/formatter@1.2.5': {}
-
   '@stackblitz/sdk@1.11.0': {}
 
   '@standard-schema/spec@1.0.0': {}
@@ -12701,10 +12689,10 @@ snapshots:
 
   dayjs@1.11.21: {}
 
-  db0@0.3.4(@libsql/client@0.15.15)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.15.15)(@types/pg@8.20.0)(kysely@0.29.2)):
+  db0@0.3.4(@libsql/client@0.17.4)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.17.4)(@types/pg@8.20.0)(kysely@0.29.2)):
     optionalDependencies:
-      '@libsql/client': 0.15.15
-      drizzle-orm: 0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.15.15)(@types/pg@8.20.0)(kysely@0.29.2)
+      '@libsql/client': 0.17.4
+      drizzle-orm: 0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.17.4)(@types/pg@8.20.0)(kysely@0.29.2)
 
   debug@2.6.9:
     dependencies:
@@ -12813,18 +12801,6 @@ snapshots:
       '@types/pg': 8.20.0
       kysely: 0.29.2
     optional: true
-
-  drizzle-query-logger@1.1.2(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.15.15)(@types/pg@8.20.0)(kysely@0.29.2))(typescript@6.0.3):
-    dependencies:
-      '@sqltools/formatter': 1.2.5
-      drizzle-orm: 0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.15.15)(@types/pg@8.20.0)(kysely@0.29.2)
-      typescript: 6.0.3
-
-  drizzle-seed@0.3.1(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.15.15)(@types/pg@8.20.0)(kysely@0.29.2)):
-    dependencies:
-      pure-rand: 6.1.0
-    optionalDependencies:
-      drizzle-orm: 0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.15.15)(@types/pg@8.20.0)(kysely@0.29.2)
 
   dunder-proto@1.0.1:
     dependencies:
@@ -13288,10 +13264,10 @@ snapshots:
 
   eventemitter3@5.0.4: {}
 
-  evlog@2.19.2(@tanstack/start-client-core@1.170.12)(@voidzero-dev/vite-plus-core@0.2.1(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(nitro-nightly@3.0.1-20260626-071224-83acc441(@libsql/client@0.15.15)(@voidzero-dev/vite-plus-core@0.2.1(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(chokidar@5.0.0)(dotenv@16.6.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.15.15)(@types/pg@8.20.0)(kysely@0.29.2))(jiti@2.7.0)(lru-cache@11.5.1)(miniflare@4.20260625.0)(wrangler@4.105.0(@cloudflare/workers-types@4.20260626.1)))(ofetch@2.0.0-alpha.3)(react@19.2.7):
+  evlog@2.19.2(@tanstack/start-client-core@1.170.12)(@voidzero-dev/vite-plus-core@0.2.1(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(nitro-nightly@3.0.1-20260626-071224-83acc441(@libsql/client@0.17.4)(@voidzero-dev/vite-plus-core@0.2.1(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(chokidar@5.0.0)(dotenv@16.6.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.17.4)(@types/pg@8.20.0)(kysely@0.29.2))(jiti@2.7.0)(lru-cache@11.5.1)(miniflare@4.20260625.0)(wrangler@4.105.0(@cloudflare/workers-types@4.20260626.1)))(ofetch@2.0.0-alpha.3)(react@19.2.7):
     optionalDependencies:
       '@tanstack/start-client-core': 1.170.12
-      nitro: nitro-nightly@3.0.1-20260626-071224-83acc441(@libsql/client@0.15.15)(@voidzero-dev/vite-plus-core@0.2.1(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(chokidar@5.0.0)(dotenv@16.6.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.15.15)(@types/pg@8.20.0)(kysely@0.29.2))(jiti@2.7.0)(lru-cache@11.5.1)(miniflare@4.20260625.0)(wrangler@4.105.0(@cloudflare/workers-types@4.20260626.1))
+      nitro: nitro-nightly@3.0.1-20260626-071224-83acc441(@libsql/client@0.17.4)(@voidzero-dev/vite-plus-core@0.2.1(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(chokidar@5.0.0)(dotenv@16.6.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.17.4)(@types/pg@8.20.0)(kysely@0.29.2))(jiti@2.7.0)(lru-cache@11.5.1)(miniflare@4.20260625.0)(wrangler@4.105.0(@cloudflare/workers-types@4.20260626.1))
       ofetch: 2.0.0-alpha.3
       react: 19.2.7
       vite: '@voidzero-dev/vite-plus-core@0.2.1(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0)'
@@ -14521,11 +14497,11 @@ snapshots:
 
   nf3@0.3.17: {}
 
-  nitro-nightly@3.0.1-20260626-071224-83acc441(@libsql/client@0.15.15)(@voidzero-dev/vite-plus-core@0.2.1(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(chokidar@5.0.0)(dotenv@16.6.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.15.15)(@types/pg@8.20.0)(kysely@0.29.2))(jiti@2.7.0)(lru-cache@11.5.1)(miniflare@4.20260625.0)(wrangler@4.105.0(@cloudflare/workers-types@4.20260626.1)):
+  nitro-nightly@3.0.1-20260626-071224-83acc441(@libsql/client@0.17.4)(@voidzero-dev/vite-plus-core@0.2.1(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@6.0.3)(yaml@2.9.0))(chokidar@5.0.0)(dotenv@16.6.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.17.4)(@types/pg@8.20.0)(kysely@0.29.2))(jiti@2.7.0)(lru-cache@11.5.1)(miniflare@4.20260625.0)(wrangler@4.105.0(@cloudflare/workers-types@4.20260626.1)):
     dependencies:
       consola: 3.4.2
       crossws: 0.4.6(srvx@0.11.17)
-      db0: 0.3.4(@libsql/client@0.15.15)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.15.15)(@types/pg@8.20.0)(kysely@0.29.2))
+      db0: 0.3.4(@libsql/client@0.17.4)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.17.4)(@types/pg@8.20.0)(kysely@0.29.2))
       env-runner: 0.1.14(miniflare@4.20260625.0)(wrangler@4.105.0(@cloudflare/workers-types@4.20260626.1))
       h3: 2.0.1-rc.22(crossws@0.4.6(srvx@0.11.17))
       hookable: 6.1.1
@@ -14536,7 +14512,7 @@ snapshots:
       rolldown: 1.1.2
       srvx: 0.11.17
       unenv: 2.0.0-rc.24
-      unstorage: 2.0.0-alpha.7(chokidar@5.0.0)(db0@0.3.4(@libsql/client@0.15.15)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.15.15)(@types/pg@8.20.0)(kysely@0.29.2)))(lru-cache@11.5.1)(ofetch@2.0.0-alpha.3)
+      unstorage: 2.0.0-alpha.7(chokidar@5.0.0)(db0@0.3.4(@libsql/client@0.17.4)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.17.4)(@types/pg@8.20.0)(kysely@0.29.2)))(lru-cache@11.5.1)(ofetch@2.0.0-alpha.3)
     optionalDependencies:
       dotenv: 16.6.1
       jiti: 2.7.0
@@ -15021,8 +14997,6 @@ snapshots:
       punycode: 2.3.1
 
   punycode@2.3.1: {}
-
-  pure-rand@6.1.0: {}
 
   qs@6.5.5: {}
 
@@ -16176,10 +16150,10 @@ snapshots:
       isobject: 3.0.1
     optional: true
 
-  unstorage@2.0.0-alpha.7(chokidar@5.0.0)(db0@0.3.4(@libsql/client@0.15.15)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.15.15)(@types/pg@8.20.0)(kysely@0.29.2)))(lru-cache@11.5.1)(ofetch@2.0.0-alpha.3):
+  unstorage@2.0.0-alpha.7(chokidar@5.0.0)(db0@0.3.4(@libsql/client@0.17.4)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.17.4)(@types/pg@8.20.0)(kysely@0.29.2)))(lru-cache@11.5.1)(ofetch@2.0.0-alpha.3):
     optionalDependencies:
       chokidar: 5.0.0
-      db0: 0.3.4(@libsql/client@0.15.15)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.15.15)(@types/pg@8.20.0)(kysely@0.29.2))
+      db0: 0.3.4(@libsql/client@0.17.4)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.17.4)(@types/pg@8.20.0)(kysely@0.29.2))
       lru-cache: 11.5.1
       ofetch: 2.0.0-alpha.3
 

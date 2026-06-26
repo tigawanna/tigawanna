@@ -45,7 +45,7 @@ export function CreatureEggTrigger({
 
     const go = () => {
       playCreatureCurtainClose(() => {
-        navigate({ to: "/creature-feature" });
+        void navigate({ to: "/creature-feature" });
       });
     };
 

@@ -21,20 +21,22 @@ export function GenericTable<T extends Record<string, any>>({
 }: GenericTableProps<T>) {
   const modalRef = useRef<HTMLDialogElement | null>(null);
   const { viewer } = useViewer();
-  const role = viewer?.user?.role;
-  // @ts-expect-error
-  const [input, setInput] = useState<T>({});
+  const canEdit = viewer?.isAdmin === true;
+  const [input, setInput] = useState<T | null>(null);
   const mutation = useMutation({
-    mutationFn: (input: T) => {
-      return updateItem ? updateItem?.(input) : new Promise((resolve) => resolve({}));
+    mutationFn: (item: T) => {
+      return updateItem ? updateItem(item) : new Promise((resolve) => resolve({}));
     },
   });
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
-    setInput((prev) => ({ ...prev, [name]: value }));
+    setInput((prev) => (prev ? { ...prev, [name]: value } : prev));
   }
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!input) {
+      return;
+    }
     mutation.mutate(input);
     modalRef.current?.close();
   }
@@ -46,7 +48,7 @@ export function GenericTable<T extends Record<string, any>>({
             {columns.map((column) => (
               <th key={column.accessor}>{column.label}</th>
             ))}
-            {role === "staff" && <th>Edit</th>}
+            {canEdit && <th>Edit</th>}
           </tr>
         </thead>
         <tbody>
@@ -55,7 +57,7 @@ export function GenericTable<T extends Record<string, any>>({
               {columns.map((column) => (
                 <td key={row.id + column.accessor}>{row[column.accessor]}</td>
               ))}
-              {role === "staff" && (
+              {canEdit && (
                 <td>
                   <Edit
                     className="size-4"
@@ -80,7 +82,7 @@ export function GenericTable<T extends Record<string, any>>({
                   <span className="label-text">{column.label}</span>
                 </label>
                 <input
-                  value={input[column.accessor]}
+                  value={input ? String(input[column.accessor] ?? "") : ""}
                   onChange={handleChange}
                   id={column.accessor}
                   name={column.accessor}

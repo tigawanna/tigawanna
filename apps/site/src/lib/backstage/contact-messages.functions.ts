@@ -1,8 +1,7 @@
 import { requireAdminSession } from "@/lib/admin-auth/require-admin";
-import { getDb } from "@/lib/drizzle/get-db";
-import { contactMessages } from "@/lib/drizzle/schema/app-schema";
+import { contactMessages, desc } from "@repo/db";
+import { getDb } from "@/lib/get-db";
 import { createServerFn } from "@tanstack/react-start";
-import { desc } from "drizzle-orm";
 
 export const listContactMessages = createServerFn({ method: "GET" }).handler(async () => {
   await requireAdminSession();

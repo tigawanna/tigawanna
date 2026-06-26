@@ -11,8 +11,8 @@ import {
   createAdminSessionToken,
   verifyAdminSessionToken,
 } from "@/lib/admin-auth/session";
-import { getDb } from "@/lib/drizzle/get-db";
-import { adminLoginChallenges } from "@/lib/drizzle/schema/app-schema";
+import { adminLoginChallenges, and, desc, eq, gt, lt } from "@repo/db";
+import { getDb } from "@/lib/get-db";
 import { TelegramNotifier } from "@/lib/telegram/client";
 import { getServerEnv } from "@/lib/server-env";
 import { createServerFn } from "@tanstack/react-start";
@@ -22,7 +22,6 @@ import {
   getRequestProtocol,
   setCookie,
 } from "@tanstack/react-start/server";
-import { and, desc, eq, gt, lt } from "drizzle-orm";
 import { z } from "zod";
 
 export type AdminViewer = {

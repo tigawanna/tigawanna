@@ -158,7 +158,7 @@ export function AsyncSelect<T>({
     : queryOptions.queryKey;
 
   const {
-    data: options = [] as T[],
+    data: options,
     isLoading,
     error,
   } = useQuery({
@@ -167,6 +167,8 @@ export function AsyncSelect<T>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } as any) as { data: T[]; isLoading: boolean; error: Error | null };
 
+  const resolvedOptions = options ?? [];
+
   useEffect(() => {
     setMounted(true);
     setSelectedValue(value);
@@ -174,13 +176,13 @@ export function AsyncSelect<T>({
 
   // Initialize selectedOption when options are loaded and value exists
   useEffect(() => {
-    if (value && options.length > 0) {
-      const option = options.find((opt) => getOptionValue(opt) === value);
+    if (value && resolvedOptions.length > 0) {
+      const option = resolvedOptions.find((opt) => getOptionValue(opt) === value);
       if (option) {
         setSelectedOption(option);
       }
     }
-  }, [value, options, getOptionValue]);
+  }, [value, resolvedOptions, getOptionValue]);
 
   // Filter options based on search term
   // First apply local filter, then optionally trigger API filter
@@ -188,12 +190,12 @@ export function AsyncSelect<T>({
     if (!mounted) return;
 
     // Always apply local filtering if available
-    let filtered = options;
+    let filtered = resolvedOptions;
     if (debouncedSearchTerm && filterFn) {
-      filtered = options.filter((option) => filterFn(option, debouncedSearchTerm));
+      filtered = resolvedOptions.filter((option) => filterFn(option, debouncedSearchTerm));
     }
     setFilteredOptions(filtered);
-  }, [options, debouncedSearchTerm, filterFn, mounted]);
+  }, [resolvedOptions, debouncedSearchTerm, filterFn, mounted]);
 
   const handleSelect = useCallback(
     (currentValue: string) => {

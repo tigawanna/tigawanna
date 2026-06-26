@@ -1,9 +1,7 @@
 import { useTheme } from "@/lib/tanstack/router/use-theme";
 import { Moon, Sun } from "lucide-react";
 
-interface ThemeToggleProps {}
-
-export function ThemeToggle({}: ThemeToggleProps) {
+export function ThemeToggle() {
   const { theme, updateTheme } = useTheme();
 
   function toggleTheme() {

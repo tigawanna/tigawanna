@@ -1,4 +1,20 @@
+import { config } from "dotenv";
 import { defineConfig } from "drizzle-kit";
+import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const packageRoot = fileURLToPath(new URL(".", import.meta.url));
+
+const envPaths = [
+  resolve(packageRoot, ".env"),
+  resolve(packageRoot, ".env.local"),
+  resolve(packageRoot, "../../apps/site/.env"),
+  resolve(packageRoot, "../../apps/site/.env.local"),
+];
+
+for (const envPath of envPaths) {
+  config({ path: envPath, override: false });
+}
 
 const DEFAULT_DATABASE_URL = "file:./local.db";
 
@@ -10,7 +26,7 @@ const isTursoRemote =
   !databaseUrl.includes("localhost");
 
 export default defineConfig({
-  schema: "./src/lib/drizzle/schema/index.ts",
+  schema: "./src/schema/index.ts",
   out: "./drizzle",
   dialect: isTursoRemote ? "turso" : "sqlite",
   dbCredentials: isTursoRemote

@@ -2,8 +2,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { contactFormSchema, type ContactFormValues } from "./contact-schema";
 import { TelegramNotifier } from "./client";
-import { getDb } from "@/lib/drizzle/get-db";
-import { contactMessages } from "@/lib/drizzle/schema/app-schema";
+import { contactMessages } from "@repo/db";
+import { getDb } from "@/lib/get-db";
 
 function createMessageId() {
   return crypto.randomUUID();

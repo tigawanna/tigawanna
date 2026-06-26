@@ -1,4 +1,4 @@
-import { DEFAULT_DATABASE_URL } from "@/lib/drizzle/db";
+import { DEFAULT_DATABASE_URL } from "@repo/db";
 
 export type ServerEnv = {
   ADMIN_EMAIL: string;
