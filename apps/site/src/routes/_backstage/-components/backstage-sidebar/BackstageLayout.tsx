@@ -17,46 +17,29 @@ import { Helmet } from "@/components/wrappers/custom-helmet";
 import { TSRBreadCrumbs } from "@/lib/tanstack/router/TSRBreadCrumbs";
 import { AppConfig } from "@/utils/system";
 import { Outlet } from "@tanstack/react-router";
-import { BackstageBotIdInit } from "../BackstageBotIdInit";
 import { BackstageSidebarFooter } from "./BackstageSidebarFooter";
 import { BackstageSidebarHeader } from "./BackstageSidebarHeader";
 
 interface BackstageLayoutProps {
-  sidebarRoutes: SidebarItem[];
-  sidebarLabel: string;
-  adminRoutes: SidebarItem[];
-  adminLabel: string;
+  routes: SidebarItem[];
+  label: string;
 }
 
-export function BackstageLayout({
-  sidebarRoutes,
-  sidebarLabel,
-  adminRoutes,
-  adminLabel,
-}: BackstageLayoutProps) {
+export function BackstageLayout({ routes, label }: BackstageLayoutProps) {
   return (
     <SidebarProvider defaultOpen={false}>
-      <BackstageBotIdInit />
       <Helmet title={`${AppConfig.name} | Backstage`} description="Site controls" />
       <Sidebar collapsible="icon">
         <SidebarHeader>
           <BackstageSidebarHeader />
         </SidebarHeader>
         <SidebarContent>
-          {sidebarRoutes.length > 0 ? (
+          {routes.length > 0 ? (
             <SidebarGroup className="bg-base-300">
               <SidebarGroupLabel className="text-sm font-semibold tracking-wide">
-                {sidebarLabel}
+                {label}
               </SidebarGroupLabel>
-              <SidebarLinks links={sidebarRoutes} />
-            </SidebarGroup>
-          ) : null}
-          {adminRoutes.length > 0 ? (
-            <SidebarGroup className="bg-base-300">
-              <SidebarGroupLabel className="text-sm font-semibold tracking-wide">
-                {adminLabel}
-              </SidebarGroupLabel>
-              <SidebarLinks links={adminRoutes} />
+              <SidebarLinks links={routes} />
             </SidebarGroup>
           ) : null}
         </SidebarContent>

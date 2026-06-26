@@ -9,6 +9,8 @@ local.db
 *.db
 .nitro
 .tanstack
+.workflow-data
+.workflow-vitest
 .wrangler
 .output
 .vinxi

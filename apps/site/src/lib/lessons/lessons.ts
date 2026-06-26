@@ -47,11 +47,11 @@ async function fetchLessonsPage(page: number, perPage: number): Promise<LessonsP
 }
 
 export const getLessons = createServerFn({ method: "GET" })
-  .inputValidator((input: { page?: number; perPage?: number }) => input)
+  .validator((input: { page?: number; perPage?: number }) => input)
   .handler(async ({ data: { page = 1, perPage = 6 } }) => fetchLessonsPage(page, perPage));
 
 export const getLessonsPreview = createServerFn({ method: "GET" })
-  .inputValidator((input: { page?: number; perPage?: number }) => input)
+  .validator((input: { page?: number; perPage?: number }) => input)
   .handler(async ({ data: { page = 1, perPage = 6 } }) => {
     const result = await fetchLessonsPage(page, perPage);
     if (!result.items.length) {
@@ -82,11 +82,11 @@ async function fetchLesson(id: string): Promise<LessonItem | null> {
 }
 
 export const getLesson = createServerFn({ method: "GET" })
-  .inputValidator((input: { id: string }) => input)
+  .validator((input: { id: string }) => input)
   .handler(async ({ data: { id } }) => fetchLesson(id));
 
 export const getLessonMarkdownHtml = createServerFn({ method: "GET" })
-  .inputValidator((input: { id: string }) => input)
+  .validator((input: { id: string }) => input)
   .handler(async ({ data: { id } }) => {
     const lesson = await fetchLesson(id);
     if (!lesson?.markdown) {

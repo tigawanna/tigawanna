@@ -43,6 +43,12 @@ async function hasPendingSuggestion(db: ReturnType<typeof getDb>, githubRepoId: 
   return rows.length > 0;
 }
 
+export async function importRepoSnapshot(repo: GithubRepoSnapshot) {
+  const db = getDb();
+  const attendance = isRepoMetadataComplete(repo) ? "complete" : "needs_enrichment";
+  await syncRepoSnapshot(db, repo, attendance);
+}
+
 async function syncRepoSnapshot(
   db: ReturnType<typeof getDb>,
   repo: GithubRepoSnapshot,

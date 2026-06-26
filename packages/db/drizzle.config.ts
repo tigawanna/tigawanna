@@ -16,7 +16,7 @@ for (const envPath of envPaths) {
   config({ path: envPath, override: false });
 }
 
-const DEFAULT_DATABASE_URL = "file:./local.db";
+const DEFAULT_DATABASE_URL = `file:${resolve(packageRoot, "../../apps/site/local.db")}`;
 
 const databaseUrl = process.env.DATABASE_URL ?? DEFAULT_DATABASE_URL;
 

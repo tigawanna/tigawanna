@@ -11,7 +11,7 @@ function BackstageHomePage() {
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Backstage</h1>
         <p className="text-base-content/60 mt-2 text-sm">
-          Manage contact messages and featured project ordering.
+          Manage contact messages, imported projects, and enrichment workflows.
         </p>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
@@ -29,11 +29,25 @@ function BackstageHomePage() {
         <Card>
           <CardHeader>
             <CardTitle>Projects</CardTitle>
-            <CardDescription>Control which repos appear first on the landing page.</CardDescription>
+            <CardDescription>Repos imported into the database.</CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-wrap gap-2">
+            <Link to="/backstage/projects" className="btn btn-primary btn-sm">
+              View projects
+            </Link>
+            <Link to="/backstage/repos" className="btn btn-ghost btn-sm">
+              Import repos
+            </Link>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Workflow</CardTitle>
+            <CardDescription>Enrichment runs and metadata review.</CardDescription>
           </CardHeader>
           <CardContent>
-            <Link to="/backstage/projects" className="btn btn-primary btn-sm">
-              Manage projects
+            <Link to="/backstage/workflow" className="btn btn-primary btn-sm">
+              Open workflow
             </Link>
           </CardContent>
         </Card>

@@ -6,10 +6,7 @@ import { RouterErrorComponent } from "@/lib/tanstack/router/routerErrorComponent
 import { AppConfig } from "@/utils/system";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { BackstageLayout } from "./-components/backstage-sidebar/BackstageLayout";
-import {
-  backstage_admin_routes,
-  getBackstagePrimaryRoutes,
-} from "./-components/backstage-sidebar/backstage_routes";
+import { backstage_routes } from "./-components/backstage-sidebar/backstage_routes";
 
 export const Route = createFileRoute("/_backstage")({
   pendingComponent: () => <RouterPendingComponent />,
@@ -41,12 +38,5 @@ function BackstageShell() {
   const { viewer } = Route.useRouteContext();
   const isAdmin = isAdminUser(viewer);
 
-  return (
-    <BackstageLayout
-      sidebarRoutes={getBackstagePrimaryRoutes(isAdmin)}
-      sidebarLabel="Backstage"
-      adminRoutes={isAdmin ? backstage_admin_routes : []}
-      adminLabel="Administration"
-    />
-  );
+  return <BackstageLayout routes={isAdmin ? backstage_routes : []} label="Backstage" />;
 }

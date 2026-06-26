@@ -1,8 +1,11 @@
 import { requireAdminSession } from "@/lib/admin-auth/require-admin";
 import { applyRepoMetadata } from "@/lib/github/apply-repo-metadata";
 import { getDb } from "@/lib/get-db";
+import { createRunRecord } from "@/lib/project-enrichment/run-enrichment";
+import type { EnrichmentRunParams } from "@/lib/project-enrichment/types";
 import { getServerEnv } from "@/lib/server-env";
 import { unwrapUnknownError } from "@/utils/errors";
+import { enrichProjectsWorkflow } from "@/workflows/project-enrichment";
 import {
   and,
   desc,
@@ -12,6 +15,8 @@ import {
   projectRepos,
 } from "@repo/db";
 import { createServerFn } from "@tanstack/react-start";
+import { start } from "workflow/api";
+import { z } from "zod";
 
 function parseTopics(raw: string) {
   try {
@@ -78,7 +83,7 @@ export const listProjectEnrichmentRuns = createServerFn({ method: "GET" }).handl
 });
 
 export const approveProjectEnrichmentSuggestion = createServerFn({ method: "POST" })
-  .inputValidator(
+  .validator(
     (input: {
       suggestionId: string;
       description: string;
@@ -165,7 +170,7 @@ export const approveProjectEnrichmentSuggestion = createServerFn({ method: "POST
   });
 
 export const rejectProjectEnrichmentSuggestion = createServerFn({ method: "POST" })
-  .inputValidator((input: { suggestionId: string }) => input)
+  .validator((input: { suggestionId: string }) => input)
   .handler(async ({ data }) => {
     await requireAdminSession();
     const db = getDb();
@@ -204,4 +209,33 @@ export const rejectProjectEnrichmentSuggestion = createServerFn({ method: "POST"
       .where(eq(projectRepos.githubRepoId, row.repo.githubRepoId));
 
     return { ok: true };
+  });
+
+const triggerEnrichmentInputSchema = z.object({
+  limit: z.number().int().min(1).max(100).optional(),
+  repos: z.array(z.string().regex(/^[^/]+\/[^/]+$/)).optional(),
+  force: z.boolean().optional(),
+});
+
+export const triggerProjectEnrichmentRun = createServerFn({ method: "POST" })
+  .validator((input: z.infer<typeof triggerEnrichmentInputSchema>) =>
+    triggerEnrichmentInputSchema.parse(input),
+  )
+  .handler(async ({ data }) => {
+    await requireAdminSession();
+
+    const trigger: EnrichmentRunParams["trigger"] = data.repos?.length ? "manual" : "scheduled";
+    const runId = await createRunRecord(trigger, data.repos ?? null);
+
+    const params: EnrichmentRunParams = {
+      runId,
+      trigger,
+      limit: data.limit ?? 100,
+      repos: data.repos,
+      force: data.force ?? false,
+    };
+
+    await start(enrichProjectsWorkflow, [params]);
+
+    return { runId, status: "started" as const };
   });

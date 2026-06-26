@@ -37,7 +37,7 @@ query OneRepo($owner: String!, $repo: String!, $firstTopics: Int!, $firstLangs: 
 }`;
 
 export const getRepoDetail = createServerFn({ method: "GET" })
-  .inputValidator((input: { owner: string; repo: string }) => input)
+  .validator((input: { owner: string; repo: string }) => input)
   .handler(async ({ data: { owner, repo } }) => {
     const pat = getServerEnv().GH_PAT;
     if (!pat) {
@@ -65,7 +65,7 @@ export const getRepoDetail = createServerFn({ method: "GET" })
   });
 
 export const getRepoReadmeHtml = createServerFn({ method: "GET" })
-  .inputValidator((input: { owner: string; repo: string }) => input)
+  .validator((input: { owner: string; repo: string }) => input)
   .handler(async ({ data: { owner, repo } }) => {
     const { convertMarkdownToHtml } = await import("@/lib/markdown/convert");
 

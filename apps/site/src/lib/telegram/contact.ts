@@ -10,7 +10,7 @@ function createMessageId() {
 }
 
 export const sendContactMessage = createServerFn({ method: "POST" })
-  .inputValidator((input: ContactFormValues) => contactFormSchema.parse(input))
+  .validator((input: ContactFormValues) => contactFormSchema.parse(input))
   .handler(async ({ data }) => {
     const hasContact = Boolean(data.contact && data.contact.trim().length > 0);
     const headers = getRequestHeaders();
