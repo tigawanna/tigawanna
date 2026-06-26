@@ -28,11 +28,11 @@
 }
 
 @utility landing-card {
-  @apply rounded-[1.75rem] border border-landing-cream/10 bg-landing-panel shadow-xl shadow-black/30;
+  @apply relative rounded-[1.75rem] border border-landing-cream/10 bg-landing-panel shadow-xl shadow-black/30;
 }
 
 @utility landing-card-tag {
-  @apply rounded-md bg-landing-cream/[0.06] px-2.5 py-0.5 text-xs text-landing-sage/75;
+  @apply rounded-full border border-landing-cream/8 bg-landing-cream/6 px-2.5 py-0.5 text-xs text-landing-sage/75;
 }
 
 @utility landing-section-heading {
@@ -87,6 +87,73 @@
   );
 }
 
+.landing-card {
+  --landing-card-glow-x: 50%;
+  --landing-card-glow-y: 18%;
+  isolation: isolate;
+  transition:
+    border-color 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.landing-card::before {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      circle at var(--landing-card-glow-x) var(--landing-card-glow-y),
+      color-mix(in oklch, var(--color-landing-cream-highlight) 14%, transparent),
+      transparent 34%
+    ),
+    linear-gradient(
+      135deg,
+      color-mix(in oklch, var(--color-landing-sage) 8%, transparent),
+      transparent 42%,
+      color-mix(in oklch, var(--color-landing-olive) 10%, transparent)
+    );
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.landing-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.landing-card:is(:hover, :focus-within),
+.landing-card[data-motion="active"] {
+  border-color: color-mix(in oklch, var(--color-landing-cream) 22%, transparent);
+  box-shadow:
+    0 24px 60px rgb(0 0 0 / 0.34),
+    0 0 0 1px color-mix(in oklch, var(--color-landing-cream) 7%, transparent);
+}
+
+.landing-card:is(:hover, :focus-within)::before,
+.landing-card[data-motion="active"]::before {
+  opacity: 1;
+}
+
+.landing-card-media {
+  background: color-mix(in oklch, var(--color-landing-panel) 92%, black);
+}
+
+.landing-card-media-image {
+  transition:
+    filter 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.landing-card:is(:hover, :focus-within) .landing-card-media-image,
+.landing-card[data-motion="active"] .landing-card-media-image {
+  filter: saturate(1.04) contrast(1.04);
+  transform: scale(1.045);
+}
+
 .cube-face {
   border-color: color-mix(in oklch, var(--color-landing-sage) 14%, transparent);
 }
@@ -129,4 +196,17 @@
 
 .markdown-on-panel blockquote {
   @apply text-landing-cream/80;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-card,
+  .landing-card::before,
+  .landing-card-media-image {
+    transition-duration: 0.01ms;
+  }
+
+  .landing-card:is(:hover, :focus-within) .landing-card-media-image,
+  .landing-card[data-motion="active"] .landing-card-media-image {
+    transform: none;
+  }
 }

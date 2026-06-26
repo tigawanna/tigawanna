@@ -1,7 +1,9 @@
 import { TimeCompponent } from "@/components/wrappers/TimeCompponent";
+import { useLandingCardMotion } from "@/hooks/use-landing-card-motion";
 import type { GithubRepoNode } from "@/types/github";
 import { Link } from "@tanstack/react-router";
 import { Github, Globe, Lock } from "lucide-react";
+import { useRef } from "react";
 import { twMerge } from "tailwind-merge";
 
 function projectRouteParam(nameWithOwner: string) {
@@ -14,11 +16,15 @@ interface ProjectCardProps {
 }
 
 export function PrivateProjectCard({ repo, className }: ProjectCardProps) {
+  const cardRef = useRef<HTMLElement | null>(null);
+  useLandingCardMotion(cardRef);
+
   return (
     <article
+      ref={cardRef}
       data-test="private-project-card"
       className={twMerge(
-        "landing-card flex min-h-[320px] flex-col items-center justify-center gap-4 p-7 text-center",
+        "landing-card flex min-h-[320px] flex-col items-center justify-center gap-4 overflow-hidden p-7 text-center",
         className,
       )}
     >
@@ -42,18 +48,26 @@ export function PrivateProjectCard({ repo, className }: ProjectCardProps) {
 }
 
 export function ProjectCard({ repo, className }: ProjectCardProps) {
+  const cardRef = useRef<HTMLElement | null>(null);
+  useLandingCardMotion(cardRef);
+
   const imageUrl =
     repo.openGraphImageUrl && repo.openGraphImageUrl.length > 0 ? repo.openGraphImageUrl : null;
 
   return (
     <article
+      ref={cardRef}
       data-test="project-card"
       className={twMerge("landing-card group relative flex flex-col overflow-hidden", className)}
     >
-      <div className="relative h-48 shrink-0 overflow-hidden">
+      <div className="landing-card-media relative h-48 shrink-0 overflow-hidden">
         {imageUrl ? (
           <>
-            <img src={imageUrl} alt={repo.name} className="h-full w-full object-cover" />
+            <img
+              src={imageUrl}
+              alt={repo.name}
+              className="landing-card-media-image h-full w-full object-cover"
+            />
             <div className="absolute inset-0 bg-linear-to-t from-landing-panel via-landing-panel/10 to-transparent" />
           </>
         ) : (

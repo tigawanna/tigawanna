@@ -1,6 +1,8 @@
+import { useLandingCardMotion } from "@/hooks/use-landing-card-motion";
 import type { LessonPreviewItem } from "@/types/lessons";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, ExternalLink } from "lucide-react";
+import { useRef } from "react";
 import { twMerge } from "tailwind-merge";
 
 const cardSurfaces = [
@@ -22,6 +24,9 @@ interface LessonCardProps {
 }
 
 export function LessonCard({ item, className, tone = 0 }: LessonCardProps) {
+  const cardRef = useRef<HTMLElement | null>(null);
+  useLandingCardMotion(cardRef);
+
   const formattedDate = new Date(item.created).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
@@ -30,9 +35,10 @@ export function LessonCard({ item, className, tone = 0 }: LessonCardProps) {
 
   return (
     <article
+      ref={cardRef}
       data-test="lesson-card"
       className={twMerge(
-        "group flex flex-col overflow-hidden rounded-t-[1.75rem] shadow-xl shadow-black/30",
+        "landing-card group flex flex-col overflow-hidden",
         cardSurfaces[tone],
         className,
       )}

@@ -1,5 +1,7 @@
+import { useLandingCardMotion } from "@/hooks/use-landing-card-motion";
 import type { DevtoArticle } from "@/types/devto";
 import { ArrowUpRight } from "lucide-react";
+import { useRef } from "react";
 import { twMerge } from "tailwind-merge";
 
 interface ArticleCardProps {
@@ -8,17 +10,25 @@ interface ArticleCardProps {
 }
 
 export function ArticleCard({ article, className }: ArticleCardProps) {
+  const cardRef = useRef<HTMLElement | null>(null);
+  useLandingCardMotion(cardRef);
+
   const imageUrl = article.social_image || article.cover_image;
 
   return (
     <article
+      ref={cardRef}
       data-test="article-card"
       className={twMerge("landing-card group relative flex flex-col overflow-hidden", className)}
     >
-      <div className="relative h-44 shrink-0 overflow-hidden">
+      <div className="landing-card-media relative h-44 shrink-0 overflow-hidden">
         {imageUrl ? (
           <>
-            <img src={imageUrl} alt={article.title} className="h-full w-full object-cover" />
+            <img
+              src={imageUrl}
+              alt={article.title}
+              className="landing-card-media-image h-full w-full object-cover"
+            />
             <div className="absolute inset-0 bg-linear-to-t from-landing-panel via-landing-panel/20 to-transparent" />
           </>
         ) : (
