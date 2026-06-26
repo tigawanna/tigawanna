@@ -2,7 +2,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function PortfolioGridSkeleton({ count = 3 }: { count?: number }) {
   return (
-    <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3" data-test="portfolio-grid-skeleton">
+    <div
+      className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+      data-test="portfolio-grid-skeleton"
+    >
       {Array.from({ length: count }).map((_, index) => (
         <div
           key={index}

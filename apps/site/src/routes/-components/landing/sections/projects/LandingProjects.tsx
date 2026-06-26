@@ -12,10 +12,14 @@ import { renderProjectCard } from "../../cards/ProjectCard";
 import { LandingSection, OrganicDivider, SectionEyebrow } from "../../primitives";
 import { ProjectsTopicFilter, type ProjectView } from "./ProjectsTopicFilter";
 
+function filterValidRepos(repos: (GithubRepoNode | null | undefined)[]) {
+  return repos.filter((repo): repo is GithubRepoNode => repo != null);
+}
+
 function collectTopics(repos: GithubRepoNode[]) {
   const topics = new Set<string>();
   for (const repo of repos) {
-    for (const node of repo.repositoryTopics?.nodes ?? []) {
+    for (const node of repo?.repositoryTopics?.nodes ?? []) {
       if (node.topic.name) {
         topics.add(node.topic.name);
       }
@@ -39,8 +43,12 @@ function ProjectsContent() {
   const { data: pinnedResponse } = useSuspenseQuery(pinnedReposQueryOptions);
   const { data: recentResponse } = useSuspenseQuery(recentReposQueryOptions);
 
-  const pinnedRepos = resolvePinnedRepos(pinnedResponse?.data?.viewer.pinnedItems.nodes ?? []);
-  const recentRepos = resolveRecentRepos(recentResponse.data?.viewer.repositories.nodes ?? []);
+  const pinnedRepos = resolvePinnedRepos(
+    filterValidRepos(pinnedResponse?.data?.viewer.pinnedItems.nodes ?? []),
+  );
+  const recentRepos = resolveRecentRepos(
+    filterValidRepos(recentResponse.data?.viewer.repositories.nodes ?? []),
+  );
   const topics = collectTopics(recentRepos);
 
   let visibleRepos: GithubRepoNode[] = [];
@@ -52,7 +60,7 @@ function ProjectsContent() {
     visibleRepos = recentRepos
       .filter((repo) => {
         if (activeTopic === "all") return true;
-        return repo.repositoryTopics?.nodes?.some(
+        return repo?.repositoryTopics?.nodes?.some(
           (topic) => topic.topic.name.toLowerCase() === activeTopic.toLowerCase(),
         );
       })
@@ -69,12 +77,12 @@ function ProjectsContent() {
         onViewChange={setActiveView}
       />
 
-      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {visibleRepos.map((repo) => renderProjectCard(repo))}
       </div>
 
       {activeView === "recent" && recentRepos.length > 6 ? (
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {recentRepos.slice(6, 12).map((repo) => renderProjectCard(repo))}
         </div>
       ) : null}

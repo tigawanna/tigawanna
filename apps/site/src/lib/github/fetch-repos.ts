@@ -101,13 +101,17 @@ export async function githubGraphql<T>(
 
 export async function fetchRecentReposForIndexing() {
   const result = await githubGraphql<RecentReposResponse>(RECENT_REPOS_QUERY);
-  const nodes = result.data?.viewer.repositories.nodes ?? [];
+  const nodes = (result.data?.viewer.repositories.nodes ?? []).filter(
+    (repo): repo is GithubRepoNode => repo != null,
+  );
   return nodes.filter((repo) => !repo.isPrivate);
 }
 
 export async function fetchPinnedReposFromGithub() {
   const result = await githubGraphql<PinnedReposResponse>(PINNED_REPOS_QUERY);
-  return result.data?.viewer.pinnedItems.nodes ?? [];
+  return (result.data?.viewer.pinnedItems.nodes ?? []).filter(
+    (repo): repo is GithubRepoNode => repo != null,
+  );
 }
 
 export async function fetchRecentReposFromGithub() {
