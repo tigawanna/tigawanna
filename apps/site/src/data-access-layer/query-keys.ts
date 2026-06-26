@@ -6,4 +6,7 @@ export const queryKeyPrefixes = {
   kitchenProfile: "kitchenProfile",
   cuisineTypes: "cuisineTypes",
   deviceSessions: "deviceSessions",
+  lessons: "lessons",
+  github: "github",
+  backstage: "backstage",
 } as const;

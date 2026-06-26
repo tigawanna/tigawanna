@@ -1,8 +1,16 @@
-import { drizzle } from "drizzle-orm/d1";
 import * as schema from "@/lib/drizzle/schema";
+import { createClient } from "@libsql/client";
+import { drizzle } from "drizzle-orm/libsql";
 
-export function createDb(d1: D1Database) {
-  return drizzle(d1, { schema });
+export const DEFAULT_DATABASE_URL = "file:./local.db";
+
+export function createDb(url: string, authToken?: string) {
+  const client = createClient({
+    url,
+    authToken,
+  });
+
+  return drizzle(client, { schema });
 }
 
 export type AppDatabase = ReturnType<typeof createDb>;

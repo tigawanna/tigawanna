@@ -18,8 +18,8 @@ export const Route = createFileRoute("/_backstage")({
   server: {
     middleware: [backstageViewerMiddleware],
   },
-  beforeLoad: ({ context, serverContext, location }) => {
-    if (!serverContext?.isServer && !context.viewer?.user) {
+  beforeLoad: ({ context, location }) => {
+    if (!context.viewer?.isAdmin) {
       throw redirect({
         to: "/backstage/sign-in",
         search: { returnTo: location.pathname },
@@ -39,7 +39,7 @@ export const Route = createFileRoute("/_backstage")({
 
 function BackstageShell() {
   const { viewer } = Route.useRouteContext();
-  const isAdmin = isAdminUser(viewer?.user);
+  const isAdmin = isAdminUser(viewer);
 
   return (
     <BackstageLayout

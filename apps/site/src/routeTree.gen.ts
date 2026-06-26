@@ -8,262 +8,240 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as BackstageLayoutRouteImport } from './routes/_backstage/layout'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as LessonsIndexRouteImport } from './routes/lessons/index'
-import { Route as CreatureFeatureIndexRouteImport } from './routes/creature-feature/index'
-import { Route as ProjectNameRouteImport } from './routes/project/$name'
-import { Route as LessonsLessonIdRouteImport } from './routes/lessons/$lessonId'
-import { Route as BackstageSignInRouteImport } from './routes/backstage/sign-in'
-import { Route as BackstageBackstageIndexRouteImport } from './routes/_backstage/backstage/index'
-import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
-import { Route as BackstageBackstageProjectsRouteImport } from './routes/_backstage/backstage/projects'
-import { Route as BackstageBackstageMessagesRouteImport } from './routes/_backstage/backstage/messages'
+import { Route as rootRouteImport } from "./routes/__root";
+import { Route as BackstageLayoutRouteImport } from "./routes/_backstage/layout";
+import { Route as IndexRouteImport } from "./routes/index";
+import { Route as LessonsIndexRouteImport } from "./routes/lessons/index";
+import { Route as CreatureFeatureIndexRouteImport } from "./routes/creature-feature/index";
+import { Route as ProjectNameRouteImport } from "./routes/project/$name";
+import { Route as LessonsLessonIdRouteImport } from "./routes/lessons/$lessonId";
+import { Route as BackstageSignInRouteImport } from "./routes/backstage/sign-in";
+import { Route as BackstageBackstageIndexRouteImport } from "./routes/_backstage/backstage/index";
+import { Route as BackstageBackstageProjectsRouteImport } from "./routes/_backstage/backstage/projects";
+import { Route as BackstageBackstageMessagesRouteImport } from "./routes/_backstage/backstage/messages";
 
 const BackstageLayoutRoute = BackstageLayoutRouteImport.update({
-  id: '/_backstage',
+  id: "/_backstage",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const LessonsIndexRoute = LessonsIndexRouteImport.update({
-  id: '/lessons/',
-  path: '/lessons/',
+  id: "/lessons/",
+  path: "/lessons/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const CreatureFeatureIndexRoute = CreatureFeatureIndexRouteImport.update({
-  id: '/creature-feature/',
-  path: '/creature-feature/',
+  id: "/creature-feature/",
+  path: "/creature-feature/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ProjectNameRoute = ProjectNameRouteImport.update({
-  id: '/project/$name',
-  path: '/project/$name',
+  id: "/project/$name",
+  path: "/project/$name",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const LessonsLessonIdRoute = LessonsLessonIdRouteImport.update({
-  id: '/lessons/$lessonId',
-  path: '/lessons/$lessonId',
+  id: "/lessons/$lessonId",
+  path: "/lessons/$lessonId",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const BackstageSignInRoute = BackstageSignInRouteImport.update({
-  id: '/backstage/sign-in',
-  path: '/backstage/sign-in',
+  id: "/backstage/sign-in",
+  path: "/backstage/sign-in",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const BackstageBackstageIndexRoute = BackstageBackstageIndexRouteImport.update({
-  id: '/backstage/',
-  path: '/backstage/',
+  id: "/backstage/",
+  path: "/backstage/",
   getParentRoute: () => BackstageLayoutRoute,
-} as any)
-const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
-  id: '/api/auth/$',
-  path: '/api/auth/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BackstageBackstageProjectsRoute =
-  BackstageBackstageProjectsRouteImport.update({
-    id: '/backstage/projects',
-    path: '/backstage/projects',
-    getParentRoute: () => BackstageLayoutRoute,
-  } as any)
-const BackstageBackstageMessagesRoute =
-  BackstageBackstageMessagesRouteImport.update({
-    id: '/backstage/messages',
-    path: '/backstage/messages',
-    getParentRoute: () => BackstageLayoutRoute,
-  } as any)
+} as any);
+const BackstageBackstageProjectsRoute = BackstageBackstageProjectsRouteImport.update({
+  id: "/backstage/projects",
+  path: "/backstage/projects",
+  getParentRoute: () => BackstageLayoutRoute,
+} as any);
+const BackstageBackstageMessagesRoute = BackstageBackstageMessagesRouteImport.update({
+  id: "/backstage/messages",
+  path: "/backstage/messages",
+  getParentRoute: () => BackstageLayoutRoute,
+} as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/backstage/sign-in': typeof BackstageSignInRoute
-  '/lessons/$lessonId': typeof LessonsLessonIdRoute
-  '/project/$name': typeof ProjectNameRoute
-  '/creature-feature/': typeof CreatureFeatureIndexRoute
-  '/lessons/': typeof LessonsIndexRoute
-  '/backstage/messages': typeof BackstageBackstageMessagesRoute
-  '/backstage/projects': typeof BackstageBackstageProjectsRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
-  '/backstage/': typeof BackstageBackstageIndexRoute
+  "/": typeof IndexRoute;
+  "/backstage/sign-in": typeof BackstageSignInRoute;
+  "/lessons/$lessonId": typeof LessonsLessonIdRoute;
+  "/project/$name": typeof ProjectNameRoute;
+  "/creature-feature/": typeof CreatureFeatureIndexRoute;
+  "/lessons/": typeof LessonsIndexRoute;
+  "/backstage/messages": typeof BackstageBackstageMessagesRoute;
+  "/backstage/projects": typeof BackstageBackstageProjectsRoute;
+  "/backstage/": typeof BackstageBackstageIndexRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/backstage/sign-in': typeof BackstageSignInRoute
-  '/lessons/$lessonId': typeof LessonsLessonIdRoute
-  '/project/$name': typeof ProjectNameRoute
-  '/creature-feature': typeof CreatureFeatureIndexRoute
-  '/lessons': typeof LessonsIndexRoute
-  '/backstage/messages': typeof BackstageBackstageMessagesRoute
-  '/backstage/projects': typeof BackstageBackstageProjectsRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
-  '/backstage': typeof BackstageBackstageIndexRoute
+  "/": typeof IndexRoute;
+  "/backstage/sign-in": typeof BackstageSignInRoute;
+  "/lessons/$lessonId": typeof LessonsLessonIdRoute;
+  "/project/$name": typeof ProjectNameRoute;
+  "/creature-feature": typeof CreatureFeatureIndexRoute;
+  "/lessons": typeof LessonsIndexRoute;
+  "/backstage/messages": typeof BackstageBackstageMessagesRoute;
+  "/backstage/projects": typeof BackstageBackstageProjectsRoute;
+  "/backstage": typeof BackstageBackstageIndexRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/_backstage': typeof BackstageLayoutRouteWithChildren
-  '/backstage/sign-in': typeof BackstageSignInRoute
-  '/lessons/$lessonId': typeof LessonsLessonIdRoute
-  '/project/$name': typeof ProjectNameRoute
-  '/creature-feature/': typeof CreatureFeatureIndexRoute
-  '/lessons/': typeof LessonsIndexRoute
-  '/_backstage/backstage/messages': typeof BackstageBackstageMessagesRoute
-  '/_backstage/backstage/projects': typeof BackstageBackstageProjectsRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
-  '/_backstage/backstage/': typeof BackstageBackstageIndexRoute
+  __root__: typeof rootRouteImport;
+  "/": typeof IndexRoute;
+  "/_backstage": typeof BackstageLayoutRouteWithChildren;
+  "/backstage/sign-in": typeof BackstageSignInRoute;
+  "/lessons/$lessonId": typeof LessonsLessonIdRoute;
+  "/project/$name": typeof ProjectNameRoute;
+  "/creature-feature/": typeof CreatureFeatureIndexRoute;
+  "/lessons/": typeof LessonsIndexRoute;
+  "/_backstage/backstage/messages": typeof BackstageBackstageMessagesRoute;
+  "/_backstage/backstage/projects": typeof BackstageBackstageProjectsRoute;
+  "/_backstage/backstage/": typeof BackstageBackstageIndexRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
-    | '/'
-    | '/backstage/sign-in'
-    | '/lessons/$lessonId'
-    | '/project/$name'
-    | '/creature-feature/'
-    | '/lessons/'
-    | '/backstage/messages'
-    | '/backstage/projects'
-    | '/api/auth/$'
-    | '/backstage/'
-  fileRoutesByTo: FileRoutesByTo
+    | "/"
+    | "/backstage/sign-in"
+    | "/lessons/$lessonId"
+    | "/project/$name"
+    | "/creature-feature/"
+    | "/lessons/"
+    | "/backstage/messages"
+    | "/backstage/projects"
+    | "/backstage/";
+  fileRoutesByTo: FileRoutesByTo;
   to:
-    | '/'
-    | '/backstage/sign-in'
-    | '/lessons/$lessonId'
-    | '/project/$name'
-    | '/creature-feature'
-    | '/lessons'
-    | '/backstage/messages'
-    | '/backstage/projects'
-    | '/api/auth/$'
-    | '/backstage'
+    | "/"
+    | "/backstage/sign-in"
+    | "/lessons/$lessonId"
+    | "/project/$name"
+    | "/creature-feature"
+    | "/lessons"
+    | "/backstage/messages"
+    | "/backstage/projects"
+    | "/backstage";
   id:
-    | '__root__'
-    | '/'
-    | '/_backstage'
-    | '/backstage/sign-in'
-    | '/lessons/$lessonId'
-    | '/project/$name'
-    | '/creature-feature/'
-    | '/lessons/'
-    | '/_backstage/backstage/messages'
-    | '/_backstage/backstage/projects'
-    | '/api/auth/$'
-    | '/_backstage/backstage/'
-  fileRoutesById: FileRoutesById
+    | "__root__"
+    | "/"
+    | "/_backstage"
+    | "/backstage/sign-in"
+    | "/lessons/$lessonId"
+    | "/project/$name"
+    | "/creature-feature/"
+    | "/lessons/"
+    | "/_backstage/backstage/messages"
+    | "/_backstage/backstage/projects"
+    | "/_backstage/backstage/";
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  BackstageLayoutRoute: typeof BackstageLayoutRouteWithChildren
-  BackstageSignInRoute: typeof BackstageSignInRoute
-  LessonsLessonIdRoute: typeof LessonsLessonIdRoute
-  ProjectNameRoute: typeof ProjectNameRoute
-  CreatureFeatureIndexRoute: typeof CreatureFeatureIndexRoute
-  LessonsIndexRoute: typeof LessonsIndexRoute
-  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  IndexRoute: typeof IndexRoute;
+  BackstageLayoutRoute: typeof BackstageLayoutRouteWithChildren;
+  BackstageSignInRoute: typeof BackstageSignInRoute;
+  LessonsLessonIdRoute: typeof LessonsLessonIdRoute;
+  ProjectNameRoute: typeof ProjectNameRoute;
+  CreatureFeatureIndexRoute: typeof CreatureFeatureIndexRoute;
+  LessonsIndexRoute: typeof LessonsIndexRoute;
 }
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/_backstage': {
-      id: '/_backstage'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof BackstageLayoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/lessons/': {
-      id: '/lessons/'
-      path: '/lessons'
-      fullPath: '/lessons/'
-      preLoaderRoute: typeof LessonsIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/creature-feature/': {
-      id: '/creature-feature/'
-      path: '/creature-feature'
-      fullPath: '/creature-feature/'
-      preLoaderRoute: typeof CreatureFeatureIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/project/$name': {
-      id: '/project/$name'
-      path: '/project/$name'
-      fullPath: '/project/$name'
-      preLoaderRoute: typeof ProjectNameRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/lessons/$lessonId': {
-      id: '/lessons/$lessonId'
-      path: '/lessons/$lessonId'
-      fullPath: '/lessons/$lessonId'
-      preLoaderRoute: typeof LessonsLessonIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/backstage/sign-in': {
-      id: '/backstage/sign-in'
-      path: '/backstage/sign-in'
-      fullPath: '/backstage/sign-in'
-      preLoaderRoute: typeof BackstageSignInRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_backstage/backstage/': {
-      id: '/_backstage/backstage/'
-      path: '/backstage'
-      fullPath: '/backstage/'
-      preLoaderRoute: typeof BackstageBackstageIndexRouteImport
-      parentRoute: typeof BackstageLayoutRoute
-    }
-    '/api/auth/$': {
-      id: '/api/auth/$'
-      path: '/api/auth/$'
-      fullPath: '/api/auth/$'
-      preLoaderRoute: typeof ApiAuthSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_backstage/backstage/projects': {
-      id: '/_backstage/backstage/projects'
-      path: '/backstage/projects'
-      fullPath: '/backstage/projects'
-      preLoaderRoute: typeof BackstageBackstageProjectsRouteImport
-      parentRoute: typeof BackstageLayoutRoute
-    }
-    '/_backstage/backstage/messages': {
-      id: '/_backstage/backstage/messages'
-      path: '/backstage/messages'
-      fullPath: '/backstage/messages'
-      preLoaderRoute: typeof BackstageBackstageMessagesRouteImport
-      parentRoute: typeof BackstageLayoutRoute
-    }
+    "/_backstage": {
+      id: "/_backstage";
+      path: "";
+      fullPath: "/";
+      preLoaderRoute: typeof BackstageLayoutRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/lessons/": {
+      id: "/lessons/";
+      path: "/lessons";
+      fullPath: "/lessons/";
+      preLoaderRoute: typeof LessonsIndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/creature-feature/": {
+      id: "/creature-feature/";
+      path: "/creature-feature";
+      fullPath: "/creature-feature/";
+      preLoaderRoute: typeof CreatureFeatureIndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/project/$name": {
+      id: "/project/$name";
+      path: "/project/$name";
+      fullPath: "/project/$name";
+      preLoaderRoute: typeof ProjectNameRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/lessons/$lessonId": {
+      id: "/lessons/$lessonId";
+      path: "/lessons/$lessonId";
+      fullPath: "/lessons/$lessonId";
+      preLoaderRoute: typeof LessonsLessonIdRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/backstage/sign-in": {
+      id: "/backstage/sign-in";
+      path: "/backstage/sign-in";
+      fullPath: "/backstage/sign-in";
+      preLoaderRoute: typeof BackstageSignInRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/_backstage/backstage/": {
+      id: "/_backstage/backstage/";
+      path: "/backstage";
+      fullPath: "/backstage/";
+      preLoaderRoute: typeof BackstageBackstageIndexRouteImport;
+      parentRoute: typeof BackstageLayoutRoute;
+    };
+    "/_backstage/backstage/projects": {
+      id: "/_backstage/backstage/projects";
+      path: "/backstage/projects";
+      fullPath: "/backstage/projects";
+      preLoaderRoute: typeof BackstageBackstageProjectsRouteImport;
+      parentRoute: typeof BackstageLayoutRoute;
+    };
+    "/_backstage/backstage/messages": {
+      id: "/_backstage/backstage/messages";
+      path: "/backstage/messages";
+      fullPath: "/backstage/messages";
+      preLoaderRoute: typeof BackstageBackstageMessagesRouteImport;
+      parentRoute: typeof BackstageLayoutRoute;
+    };
   }
 }
 
 interface BackstageLayoutRouteChildren {
-  BackstageBackstageMessagesRoute: typeof BackstageBackstageMessagesRoute
-  BackstageBackstageProjectsRoute: typeof BackstageBackstageProjectsRoute
-  BackstageBackstageIndexRoute: typeof BackstageBackstageIndexRoute
+  BackstageBackstageMessagesRoute: typeof BackstageBackstageMessagesRoute;
+  BackstageBackstageProjectsRoute: typeof BackstageBackstageProjectsRoute;
+  BackstageBackstageIndexRoute: typeof BackstageBackstageIndexRoute;
 }
 
 const BackstageLayoutRouteChildren: BackstageLayoutRouteChildren = {
   BackstageBackstageMessagesRoute: BackstageBackstageMessagesRoute,
   BackstageBackstageProjectsRoute: BackstageBackstageProjectsRoute,
   BackstageBackstageIndexRoute: BackstageBackstageIndexRoute,
-}
+};
 
 const BackstageLayoutRouteWithChildren = BackstageLayoutRoute._addFileChildren(
   BackstageLayoutRouteChildren,
-)
+);
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -273,17 +251,16 @@ const rootRouteChildren: RootRouteChildren = {
   ProjectNameRoute: ProjectNameRoute,
   CreatureFeatureIndexRoute: CreatureFeatureIndexRoute,
   LessonsIndexRoute: LessonsIndexRoute,
-  ApiAuthSplatRoute: ApiAuthSplatRoute,
-}
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
+import type { getRouter } from "./router.tsx";
+import type { createStart } from "@tanstack/react-start";
+declare module "@tanstack/react-start" {
   interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
+    ssr: true;
+    router: Awaited<ReturnType<typeof getRouter>>;
   }
 }

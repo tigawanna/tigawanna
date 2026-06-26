@@ -1,29 +1,21 @@
-import { getSession } from "@/lib/auth.functions";
-import { getAuth } from "@/lib/auth";
-import { isAdminUser, isAuthBypassEnabledOnServer } from "@/data-access-layer/auth/auth-utils";
-import { authClient, type BetterAuthSession } from "@/lib/better-auth/client";
-import { getWorkerEnv } from "@/lib/worker-env";
+import { getAdminSession, signOutAdmin } from "@/lib/admin-auth/admin-auth.functions";
+import type { AdminViewer } from "@/lib/admin-auth/admin-auth.functions";
+import { isAuthBypassEnabledOnServer } from "@/data-access-layer/auth/auth-utils";
+import { getServerEnv } from "@/lib/server-env";
 import { queryOptions, useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { redirect } from "@tanstack/react-router";
 import { createMiddleware } from "@tanstack/react-start";
+import { getCookieFromRequest } from "@/lib/admin-auth/cookies";
+import { adminSessionCookie, verifyAdminSessionToken } from "@/lib/admin-auth/session";
 
-type ViewerUser = BetterAuthSession["user"];
-type ViewerSession = BetterAuthSession["session"];
-
-export type TViewer = {
-  user?: ViewerUser;
-  session?: ViewerSession;
-};
+export type TViewer = AdminViewer;
 
 export const viewerqueryOptions = queryOptions({
   queryKey: ["viewer"],
   queryFn: async () => {
-    const session = await getSession();
-    if (!session) {
-      return { data: null, error: null };
-    }
+    const viewer = await getAdminSession();
     return {
-      data: { user: session.user, session: session.session },
+      data: viewer,
       error: null,
     };
   },
@@ -33,7 +25,7 @@ export function useViewer() {
   const queryClient = useQueryClient();
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      await authClient.signOut();
+      await signOutAdmin();
       void queryClient.invalidateQueries(viewerqueryOptions);
       throw redirect({ to: "/", search: {} });
     },
@@ -42,22 +34,35 @@ export function useViewer() {
 
   return {
     viewerQuery,
-    viewer: {
-      user: viewerQuery.data.data?.user,
-      session: viewerQuery.data.data?.session,
-    },
-    isAdmin: isAdminUser(viewerQuery.data.data?.user),
+    viewer: viewerQuery.data.data ?? undefined,
+    isAdmin: viewerQuery.data.data?.isAdmin === true,
     logoutMutation,
   } as const;
 }
 
 export const backstageViewerMiddleware = createMiddleware().server(async ({ next, request }) => {
-  if (isAuthBypassEnabledOnServer(getWorkerEnv())) {
-    return await next();
+  if (isAuthBypassEnabledOnServer(getServerEnv())) {
+    const email = getServerEnv().ADMIN_EMAIL ?? "admin@backstage.local";
+    return await next({
+      context: {
+        viewer: {
+          isAdmin: true as const,
+          name: email.split("@")[0] ?? "Admin",
+          email,
+        },
+      },
+    });
   }
 
-  const session = await getAuth().api.getSession({ headers: request.headers });
-  if (!session) {
+  const token = getCookieFromRequest(request, adminSessionCookie.name);
+  if (!token) {
+    const pathname = new URL(request.url).pathname;
+    const returnTo = pathname.startsWith("/backstage/sign-in") ? "/backstage" : pathname;
+    throw redirect({ to: "/backstage/sign-in", search: { returnTo } });
+  }
+
+  const payload = await verifyAdminSessionToken(token);
+  if (!payload) {
     const pathname = new URL(request.url).pathname;
     const returnTo = pathname.startsWith("/backstage/sign-in") ? "/backstage" : pathname;
     throw redirect({ to: "/backstage/sign-in", search: { returnTo } });
@@ -65,9 +70,13 @@ export const backstageViewerMiddleware = createMiddleware().server(async ({ next
 
   return await next({
     context: {
-      viewer: { user: session.user, session: session.session },
+      viewer: {
+        isAdmin: true as const,
+        name: payload.name,
+        email: payload.email,
+      },
     },
   });
 });
 
-export { isAdminUser };
+export { isAdminUser } from "@/data-access-layer/auth/auth-utils";

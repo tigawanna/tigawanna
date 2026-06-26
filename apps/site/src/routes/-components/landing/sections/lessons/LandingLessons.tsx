@@ -2,7 +2,6 @@ import {
   CreatureEggCapitalI,
   CreatureEggTrigger,
 } from "@/components/creature-egg/CreatureEggTrigger";
-import { STATIC_LESSONS } from "@/data/portfolio/static";
 import type { LessonPreviewItem } from "@/types/lessons";
 import { Link } from "@tanstack/react-router";
 import { LessonCard } from "../../cards/LessonCard";
@@ -57,11 +56,4 @@ export function LandingLessons({ items }: LandingLessonsProps) {
       </div>
     </LandingSection>
   );
-}
-
-export const LESSON_PREVIEW_COUNT = 6;
-
-export async function loadLandingLessonPreviews() {
-  const { buildLessonPreviews } = await import("@/lib/lessons/build-lesson-previews");
-  return buildLessonPreviews(STATIC_LESSONS.slice(0, LESSON_PREVIEW_COUNT));
 }

@@ -1,9 +1,9 @@
 import type { DevtoArticles } from "@/types/devto";
-import { getWorkerEnv } from "@/lib/worker-env";
+import { getServerEnv } from "@/lib/server-env";
 import { createServerFn } from "@tanstack/react-start";
 
 export const getDevtoArticles = createServerFn({ method: "GET" }).handler(async () => {
-  const apiKey = getWorkerEnv().DEV_TO_KEY;
+  const apiKey = getServerEnv().DEV_TO_KEY;
   if (!apiKey) {
     return [] as DevtoArticles;
   }

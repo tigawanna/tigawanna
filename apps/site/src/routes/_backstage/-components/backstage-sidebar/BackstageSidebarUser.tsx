@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,7 +33,7 @@ export function BackstageSidebarUser() {
   const isExpanded = state === "expanded" || isMobile;
   const { viewer, logoutMutation } = useViewer();
 
-  if (!viewer?.user) {
+  if (!viewer) {
     return null;
   }
 
@@ -48,15 +48,12 @@ export function BackstageSidebarUser() {
               data-test="backstage-user-menu"
             >
               <Avatar className="size-8 rounded-lg">
-                <AvatarImage src={viewer.user.image ?? undefined} alt={viewer.user.name} />
-                <AvatarFallback className="rounded-lg">
-                  {getInitials(viewer.user.name)}
-                </AvatarFallback>
+                <AvatarFallback className="rounded-lg">{getInitials(viewer.name)}</AvatarFallback>
               </Avatar>
               {isExpanded ? (
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{viewer.user.name}</span>
-                  <span className="truncate text-xs">{viewer.user.email}</span>
+                  <span className="truncate font-medium">{viewer.name}</span>
+                  <span className="truncate text-xs">{viewer.email}</span>
                 </div>
               ) : null}
             </SidebarMenuButton>
@@ -70,14 +67,11 @@ export function BackstageSidebarUser() {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="size-8 rounded-lg">
-                  <AvatarImage src={viewer.user.image ?? undefined} alt={viewer.user.name} />
-                  <AvatarFallback className="rounded-lg">
-                    {getInitials(viewer.user.name)}
-                  </AvatarFallback>
+                  <AvatarFallback className="rounded-lg">{getInitials(viewer.name)}</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{viewer.user.name}</span>
-                  <span className="truncate text-xs">{viewer.user.email}</span>
+                  <span className="truncate font-medium">{viewer.name}</span>
+                  <span className="truncate text-xs">{viewer.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>

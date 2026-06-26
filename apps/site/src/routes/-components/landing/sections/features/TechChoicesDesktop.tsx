@@ -111,12 +111,12 @@ export function TechChoicesDesktop() {
           <div
             ref={detailRef}
             data-test="tech-choice-detail-scroller"
-            className="relative h-full min-h-0 overflow-y-auto overscroll-contain rounded-none border border-landing-cream/12 bg-landing-panel/78 shadow-2xl shadow-black/25 backdrop-blur-sm [scrollbar-color:color-mix(in_oklch,var(--color-landing-cream)_22%,transparent)_transparent] [scrollbar-width:thin]"
+            className="relative h-full min-h-0 overflow-y-auto overscroll-contain rounded-none border border-landing-cream/12 bg-landing-panel/78 shadow-2xl shadow-black/25 backdrop-blur-sm [scrollbar-color:color-mix(in_oklch,var(--color-landing-cream)_22%,transparent)_transparent] scrollbar-thin"
           >
-            <div className="perspective-[1400px] [transform-style:preserve-3d]">
+            <div className="perspective-[1400px] transform-3d">
               <div
                 ref={panelRef}
-                className="origin-right px-14 pt-6 pb-14 will-change-transform [transform-style:preserve-3d] xl:px-16 xl:pt-7 xl:pb-16"
+                className="origin-right px-14 pt-6 pb-14 will-change-transform transform-3d xl:px-16 xl:pt-7 xl:pb-16"
               >
                 <TechChoiceDetailPanel choice={activeChoice} index={activeIndex} />
               </div>
@@ -156,7 +156,7 @@ export function TechChoicesDesktop() {
             <div
               ref={railRef}
               data-test="tech-choice-rail-scroller"
-              className="relative flex min-h-0 w-full max-w-md flex-1 flex-col gap-2 overflow-y-auto overscroll-contain py-2 pl-10 [mask-image:linear-gradient(to_bottom,transparent,black_6%,black_94%,transparent)] [scrollbar-color:color-mix(in_oklch,var(--color-landing-cream)_22%,transparent)_transparent] [scrollbar-width:thin]"
+              className="relative flex min-h-0 w-full max-w-md flex-1 flex-col gap-2 overflow-y-auto overscroll-contain py-2 pl-10 mask-[linear-gradient(to_bottom,transparent,black_6%,black_94%,transparent)] [scrollbar-color:color-mix(in_oklch,var(--color-landing-cream)_22%,transparent)_transparent] scrollbar-thin"
             >
               {techChoices.map((choice, index) => (
                 <TechChoiceRailItem

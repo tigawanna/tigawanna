@@ -35,5 +35,19 @@ export const featuredProjects = sqliteTable(
   (table) => [index("featured_projects_sort_order_idx").on(table.sortOrder)],
 );
 
+export const adminLoginChallenges = sqliteTable(
+  "admin_login_challenges",
+  {
+    id: text("id").primaryKey(),
+    codeHash: text("code_hash").notNull(),
+    expiresAt: integer("expires_at", { mode: "timestamp_ms" }).notNull(),
+    createdAt: integer("created_at", { mode: "timestamp_ms" })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .notNull(),
+  },
+  (table) => [index("admin_login_challenges_expires_at_idx").on(table.expiresAt)],
+);
+
 export type ContactMessageRow = typeof contactMessages.$inferSelect;
 export type FeaturedProjectRow = typeof featuredProjects.$inferSelect;
+export type AdminLoginChallengeRow = typeof adminLoginChallenges.$inferSelect;

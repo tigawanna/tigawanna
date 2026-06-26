@@ -1,4 +1,3 @@
-import { isAdminUser } from "@/data-access-layer/auth/auth-utils";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
@@ -7,23 +6,6 @@ export const Route = createFileRoute("/_backstage/backstage/")({
 });
 
 function BackstageHomePage() {
-  const { viewer } = Route.useRouteContext();
-  const isAdmin = isAdminUser(viewer?.user);
-
-  if (!isAdmin) {
-    return (
-      <div
-        className="mx-auto flex max-w-lg flex-col gap-6 py-16 text-center"
-        data-test="backstage-decoy"
-      >
-        <h1 className="text-2xl font-semibold tracking-tight">Backstage</h1>
-        <p className="text-base-content/60 text-sm leading-relaxed">
-          There is nothing scheduled here right now. Check back another time.
-        </p>
-      </div>
-    );
-  }
-
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-6" data-test="backstage-admin-home">
       <div>

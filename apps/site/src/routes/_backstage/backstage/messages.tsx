@@ -1,24 +1,21 @@
 import { isAdminUser } from "@/data-access-layer/auth/auth-utils";
-import { listContactMessages } from "@/lib/backstage/contact-messages.functions";
+import { contactMessagesQueryOptions } from "@/data-access-layer/backstage/query-options";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 
 export const Route = createFileRoute("/_backstage/backstage/messages")({
   beforeLoad: ({ context }) => {
-    if (!isAdminUser(context.viewer?.user)) {
+    if (!isAdminUser(context.viewer)) {
       throw redirect({ to: "/backstage" });
     }
   },
-  loader: () => listContactMessages(),
+  loader: ({ context }) => context.queryClient.ensureQueryData(contactMessagesQueryOptions),
   component: BackstageMessagesPage,
 });
 
 function BackstageMessagesPage() {
-  const { data: messages } = useSuspenseQuery({
-    queryKey: ["backstage", "contact-messages"],
-    queryFn: () => listContactMessages(),
-  });
+  const { data: messages } = useSuspenseQuery(contactMessagesQueryOptions);
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-6" data-test="backstage-messages">

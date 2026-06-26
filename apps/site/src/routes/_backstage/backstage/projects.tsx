@@ -4,7 +4,7 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_backstage/backstage/projects")({
   beforeLoad: ({ context }) => {
-    if (!isAdminUser(context.viewer?.user)) {
+    if (!isAdminUser(context.viewer)) {
       throw redirect({ to: "/backstage" });
     }
   },
