@@ -1,7 +1,7 @@
+import { backstageGithubReposCollection } from "@/data-access-layer/backstage-github-repos-collection";
+import { backstageProjectsCollection } from "@/data-access-layer/backstage-projects-collection";
 import { importProjectRepo } from "@/lib/backstage/projects.functions";
 import { createOptimisticAction } from "@tanstack/db";
-import { backstageGithubReposCollection } from "./github-repos-collection";
-import { backstageProjectsCollection } from "./projects-collection";
 
 export type ImportBackstageProjectInput = {
   repoFullName: string;

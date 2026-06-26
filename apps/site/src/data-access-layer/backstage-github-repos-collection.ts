@@ -1,15 +1,15 @@
+import { backstageProjectsCollection } from "@/data-access-layer/backstage-projects-collection";
 import { queryKeyPrefixes } from "@/data-access-layer/query-keys";
 import {
   deleteGithubRepoForBackstage,
   listGithubReposForBackstage,
   setGithubRepoVisibilityForBackstage,
 } from "@/lib/backstage/projects.functions";
-import type { BackstageGithubRepo } from "@/types/backstage";
-import { createCollection, BasicIndex } from "@tanstack/db";
-import { queryCollectionOptions } from "@tanstack/query-db-collection";
-import { backstageProjectsCollection } from "./projects-collection";
-
 import { getTanstackQueryContext } from "@/lib/tanstack/query/query-provider";
+import type { BackstageGithubRepo } from "@/types/backstage";
+import { BasicIndex, createCollection } from "@tanstack/db";
+import { queryCollectionOptions } from "@tanstack/query-db-collection";
+
 const { queryClient } = getTanstackQueryContext();
 
 export const backstageGithubReposCollection = createCollection(

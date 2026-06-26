@@ -142,6 +142,8 @@ interface TanstackDBColumnFiltersProps<
    * @default "desc"
    */
   defaultSortDirection?: "asc" | "desc";
+
+  layout?: "inline" | "stacked";
 }
 
 /**
@@ -365,6 +367,7 @@ export function TanstackDBSortSelect<
   navigate,
   defaultSortBy,
   defaultSortDirection = "desc",
+  layout = "inline",
 }: TanstackDBColumnFiltersProps<TCollection, TColumns>) {
   // Use React's transition hook to prevent UI jank during navigation
   const [, startTransition] = useTransition();
@@ -390,14 +393,16 @@ export function TanstackDBSortSelect<
   );
 
   return (
-    // Compact flex layout: dropdown on left, direction toggle button on right
-    <div className="flex items-center gap-1">
-      {/* Column selector dropdown */}
+    <div
+      className={
+        layout === "stacked" ? "flex w-full items-center gap-2" : "flex items-center gap-1"
+      }
+    >
       <Select
         value={currentSortBy}
         onValueChange={(value) => setSearch({ sortBy: value, offset: 0 })}
       >
-        <SelectTrigger className="h-9 w-35">
+        <SelectTrigger className={layout === "stacked" ? "h-9 w-full" : "h-9 w-35"}>
           <SelectValue placeholder="Sort by" />
         </SelectTrigger>
         <SelectContent>
@@ -409,11 +414,10 @@ export function TanstackDBSortSelect<
         </SelectContent>
       </Select>
 
-      {/* Direction toggle button - shows current direction via icon */}
       <Button
-        variant="ghost"
-        size="icon"
-        className="h-9 w-9"
+        variant={layout === "stacked" ? "outline" : "ghost"}
+        size={layout === "stacked" ? "sm" : "icon"}
+        className={layout === "stacked" ? "h-9 shrink-0 gap-2 px-3" : "h-9 w-9"}
         onClick={() =>
           setSearch({
             sortDirection: currentSortDirection === "asc" ? "desc" : "asc",
@@ -423,10 +427,13 @@ export function TanstackDBSortSelect<
         title={`Sort ${currentSortDirection === "asc" ? "descending" : "ascending"}`}
       >
         {currentSortDirection === "asc" ? (
-          <ArrowDownAZ className="h-4 w-4" /> // Ascending: A→Z
+          <ArrowDownAZ className="h-4 w-4" />
         ) : (
-          <ArrowUpZA className="h-4 w-4" /> // Descending: Z→A
+          <ArrowUpZA className="h-4 w-4" />
         )}
+        {layout === "stacked" ? (
+          <span className="text-sm">{currentSortDirection === "asc" ? "Asc" : "Desc"}</span>
+        ) : null}
       </Button>
     </div>
   );

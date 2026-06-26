@@ -1,39 +1,105 @@
-import {
-  backstageGithubReposCollection,
-  backstageProjectsCollection,
-} from "@/data-access-layer/backstage/collections";
+import { backstageGithubReposCollection } from "@/data-access-layer/backstage-github-repos-collection";
+import { backstageProjectsCollection } from "@/data-access-layer/backstage-projects-collection";
+import { SearchBox } from "@/components/search/SearchBox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useTSRSearchQuery } from "@/routes/_backstage/backstage/-hooks/use-tsr-search-query";
+import { TanstackDBSortSelect } from "@/routes/_backstage/backstage/-components/TanstackDBColumnfilters";
+import { createSortableColumns } from "@/routes/_backstage/backstage/-components/sortable-columns";
+import { and, eq, ilike, isNull, IR } from "@tanstack/db";
 import { Link } from "@tanstack/react-router";
-import { eq } from "@tanstack/db";
 import { useLiveSuspenseQuery } from "@tanstack/react-db";
 import { BackstageProjectRow } from "./BackstageProjectRow";
+import { BackstageFilterField, BackstageFiltersDialog } from "./BackstageFiltersDialog";
+import { Route, type BackstageProjectsSearch } from "../projects";
+
+const projectSortableColumns = createSortableColumns(backstageProjectsCollection, [
+  { value: "repoFullName", label: "Repository" },
+  { value: "lastGithubSyncAt", label: "Last GitHub sync" },
+  { value: "createdAt", label: "Created" },
+  { value: "updatedAt", label: "Updated" },
+  { value: "attendance", label: "Attendance" },
+]);
+
+function combineWhereClauses(clauses: Array<IR.BasicExpression<boolean>>) {
+  return clauses.slice(1).reduce((acc, clause) => and(acc, clause), clauses[0]!);
+}
 
 export function BackstageProjectsContent() {
-  const { data: projects } = useLiveSuspenseQuery((q) =>
-    q
-      .from({ projects: backstageProjectsCollection })
-      .leftJoin({ github: backstageGithubReposCollection }, ({ projects, github }) =>
-        eq(projects.repoFullName, github.nameWithOwner),
-      )
-      .select(({ projects, github }) => ({
-        project: projects,
-        isPrivate: github == null ? null : github.isPrivate,
-      })),
+  const search = Route.useSearch();
+  const navigate = Route.useNavigate();
+  const { debouncedValue, isDebouncing, keyword, setKeyword, setSearchParams } =
+    useTSRSearchQuery<BackstageProjectsSearch>({
+      search,
+      navigate,
+      query_param: "sq",
+      debounce_delay: 400,
+    });
+
+  const sortBy = search.sortBy ?? "repoFullName";
+  const sortDirection = search.sortDirection ?? "asc";
+  const visibility = search.visibility ?? "all";
+  const hasActiveFilters = Boolean(debouncedValue || visibility !== "all");
+
+  const { data: projects } = useLiveSuspenseQuery(
+    (q) => {
+      let query = q
+        .from({ projects: backstageProjectsCollection })
+        .leftJoin({ github: backstageGithubReposCollection }, ({ projects, github }) =>
+          eq(projects.repoFullName, github.nameWithOwner),
+        );
+
+      if (debouncedValue || visibility !== "all") {
+        query = query.where(({ projects, github }) => {
+          const clauses: Array<IR.BasicExpression<boolean>> = [];
+
+          if (debouncedValue) {
+            clauses.push(ilike(projects.repoFullName, `%${debouncedValue}%`));
+          }
+
+          if (visibility === "private") {
+            clauses.push(eq(github.isPrivate, true));
+          } else if (visibility === "public") {
+            clauses.push(eq(github.isPrivate, false));
+          } else if (visibility === "unknown") {
+            clauses.push(isNull(github));
+          }
+
+          return combineWhereClauses(clauses);
+        });
+      }
+
+      return query
+        .orderBy(({ projects }) => {
+          switch (sortBy) {
+            case "lastGithubSyncAt":
+              return projects.lastGithubSyncAt;
+            case "createdAt":
+              return projects.createdAt;
+            case "updatedAt":
+              return projects.updatedAt;
+            case "attendance":
+              return projects.attendance;
+            default:
+              return projects.repoFullName;
+          }
+        }, sortDirection)
+        .select(({ projects, github }) => ({
+          project: projects,
+          isPrivate: github == null ? null : github.isPrivate,
+        }));
+    },
+    [debouncedValue, sortBy, sortDirection, visibility],
   );
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6" data-test="backstage-projects">
-      <Card data-test="backstage-projects-debug">
-        <CardHeader>
-          <CardTitle>Live query results (experiment)</CardTitle>
-          <CardDescription>Raw rows from the inline join query.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <pre className="bg-base-200 max-h-96 overflow-auto rounded-lg p-4 text-xs">
-            {JSON.stringify(projects, null, 2)}
-          </pre>
-        </CardContent>
-      </Card>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Projects</h1>
@@ -54,11 +120,67 @@ export function BackstageProjectsContent() {
         </Link>
       </div>
 
+      <div className="flex items-center gap-2">
+        <div className="min-w-0 flex-1" data-test="backstage-projects-search">
+          <SearchBox
+            keyword={keyword}
+            setKeyword={setKeyword}
+            debouncedValue={debouncedValue}
+            isDebouncing={isDebouncing}
+            inputProps={{
+              placeholder: "Search by repository name…",
+            }}
+          />
+        </div>
+        <BackstageFiltersDialog
+          data-test="backstage-projects-filters"
+          activeFilterCount={visibility !== "all" ? 1 : 0}
+          onClear={() => setSearchParams({ visibility: undefined })}
+        >
+          <BackstageFilterField label="Visibility">
+            <Select
+              value={visibility}
+              onValueChange={(value) =>
+                setSearchParams({
+                  visibility:
+                    value === "all" ? undefined : (value as BackstageProjectsSearch["visibility"]),
+                })
+              }
+            >
+              <SelectTrigger className="w-full" data-test="backstage-projects-visibility-filter">
+                <SelectValue placeholder="Visibility" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All visibility</SelectItem>
+                <SelectItem value="public">Public</SelectItem>
+                <SelectItem value="private">Private</SelectItem>
+                <SelectItem value="unknown">Unknown</SelectItem>
+              </SelectContent>
+            </Select>
+          </BackstageFilterField>
+          <BackstageFilterField label="Sort">
+            <TanstackDBSortSelect
+              layout="stacked"
+              collection={backstageProjectsCollection}
+              sortableColumns={projectSortableColumns}
+              search={search}
+              navigate={navigate}
+              defaultSortBy="repoFullName"
+              defaultSortDirection="asc"
+            />
+          </BackstageFilterField>
+        </BackstageFiltersDialog>
+      </div>
+
       {projects.length === 0 ? (
         <Card>
           <CardHeader>
-            <CardTitle>No projects yet</CardTitle>
-            <CardDescription>Import repos from GitHub to start tracking them here.</CardDescription>
+            <CardTitle>{hasActiveFilters ? "No matching projects" : "No projects yet"}</CardTitle>
+            <CardDescription>
+              {hasActiveFilters
+                ? "Try a different search term or filter."
+                : "Import repos from GitHub to start tracking them here."}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Link to="/backstage/repos" className="btn btn-primary btn-sm">
@@ -70,7 +192,9 @@ export function BackstageProjectsContent() {
         <Card>
           <CardHeader>
             <CardTitle>All projects</CardTitle>
-            <CardDescription>{projects.length} repos in the database</CardDescription>
+            <CardDescription>
+              {projects.length} {hasActiveFilters ? "matching" : ""} repos in the database
+            </CardDescription>
           </CardHeader>
           <CardContent className="divide-base-content/10 divide-y rounded-lg border border-base-content/10 p-0">
             {projects.map((row) => (

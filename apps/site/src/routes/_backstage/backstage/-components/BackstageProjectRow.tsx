@@ -2,7 +2,7 @@ import {
   deleteBackstageGithubRepo,
   removeBackstageProject,
   setBackstageRepoVisibility,
-} from "@/data-access-layer/backstage/collections/mutations";
+} from "@/data-access-layer/backstage-collection-mutations";
 import type { BackstageProject } from "@/types/backstage";
 import { Badge } from "@/components/ui/badge";
 import { unwrapUnknownError } from "@/utils/errors";

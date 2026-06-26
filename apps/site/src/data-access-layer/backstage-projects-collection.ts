@@ -1,22 +1,18 @@
 import { queryKeyPrefixes } from "@/data-access-layer/query-keys";
 import { listProjectRepos } from "@/lib/backstage/projects-enrichment.functions";
 import { removeProjectRepo } from "@/lib/backstage/projects.functions";
-
+import { getTanstackQueryContext } from "@/lib/tanstack/query/query-provider";
 import type { BackstageProject } from "@/types/backstage";
-import { createCollection, BasicIndex } from "@tanstack/db";
+import { BasicIndex, createCollection } from "@tanstack/db";
 import { queryCollectionOptions } from "@tanstack/query-db-collection";
 
-import { getTanstackQueryContext } from "@/lib/tanstack/query/query-provider";
 const { queryClient } = getTanstackQueryContext();
 
 export const backstageProjectsCollection = createCollection(
   queryCollectionOptions({
     id: "backstage-projects",
     queryKey: [queryKeyPrefixes.backstage, "projects"],
-    queryFn: (ctx) => {
-      console.log("ctx ===>> ", ctx);
-      return listProjectRepos();
-    },
+    queryFn: () => listProjectRepos(),
     queryClient,
     defaultIndexType: BasicIndex,
     getKey: (item: BackstageProject) => item.githubRepoId,
