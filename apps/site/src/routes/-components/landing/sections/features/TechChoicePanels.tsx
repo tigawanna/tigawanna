@@ -1,5 +1,6 @@
 import type { TechChoice } from "@/types/tech-choices";
 import { CheckCircle2, MoveRight } from "lucide-react";
+import { twMerge } from "tailwind-merge";
 
 export function TechChoiceDetailPanel({
   choice,
@@ -12,7 +13,7 @@ export function TechChoiceDetailPanel({
 }) {
   return (
     <article className={className}>
-      <div data-tech-detail-line className="flex items-start justify-between gap-6">
+      <div className="flex items-start justify-between gap-6">
         <div>
           <p className="text-xs tracking-[0.32em] text-primary/80 uppercase">{choice.category}</p>
           <h3 className="mt-3 font-serif text-4xl leading-none font-medium tracking-[-0.035em] text-landing-cream xl:text-5xl">
@@ -24,14 +25,10 @@ export function TechChoiceDetailPanel({
         </span>
       </div>
 
-      <p data-tech-detail-line className="mt-5 text-base leading-7 text-landing-cream/86">
-        {choice.summary}
-      </p>
-      <p data-tech-detail-line className="mt-3 text-sm leading-6 text-landing-sage/72">
-        {choice.reason}
-      </p>
+      <p className="mt-5 text-base leading-7 text-landing-cream/86">{choice.summary}</p>
+      <p className="mt-3 text-sm leading-6 text-landing-sage/72">{choice.reason}</p>
 
-      <div data-tech-detail-line className="mt-5 flex flex-wrap gap-2">
+      <div className="mt-5 flex flex-wrap gap-2">
         {choice.strengths.map((strength) => (
           <span
             key={strength}
@@ -49,20 +46,40 @@ export function TechChoiceDetailPanel({
 export function TechChoiceRailItem({
   choice,
   index,
-  isFirst,
+  isActive,
+  onSelect,
 }: {
   choice: TechChoice;
   index: number;
-  isFirst: boolean;
+  isActive: boolean;
+  onSelect: (index: number) => void;
 }) {
   return (
-    <div data-tech-tool-group className="relative" style={{ opacity: isFirst ? 1 : 0.35 }}>
+    <button
+      type="button"
+      data-test={`tech-choice-rail-${choice.id}`}
+      aria-selected={isActive}
+      onClick={() => onSelect(index)}
+      className={twMerge(
+        "group relative w-full text-left transition-[transform,opacity] duration-500 ease-out",
+        isActive ? "z-10 -translate-x-3 opacity-100" : "translate-x-0 opacity-40 hover:opacity-65",
+      )}
+    >
       <div
-        data-tech-tool-row
-        className="group flex items-center justify-between gap-4 rounded-none border border-landing-cream/10 bg-landing-panel-alt/72 px-5 py-3 shadow-lg shadow-black/16"
+        className={twMerge(
+          "flex items-center justify-between gap-4 rounded-none border bg-landing-panel-alt/72 px-5 py-3 shadow-lg shadow-black/16 transition-[border-color,background-color] duration-500",
+          isActive
+            ? "border-primary/50 bg-landing-cream/10"
+            : "border-landing-cream/10 group-hover:border-landing-cream/20",
+        )}
       >
         <div className="flex items-center gap-4">
-          <span className="font-serif text-xl leading-none text-landing-cream/35">
+          <span
+            className={twMerge(
+              "font-serif text-xl leading-none transition-colors duration-500",
+              isActive ? "text-primary" : "text-landing-cream/35",
+            )}
+          >
             {String(index + 1).padStart(2, "0")}
           </span>
           <div>
@@ -72,8 +89,13 @@ export function TechChoiceRailItem({
             <p className="mt-1 text-xs text-landing-sage/58">{choice.position}</p>
           </div>
         </div>
-        <MoveRight className="size-4 text-landing-cream/22" />
+        <MoveRight
+          className={twMerge(
+            "size-4 transition-colors duration-500",
+            isActive ? "text-primary" : "text-landing-cream/22",
+          )}
+        />
       </div>
-    </div>
+    </button>
   );
 }
