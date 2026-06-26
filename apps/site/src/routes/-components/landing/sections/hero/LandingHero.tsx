@@ -3,7 +3,6 @@ import { AppConfig } from "@/utils/system";
 import { animate, stagger } from "animejs";
 import { useEffect, useRef } from "react";
 import { HeroIllustration } from "./HeroIllustration";
-import { LandingSearchBar } from "./LandingSearchBar";
 
 export function LandingHero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -52,7 +51,13 @@ export function LandingHero() {
         </p>
 
         <div data-hero-reveal className="mt-10 w-full max-w-2xl md:mt-12">
-          <LandingSearchBar />
+          <a
+            href="#projects"
+            className="btn btn-primary rounded-2xl px-8 text-base shadow-lg shadow-primary/30"
+            data-test="landing-view-projects"
+          >
+            View projects
+          </a>
         </div>
 
         <div data-hero-reveal className="mt-10 w-full max-w-md md:mt-12 lg:mt-8">

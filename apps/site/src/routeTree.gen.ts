@@ -9,37 +9,25 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthLayoutRouteImport } from './routes/auth/layout'
-import { Route as DashboardLayoutRouteImport } from './routes/_dashboard/layout'
+import { Route as BackstageLayoutRouteImport } from './routes/_backstage/layout'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as SearchIndexRouteImport } from './routes/search/index'
 import { Route as LessonsIndexRouteImport } from './routes/lessons/index'
 import { Route as CreatureFeatureIndexRouteImport } from './routes/creature-feature/index'
-import { Route as AuthIndexRouteImport } from './routes/auth/index'
 import { Route as ProjectNameRouteImport } from './routes/project/$name'
 import { Route as LessonsLessonIdRouteImport } from './routes/lessons/$lessonId'
-import { Route as AuthSignupRouteImport } from './routes/auth/signup'
-import { Route as DashboardProfileRouteImport } from './routes/_dashboard/profile'
-import { Route as DashboardDashboardRouteImport } from './routes/_dashboard/dashboard'
-import { Route as ApiAiPortfolioSearchRouteImport } from './routes/api/ai/portfolio-search'
+import { Route as BackstageSignInRouteImport } from './routes/backstage/sign-in'
+import { Route as BackstageBackstageIndexRouteImport } from './routes/_backstage/backstage/index'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as BackstageBackstageProjectsRouteImport } from './routes/_backstage/backstage/projects'
+import { Route as BackstageBackstageMessagesRouteImport } from './routes/_backstage/backstage/messages'
 
-const AuthLayoutRoute = AuthLayoutRouteImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardLayoutRoute = DashboardLayoutRouteImport.update({
-  id: '/_dashboard',
+const BackstageLayoutRoute = BackstageLayoutRouteImport.update({
+  id: '/_backstage',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SearchIndexRoute = SearchIndexRouteImport.update({
-  id: '/search/',
-  path: '/search/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LessonsIndexRoute = LessonsIndexRouteImport.update({
@@ -52,11 +40,6 @@ const CreatureFeatureIndexRoute = CreatureFeatureIndexRouteImport.update({
   path: '/creature-feature/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthIndexRoute = AuthIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AuthLayoutRoute,
-} as any)
 const ProjectNameRoute = ProjectNameRouteImport.update({
   id: '/project/$name',
   path: '/project/$name',
@@ -67,141 +50,130 @@ const LessonsLessonIdRoute = LessonsLessonIdRouteImport.update({
   path: '/lessons/$lessonId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthSignupRoute = AuthSignupRouteImport.update({
-  id: '/signup',
-  path: '/signup',
-  getParentRoute: () => AuthLayoutRoute,
-} as any)
-const DashboardProfileRoute = DashboardProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => DashboardLayoutRoute,
-} as any)
-const DashboardDashboardRoute = DashboardDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => DashboardLayoutRoute,
-} as any)
-const ApiAiPortfolioSearchRoute = ApiAiPortfolioSearchRouteImport.update({
-  id: '/api/ai/portfolio-search',
-  path: '/api/ai/portfolio-search',
+const BackstageSignInRoute = BackstageSignInRouteImport.update({
+  id: '/backstage/sign-in',
+  path: '/backstage/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BackstageBackstageIndexRoute = BackstageBackstageIndexRouteImport.update({
+  id: '/backstage/',
+  path: '/backstage/',
+  getParentRoute: () => BackstageLayoutRoute,
+} as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BackstageBackstageProjectsRoute =
+  BackstageBackstageProjectsRouteImport.update({
+    id: '/backstage/projects',
+    path: '/backstage/projects',
+    getParentRoute: () => BackstageLayoutRoute,
+  } as any)
+const BackstageBackstageMessagesRoute =
+  BackstageBackstageMessagesRouteImport.update({
+    id: '/backstage/messages',
+    path: '/backstage/messages',
+    getParentRoute: () => BackstageLayoutRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/auth': typeof AuthLayoutRouteWithChildren
-  '/dashboard': typeof DashboardDashboardRoute
-  '/profile': typeof DashboardProfileRoute
-  '/auth/signup': typeof AuthSignupRoute
+  '/backstage/sign-in': typeof BackstageSignInRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/project/$name': typeof ProjectNameRoute
-  '/auth/': typeof AuthIndexRoute
   '/creature-feature/': typeof CreatureFeatureIndexRoute
   '/lessons/': typeof LessonsIndexRoute
-  '/search/': typeof SearchIndexRoute
-  '/api/ai/portfolio-search': typeof ApiAiPortfolioSearchRoute
+  '/backstage/messages': typeof BackstageBackstageMessagesRoute
+  '/backstage/projects': typeof BackstageBackstageProjectsRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/backstage/': typeof BackstageBackstageIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardDashboardRoute
-  '/profile': typeof DashboardProfileRoute
-  '/auth/signup': typeof AuthSignupRoute
+  '/backstage/sign-in': typeof BackstageSignInRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/project/$name': typeof ProjectNameRoute
-  '/auth': typeof AuthIndexRoute
   '/creature-feature': typeof CreatureFeatureIndexRoute
   '/lessons': typeof LessonsIndexRoute
-  '/search': typeof SearchIndexRoute
-  '/api/ai/portfolio-search': typeof ApiAiPortfolioSearchRoute
+  '/backstage/messages': typeof BackstageBackstageMessagesRoute
+  '/backstage/projects': typeof BackstageBackstageProjectsRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/backstage': typeof BackstageBackstageIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_dashboard': typeof DashboardLayoutRouteWithChildren
-  '/auth': typeof AuthLayoutRouteWithChildren
-  '/_dashboard/dashboard': typeof DashboardDashboardRoute
-  '/_dashboard/profile': typeof DashboardProfileRoute
-  '/auth/signup': typeof AuthSignupRoute
+  '/_backstage': typeof BackstageLayoutRouteWithChildren
+  '/backstage/sign-in': typeof BackstageSignInRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/project/$name': typeof ProjectNameRoute
-  '/auth/': typeof AuthIndexRoute
   '/creature-feature/': typeof CreatureFeatureIndexRoute
   '/lessons/': typeof LessonsIndexRoute
-  '/search/': typeof SearchIndexRoute
-  '/api/ai/portfolio-search': typeof ApiAiPortfolioSearchRoute
+  '/_backstage/backstage/messages': typeof BackstageBackstageMessagesRoute
+  '/_backstage/backstage/projects': typeof BackstageBackstageProjectsRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/_backstage/backstage/': typeof BackstageBackstageIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/auth'
-    | '/dashboard'
-    | '/profile'
-    | '/auth/signup'
+    | '/backstage/sign-in'
     | '/lessons/$lessonId'
     | '/project/$name'
-    | '/auth/'
     | '/creature-feature/'
     | '/lessons/'
-    | '/search/'
-    | '/api/ai/portfolio-search'
+    | '/backstage/messages'
+    | '/backstage/projects'
+    | '/api/auth/$'
+    | '/backstage/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/dashboard'
-    | '/profile'
-    | '/auth/signup'
+    | '/backstage/sign-in'
     | '/lessons/$lessonId'
     | '/project/$name'
-    | '/auth'
     | '/creature-feature'
     | '/lessons'
-    | '/search'
-    | '/api/ai/portfolio-search'
+    | '/backstage/messages'
+    | '/backstage/projects'
+    | '/api/auth/$'
+    | '/backstage'
   id:
     | '__root__'
     | '/'
-    | '/_dashboard'
-    | '/auth'
-    | '/_dashboard/dashboard'
-    | '/_dashboard/profile'
-    | '/auth/signup'
+    | '/_backstage'
+    | '/backstage/sign-in'
     | '/lessons/$lessonId'
     | '/project/$name'
-    | '/auth/'
     | '/creature-feature/'
     | '/lessons/'
-    | '/search/'
-    | '/api/ai/portfolio-search'
+    | '/_backstage/backstage/messages'
+    | '/_backstage/backstage/projects'
+    | '/api/auth/$'
+    | '/_backstage/backstage/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DashboardLayoutRoute: typeof DashboardLayoutRouteWithChildren
-  AuthLayoutRoute: typeof AuthLayoutRouteWithChildren
+  BackstageLayoutRoute: typeof BackstageLayoutRouteWithChildren
+  BackstageSignInRoute: typeof BackstageSignInRoute
   LessonsLessonIdRoute: typeof LessonsLessonIdRoute
   ProjectNameRoute: typeof ProjectNameRoute
   CreatureFeatureIndexRoute: typeof CreatureFeatureIndexRoute
   LessonsIndexRoute: typeof LessonsIndexRoute
-  SearchIndexRoute: typeof SearchIndexRoute
-  ApiAiPortfolioSearchRoute: typeof ApiAiPortfolioSearchRoute
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthLayoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_dashboard': {
-      id: '/_dashboard'
+    '/_backstage': {
+      id: '/_backstage'
       path: ''
       fullPath: '/'
-      preLoaderRoute: typeof DashboardLayoutRouteImport
+      preLoaderRoute: typeof BackstageLayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -209,13 +181,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/search/': {
-      id: '/search/'
-      path: '/search'
-      fullPath: '/search/'
-      preLoaderRoute: typeof SearchIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lessons/': {
@@ -232,13 +197,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CreatureFeatureIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth/': {
-      id: '/auth/'
-      path: '/'
-      fullPath: '/auth/'
-      preLoaderRoute: typeof AuthIndexRouteImport
-      parentRoute: typeof AuthLayoutRoute
-    }
     '/project/$name': {
       id: '/project/$name'
       path: '/project/$name'
@@ -253,75 +211,69 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LessonsLessonIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth/signup': {
-      id: '/auth/signup'
-      path: '/signup'
-      fullPath: '/auth/signup'
-      preLoaderRoute: typeof AuthSignupRouteImport
-      parentRoute: typeof AuthLayoutRoute
-    }
-    '/_dashboard/profile': {
-      id: '/_dashboard/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof DashboardProfileRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-    '/_dashboard/dashboard': {
-      id: '/_dashboard/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardDashboardRouteImport
-      parentRoute: typeof DashboardLayoutRoute
-    }
-    '/api/ai/portfolio-search': {
-      id: '/api/ai/portfolio-search'
-      path: '/api/ai/portfolio-search'
-      fullPath: '/api/ai/portfolio-search'
-      preLoaderRoute: typeof ApiAiPortfolioSearchRouteImport
+    '/backstage/sign-in': {
+      id: '/backstage/sign-in'
+      path: '/backstage/sign-in'
+      fullPath: '/backstage/sign-in'
+      preLoaderRoute: typeof BackstageSignInRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_backstage/backstage/': {
+      id: '/_backstage/backstage/'
+      path: '/backstage'
+      fullPath: '/backstage/'
+      preLoaderRoute: typeof BackstageBackstageIndexRouteImport
+      parentRoute: typeof BackstageLayoutRoute
+    }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_backstage/backstage/projects': {
+      id: '/_backstage/backstage/projects'
+      path: '/backstage/projects'
+      fullPath: '/backstage/projects'
+      preLoaderRoute: typeof BackstageBackstageProjectsRouteImport
+      parentRoute: typeof BackstageLayoutRoute
+    }
+    '/_backstage/backstage/messages': {
+      id: '/_backstage/backstage/messages'
+      path: '/backstage/messages'
+      fullPath: '/backstage/messages'
+      preLoaderRoute: typeof BackstageBackstageMessagesRouteImport
+      parentRoute: typeof BackstageLayoutRoute
     }
   }
 }
 
-interface DashboardLayoutRouteChildren {
-  DashboardDashboardRoute: typeof DashboardDashboardRoute
-  DashboardProfileRoute: typeof DashboardProfileRoute
+interface BackstageLayoutRouteChildren {
+  BackstageBackstageMessagesRoute: typeof BackstageBackstageMessagesRoute
+  BackstageBackstageProjectsRoute: typeof BackstageBackstageProjectsRoute
+  BackstageBackstageIndexRoute: typeof BackstageBackstageIndexRoute
 }
 
-const DashboardLayoutRouteChildren: DashboardLayoutRouteChildren = {
-  DashboardDashboardRoute: DashboardDashboardRoute,
-  DashboardProfileRoute: DashboardProfileRoute,
+const BackstageLayoutRouteChildren: BackstageLayoutRouteChildren = {
+  BackstageBackstageMessagesRoute: BackstageBackstageMessagesRoute,
+  BackstageBackstageProjectsRoute: BackstageBackstageProjectsRoute,
+  BackstageBackstageIndexRoute: BackstageBackstageIndexRoute,
 }
 
-const DashboardLayoutRouteWithChildren = DashboardLayoutRoute._addFileChildren(
-  DashboardLayoutRouteChildren,
-)
-
-interface AuthLayoutRouteChildren {
-  AuthSignupRoute: typeof AuthSignupRoute
-  AuthIndexRoute: typeof AuthIndexRoute
-}
-
-const AuthLayoutRouteChildren: AuthLayoutRouteChildren = {
-  AuthSignupRoute: AuthSignupRoute,
-  AuthIndexRoute: AuthIndexRoute,
-}
-
-const AuthLayoutRouteWithChildren = AuthLayoutRoute._addFileChildren(
-  AuthLayoutRouteChildren,
+const BackstageLayoutRouteWithChildren = BackstageLayoutRoute._addFileChildren(
+  BackstageLayoutRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DashboardLayoutRoute: DashboardLayoutRouteWithChildren,
-  AuthLayoutRoute: AuthLayoutRouteWithChildren,
+  BackstageLayoutRoute: BackstageLayoutRouteWithChildren,
+  BackstageSignInRoute: BackstageSignInRoute,
   LessonsLessonIdRoute: LessonsLessonIdRoute,
   ProjectNameRoute: ProjectNameRoute,
   CreatureFeatureIndexRoute: CreatureFeatureIndexRoute,
   LessonsIndexRoute: LessonsIndexRoute,
-  SearchIndexRoute: SearchIndexRoute,
-  ApiAiPortfolioSearchRoute: ApiAiPortfolioSearchRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

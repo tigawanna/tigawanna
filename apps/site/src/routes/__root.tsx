@@ -1,4 +1,5 @@
 import type { TViewer } from "@/data-access-layer/auth/viewer";
+import { viewerqueryOptions } from "@/data-access-layer/auth/viewer";
 import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
@@ -25,6 +26,12 @@ const seoKeywords =
   "fullstack developer, JavaScript, React, TanStack Start, TypeScript, web development, Nairobi, tigawanna";
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
+  beforeLoad: async ({ context }) => {
+    const viewer = await context.queryClient.ensureQueryData(viewerqueryOptions);
+    return {
+      viewer: viewer.data ?? undefined,
+    };
+  },
   head: () => ({
     meta: [
       { charSet: "utf-8" },

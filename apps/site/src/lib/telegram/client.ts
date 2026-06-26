@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { getWorkerEnv } from "@/lib/worker-env";
 
 const telegramEnvSchema = z.object({
   TELEGRAM_BOT_TOKEN: z.string().min(1),
@@ -16,9 +17,10 @@ export class TelegramNotifier {
   private readonly channelId: string;
 
   constructor() {
+    const env = getWorkerEnv();
     const parsed = telegramEnvSchema.safeParse({
-      TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN,
-      TELEGRAM_CHANNEL_ID: process.env.TELEGRAM_CHANNEL_ID,
+      TELEGRAM_BOT_TOKEN: env.TELEGRAM_BOT_TOKEN,
+      TELEGRAM_CHANNEL_ID: env.TELEGRAM_CHANNEL_ID,
     });
 
     if (!parsed.success) {

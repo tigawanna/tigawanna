@@ -1,4 +1,5 @@
 import type { OneRepoGQL } from "@/types/github";
+import { getWorkerEnv } from "@/lib/worker-env";
 import { createServerFn } from "@tanstack/react-start";
 
 const REPO_QUERY = `
@@ -38,7 +39,7 @@ query OneRepo($owner: String!, $repo: String!, $firstTopics: Int!, $firstLangs: 
 export const getRepoDetail = createServerFn({ method: "GET" })
   .inputValidator((input: { owner: string; repo: string }) => input)
   .handler(async ({ data: { owner, repo } }) => {
-    const pat = process.env.GH_PAT;
+    const pat = getWorkerEnv().GH_PAT;
     if (!pat) {
       return null;
     }

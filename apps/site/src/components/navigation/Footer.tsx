@@ -1,10 +1,9 @@
 import { AppConfig } from "@/utils/system";
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { Github, Mail, Twitter } from "lucide-react";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
-  const { pathname } = useLocation();
 
   return (
     <footer className="bg-base-200 text-base-content">
@@ -13,7 +12,7 @@ export function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 mb-8">
             <div className="flex flex-col items-center md:items-start gap-3 text-center md:text-left">
               {(() => {
-                const Icon = AppConfig.icon as any;
+                const Icon = AppConfig.icon;
                 return <Icon className="text-primary size-10 md:size-12" />;
               })()}
               <div>
@@ -44,7 +43,7 @@ export function Footer() {
                 <Twitter className="size-5" />
               </a>
               <a
-                href={AppConfig.links.mail}
+                href={AppConfig.links.emailTo}
                 className="btn btn-ghost btn-square btn-sm md:btn-md"
                 aria-label="Email"
               >
@@ -57,21 +56,6 @@ export function Footer() {
                 <li>
                   <Link to="/" className="link link-hover">
                     Home
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/profile" className="link link-hover">
-                    Dashboard
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/profile" className="link link-hover">
-                    Profile
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/auth" search={{ returnTo: pathname }} className="link link-hover">
-                    Sign In
                   </Link>
                 </li>
               </ul>

@@ -12,8 +12,10 @@ const emptyPage: LessonsPage = {
   items: [],
 };
 
+import { getWorkerEnv } from "@/lib/worker-env";
+
 function getPbUrl() {
-  return process.env.PB_URL ?? "";
+  return getWorkerEnv().PB_URL ?? "";
 }
 
 async function fetchLessonsPage(page: number, perPage: number): Promise<LessonsPage> {

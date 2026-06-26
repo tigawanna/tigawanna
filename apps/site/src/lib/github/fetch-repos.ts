@@ -1,4 +1,5 @@
 import type { GithubRepoNode } from "@/types/github";
+import { getWorkerEnv } from "@/lib/worker-env";
 
 const RECENT_REPOS_QUERY = `query getViewerRecentlyPushedRepos {
   viewer {
@@ -70,7 +71,7 @@ type PinnedReposResponse = {
 };
 
 function getGithubPat() {
-  const pat = process.env.GH_PAT;
+  const pat = getWorkerEnv().GH_PAT;
   if (!pat) {
     throw new Error("GH_PAT is not configured");
   }

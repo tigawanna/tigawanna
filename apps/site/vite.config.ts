@@ -1,4 +1,5 @@
 import { devtools } from "@tanstack/devtools-vite";
+import { cloudflare } from "@cloudflare/vite-plugin";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { fileURLToPath, URL } from "url";
@@ -10,11 +11,10 @@ const config = defineConfig({
   server: {
     host: "::",
   },
-  optimizeDeps: {
-    include: ["@tanstack/ai", "@tanstack/ai-react", "@tanstack/ai-openrouter"],
-  },
   ssr: {
-    noExternal: ["@tanstack/ai", "@tanstack/ai-react", "@tanstack/ai-openrouter"],
+    optimizeDeps: {
+      exclude: ["better-auth"],
+    },
   },
   resolve: {
     alias: {
@@ -23,11 +23,11 @@ const config = defineConfig({
   },
   plugins: [
     devtools(),
-    // this is the plugin that enables path aliases
+    cloudflare({ viteEnvironment: { name: "ssr" } }),
     tailwindcss(),
     tanstackStart({
       router: {
-        routeToken: "layout", // <-- Add this line
+        routeToken: "layout",
       },
     }),
     viteReact(),

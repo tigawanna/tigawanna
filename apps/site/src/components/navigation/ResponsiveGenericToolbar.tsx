@@ -1,7 +1,7 @@
 import { ThemeToggle } from "@/components/navigation/ThemeToggle";
 import { AppConfig } from "@/utils/system";
 import { Link } from "@tanstack/react-router";
-import { Code2, Home, LayoutDashboard, User } from "lucide-react";
+import { Code2, Home } from "lucide-react";
 
 interface ResponsiveGenericToolbarProps {
   children: React.ReactNode;
@@ -93,18 +93,6 @@ export function ResponsiveGenericToolbar({ children }: ResponsiveGenericToolbarP
             <Link to="/" className="gap-3">
               <Home className="size-5" />
               Home
-            </Link>
-          </li>
-          <li>
-            <Link to="/profile" className="gap-3">
-              <LayoutDashboard className="size-5" />
-              Dashboard
-            </Link>
-          </li>
-          <li>
-            <Link to="/profile" className="gap-3">
-              <User className="size-5" />
-              Profile
             </Link>
           </li>
 

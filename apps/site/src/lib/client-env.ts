@@ -1,22 +1,17 @@
 import { z } from "zod";
 
-const envSchema = z.object({
-  VITE_API_URL: z.url(),
-  VITE_AI_LOCAL_MODE: z
-    .string()
-    .optional()
-    .transform((value) => value === "true"),
+const clientEnvSchema = z.object({
+  VITE_APP_URL: z.url().default("http://localhost:3044"),
 });
 
-const { success, error, data } = envSchema.safeParse(import.meta.env);
+export const clientEnv = clientEnvSchema.parse({
+  VITE_APP_URL: import.meta.env.VITE_APP_URL,
+});
 
-if (!success) {
-  const formattedErrors = error.issues
-    .map((issue) => `- ${issue.path.join(".")}: ${issue.message}`)
-    .join("\n");
-  throw new Error(`Invalid environment variables:\n${formattedErrors}`);
+export function getAppUrl() {
+  if (typeof window !== "undefined") {
+    return window.location.origin;
+  }
+
+  return clientEnv.VITE_APP_URL;
 }
-
-export const clientEnv = data;
-
-export const isAiLocalMode = clientEnv.VITE_AI_LOCAL_MODE === true;
