@@ -3,9 +3,9 @@ import { useEffect, useRef, type RefObject } from "react";
 
 const SWIPE_THRESHOLD_PX = 64;
 const SWIPE_COMMIT_RATIO = 0.18;
-const ENTER_DURATION = 980;
-const EXIT_DURATION = 420;
-const SNAP_DURATION = 380;
+const ENTER_DURATION = 300;
+const EXIT_DURATION = 220;
+const SNAP_DURATION = 180;
 
 type DragState = {
   active: boolean;

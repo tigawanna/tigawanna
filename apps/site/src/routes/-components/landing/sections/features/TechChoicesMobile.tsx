@@ -23,6 +23,8 @@ export function TechChoicesMobile() {
   const isFirst = activeIndex === 0;
   const isLast = activeIndex === techChoices.length - 1;
 
+  if (!activeChoice) return null;
+
   return (
     <div data-test="tech-choices-mobile" className="lg:hidden">
       <div className="relative z-10 py-20">

@@ -8,7 +8,7 @@ export function LandingFeatures() {
       id="skills"
       tone="olive"
       dataTest="landing-tech-choices"
-      className="bg-landing-face-3 py-0 text-landing-cream"
+      className="bg-landing-face-3 py-0 text-landing-cream lg:overflow-hidden"
     >
       <OrganicDivider tone="olive" />
       <TechChoicesDesktop />
