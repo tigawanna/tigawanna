@@ -1,15 +1,14 @@
-import { backstageRepoMutationInvalidates } from "@/data-access-layer/backstage/projects-query-options";
-import type { BackstageGithubRepo } from "@/lib/backstage/projects.functions";
 import {
-  deleteGithubRepoForBackstage,
-  setGithubRepoVisibilityForBackstage,
-} from "@/lib/backstage/projects.functions";
+  deleteBackstageGithubRepo,
+  setBackstageRepoVisibility,
+} from "@/data-access-layer/backstage/collections/mutations";
+import type { BackstageGithubRepo } from "@/types/backstage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { unwrapUnknownError } from "@/utils/errors";
-import { useMutation } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { ExternalLink, GitFork, Star } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { RepoDeleteButton } from "./RepoDeleteButton";
 import { RepoVisibilityButton } from "./RepoVisibilityButton";
@@ -29,34 +28,35 @@ export function BackstageRepoRow({
   onImport,
   disabled,
 }: BackstageRepoRowProps) {
-  const visibilityMutation = useMutation({
-    mutationFn: (visibility: "public" | "private") =>
-      setGithubRepoVisibilityForBackstage({
-        data: { repoFullName: repo.nameWithOwner, visibility },
-      }),
-    onSuccess(_result, visibility) {
+  const [pendingAction, setPendingAction] = useState<"visibility" | "delete" | null>(null);
+
+  const actionsDisabled = disabled || pendingAction != null;
+
+  const handleVisibility = async (visibility: "public" | "private") => {
+    setPendingAction("visibility");
+    try {
+      await setBackstageRepoVisibility(repo.nameWithOwner, visibility);
       toast.success(visibility === "private" ? "Repo is now private" : "Repo is now public", {
         description: repo.nameWithOwner,
       });
-    },
-    onError(err: unknown) {
+    } catch (err: unknown) {
       toast.error("Visibility update failed", { description: unwrapUnknownError(err).message });
-    },
-    meta: { invalidates: backstageRepoMutationInvalidates },
-  });
+    } finally {
+      setPendingAction(null);
+    }
+  };
 
-  const deleteMutation = useMutation({
-    mutationFn: () => deleteGithubRepoForBackstage({ data: { repoFullName: repo.nameWithOwner } }),
-    onSuccess() {
+  const handleDelete = async () => {
+    setPendingAction("delete");
+    try {
+      await deleteBackstageGithubRepo(repo.nameWithOwner);
       toast.success("Repository deleted", { description: repo.nameWithOwner });
-    },
-    onError(err: unknown) {
+    } catch (err: unknown) {
       toast.error("Delete failed", { description: unwrapUnknownError(err).message });
-    },
-    meta: { invalidates: backstageRepoMutationInvalidates },
-  });
-
-  const actionsDisabled = disabled || visibilityMutation.isPending || deleteMutation.isPending;
+    } finally {
+      setPendingAction(null);
+    }
+  };
 
   return (
     <div className="flex flex-wrap items-start gap-4 px-4 py-4" data-test="github-repo-row">
@@ -136,15 +136,15 @@ export function BackstageRepoRow({
           repoFullName={repo.nameWithOwner}
           isPrivate={repo.isPrivate}
           disabled={actionsDisabled}
-          isPending={visibilityMutation.isPending}
-          onConfirm={(visibility) => visibilityMutation.mutate(visibility)}
+          isPending={pendingAction === "visibility"}
+          onConfirm={handleVisibility}
         />
 
         <RepoDeleteButton
           repoFullName={repo.nameWithOwner}
           disabled={actionsDisabled}
-          isPending={deleteMutation.isPending}
-          onConfirm={() => deleteMutation.mutate()}
+          isPending={pendingAction === "delete"}
+          onConfirm={handleDelete}
         />
       </div>
     </div>

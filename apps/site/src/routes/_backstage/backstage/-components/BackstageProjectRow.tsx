@@ -1,24 +1,21 @@
-import { backstageRepoMutationInvalidates } from "@/data-access-layer/backstage/projects-query-options";
-import type { listProjectRepos } from "@/lib/backstage/projects-enrichment.functions";
 import {
-  deleteGithubRepoForBackstage,
-  removeProjectRepo,
-  setGithubRepoVisibilityForBackstage,
-} from "@/lib/backstage/projects.functions";
+  deleteBackstageGithubRepo,
+  removeBackstageProject,
+  setBackstageRepoVisibility,
+} from "@/data-access-layer/backstage/collections/mutations";
+import type { BackstageProject } from "@/types/backstage";
 import { Badge } from "@/components/ui/badge";
 import { unwrapUnknownError } from "@/utils/errors";
-import { useMutation } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ExternalLink } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { RepoDeleteButton } from "./RepoDeleteButton";
 import { RepoRemoveButton } from "./RepoRemoveButton";
 import { RepoVisibilityButton } from "./RepoVisibilityButton";
 
-type Project = Awaited<ReturnType<typeof listProjectRepos>>[number];
-
 type BackstageProjectRowProps = {
-  project: Project;
+  project: BackstageProject;
   isPrivate: boolean | null;
   disabled?: boolean;
 };
@@ -28,50 +25,49 @@ function attendanceLabel(attendance: string) {
 }
 
 export function BackstageProjectRow({ project, isPrivate, disabled }: BackstageProjectRowProps) {
-  const visibilityMutation = useMutation({
-    mutationFn: (visibility: "public" | "private") =>
-      setGithubRepoVisibilityForBackstage({
-        data: { repoFullName: project.repoFullName, visibility },
-      }),
-    onSuccess(_result, visibility) {
+  const [pendingAction, setPendingAction] = useState<"visibility" | "remove" | "delete" | null>(
+    null,
+  );
+
+  const actionsDisabled = disabled || pendingAction != null;
+
+  const handleVisibility = async (visibility: "public" | "private") => {
+    setPendingAction("visibility");
+    try {
+      await setBackstageRepoVisibility(project.repoFullName, visibility);
       toast.success(visibility === "private" ? "Repo is now private" : "Repo is now public", {
         description: project.repoFullName,
       });
-    },
-    onError(err: unknown) {
+    } catch (err: unknown) {
       toast.error("Visibility update failed", { description: unwrapUnknownError(err).message });
-    },
-    meta: { invalidates: backstageRepoMutationInvalidates },
-  });
+    } finally {
+      setPendingAction(null);
+    }
+  };
 
-  const removeMutation = useMutation({
-    mutationFn: () => removeProjectRepo({ data: { repoFullName: project.repoFullName } }),
-    onSuccess() {
+  const handleRemove = async () => {
+    setPendingAction("remove");
+    try {
+      await removeBackstageProject(project.githubRepoId);
       toast.success("Removed from projects", { description: project.repoFullName });
-    },
-    onError(err: unknown) {
+    } catch (err: unknown) {
       toast.error("Remove failed", { description: unwrapUnknownError(err).message });
-    },
-    meta: { invalidates: backstageRepoMutationInvalidates },
-  });
+    } finally {
+      setPendingAction(null);
+    }
+  };
 
-  const deleteMutation = useMutation({
-    mutationFn: () =>
-      deleteGithubRepoForBackstage({ data: { repoFullName: project.repoFullName } }),
-    onSuccess() {
+  const handleDelete = async () => {
+    setPendingAction("delete");
+    try {
+      await deleteBackstageGithubRepo(project.repoFullName);
       toast.success("Repository deleted", { description: project.repoFullName });
-    },
-    onError(err: unknown) {
+    } catch (err: unknown) {
       toast.error("Delete failed", { description: unwrapUnknownError(err).message });
-    },
-    meta: { invalidates: backstageRepoMutationInvalidates },
-  });
-
-  const actionsDisabled =
-    disabled ||
-    visibilityMutation.isPending ||
-    removeMutation.isPending ||
-    deleteMutation.isPending;
+    } finally {
+      setPendingAction(null);
+    }
+  };
 
   return (
     <div className="flex flex-wrap items-start gap-4 px-4 py-4" data-test="project-row">
@@ -133,23 +129,23 @@ export function BackstageProjectRow({ project, isPrivate, disabled }: BackstageP
             repoFullName={project.repoFullName}
             isPrivate={isPrivate}
             disabled={actionsDisabled}
-            isPending={visibilityMutation.isPending}
-            onConfirm={(visibility) => visibilityMutation.mutate(visibility)}
+            isPending={pendingAction === "visibility"}
+            onConfirm={handleVisibility}
           />
         ) : null}
 
         <RepoRemoveButton
           repoFullName={project.repoFullName}
           disabled={actionsDisabled}
-          isPending={removeMutation.isPending}
-          onConfirm={() => removeMutation.mutate()}
+          isPending={pendingAction === "remove"}
+          onConfirm={handleRemove}
         />
 
         <RepoDeleteButton
           repoFullName={project.repoFullName}
           disabled={actionsDisabled}
-          isPending={deleteMutation.isPending}
-          onConfirm={() => deleteMutation.mutate()}
+          isPending={pendingAction === "delete"}
+          onConfirm={handleDelete}
         />
       </div>
     </div>

@@ -1,0 +1,33 @@
+import { queryKeyPrefixes } from "@/data-access-layer/query-keys";
+import { listProjectRepos } from "@/lib/backstage/projects-enrichment.functions";
+import { removeProjectRepo } from "@/lib/backstage/projects.functions";
+
+import type { BackstageProject } from "@/types/backstage";
+import { createCollection } from "@tanstack/db";
+import { queryCollectionOptions } from "@tanstack/query-db-collection";
+
+import { getTanstackQueryContext } from "@/lib/tanstack/query/query-provider";
+const { queryClient } = getTanstackQueryContext();
+
+export const backstageProjectsCollection = createCollection(
+  queryCollectionOptions({
+    id: "backstage-projects",
+    queryKey: [queryKeyPrefixes.backstage, "projects"],
+    queryFn: (ctx) => {
+      console.log("ctx ===>> ", ctx);
+      return listProjectRepos();
+    },
+    queryClient,
+    getKey: (item: BackstageProject) => item.githubRepoId,
+    onDelete: async ({ transaction }) => {
+      await Promise.all(
+        transaction.mutations.map((mutation) =>
+          removeProjectRepo({ data: { repoFullName: mutation.original.repoFullName } }),
+        ),
+      );
+      await backstageProjectsCollection.utils.refetch();
+    },
+  }),
+);
+
+backstageProjectsCollection.createIndex((row) => row.repoFullName);

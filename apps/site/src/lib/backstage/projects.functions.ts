@@ -7,28 +7,12 @@ import { createRunRecord, importRepoSnapshot } from "@/lib/project-enrichment/ru
 import type { EnrichmentRunParams } from "@/lib/project-enrichment/types";
 import { getServerEnv } from "@/lib/server-env";
 import type { GithubRepoNode } from "@/types/github";
+import type { BackstageGithubRepo, BackstageGithubReposResponse } from "@/types/backstage";
 import { enrichProjectsWorkflow } from "@/workflows/project-enrichment";
 import { eq, projectRepos } from "@repo/db";
 import { createServerFn } from "@tanstack/react-start";
 import { start } from "workflow/api";
 import { z } from "zod";
-
-export type BackstageGithubRepo = {
-  id: string;
-  name: string;
-  nameWithOwner: string;
-  description: string | null;
-  homepageUrl: string | null;
-  url: string;
-  openGraphImageUrl: string | null;
-  pushedAt: string;
-  isPrivate: boolean;
-  isFork: boolean;
-  isArchived: boolean;
-  stargazerCount: number;
-  forkCount: number;
-  topics: string[];
-};
 
 function mapRepoNode(repo: GithubRepoNode): BackstageGithubRepo {
   return {
@@ -64,18 +48,20 @@ function requirePat() {
 
 const repoFullNameSchema = z.string().regex(/^[^/]+\/[^/]+$/);
 
-export const listGithubReposForBackstage = createServerFn({ method: "GET" }).handler(async () => {
-  await requireAdminSession();
-  const result = await fetchRecentReposFromGithub();
-  const nodes = (result.data?.viewer.repositories.nodes ?? []).filter(
-    (repo): repo is GithubRepoNode => repo != null,
-  );
+export const listGithubReposForBackstage = createServerFn({ method: "GET" }).handler(
+  async (): Promise<BackstageGithubReposResponse> => {
+    await requireAdminSession();
+    const result = await fetchRecentReposFromGithub();
+    const nodes = (result.data?.viewer.repositories.nodes ?? []).filter(
+      (repo): repo is GithubRepoNode => repo != null,
+    );
 
-  return {
-    repos: nodes.map(mapRepoNode),
-    errors: result.errors.map((error) => error.message),
-  };
-});
+    return {
+      repos: nodes.map(mapRepoNode),
+      errors: result.errors.map((error) => error.message),
+    };
+  },
+);
 
 const importProjectRepoInputSchema = z.object({
   repoFullName: repoFullNameSchema,
