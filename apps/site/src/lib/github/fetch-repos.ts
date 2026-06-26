@@ -78,13 +78,17 @@ function getGithubPat() {
   return pat;
 }
 
-export async function githubGraphql<T>(query: string): Promise<T> {
+export async function githubGraphql<T>(
+  query: string,
+  options?: { cache?: RequestCache },
+): Promise<T> {
   const res = await fetch("https://api.github.com/graphql", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${getGithubPat()}`,
     },
+    cache: options?.cache,
     body: JSON.stringify({ query }),
   });
 
@@ -107,7 +111,9 @@ export async function fetchPinnedReposFromGithub() {
 }
 
 export async function fetchRecentReposFromGithub() {
-  const result = await githubGraphql<RecentReposResponse>(RECENT_REPOS_QUERY);
+  const result = await githubGraphql<RecentReposResponse>(RECENT_REPOS_QUERY, {
+    cache: "no-store",
+  });
   return {
     data: result.data,
     errors: result.errors ?? [],

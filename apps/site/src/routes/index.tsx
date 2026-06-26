@@ -1,3 +1,7 @@
+import {
+  pinnedReposQueryOptions,
+  recentReposQueryOptions,
+} from "@/data-access-layer/github/query-options";
 import { SmoothScroll } from "@/components/animation/SmoothScroll";
 import { createFileRoute } from "@tanstack/react-router";
 import { LandingFooter } from "./-components/landing/layout/LandingFooter";
@@ -15,7 +19,15 @@ import { LandingProjects } from "./-components/landing/sections/projects/Landing
 import { StackCube } from "./-components/landing/sections/stack-cube/StackCube";
 
 export const Route = createFileRoute("/")({
-  loader: () => loadLandingLessonPreviews(),
+  loader: async ({ context }) => {
+    const [lessonPreviews] = await Promise.all([
+      loadLandingLessonPreviews(),
+      context.queryClient.ensureQueryData(pinnedReposQueryOptions),
+      context.queryClient.ensureQueryData(recentReposQueryOptions),
+    ]);
+
+    return lessonPreviews;
+  },
   component: LandingPage,
 });
 

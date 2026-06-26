@@ -1,7 +1,13 @@
-import { STATIC_PINNED_PROJECTS, STATIC_RECENT_PROJECTS } from "@/data/portfolio/static";
 import { CreatureEggLowercaseI } from "@/components/creature-egg/CreatureEggTrigger";
+import { STATIC_PINNED_PROJECTS, STATIC_RECENT_PROJECTS } from "@/data/portfolio/static";
+import {
+  pinnedReposQueryOptions,
+  recentReposQueryOptions,
+} from "@/data-access-layer/github/query-options";
 import type { GithubRepoNode } from "@/types/github";
-import { useState } from "react";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { Suspense, useState } from "react";
+import { PortfolioGridSkeleton } from "../../cards/PortfolioGridSkeleton";
 import { renderProjectCard } from "../../cards/ProjectCard";
 import { LandingSection, OrganicDivider, SectionEyebrow } from "../../primitives";
 import { ProjectsTopicFilter, type ProjectView } from "./ProjectsTopicFilter";
@@ -18,12 +24,23 @@ function collectTopics(repos: GithubRepoNode[]) {
   return Array.from(topics).sort();
 }
 
+function resolvePinnedRepos(nodes: GithubRepoNode[]) {
+  return nodes.length > 0 ? nodes : STATIC_PINNED_PROJECTS;
+}
+
+function resolveRecentRepos(nodes: GithubRepoNode[]) {
+  return nodes.length > 0 ? nodes : STATIC_RECENT_PROJECTS;
+}
+
 function ProjectsContent() {
   const [activeView, setActiveView] = useState<ProjectView>("featured");
   const [activeTopic, setActiveTopic] = useState("all");
 
-  const pinnedRepos = STATIC_PINNED_PROJECTS;
-  const recentRepos = STATIC_RECENT_PROJECTS;
+  const { data: pinnedResponse } = useSuspenseQuery(pinnedReposQueryOptions);
+  const { data: recentResponse } = useSuspenseQuery(recentReposQueryOptions);
+
+  const pinnedRepos = resolvePinnedRepos(pinnedResponse?.data?.viewer.pinnedItems.nodes ?? []);
+  const recentRepos = resolveRecentRepos(recentResponse.data?.viewer.repositories.nodes ?? []);
   const topics = collectTopics(recentRepos);
 
   let visibleRepos: GithubRepoNode[] = [];
@@ -85,12 +102,13 @@ export function LandingProjects() {
             ngs I&apos;ve built.
           </h2>
           <p className="landing-section-lead">
-            Pinned highlights, recently pushed repos, and topic filters — curated shelves until the
-            admin flow lands.
+            Pinned highlights, recently pushed repos, and topic filters — pulled live from GitHub.
           </p>
         </div>
 
-        <ProjectsContent />
+        <Suspense fallback={<PortfolioGridSkeleton count={6} />}>
+          <ProjectsContent />
+        </Suspense>
       </div>
     </LandingSection>
   );
