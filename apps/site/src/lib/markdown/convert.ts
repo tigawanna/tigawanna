@@ -66,7 +66,5 @@ export function convertMarkdownToHtml(markdown: string): string {
 }
 
 export async function convertMarkdownToHtmlWithShiki(markdown: string): Promise<string> {
-  const { highlightHtmlCodeBlocks } = await import("@/lib/markdown/shiki");
-  const html = convertMarkdownToBaseHtml(markdown);
-  return highlightHtmlCodeBlocks(html);
+  return convertMarkdownToHtml(markdown);
 }

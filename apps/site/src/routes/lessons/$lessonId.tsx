@@ -86,7 +86,7 @@ function LessonDetailContent({ lessonId }: { lessonId: string }) {
 
       {html ? (
         <div
-          className="markdown markdown-lesson mt-10 [&_pre.shiki]:overflow-x-auto [&_pre.shiki]:rounded-xl [&_pre.shiki]:text-sm [&_pre.shiki_code]:p-4"
+          className="markdown markdown-lesson mt-10 [&_pre.hljs]:overflow-x-auto [&_pre.hljs]:rounded-xl [&_pre.hljs]:text-sm [&_pre.hljs_code]:p-4"
           dangerouslySetInnerHTML={{ __html: html }}
         />
       ) : null}
