@@ -14,9 +14,11 @@
 
 ---
 
-## Source Layout (`src/`)
+## Source Layout (`src/`) — TanStack Start / TanStack Router only
 
-Applies to **TanStack Start / TanStack Router** projects. Expo and other stacks may differ.
+> **Stack scope:** This section applies **only** to TanStack Start and TanStack Router web apps. It does **not** apply to **Expo** / Expo Router apps, Electron shells, or other stacks.
+>
+> **This repo:** `apps/site/src/`
 
 ### Tree map
 
