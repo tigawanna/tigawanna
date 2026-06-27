@@ -1,4 +1,5 @@
 import { SiteIcon } from "@/components/icon/SiteIcon";
+import { useReportSiteError } from "@/lib/tanstack/router/use-report-site-error";
 import { Link } from "@tanstack/react-router";
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
@@ -8,6 +9,8 @@ interface RouterErrorComponentProps {
 }
 
 export function RouterErrorComponent({ error }: RouterErrorComponentProps) {
+  useReportSiteError(error);
+
   return (
     <div
       data-test="router-error"

@@ -12,18 +12,10 @@ export function TechChoicesDesktop() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const railRef = useRef<HTMLDivElement>(null);
   const [sectionInView, setSectionInView] = useState(false);
-  const {
-    activeIndex,
-    direction,
-    selectIndex,
-    goNext,
-    goPrev,
-    detailRef,
-    allVisited,
-    visitedCount,
-  } = useTechChoicePanel(techChoices.length);
+  const { activeIndex, selectIndex, goNext, goPrev, detailRef, allVisited, visitedCount } =
+    useTechChoicePanel(techChoices.length);
   const panelRef = useRef<HTMLDivElement>(null);
-  useTechChoiceTransition(panelRef, activeIndex, direction);
+  useTechChoiceTransition(panelRef, activeIndex);
 
   useTechChoiceScrollLock({
     sectionRef,
@@ -111,16 +103,17 @@ export function TechChoicesDesktop() {
           <div
             ref={detailRef}
             data-test="tech-choice-detail-scroller"
-            className="relative h-full min-h-0 overflow-y-auto overscroll-contain rounded-none border border-landing-cream/12 bg-landing-panel/78 shadow-2xl shadow-black/25 backdrop-blur-sm [scrollbar-color:color-mix(in_oklch,var(--color-landing-cream)_22%,transparent)_transparent] scrollbar-thin"
+            className="relative h-full min-h-0 overflow-y-auto overscroll-contain rounded-none border border-landing-cream/12 bg-landing-panel/20 shadow-2xl shadow-black/25 [scrollbar-color:color-mix(in_oklch,var(--color-landing-cream)_22%,transparent)_transparent] scrollbar-thin"
           >
-            <div className="perspective-[1400px] transform-3d">
-              <div
-                ref={panelRef}
-                role="tabpanel"
-                id="tech-choice-detail-panel"
-                aria-labelledby={`tech-choice-tab-${activeChoice.id}`}
-                className="origin-right px-14 pt-6 pb-14 will-change-transform transform-3d xl:px-16 xl:pt-7 xl:pb-16"
-              >
+            <div
+              ref={panelRef}
+              role="tabpanel"
+              id="tech-choice-detail-panel"
+              aria-labelledby={`tech-choice-tab-${activeChoice.id}`}
+              className="min-h-full bg-landing-panel/92 backdrop-blur-sm will-change-[clip-path]"
+              style={{ clipPath: "circle(108% at 50% 100%)" }}
+            >
+              <div data-tech-choice-content className="px-14 pt-6 pb-14 xl:px-16 xl:pt-7 xl:pb-16">
                 <TechChoiceDetailPanel choice={activeChoice} index={activeIndex} />
               </div>
             </div>

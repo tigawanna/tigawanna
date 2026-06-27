@@ -103,42 +103,6 @@ export const howIWorkSections = [
 
 export const techChoices = [
   {
-    id: "next",
-    name: "Next.js",
-    shortName: "Next",
-    category: "React framework",
-    position: "Server-first default",
-    summary:
-      "I reach for Next.js when a product needs the safest React deployment path, mature rendering primitives, and a large ecosystem around the edges.",
-    reason:
-      "It wraps React with a strong server-first model, great routing conventions, ISR, image handling, and enough industry gravity that teams rarely need to explain the choice.",
-    strengths: ["SSR", "ISR", "App Router", "Platform maturity"],
-  },
-  {
-    id: "tanstack-start",
-    name: "TanStack Start",
-    shortName: "Start",
-    category: "React framework",
-    position: "Client-comfort SSR",
-    summary:
-      "TanStack Start is where I go when I want server rendering without giving up the client-first mental model I like for product interfaces.",
-    reason:
-      "It keeps the TanStack Router ergonomics, pairs naturally with Query, and gives SSR/server functions while still feeling like a React app instead of a framework ceremony.",
-    strengths: ["SSR", "Server functions", "Typed routing", "Query-native"],
-  },
-  {
-    id: "react",
-    name: "React",
-    shortName: "React",
-    category: "UI runtime",
-    position: "Composable interface core",
-    summary:
-      "React remains my base layer for interfaces because the component model is boring in the best way and the ecosystem is still unmatched.",
-    reason:
-      "It gives me a predictable way to build reusable UI, pair with typed data tools, and ship across web and native surfaces without changing how I think about product state.",
-    strengths: ["Components", "React 19", "Compiler", "Ecosystem"],
-  },
-  {
     id: "typescript",
     name: "TypeScript",
     shortName: "TS",
@@ -151,28 +115,58 @@ export const techChoices = [
     strengths: ["Strict contracts", "Refactors", "DX", "API safety"],
   },
   {
-    id: "tanstack-router",
-    name: "TanStack Router",
-    shortName: "Router",
-    category: "Routing",
-    position: "Typed navigation",
+    id: "zod",
+    name: "Zod",
+    shortName: "Zod",
+    category: "Validation",
+    position: "Runtime contracts",
     summary:
-      "I like TanStack Router when routes should behave like part of the type system instead of a string map that can drift.",
+      "Zod is how I validate at the boundaries: API payloads, form input, env vars, and anything that crosses from unknown into application code.",
     reason:
-      "File routing, loaders, search params, and route context become easier to reason about when navigation is typed from the route tree outward.",
-    strengths: ["File routes", "Typed params", "Loaders", "Route context"],
+      "Schemas double as TypeScript types, fail fast with clear errors, and keep untrusted data from silently becoming trusted state.",
+    strengths: ["Runtime validation", "Type inference", "Form schemas", "Env parsing"],
   },
   {
-    id: "tanstack-query",
-    name: "TanStack Query",
-    shortName: "Query",
-    category: "Async state",
-    position: "Server state boundary",
+    id: "react",
+    name: "React",
+    shortName: "React",
+    category: "UI runtime",
+    position: "Composable interface core",
     summary:
-      "TanStack Query is the clean separation between remote data and local UI state, which keeps components from turning into fetch lifecycle machines.",
+      "React is still my default for interfaces. It may not beat Solid on raw performance or Svelte on weight, but the declarative model, where UI is a function of state, keeps holding its own when products get complicated.",
     reason:
-      "It handles caching, invalidation, suspense, retries, and loading/error behavior in a way that scales from tiny pages to serious product surfaces.",
-    strengths: ["Caching", "Invalidation", "Suspense", "Async UX"],
+      "Early returns, conditional branches, and ordinary control flow make it easy to shape complex UI around complex state without fighting the framework, and the ecosystem still has no real peer.",
+    strengths: ["Declarative UI", "State-driven rendering", "Control flow", "Ecosystem"],
+  },
+  {
+    id: "next",
+    name: "Next.js",
+    shortName: "Next",
+    category: "React framework",
+    position: "Server-first default",
+    summary:
+      "Next.js is the React meta-framework I trust most for server-side rendering, with exclusive patterns like PPR, best-in-class static and incremental rendering, and the widest RSC adoption in production.",
+    reason:
+      "It has been around longer than the alternatives, ships the maturest server rendering story, and carries enough industry gravity and ecosystem depth that teams rarely need to justify the choice.",
+    strengths: ["PPR", "SSG & ISR", "RSC", "Ecosystem maturity"],
+  },
+  {
+    id: "tanstack",
+    name: "TanStack",
+    shortName: "TanStack",
+    category: "React stack",
+    position: "Cohesive primitives",
+    summary:
+      "TanStack is the stack I reach for when I want the React ecosystem without stitching together half a dozen libraries: server state, typed routing, typed forms, SSR when you need it, and optimistic updates, all while staying heavily client- and SPA-first like the web apps I build most often.",
+    reason:
+      "The primitives are designed to play well together, keep application code clean, and push toward performance-minded patterns without forcing a server-first model on products that are still mostly SPA at heart.",
+    strengths: [
+      "TanStack Query",
+      "TanStack Router",
+      "TanStack Form",
+      "TanStack Start",
+      "TanStack DB",
+    ],
   },
   {
     id: "tailwind",
@@ -187,39 +181,51 @@ export const techChoices = [
     strengths: ["Tokens", "Responsive UI", "Velocity", "Consistency"],
   },
   {
+    id: "nodejs",
+    name: "Node.js",
+    shortName: "Node",
+    category: "Runtime",
+    position: "Server-side JavaScript",
+    summary:
+      "Node.js is the default runtime when I need servers, APIs, scripts, and tooling in the same language as the frontend.",
+    reason:
+      "Mature ecosystem, wide hosting support, and enough flexibility to run everything from compact APIs to long-running services without changing stacks.",
+    strengths: ["APIs", "Tooling", "npm ecosystem", "TypeScript-native"],
+  },
+  {
     id: "drizzle",
     name: "Drizzle ORM",
     shortName: "Drizzle",
     category: "Data layer",
     position: "SQL with types",
     summary:
-      "I use Drizzle when I want the database to stay visible instead of hiding everything behind a heavy abstraction.",
+      "Drizzle is my go-to for talking to databases on the server, on mobile, or in embedded web setups, anywhere you want SQL to stay visible instead of buried under a heavy ORM.",
     reason:
-      "It keeps SQL close, types the schema, works well with migrations, and makes data access feel explicit without losing developer speed.",
-    strengths: ["Typed schema", "Migrations", "SQL-first", "Lightweight"],
+      "It keeps queries explicit and typed, works cleanly across runtimes, and makes schema, migrations, and data access feel lightweight without sacrificing control.",
+    strengths: ["Typed schema", "Cross-runtime", "Migrations", "SQL-first"],
   },
   {
-    id: "cloudflare-workers",
-    name: "Cloudflare Workers",
-    shortName: "Workers",
-    category: "Runtime",
-    position: "Edge delivery",
+    id: "vitest",
+    name: "Vitest",
+    shortName: "Vitest",
+    category: "Testing",
+    position: "Fast test runner",
     summary:
-      "Workers are useful when the product benefits from small, fast server logic close to the user.",
+      "Vitest is my default test runner when I want fast feedback loops without a separate Jest configuration tax.",
     reason:
-      "They make APIs, middleware, webhooks, and edge workloads cheap to deploy and fast to reach, especially for compact TypeScript services.",
-    strengths: ["Edge runtime", "Fast APIs", "Webhooks", "Low overhead"],
+      "It shares the Vite toolchain, runs TypeScript natively, handles unit and integration tests well, and feels natural in modern React and Node projects.",
+    strengths: ["Vite-native", "TypeScript", "Watch mode", "Component tests"],
   },
   {
-    id: "react-native",
-    name: "React Native",
-    shortName: "Native",
+    id: "expo",
+    name: "Expo",
+    shortName: "Expo",
     category: "Mobile",
-    position: "Shared product thinking",
+    position: "React-native delivery",
     summary:
-      "React Native lets me carry React product architecture onto mobile without pretending the platforms are identical.",
+      "Expo is how I ship mobile when I want React product thinking on iOS and Android without drowning in native toolchain setup.",
     reason:
-      "It keeps enough shared mental model to move fast, while still leaving room for native navigation, device APIs, and platform-specific polish where it matters.",
-    strengths: ["Mobile UI", "Expo", "Shared model", "Native APIs"],
+      "It wraps React Native with a sane default stack (routing, builds, OTA updates, and device APIs) so teams can focus on the product instead of the platform plumbing.",
+    strengths: ["Expo Router", "EAS Build", "OTA updates", "Dev client"],
   },
 ] as const satisfies readonly TechChoice[];
