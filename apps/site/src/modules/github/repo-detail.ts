@@ -1,3 +1,4 @@
+import { convertMarkdownToHtmlWithShiki } from "@/lib/markdown/convert";
 import type { OneRepoGQL } from "@/types/github";
 import { getServerEnv } from "@/lib/envs/server-env";
 import { createServerFn } from "@tanstack/react-start";
@@ -67,8 +68,6 @@ export const getRepoDetail = createServerFn({ method: "GET" })
 export const getRepoReadmeHtml = createServerFn({ method: "GET" })
   .validator((input: { owner: string; repo: string }) => input)
   .handler(async ({ data: { owner, repo } }) => {
-    const { convertMarkdownToHtml } = await import("@/lib/markdown/convert");
-
     for (const branch of ["main", "master"]) {
       try {
         const response = await fetch(
@@ -77,7 +76,7 @@ export const getRepoReadmeHtml = createServerFn({ method: "GET" })
         if (!response.ok) continue;
         const text = await response.text();
         if (!text) continue;
-        return await convertMarkdownToHtml(text);
+        return await convertMarkdownToHtmlWithShiki(text);
       } catch {
         continue;
       }

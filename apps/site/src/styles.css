@@ -869,7 +869,7 @@
   @apply mt-6 mb-4 text-lg font-semibold leading-snug;
 }
 
-.markdown pre {
+.markdown pre:not(.shiki) {
   @apply overflow-x-auto rounded-xl bg-base-200 p-4 text-sm;
 }
 

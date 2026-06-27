@@ -14,37 +14,19 @@ export type StackCubeFace = {
 export const stackCubeFaces = [
   {
     label: "Web",
-    techs: [
-      "React",
-      "Next.js",
-      "TanStack Start",
-      "HTML",
-      "Tailwind CSS",
-      "TypeScript",
-      "CSS",
-      "Responsive design",
-    ],
+    techs: ["React", "Next.js", "TanStack", "Tailwind CSS", "TypeScript"],
   },
   {
     label: "Mobile",
-    techs: ["React Native", "Expo", "Zustand", "Capacitor", "PWA", "TypeScript"],
+    techs: ["React Native", "Expo", "Capacitor", "PWA", "TypeScript"],
   },
   {
     label: "AI",
-    techs: ["RAG", "RAG pipelines", "Chatbots", "Models", "Local data preservation", "Embeddings"],
+    techs: ["RAG", "Chatbots", "Workflows", "Agents"],
   },
   {
     label: "Backend",
-    techs: [
-      "Firebase",
-      "Supabase",
-      "Node.js",
-      "Docker",
-      "AWS",
-      "GCP",
-      "Cloudflare Workers",
-      "Drizzle ORM",
-    ],
+    techs: ["Node.js", "Docker", "AWS", "GCP", "Cloudflare", "Linux Servers", "Supabase"],
   },
 ] as const satisfies readonly StackCubeFace[];
 
@@ -52,7 +34,7 @@ export const howIWorkCards = [
   {
     tag: "Ownership",
     title: "End-to-end project ownership",
-    body: "Architecture through deployment — and the long tail after launch. I stay accountable for the whole arc, not just my slice of it.",
+    body: "Architecture through deployment and the work after launch. I stay accountable for the entire lifecycle, not just my part.",
   },
   {
     tag: "Architecture",
@@ -72,12 +54,12 @@ export const howIWorkCards = [
   {
     tag: "Partnership",
     title: "Cross-functional collaborator",
-    body: "Comfortable across product, design, and engineering — translating constraints in both directions so the work actually lands.",
+    body: "Comfortable across product, design, and engineering, connecting needs across teams so the work actually lands.",
   },
   {
     tag: "Open source",
     title: "Contributor & user",
-    body: "I enjoy open source and give back where I can — fixes, docs, and small contributions to the tools and libraries teams rely on every day.",
+    body: "I enjoy open source and give back where I can with fixes, docs, and contributions to core tools and libraries.",
   },
 ] as const satisfies readonly InfoCard[];
 
@@ -89,7 +71,7 @@ export const howIWorkSections = [
     id: "ownership",
     tag: "Ownership",
     title: "End-to-end project ownership",
-    body: "From architecture through deployment and the long tail after launch. I stay accountable for the whole arc, not just my slice.",
+    body: "From architecture through deployment and the work after launch. I stay accountable for the entire lifecycle, not just my part.",
     background: "var(--color-landing-face-1)",
     foreground: "var(--color-landing-cream-bg)",
   },

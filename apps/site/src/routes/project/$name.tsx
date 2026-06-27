@@ -41,6 +41,7 @@ export const Route = createFileRoute("/project/$name")({
 
     try {
       await context.queryClient.ensureQueryData(repoDetailQueryOptions(parsed.owner, parsed.repo));
+      await context.queryClient.ensureQueryData(repoReadmeQueryOptions(parsed.owner, parsed.repo));
     } catch {
       throw redirect({ to: "/" });
     }
@@ -142,9 +143,10 @@ function ProjectDetailContent({ owner, repo }: { owner: string; repo: string }) 
       </div>
 
       {readmeHtml ? (
-        <section className="markdown rounded-none border border-base-content/10 bg-base-300/40 p-6 md:p-10">
-          <div dangerouslySetInnerHTML={{ __html: readmeHtml }} />
-        </section>
+        <section
+          className="markdown rounded-none border border-base-content/10 bg-base-300/40 p-6 md:p-10"
+          dangerouslySetInnerHTML={{ __html: readmeHtml }}
+        />
       ) : null}
     </article>
   );

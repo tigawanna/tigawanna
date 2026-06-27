@@ -4,23 +4,23 @@ import {
   projectEnrichmentSuggestionsQueryOptions,
   projectReposQueryOptions,
 } from "@/data-access-layer/backstage/projects-enrichment-query-options";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { triggerProjectEnrichmentRun } from "@/modules/backstage/projects-enrichment.functions";
-import { unwrapUnknownError } from "@/utils/errors";
-import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { format } from "date-fns";
-import { useState } from "react";
-import { toast } from "sonner";
+import { EnrichmentRunRow } from "./-components/EnrichmentRunRow";
+import { StartEnrichmentDialog } from "./-components/StartEnrichmentDialog";
 import { SuggestionReviewCard } from "./-components/SuggestionReviewCard";
 
-const SCAN_PRESETS = [
-  { label: "Latest 5", limit: 5 },
-  { label: "Latest 25", limit: 25 },
-  { label: "All (100)", limit: 100 },
-] as const;
+type RunFilter = "all" | "running" | "completed" | "failed";
+
+function filterRuns<T extends { status: string }>(runs: T[], filter: RunFilter) {
+  if (filter === "all") {
+    return runs;
+  }
+  return runs.filter((run) => run.status === filter);
+}
 
 export const Route = createFileRoute("/_backstage/backstage/workflow")({
   beforeLoad: ({ context }) => {
@@ -41,9 +41,11 @@ function BackstageWorkflowPage() {
   const queryClient = useQueryClient();
   const { data: suggestions } = useSuspenseQuery(projectEnrichmentSuggestionsQueryOptions);
   const { data: repos } = useSuspenseQuery(projectReposQueryOptions);
-  const { data: runs } = useSuspenseQuery(projectEnrichmentRunsQueryOptions);
-  const [manualRepo, setManualRepo] = useState("");
-  const [pendingRepo, setPendingRepo] = useState<string | null>(null);
+  const { data: runs } = useSuspenseQuery({
+    ...projectEnrichmentRunsQueryOptions,
+    refetchInterval: (query) =>
+      query.state.data?.some((run) => run.status === "running") ? 5000 : false,
+  });
 
   const invalidate = () => {
     void queryClient.invalidateQueries({
@@ -51,162 +53,78 @@ function BackstageWorkflowPage() {
     });
   };
 
-  const triggerRun = useMutation({
-    mutationFn: (input: { limit?: number; repos?: string[]; force?: boolean }) =>
-      triggerProjectEnrichmentRun({ data: input }),
-    onSuccess(result) {
-      toast.success("Enrichment run started", { description: `Run ${result.runId}` });
-      invalidate();
-    },
-    onError(err: unknown) {
-      toast.error("Failed to start run", { description: unwrapUnknownError(err).message });
-    },
-    onSettled() {
-      setPendingRepo(null);
-    },
-  });
+  const runningCount = runs.filter((run) => run.status === "running").length;
+  const completedCount = runs.filter((run) => run.status === "completed").length;
+  const failedCount = runs.filter((run) => run.status === "failed").length;
+  const completeRepoCount = repos.filter((repo) => repo.attendance === "complete").length;
 
-  const runForRepo = (repoFullName: string) => {
-    setPendingRepo(repoFullName);
-    triggerRun.mutate({ repos: [repoFullName], force: true });
-  };
-
-  const runManualRepo = () => {
-    const repo = manualRepo.trim();
-    if (!repo.includes("/")) {
-      toast.error("Use owner/repo format");
-      return;
-    }
-    setManualRepo("");
-    runForRepo(repo);
-  };
-
-  const runTrackedRepos = (count: number | "all") => {
-    const names =
-      count === "all"
-        ? repos.map((repo) => repo.repoFullName)
-        : repos.slice(0, count).map((repo) => repo.repoFullName);
-
-    if (names.length === 0) {
-      toast.error("No tracked repos yet");
-      return;
-    }
-
-    triggerRun.mutate({ repos: names, force: true });
-  };
-
-  const completeCount = repos.filter((repo) => repo.attendance === "complete").length;
+  const runTabs: Array<{ value: RunFilter; label: string; count: number }> = [
+    { value: "all", label: "All", count: runs.length },
+    { value: "running", label: "Running", count: runningCount },
+    { value: "completed", label: "Completed", count: completedCount },
+    { value: "failed", label: "Failed", count: failedCount },
+  ];
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6" data-test="backstage-workflow">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Workflow</h1>
-        <p className="text-base-content/60 mt-2 text-sm">
-          GitHub enrichment runs, metadata review, and re-sync controls.
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">Workflow</h1>
+          <p className="text-base-content/60 mt-2 text-sm">
+            {repos.length} tracked repos · {completeRepoCount} complete on GitHub ·{" "}
+            {suggestions.length} pending review
+          </p>
+        </div>
+        <StartEnrichmentDialog trackedRepos={repos} onRunStarted={invalidate} />
       </div>
 
-      <Card data-test="enrichment-command-center">
+      <Card data-test="enrichment-runs">
         <CardHeader>
-          <CardTitle>Enrichment command center</CardTitle>
+          <CardTitle>Enrichment runs</CardTitle>
           <CardDescription>
-            {repos.length} tracked repos · {completeCount} complete on GitHub · {suggestions.length}{" "}
-            pending review
+            {runningCount > 0
+              ? `${runningCount} run${runningCount === 1 ? "" : "s"} in progress`
+              : "History of discovery and enrichment jobs"}
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col gap-6">
-          <div className="space-y-3">
-            <p className="text-base-content/60 text-xs font-medium uppercase tracking-wide">
-              Discover from GitHub
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {SCAN_PRESETS.map((preset) => (
-                <Button
-                  key={preset.limit}
-                  data-test={`trigger-scan-${preset.limit}`}
-                  variant="outline"
-                  disabled={triggerRun.isPending}
-                  onClick={() => triggerRun.mutate({ limit: preset.limit })}
-                >
-                  {preset.label}
-                </Button>
-              ))}
+        <CardContent className="p-0">
+          <Tabs defaultValue="all">
+            <div className="border-b border-base-content/10 px-4 pt-2">
+              <TabsList variant="line">
+                {runTabs.map((tab) => (
+                  <TabsTrigger
+                    key={tab.value}
+                    value={tab.value}
+                    data-test={`enrichment-runs-tab-${tab.value}`}
+                  >
+                    {tab.label} ({tab.count})
+                  </TabsTrigger>
+                ))}
+              </TabsList>
             </div>
-          </div>
 
-          <div className="space-y-3">
-            <p className="text-base-content/60 text-xs font-medium uppercase tracking-wide">
-              Re-enrich tracked
-            </p>
-            <div className="flex flex-wrap gap-2">
-              <Button
-                data-test="trigger-tracked-first-5"
-                variant="outline"
-                disabled={triggerRun.isPending || repos.length === 0}
-                onClick={() => runTrackedRepos(5)}
-              >
-                First 5 tracked
-              </Button>
-              <Button
-                data-test="trigger-tracked-all"
-                variant="outline"
-                disabled={triggerRun.isPending || repos.length === 0}
-                onClick={() => runTrackedRepos("all")}
-              >
-                All tracked ({repos.length})
-              </Button>
-            </div>
-          </div>
+            {runTabs.map((tab) => {
+              const filtered = filterRuns(runs, tab.value);
 
-          <div className="space-y-3">
-            <p className="text-base-content/60 text-xs font-medium uppercase tracking-wide">
-              Single repo
-            </p>
-            <div className="flex flex-wrap gap-2">
-              <Input
-                className="min-w-[240px] flex-1"
-                data-test="manual-repo-input"
-                placeholder="owner/repo"
-                value={manualRepo}
-                onChange={(event) => setManualRepo(event.target.value)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") {
-                    runManualRepo();
-                  }
-                }}
-              />
-              <Button
-                data-test="trigger-manual-repo"
-                disabled={triggerRun.isPending || manualRepo.trim().length === 0}
-                onClick={runManualRepo}
-              >
-                Run enrichment
-              </Button>
-            </div>
-          </div>
-
-          {runs.length > 0 ? (
-            <div className="text-base-content/60 space-y-2 border-t border-base-content/10 pt-4 text-sm">
-              <p className="text-base-content/80 text-xs font-medium uppercase tracking-wide">
-                Recent runs
-              </p>
-              {runs.slice(0, 5).map((run) => (
-                <div key={run.id} className="flex flex-wrap items-center gap-3">
-                  <span className="font-mono text-xs">{run.id.slice(0, 8)}</span>
-                  <span>{run.status}</span>
-                  <span>
-                    synced {run.reposSynced} · skipped {run.reposSkipped} · enriched{" "}
-                    {run.reposEnriched}
-                  </span>
-                  <span>{format(new Date(run.startedAt), "PPp")}</span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-base-content/50 border-t border-base-content/10 pt-4 text-sm">
-              No runs yet.
-            </p>
-          )}
+              return (
+                <TabsContent key={tab.value} value={tab.value} className="mt-0">
+                  {filtered.length === 0 ? (
+                    <p className="text-base-content/50 px-4 py-8 text-sm">
+                      {tab.value === "all"
+                        ? "No runs yet. Start one to discover or enrich repos."
+                        : `No ${tab.value} runs.`}
+                    </p>
+                  ) : (
+                    <div className="divide-base-content/10 divide-y">
+                      {filtered.map((run) => (
+                        <EnrichmentRunRow key={run.id} run={run} />
+                      ))}
+                    </div>
+                  )}
+                </TabsContent>
+              );
+            })}
+          </Tabs>
         </CardContent>
       </Card>
 
@@ -229,29 +147,12 @@ function BackstageWorkflowPage() {
           </CardHeader>
           <CardContent className="divide-base-content/10 divide-y rounded-lg border border-base-content/10 p-0">
             {repos.map((repo) => (
-              <div
-                key={repo.githubRepoId}
-                className="flex flex-wrap items-center justify-between gap-3 px-4 py-3"
-                data-test="tracked-repo-row"
-              >
-                <div className="min-w-0">
-                  <p className="font-medium">{repo.repoFullName}</p>
-                  <p className="text-base-content/60 text-sm">
-                    {repo.attendance.replaceAll("_", " ")} · synced{" "}
-                    {format(new Date(repo.lastGithubSyncAt), "PP")}
-                  </p>
-                </div>
-                <Button
-                  data-test="trigger-tracked-repo"
-                  variant="outline"
-                  size="sm"
-                  disabled={triggerRun.isPending}
-                  onClick={() => runForRepo(repo.repoFullName)}
-                >
-                  {pendingRepo === repo.repoFullName && triggerRun.isPending
-                    ? "Starting…"
-                    : "Run enrichment"}
-                </Button>
+              <div key={repo.githubRepoId} className="px-4 py-3" data-test="tracked-repo-row">
+                <p className="font-medium">{repo.repoFullName}</p>
+                <p className="text-base-content/60 text-sm">
+                  {repo.attendance.replaceAll("_", " ")} · synced{" "}
+                  {format(new Date(repo.lastGithubSyncAt), "PP")}
+                </p>
               </div>
             ))}
           </CardContent>
