@@ -1,22 +1,17 @@
-import { sleep } from "workflow";
-import { getServerEnv } from "@/lib/server-env";
-import {
-  fetchRecentRepos,
-  fetchReposByFullNames,
-  type GithubRepoSnapshot,
-} from "@/lib/project-enrichment/github-client";
-import {
-  processRepoForRun,
-  sumDeltas,
-  updateRunFailure,
-  updateRunSuccess,
-} from "@/lib/project-enrichment/run-enrichment";
+import { sumDeltas } from "@/lib/project-enrichment/counters";
 import type { EnrichmentRunParams } from "@/lib/project-enrichment/types";
+import { sleep } from "workflow";
+import {
+  fetchReposStep,
+  finalizeRunStep,
+  markRunFailedStep,
+  processRepoStep,
+} from "./project-enrichment.steps";
 
 export async function enrichProjectsWorkflow(params: EnrichmentRunParams) {
   "use workflow";
 
-  const deltas: Awaited<ReturnType<typeof processRepoForRun>>[] = [];
+  const deltas: Awaited<ReturnType<typeof processRepoStep>>[] = [];
 
   try {
     const repos = await fetchReposStep(params);
@@ -33,38 +28,4 @@ export async function enrichProjectsWorkflow(params: EnrichmentRunParams) {
     await markRunFailedStep(params.runId, sumDeltas(deltas), message);
     throw error;
   }
-}
-
-async function fetchReposStep(params: EnrichmentRunParams) {
-  "use step";
-
-  const pat = getServerEnv().GH_PAT;
-  if (!pat) {
-    throw new Error("GH_PAT is not configured");
-  }
-
-  if (params.repos && params.repos.length > 0) {
-    return fetchReposByFullNames(pat, params.repos);
-  }
-
-  return fetchRecentRepos(pat, params.limit ?? 100);
-}
-
-async function processRepoStep(runId: string, repo: GithubRepoSnapshot, force: boolean) {
-  "use step";
-  return processRepoForRun(runId, repo, force);
-}
-
-async function finalizeRunStep(runId: string, counters: ReturnType<typeof sumDeltas>) {
-  "use step";
-  await updateRunSuccess(runId, counters);
-}
-
-async function markRunFailedStep(
-  runId: string,
-  counters: ReturnType<typeof sumDeltas>,
-  message: string,
-) {
-  "use step";
-  await updateRunFailure(runId, counters, message);
 }

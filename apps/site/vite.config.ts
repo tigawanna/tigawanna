@@ -3,14 +3,25 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
 import { fileURLToPath, URL } from "url";
-import { defineConfig } from "vite-plus";
+import { createLogger, defineConfig } from "vite-plus";
 import { workflow } from "workflow/vite";
 
 import tailwindcss from "@tailwindcss/vite";
 
 const botIdBase = "/149e9513-01fa-4fb0-aad4-566afd725d1b/2d206a39-8ed7-437e-a3be-862e0f06eea3";
 
+const logger = createLogger();
+const loggerWarn = logger.warn.bind(logger);
+
+logger.warn = (msg, options) => {
+  if (msg.includes("dynamic import cannot be analyzed") && msg.includes("#workflow/")) {
+    return;
+  }
+  loggerWarn(msg, options);
+};
+
 const config = defineConfig({
+  customLogger: logger,
   fmt: {
     ignorePatterns: ["**/routeTree.gen.ts"],
   },

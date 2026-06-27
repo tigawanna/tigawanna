@@ -22,6 +22,7 @@ import { Route as BackstageBackstageReposRouteImport } from './routes/_backstage
 import { Route as BackstageBackstageProjectsEnrichmentRouteImport } from './routes/_backstage/backstage/projects-enrichment'
 import { Route as BackstageBackstageProjectsRouteImport } from './routes/_backstage/backstage/projects'
 import { Route as BackstageBackstageMessagesRouteImport } from './routes/_backstage/backstage/messages'
+import { Route as BackstageBackstageJournalRouteImport } from './routes/_backstage/backstage/journal'
 
 const BackstageLayoutRoute = BackstageLayoutRouteImport.update({
   id: '/_backstage',
@@ -91,6 +92,12 @@ const BackstageBackstageMessagesRoute =
     path: '/backstage/messages',
     getParentRoute: () => BackstageLayoutRoute,
   } as any)
+const BackstageBackstageJournalRoute =
+  BackstageBackstageJournalRouteImport.update({
+    id: '/backstage/journal',
+    path: '/backstage/journal',
+    getParentRoute: () => BackstageLayoutRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/project/$name': typeof ProjectNameRoute
   '/creature-feature/': typeof CreatureFeatureIndexRoute
   '/lessons/': typeof LessonsIndexRoute
+  '/backstage/journal': typeof BackstageBackstageJournalRoute
   '/backstage/messages': typeof BackstageBackstageMessagesRoute
   '/backstage/projects': typeof BackstageBackstageProjectsRoute
   '/backstage/projects-enrichment': typeof BackstageBackstageProjectsEnrichmentRoute
@@ -113,6 +121,7 @@ export interface FileRoutesByTo {
   '/project/$name': typeof ProjectNameRoute
   '/creature-feature': typeof CreatureFeatureIndexRoute
   '/lessons': typeof LessonsIndexRoute
+  '/backstage/journal': typeof BackstageBackstageJournalRoute
   '/backstage/messages': typeof BackstageBackstageMessagesRoute
   '/backstage/projects': typeof BackstageBackstageProjectsRoute
   '/backstage/projects-enrichment': typeof BackstageBackstageProjectsEnrichmentRoute
@@ -129,6 +138,7 @@ export interface FileRoutesById {
   '/project/$name': typeof ProjectNameRoute
   '/creature-feature/': typeof CreatureFeatureIndexRoute
   '/lessons/': typeof LessonsIndexRoute
+  '/_backstage/backstage/journal': typeof BackstageBackstageJournalRoute
   '/_backstage/backstage/messages': typeof BackstageBackstageMessagesRoute
   '/_backstage/backstage/projects': typeof BackstageBackstageProjectsRoute
   '/_backstage/backstage/projects-enrichment': typeof BackstageBackstageProjectsEnrichmentRoute
@@ -145,6 +155,7 @@ export interface FileRouteTypes {
     | '/project/$name'
     | '/creature-feature/'
     | '/lessons/'
+    | '/backstage/journal'
     | '/backstage/messages'
     | '/backstage/projects'
     | '/backstage/projects-enrichment'
@@ -159,6 +170,7 @@ export interface FileRouteTypes {
     | '/project/$name'
     | '/creature-feature'
     | '/lessons'
+    | '/backstage/journal'
     | '/backstage/messages'
     | '/backstage/projects'
     | '/backstage/projects-enrichment'
@@ -174,6 +186,7 @@ export interface FileRouteTypes {
     | '/project/$name'
     | '/creature-feature/'
     | '/lessons/'
+    | '/_backstage/backstage/journal'
     | '/_backstage/backstage/messages'
     | '/_backstage/backstage/projects'
     | '/_backstage/backstage/projects-enrichment'
@@ -285,10 +298,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BackstageBackstageMessagesRouteImport
       parentRoute: typeof BackstageLayoutRoute
     }
+    '/_backstage/backstage/journal': {
+      id: '/_backstage/backstage/journal'
+      path: '/backstage/journal'
+      fullPath: '/backstage/journal'
+      preLoaderRoute: typeof BackstageBackstageJournalRouteImport
+      parentRoute: typeof BackstageLayoutRoute
+    }
   }
 }
 
 interface BackstageLayoutRouteChildren {
+  BackstageBackstageJournalRoute: typeof BackstageBackstageJournalRoute
   BackstageBackstageMessagesRoute: typeof BackstageBackstageMessagesRoute
   BackstageBackstageProjectsRoute: typeof BackstageBackstageProjectsRoute
   BackstageBackstageProjectsEnrichmentRoute: typeof BackstageBackstageProjectsEnrichmentRoute
@@ -298,6 +319,7 @@ interface BackstageLayoutRouteChildren {
 }
 
 const BackstageLayoutRouteChildren: BackstageLayoutRouteChildren = {
+  BackstageBackstageJournalRoute: BackstageBackstageJournalRoute,
   BackstageBackstageMessagesRoute: BackstageBackstageMessagesRoute,
   BackstageBackstageProjectsRoute: BackstageBackstageProjectsRoute,
   BackstageBackstageProjectsEnrichmentRoute:

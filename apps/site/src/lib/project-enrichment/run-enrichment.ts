@@ -8,6 +8,7 @@ import {
   projectRepos,
 } from "@repo/db";
 import { enrichRepoMetadata } from "./enrich-ai";
+import type { RepoProcessDelta, RunCounters } from "./counters";
 import {
   fetchRepoAnalysis,
   hasCustomSocialPreview,
@@ -15,18 +16,6 @@ import {
   type GithubRepoSnapshot,
 } from "./github-client";
 import type { EnrichmentRunParams } from "./types";
-
-type RunCounters = {
-  reposSynced: number;
-  reposSkipped: number;
-  reposEnriched: number;
-};
-
-export type RepoProcessDelta = {
-  reposSynced: number;
-  reposSkipped: number;
-  reposEnriched: number;
-};
 
 async function hasPendingSuggestion(db: ReturnType<typeof getDb>, githubRepoId: string) {
   const rows = await db
@@ -182,17 +171,6 @@ export async function updateRunFailure(runId: string, counters: RunCounters, mes
       error: message,
     })
     .where(eq(projectEnrichmentRuns.id, runId));
-}
-
-export function sumDeltas(deltas: RepoProcessDelta[]): RunCounters {
-  return deltas.reduce(
-    (totals, delta) => ({
-      reposSynced: totals.reposSynced + delta.reposSynced,
-      reposSkipped: totals.reposSkipped + delta.reposSkipped,
-      reposEnriched: totals.reposEnriched + delta.reposEnriched,
-    }),
-    { reposSynced: 0, reposSkipped: 0, reposEnriched: 0 },
-  );
 }
 
 export async function createRunRecord(

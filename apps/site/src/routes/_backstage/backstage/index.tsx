@@ -11,7 +11,7 @@ function BackstageHomePage() {
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Backstage</h1>
         <p className="text-base-content/60 mt-2 text-sm">
-          Manage contact messages, imported projects, and enrichment workflows.
+          Manage contact messages, journal entries, imported projects, and enrichment workflows.
         </p>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
@@ -37,6 +37,19 @@ function BackstageHomePage() {
             </Link>
             <Link to="/backstage/repos" className="btn btn-ghost btn-sm">
               Import repos
+            </Link>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Journal</CardTitle>
+            <CardDescription>
+              Today-I-learned entries for the landing page and /lessons.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Link to="/backstage/journal" className="btn btn-primary btn-sm">
+              Manage journal
             </Link>
           </CardContent>
         </Card>
