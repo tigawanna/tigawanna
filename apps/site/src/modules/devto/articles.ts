@@ -1,5 +1,5 @@
 import type { DevtoArticles } from "@/types/devto";
-import { getServerEnv } from "@/lib/server-env";
+import { getServerEnv } from "@/lib/envs/server-env";
 import { createServerFn } from "@tanstack/react-start";
 
 export const getDevtoArticles = createServerFn({ method: "GET" }).handler(async () => {

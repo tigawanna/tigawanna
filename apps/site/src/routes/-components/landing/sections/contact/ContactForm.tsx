@@ -1,6 +1,9 @@
 import { useAppForm } from "@/lib/tanstack/form";
-import { sendContactMessage } from "@/lib/telegram/contact";
-import { contactFormSchema, type ContactFormValues } from "@/lib/telegram/contact-schema";
+import { sendContactMessage } from "@/routes/-components/landing/sections/contact/contact.functions";
+import {
+  contactFormSchema,
+  type ContactFormValues,
+} from "@/routes/-components/landing/sections/contact/contact-schema";
 import { formOptions } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";

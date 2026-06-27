@@ -1,6 +1,6 @@
-import { requireAdminSession } from "@/lib/admin-auth/require-admin";
+import { requireAdminSession } from "@/modules/admin-auth/require-admin";
 import { contactMessages, desc } from "@repo/db";
-import { getDb } from "@/lib/get-db";
+import { getDb } from "@/lib/db/get-db";
 import { createServerFn } from "@tanstack/react-start";
 
 export const listContactMessages = createServerFn({ method: "GET" }).handler(async () => {

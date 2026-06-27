@@ -1,4 +1,4 @@
-import { requestAdminOtp, verifyAdminOtp } from "@/lib/admin-auth/admin-auth.functions";
+import { requestAdminOtp, verifyAdminOtp } from "@/modules/admin-auth/admin-auth.functions";
 import { viewerqueryOptions } from "@/data-access-layer/auth/viewer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

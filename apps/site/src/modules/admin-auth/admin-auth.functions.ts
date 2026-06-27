@@ -5,16 +5,16 @@ import {
   getOtpResendCooldownMs,
   hashOtpCode,
   verifyOtpCode,
-} from "@/lib/admin-auth/otp";
+} from "@/modules/admin-auth/otp";
 import {
   adminSessionCookie,
   createAdminSessionToken,
   verifyAdminSessionToken,
-} from "@/lib/admin-auth/session";
+} from "@/modules/admin-auth/session";
 import { adminLoginChallenges, and, desc, eq, gt, lt } from "@repo/db";
-import { getDb } from "@/lib/get-db";
+import { getDb } from "@/lib/db/get-db";
 import { TelegramNotifier } from "@/lib/telegram/client";
-import { getServerEnv } from "@/lib/server-env";
+import { getServerEnv } from "@/lib/envs/server-env";
 import { createServerFn } from "@tanstack/react-start";
 import {
   deleteCookie,

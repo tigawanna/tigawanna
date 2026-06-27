@@ -1,5 +1,5 @@
 import { queryKeyPrefixes } from "@/data-access-layer/query-keys";
-import { getPinnedRepos, getRecentRepos } from "@/lib/github/repos";
+import { getPinnedRepos, getRecentRepos } from "@/modules/github/repos";
 import { queryOptions } from "@tanstack/react-query";
 
 export const pinnedReposQueryOptions = queryOptions({

@@ -3,7 +3,7 @@ import {
   listProjectEnrichmentRuns,
   listProjectEnrichmentSuggestions,
   listProjectRepos,
-} from "@/lib/backstage/projects-enrichment.functions";
+} from "@/modules/backstage/projects-enrichment.functions";
 import { queryOptions } from "@tanstack/react-query";
 
 export const projectEnrichmentSuggestionsQueryOptions = queryOptions({

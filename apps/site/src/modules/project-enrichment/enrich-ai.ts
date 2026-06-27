@@ -1,4 +1,4 @@
-import { getServerEnv } from "@/lib/server-env";
+import { getServerEnv } from "@/lib/envs/server-env";
 import { z } from "zod";
 import type { GithubRepoSnapshot, RepoAnalysis } from "./github-client";
 

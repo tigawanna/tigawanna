@@ -1,5 +1,5 @@
 import type { GithubRepoNode } from "@/types/github";
-import { getServerEnv } from "@/lib/server-env";
+import { getServerEnv } from "@/lib/envs/server-env";
 
 const RECENT_REPOS_QUERY = `query getViewerRecentlyPushedRepos {
   viewer {

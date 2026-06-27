@@ -1,5 +1,5 @@
 import type { TViewer } from "@/data-access-layer/auth/viewer";
-import type { ServerEnv } from "@/lib/server-env";
+import type { ServerEnv } from "@/lib/envs/server-env";
 
 function isTruthy(value: string | undefined) {
   return value === "true";

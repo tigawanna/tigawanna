@@ -1,16 +1,16 @@
-import { getServerEnv } from "@/lib/server-env";
+import { getServerEnv } from "@/lib/envs/server-env";
 import {
   fetchRecentRepos,
   fetchReposByFullNames,
   type GithubRepoSnapshot,
-} from "@/lib/project-enrichment/github-client";
-import type { RunCounters } from "@/lib/project-enrichment/counters";
+} from "@/modules/project-enrichment/github-client";
+import type { RunCounters } from "@/modules/project-enrichment/counters";
 import {
   processRepoForRun,
   updateRunFailure,
   updateRunSuccess,
-} from "@/lib/project-enrichment/run-enrichment";
-import type { EnrichmentRunParams } from "@/lib/project-enrichment/types";
+} from "@/modules/project-enrichment/run-enrichment";
+import type { EnrichmentRunParams } from "@/modules/project-enrichment/types";
 
 export async function fetchReposStep(params: EnrichmentRunParams) {
   "use step";

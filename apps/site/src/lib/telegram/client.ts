@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getServerEnv } from "@/lib/server-env";
+import { getServerEnv } from "@/lib/envs/server-env";
 
 const telegramEnvSchema = z.object({
   TELEGRAM_BOT_TOKEN: z.string().min(1),

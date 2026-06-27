@@ -1,6 +1,6 @@
 import { queryKeyPrefixes } from "@/data-access-layer/query-keys";
-import { listProjectRepos } from "@/lib/backstage/projects-enrichment.functions";
-import { removeProjectRepo } from "@/lib/backstage/projects.functions";
+import { listProjectRepos } from "@/modules/backstage/projects-enrichment.functions";
+import { removeProjectRepo } from "@/modules/backstage/projects.functions";
 import { getTanstackQueryContext } from "@/lib/tanstack/query/query-provider";
 import type { BackstageProject } from "@/types/backstage";
 import { BasicIndex, createCollection } from "@tanstack/db";

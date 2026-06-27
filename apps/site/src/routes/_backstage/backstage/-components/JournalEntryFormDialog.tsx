@@ -3,8 +3,8 @@ import {
   journalEntryFormDefaults,
   journalEntryFormSchema,
   type JournalEntryFormValues,
-} from "@/lib/journal/journal-form-schema";
-import { createJournalEntry, updateJournalEntry } from "@/lib/backstage/journal.functions";
+} from "@/modules/journal/journal-form-schema";
+import { createJournalEntry, updateJournalEntry } from "@/modules/journal/journal.functions";
 import { journalEntryTypeValues, type JournalEntryRow } from "@repo/db";
 import { formOptions } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";

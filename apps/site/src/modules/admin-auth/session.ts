@@ -1,4 +1,4 @@
-import { getServerEnv } from "@/lib/server-env";
+import { getServerEnv } from "@/lib/envs/server-env";
 
 const SESSION_COOKIE = "admin_session";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 30;

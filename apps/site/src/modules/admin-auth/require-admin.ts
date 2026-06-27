@@ -1,4 +1,4 @@
-import { adminSessionCookie, verifyAdminSessionToken } from "@/lib/admin-auth/session";
+import { adminSessionCookie, verifyAdminSessionToken } from "@/modules/admin-auth/session";
 import { getCookie } from "@tanstack/react-start/server";
 
 export async function requireAdminSession() {

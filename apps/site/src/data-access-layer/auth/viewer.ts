@@ -1,12 +1,12 @@
-import { getAdminSession, signOutAdmin } from "@/lib/admin-auth/admin-auth.functions";
-import type { AdminViewer } from "@/lib/admin-auth/admin-auth.functions";
+import { getAdminSession, signOutAdmin } from "@/modules/admin-auth/admin-auth.functions";
+import type { AdminViewer } from "@/modules/admin-auth/admin-auth.functions";
 import { isAuthBypassEnabledOnServer } from "@/data-access-layer/auth/auth-utils";
-import { getServerEnv } from "@/lib/server-env";
+import { getServerEnv } from "@/lib/envs/server-env";
 import { queryOptions, useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { redirect } from "@tanstack/react-router";
 import { createMiddleware } from "@tanstack/react-start";
-import { getCookieFromRequest } from "@/lib/admin-auth/cookies";
-import { adminSessionCookie, verifyAdminSessionToken } from "@/lib/admin-auth/session";
+import { getCookieFromRequest } from "@/modules/admin-auth/cookies";
+import { adminSessionCookie, verifyAdminSessionToken } from "@/modules/admin-auth/session";
 
 export type TViewer = AdminViewer;
 

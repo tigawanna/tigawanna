@@ -4,7 +4,7 @@ import {
   deleteGithubRepoForBackstage,
   listGithubReposForBackstage,
   setGithubRepoVisibilityForBackstage,
-} from "@/lib/backstage/projects.functions";
+} from "@/modules/backstage/projects.functions";
 import { getTanstackQueryContext } from "@/lib/tanstack/query/query-provider";
 import type { BackstageGithubRepo } from "@/types/backstage";
 import { BasicIndex, createCollection } from "@tanstack/db";

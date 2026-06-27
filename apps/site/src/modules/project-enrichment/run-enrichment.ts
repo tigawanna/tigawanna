@@ -1,5 +1,5 @@
-import { getDb } from "@/lib/get-db";
-import { getServerEnv } from "@/lib/server-env";
+import { getDb } from "@/lib/db/get-db";
+import { getServerEnv } from "@/lib/envs/server-env";
 import {
   and,
   eq,

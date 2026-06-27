@@ -1,17 +1,12 @@
 import { getStaticLessonById, STATIC_LESSONS } from "@/data/portfolio/static";
-import { buildLessonPreviews } from "@/lib/lessons/build-lesson-previews";
-import { fetchJournalLessonById, fetchJournalLessonPage } from "@/lib/backstage/journal.functions";
+import { buildLessonPreviews } from "@/modules/lessons/build-lesson-previews";
+import {
+  fetchJournalLessonById,
+  fetchJournalLessonPage,
+} from "@/modules/journal/journal.functions";
 import { convertMarkdownToHtmlWithShiki } from "@/lib/markdown/convert";
 import type { LessonItem, LessonsPage, LessonsPreviewPage } from "@/types/lessons";
 import { createServerFn } from "@tanstack/react-start";
-
-const emptyPage: LessonsPage = {
-  page: 0,
-  perPage: 0,
-  totalPages: 0,
-  totalItems: 0,
-  items: [],
-};
 
 async function fetchLessonsPage(page: number, perPage: number): Promise<LessonsPage> {
   const dbPage = await fetchJournalLessonPage(page, perPage);

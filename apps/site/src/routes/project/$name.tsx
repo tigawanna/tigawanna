@@ -1,4 +1,4 @@
-import { getRepoDetail, getRepoReadmeHtml } from "@/lib/github/repo-detail";
+import { getRepoDetail, getRepoReadmeHtml } from "@/modules/github/repo-detail";
 import { LandingFooter } from "@/routes/-components/landing/layout/LandingFooter";
 import { LandingNavbar } from "@/routes/-components/landing/layout/LandingNavbar";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";

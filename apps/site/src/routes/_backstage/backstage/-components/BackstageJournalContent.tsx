@@ -1,22 +1,92 @@
 import { journalEntriesQueryOptions } from "@/data-access-layer/backstage/journal-query-options";
-import { deleteJournalEntry, setJournalEntryPinned } from "@/lib/backstage/journal.functions";
+import { SearchBox } from "@/components/search/SearchBox";
+import { deleteJournalEntry, setJournalEntryPinned } from "@/modules/journal/journal.functions";
+import { filterAndSortJournalEntries } from "@/modules/journal/filter-sort-journal-entries";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { JournalEntryFormDialog } from "@/routes/_backstage/backstage/-components/JournalEntryFormDialog";
+import {
+  BackstageFilterField,
+  BackstageFiltersDialog,
+} from "@/routes/_backstage/backstage/-components/BackstageFiltersDialog";
+import { useTSRSearchQuery } from "@/routes/_backstage/backstage/-hooks/use-tsr-search-query";
+import { Route, type BackstageJournalSearch } from "@/routes/_backstage/backstage/journal";
 import { unwrapUnknownError } from "@/utils/errors";
-import type { JournalEntryRow } from "@repo/db";
+import { journalEntryTypeValues, type JournalEntryRow } from "@repo/db";
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { Link } from "@tanstack/react-router";
-import { ExternalLink, Pencil, Pin, PinOff, Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
+import {
+  ArrowDownAZ,
+  ArrowUpZA,
+  ExternalLink,
+  Pencil,
+  Pin,
+  PinOff,
+  Plus,
+  Trash2,
+} from "lucide-react";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
+const journalSortOptions = [
+  { value: "siteOrder", label: "Site order (pinned first)" },
+  { value: "createdAt", label: "Created" },
+  { value: "updatedAt", label: "Updated" },
+  { value: "title", label: "Title" },
+  { value: "type", label: "Type" },
+] as const;
+
 export function BackstageJournalContent() {
+  const search = Route.useSearch();
+  const navigate = Route.useNavigate();
+  const [, startTransition] = useTransition();
   const queryClient = useQueryClient();
   const { data: entries } = useSuspenseQuery(journalEntriesQueryOptions);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingEntry, setEditingEntry] = useState<JournalEntryRow | null>(null);
+
+  const { debouncedValue, isDebouncing, keyword, setKeyword, setSearchParams } =
+    useTSRSearchQuery<BackstageJournalSearch>({
+      search,
+      navigate,
+      query_param: "sq",
+      debounce_delay: 400,
+    });
+
+  const sortBy = search.sortBy ?? "siteOrder";
+  const sortDirection = search.sortDirection ?? "desc";
+  const typeFilter = search.type ?? "all";
+  const pinnedFilter = search.pinned ?? "all";
+
+  const activeFilterCount = (typeFilter !== "all" ? 1 : 0) + (pinnedFilter !== "all" ? 1 : 0);
+
+  const hasActiveFilters = Boolean(debouncedValue || activeFilterCount > 0);
+
+  const visibleEntries = filterAndSortJournalEntries(entries, {
+    query: debouncedValue,
+    type: typeFilter,
+    pinned: pinnedFilter,
+    sortBy,
+    sortDirection,
+  });
+
+  const setSortParams = (patch: Partial<BackstageJournalSearch>) => {
+    startTransition(() => {
+      void navigate({
+        search: (prev) => ({ ...prev, ...patch }),
+        replace: true,
+        viewTransition: false,
+      });
+    });
+  };
 
   const invalidate = () => {
     void queryClient.invalidateQueries({ queryKey: journalEntriesQueryOptions.queryKey });
@@ -68,8 +138,8 @@ export function BackstageJournalContent() {
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Journal</h1>
           <p className="text-base-content/60 mt-2 text-sm">
-            Today-I-learned entries for the landing page and /lessons. Pinned entries show first;
-            others sort by newest.
+            Today-I-learned entries for the landing page and /lessons. Pinned entries show first on
+            the site unless you choose a different sort order below.
           </p>
         </div>
         <Button
@@ -81,6 +151,122 @@ export function BackstageJournalContent() {
           Add entry
         </Button>
       </div>
+
+      {entries.length > 0 ? (
+        <div className="flex items-center gap-2">
+          <div className="min-w-0 flex-1" data-test="backstage-journal-search">
+            <SearchBox
+              keyword={keyword}
+              setKeyword={setKeyword}
+              debouncedValue={debouncedValue}
+              isDebouncing={isDebouncing}
+              inputProps={{
+                placeholder: "Search by title, description, or type…",
+              }}
+            />
+          </div>
+          <BackstageFiltersDialog
+            data-test="backstage-journal-filters"
+            activeFilterCount={activeFilterCount}
+            onClear={() =>
+              setSearchParams({
+                type: undefined,
+                pinned: undefined,
+              })
+            }
+          >
+            <BackstageFilterField label="Type">
+              <Select
+                value={typeFilter}
+                onValueChange={(value) =>
+                  setSearchParams({
+                    type: value === "all" ? undefined : (value as BackstageJournalSearch["type"]),
+                  })
+                }
+              >
+                <SelectTrigger className="w-full" data-test="backstage-journal-type-filter">
+                  <SelectValue placeholder="Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All types</SelectItem>
+                  {journalEntryTypeValues.map((value) => (
+                    <SelectItem key={value} value={value}>
+                      {value}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </BackstageFilterField>
+            <BackstageFilterField label="Pinned">
+              <Select
+                value={pinnedFilter}
+                onValueChange={(value) =>
+                  setSearchParams({
+                    pinned:
+                      value === "all" ? undefined : (value as BackstageJournalSearch["pinned"]),
+                  })
+                }
+              >
+                <SelectTrigger className="w-full" data-test="backstage-journal-pinned-filter">
+                  <SelectValue placeholder="Pinned" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All entries</SelectItem>
+                  <SelectItem value="pinned">Pinned only</SelectItem>
+                  <SelectItem value="unpinned">Unpinned only</SelectItem>
+                </SelectContent>
+              </Select>
+            </BackstageFilterField>
+            <BackstageFilterField label="Sort by">
+              <Select
+                value={sortBy}
+                onValueChange={(value) =>
+                  setSortParams({
+                    sortBy: value as BackstageJournalSearch["sortBy"],
+                  })
+                }
+              >
+                <SelectTrigger className="w-full" data-test="backstage-journal-sort-by">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  {journalSortOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </BackstageFilterField>
+            <BackstageFilterField label="Direction">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-9 w-full justify-start gap-2"
+                onClick={() =>
+                  setSortParams({
+                    sortDirection: sortDirection === "asc" ? "desc" : "asc",
+                  })
+                }
+                data-test="backstage-journal-sort-direction"
+              >
+                {sortDirection === "asc" ? (
+                  <>
+                    <ArrowDownAZ className="size-4" />
+                    Ascending
+                  </>
+                ) : (
+                  <>
+                    <ArrowUpZA className="size-4" />
+                    Descending
+                  </>
+                )}
+              </Button>
+            </BackstageFilterField>
+          </BackstageFiltersDialog>
+        </div>
+      ) : null}
 
       {entries.length === 0 ? (
         <Card>
@@ -96,9 +282,20 @@ export function BackstageJournalContent() {
             </Button>
           </CardContent>
         </Card>
+      ) : visibleEntries.length === 0 ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>No matching entries</CardTitle>
+            <CardDescription>Try a different search term or filter.</CardDescription>
+          </CardHeader>
+        </Card>
       ) : (
         <div className="flex flex-col gap-4">
-          {entries.map((entry) => (
+          <p className="text-base-content/50 text-sm" data-test="backstage-journal-results-count">
+            {visibleEntries.length} {hasActiveFilters ? "matching" : ""}{" "}
+            {visibleEntries.length === 1 ? "entry" : "entries"}
+          </p>
+          {visibleEntries.map((entry) => (
             <article
               key={entry.id}
               className="rounded-xl border border-base-content/10 bg-base-200/40 p-5"

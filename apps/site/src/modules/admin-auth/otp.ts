@@ -1,5 +1,5 @@
 import { timingSafeEqual } from "node:crypto";
-import { getServerEnv } from "@/lib/server-env";
+import { getServerEnv } from "@/lib/envs/server-env";
 
 const OTP_CHALLENGE_COOKIE = "admin_otp_challenge";
 const OTP_TTL_MS = 10 * 60 * 1000;

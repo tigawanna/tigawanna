@@ -1,4 +1,4 @@
-import type { listProjectRepos } from "@/lib/backstage/projects-enrichment.functions";
+import type { listProjectRepos } from "@/modules/backstage/projects-enrichment.functions";
 
 export type BackstageProject = Awaited<ReturnType<typeof listProjectRepos>>[number];
 

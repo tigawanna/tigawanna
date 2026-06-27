@@ -1,5 +1,5 @@
 import { queryKeyPrefixes } from "@/data-access-layer/query-keys";
-import { listJournalEntriesForBackstage } from "@/lib/backstage/journal.functions";
+import { listJournalEntriesForBackstage } from "@/modules/journal/journal.functions";
 import { queryOptions } from "@tanstack/react-query";
 
 export const journalEntriesQueryOptions = queryOptions({

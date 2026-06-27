@@ -1,5 +1,5 @@
 import { useStackTraceFlood } from "@/hooks/use-stack-trace-flood";
-import { getStackTraceLines } from "@/lib/creature-feature/stack-trace";
+import { getStackTraceLines } from "@/modules/creature-feature/stack-trace";
 import type { StackTraceTone } from "@/types/creature-feature";
 import { useRef, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";

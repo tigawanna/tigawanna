@@ -1,9 +1,9 @@
-import { requireAdminSession } from "@/lib/admin-auth/require-admin";
-import { applyRepoMetadata } from "@/lib/github/apply-repo-metadata";
-import { getDb } from "@/lib/get-db";
-import { createRunRecord } from "@/lib/project-enrichment/run-enrichment";
-import type { EnrichmentRunParams } from "@/lib/project-enrichment/types";
-import { getServerEnv } from "@/lib/server-env";
+import { requireAdminSession } from "@/modules/admin-auth/require-admin";
+import { applyRepoMetadata } from "@/modules/github/apply-repo-metadata";
+import { getDb } from "@/lib/db/get-db";
+import { createRunRecord } from "@/modules/project-enrichment/run-enrichment";
+import type { EnrichmentRunParams } from "@/modules/project-enrichment/types";
+import { getServerEnv } from "@/lib/envs/server-env";
 import { unwrapUnknownError } from "@/utils/errors";
 import { enrichProjectsWorkflow } from "@/workflows/project-enrichment";
 import {

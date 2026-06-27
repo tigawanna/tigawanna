@@ -1,6 +1,6 @@
 import { queryKeyPrefixes } from "@/data-access-layer/query-keys";
-import { getLessonsPreview } from "@/lib/lessons/lessons";
-import { getLandingLessonPreviews } from "@/lib/lessons/landing-lessons.functions";
+import { getLessonsPreview } from "@/modules/lessons/lessons";
+import { getLandingLessonPreviews } from "@/modules/lessons/landing-lessons.functions";
 import { queryOptions } from "@tanstack/react-query";
 
 export function lessonsListQueryOptions(page: number, perPage: number) {

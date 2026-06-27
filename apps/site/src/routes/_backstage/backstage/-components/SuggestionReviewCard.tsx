@@ -1,7 +1,7 @@
 import {
   approveProjectEnrichmentSuggestion,
   rejectProjectEnrichmentSuggestion,
-} from "@/lib/backstage/projects-enrichment.functions";
+} from "@/modules/backstage/projects-enrichment.functions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,7 @@ import { toast } from "sonner";
 
 type Suggestion = Awaited<
   ReturnType<
-    typeof import("@/lib/backstage/projects-enrichment.functions").listProjectEnrichmentSuggestions
+    typeof import("@/modules/backstage/projects-enrichment.functions").listProjectEnrichmentSuggestions
   >
 >[number];
 

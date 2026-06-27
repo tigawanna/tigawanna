@@ -7,7 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { triggerProjectEnrichmentRun } from "@/lib/backstage/projects-enrichment.functions";
+import { triggerProjectEnrichmentRun } from "@/modules/backstage/projects-enrichment.functions";
 import { unwrapUnknownError } from "@/utils/errors";
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";

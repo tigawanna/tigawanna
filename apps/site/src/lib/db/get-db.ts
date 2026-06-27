@@ -1,5 +1,5 @@
 import { createDb, isTursoRemote } from "@repo/db";
-import { getServerEnv } from "@/lib/server-env";
+import { getServerEnv } from "@/lib/envs/server-env";
 
 export function getDb() {
   const { DATABASE_URL, DATABASE_AUTH_TOKEN } = getServerEnv();

@@ -1,7 +1,7 @@
 import { createTimeline } from "animejs";
 import { useEffect, useRef } from "react";
 
-import { CREATURE_CURTAIN_PLEATS } from "@/lib/creature-feature/curtain";
+import { CREATURE_CURTAIN_PLEATS } from "@/modules/creature-feature/curtain";
 
 interface CreatureCurtainOutroProps {
   onClose: () => void;

@@ -1,5 +1,5 @@
 import type { GithubRepoNode } from "@/types/github";
-import { buildRepoSearchText, extractRepoTags } from "@/lib/github/fetch-repos";
+import { buildRepoSearchText, extractRepoTags } from "@/modules/github/fetch-repos";
 
 export type RepoSearchResult = {
   nameWithOwner: string;

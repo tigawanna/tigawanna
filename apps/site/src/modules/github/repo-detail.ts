@@ -1,5 +1,5 @@
 import type { OneRepoGQL } from "@/types/github";
-import { getServerEnv } from "@/lib/server-env";
+import { getServerEnv } from "@/lib/envs/server-env";
 import { createServerFn } from "@tanstack/react-start";
 
 const REPO_QUERY = `

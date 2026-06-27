@@ -1,13 +1,13 @@
-import { requireAdminSession } from "@/lib/admin-auth/require-admin";
+import { requireAdminSession } from "@/modules/admin-auth/require-admin";
 import {
   journalEntryFormSchema,
   type JournalEntryFormValues,
-} from "@/lib/journal/journal-form-schema";
+} from "@/modules/journal/journal-form-schema";
 import {
   compareJournalEntriesForDisplay,
   journalRowToLessonItem,
-} from "@/lib/journal/map-journal-row";
-import { getDb } from "@/lib/get-db";
+} from "@/modules/journal/map-journal-row";
+import { getDb } from "@/lib/db/get-db";
 import type { LessonItem } from "@/types/lessons";
 import { eq, journalEntries, sql, type JournalEntryRow } from "@repo/db";
 import { createServerFn } from "@tanstack/react-start";

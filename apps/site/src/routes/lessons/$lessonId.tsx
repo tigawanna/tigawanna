@@ -1,4 +1,4 @@
-import { getLesson, getLessonMarkdownHtml } from "@/lib/lessons/lessons";
+import { getLesson, getLessonMarkdownHtml } from "@/modules/lessons/lessons";
 import { LandingFooter } from "@/routes/-components/landing/layout/LandingFooter";
 import { LandingNavbar } from "@/routes/-components/landing/layout/LandingNavbar";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";

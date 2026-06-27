@@ -1,5 +1,5 @@
-import { sumDeltas } from "@/lib/project-enrichment/counters";
-import type { EnrichmentRunParams } from "@/lib/project-enrichment/types";
+import { sumDeltas } from "@/modules/project-enrichment/counters";
+import type { EnrichmentRunParams } from "@/modules/project-enrichment/types";
 import { sleep } from "workflow";
 import {
   fetchReposStep,
