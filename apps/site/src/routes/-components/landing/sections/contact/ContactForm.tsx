@@ -84,7 +84,8 @@ export function ContactForm() {
       <form.AppForm>
         <form.SubmitButton
           label="Send message"
-          className="btn btn-ghost w-full justify-start px-0 text-base-content underline-offset-4 hover:underline"
+          variant="ghost"
+          className="mt-2 h-auto w-full justify-center rounded-full border border-landing-cream/15 bg-landing-cream px-6 py-3 text-sm font-medium text-landing-ink shadow-none transition-colors hover:bg-landing-cream-highlight disabled:opacity-40"
         />
       </form.AppForm>
     </form>

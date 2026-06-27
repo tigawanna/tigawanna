@@ -1,13 +1,22 @@
 import { Button } from "@/components/ui/button";
+import type { ComponentProps } from "react";
 import { useFormContext } from "./form-context";
 
 interface SubmitButtonProps {
   label?: string;
   className?: string;
   children?: React.ReactNode;
+  variant?: ComponentProps<typeof Button>["variant"];
+  size?: ComponentProps<typeof Button>["size"];
 }
 
-export function SubmitButton({ label = "Submit", className, children }: SubmitButtonProps) {
+export function SubmitButton({
+  label = "Submit",
+  className,
+  children,
+  variant,
+  size,
+}: SubmitButtonProps) {
   const form = useFormContext();
 
   return (
@@ -21,6 +30,8 @@ export function SubmitButton({ label = "Submit", className, children }: SubmitBu
       {({ isSubmitting, canSubmit, isPristine }) => (
         <Button
           type="submit"
+          variant={variant}
+          size={size}
           disabled={isSubmitting || !canSubmit || isPristine}
           className={className}
         >

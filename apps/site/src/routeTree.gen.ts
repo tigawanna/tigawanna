@@ -16,6 +16,7 @@ import { Route as CreatureFeatureIndexRouteImport } from './routes/creature-feat
 import { Route as ProjectNameRouteImport } from './routes/project/$name'
 import { Route as LessonsLessonIdRouteImport } from './routes/lessons/$lessonId'
 import { Route as BackstageSignInRouteImport } from './routes/backstage/sign-in'
+import { Route as PreviewErrorIndexRouteImport } from './routes/preview/error/index'
 import { Route as BackstageBackstageIndexRouteImport } from './routes/_backstage/backstage/index'
 import { Route as BackstageBackstageWorkflowRouteImport } from './routes/_backstage/backstage/workflow'
 import { Route as BackstageBackstageReposRouteImport } from './routes/_backstage/backstage/repos'
@@ -56,6 +57,11 @@ const LessonsLessonIdRoute = LessonsLessonIdRouteImport.update({
 const BackstageSignInRoute = BackstageSignInRouteImport.update({
   id: '/backstage/sign-in',
   path: '/backstage/sign-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreviewErrorIndexRoute = PreviewErrorIndexRouteImport.update({
+  id: '/preview/error/',
+  path: '/preview/error/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BackstageBackstageIndexRoute = BackstageBackstageIndexRouteImport.update({
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/backstage/repos': typeof BackstageBackstageReposRoute
   '/backstage/workflow': typeof BackstageBackstageWorkflowRoute
   '/backstage/': typeof BackstageBackstageIndexRoute
+  '/preview/error/': typeof PreviewErrorIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -128,6 +135,7 @@ export interface FileRoutesByTo {
   '/backstage/repos': typeof BackstageBackstageReposRoute
   '/backstage/workflow': typeof BackstageBackstageWorkflowRoute
   '/backstage': typeof BackstageBackstageIndexRoute
+  '/preview/error': typeof PreviewErrorIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -145,6 +153,7 @@ export interface FileRoutesById {
   '/_backstage/backstage/repos': typeof BackstageBackstageReposRoute
   '/_backstage/backstage/workflow': typeof BackstageBackstageWorkflowRoute
   '/_backstage/backstage/': typeof BackstageBackstageIndexRoute
+  '/preview/error/': typeof PreviewErrorIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -162,6 +171,7 @@ export interface FileRouteTypes {
     | '/backstage/repos'
     | '/backstage/workflow'
     | '/backstage/'
+    | '/preview/error/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -177,6 +187,7 @@ export interface FileRouteTypes {
     | '/backstage/repos'
     | '/backstage/workflow'
     | '/backstage'
+    | '/preview/error'
   id:
     | '__root__'
     | '/'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/_backstage/backstage/repos'
     | '/_backstage/backstage/workflow'
     | '/_backstage/backstage/'
+    | '/preview/error/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -203,6 +215,7 @@ export interface RootRouteChildren {
   ProjectNameRoute: typeof ProjectNameRoute
   CreatureFeatureIndexRoute: typeof CreatureFeatureIndexRoute
   LessonsIndexRoute: typeof LessonsIndexRoute
+  PreviewErrorIndexRoute: typeof PreviewErrorIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -254,6 +267,13 @@ declare module '@tanstack/react-router' {
       path: '/backstage/sign-in'
       fullPath: '/backstage/sign-in'
       preLoaderRoute: typeof BackstageSignInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/error/': {
+      id: '/preview/error/'
+      path: '/preview/error'
+      fullPath: '/preview/error/'
+      preLoaderRoute: typeof PreviewErrorIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_backstage/backstage/': {
@@ -341,6 +361,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProjectNameRoute: ProjectNameRoute,
   CreatureFeatureIndexRoute: CreatureFeatureIndexRoute,
   LessonsIndexRoute: LessonsIndexRoute,
+  PreviewErrorIndexRoute: PreviewErrorIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
