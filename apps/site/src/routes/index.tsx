@@ -1,7 +1,3 @@
-import {
-  pinnedReposQueryOptions,
-  recentReposQueryOptions,
-} from "@/data-access-layer/github/query-options";
 import { landingLessonPreviewsQueryOptions } from "@/data-access-layer/portfolio/query-options";
 import { SmoothScroll } from "@/components/animation/SmoothScroll";
 import { createFileRoute } from "@tanstack/react-router";
@@ -13,16 +9,14 @@ import { LandingCTA } from "./-components/landing/sections/contact/LandingCTA";
 import { LandingFeatures } from "./-components/landing/sections/features/LandingFeatures";
 import { LandingHero } from "./-components/landing/sections/hero/LandingHero";
 import { LandingLessons } from "./-components/landing/sections/lessons/LandingLessons";
-import { LandingProjects } from "./-components/landing/sections/projects/LandingProjects";
+import { LandingProjectsDeferred } from "./-components/landing/sections/projects/LandingProjectsDeferred";
 import { StackCube } from "./-components/landing/sections/stack-cube/StackCube";
 
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
-    const [lessonPreviews] = await Promise.all([
-      context.queryClient.ensureQueryData(landingLessonPreviewsQueryOptions),
-      context.queryClient.ensureQueryData(pinnedReposQueryOptions),
-      context.queryClient.ensureQueryData(recentReposQueryOptions),
-    ]);
+    const lessonPreviews = await context.queryClient.ensureQueryData(
+      landingLessonPreviewsQueryOptions,
+    );
 
     return lessonPreviews;
   },
@@ -40,7 +34,7 @@ function LandingPage() {
       <StackCube />
       <LandingHowIWork />
       <LandingFeatures />
-      <LandingProjects />
+      <LandingProjectsDeferred />
       <LandingArticles />
       <LandingLessons items={lessonPreviews} />
       <LandingCTA />

@@ -1,15 +1,14 @@
-import { CreatureEggLowercaseI } from "@/components/creature-egg/CreatureEggTrigger";
 import { STATIC_PINNED_PROJECTS, STATIC_RECENT_PROJECTS } from "@/data/portfolio/static";
 import {
   pinnedReposQueryOptions,
   recentReposQueryOptions,
 } from "@/data-access-layer/github/query-options";
 import type { GithubRepoNode } from "@/types/github";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { Suspense, useState } from "react";
-import { PortfolioGridSkeleton } from "../../cards/PortfolioGridSkeleton";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { renderProjectCard } from "../../cards/ProjectCard";
 import { LandingSection, OrganicDivider, SectionEyebrow } from "../../primitives";
+import { CreatureEggLowercaseI } from "@/components/creature-egg/CreatureEggTrigger";
 import { filterReposByTopic, matchesProjectSearch } from "./-utils/project-search";
 import { ProjectsSearch } from "./ProjectsSearch";
 import { ProjectsTopicFilter, type ProjectView } from "./ProjectsTopicFilter";
@@ -46,14 +45,39 @@ function ProjectsContent() {
   const [searchDraft, setSearchDraft] = useState("");
   const [appliedSearch, setAppliedSearch] = useState("");
 
-  const { data: pinnedResponse } = useSuspenseQuery(pinnedReposQueryOptions);
-  const { data: recentResponse } = useSuspenseQuery(recentReposQueryOptions);
+  const clientOnly = !import.meta.env.SSR;
+
+  const pinnedQuery = useQuery({
+    ...pinnedReposQueryOptions,
+    enabled: clientOnly,
+    placeholderData: () => ({
+      data: {
+        viewer: {
+          pinnedItems: { nodes: STATIC_PINNED_PROJECTS },
+          repositories: { nodes: [] },
+        },
+      },
+    }),
+  });
+  const recentQuery = useQuery({
+    ...recentReposQueryOptions,
+    enabled: clientOnly,
+    placeholderData: () => ({
+      data: {
+        viewer: {
+          pinnedItems: { nodes: [] },
+          repositories: { nodes: STATIC_RECENT_PROJECTS },
+        },
+      },
+      errors: [],
+    }),
+  });
 
   const pinnedRepos = resolvePinnedRepos(
-    filterValidRepos(pinnedResponse?.data?.viewer.pinnedItems.nodes ?? []),
+    filterValidRepos(pinnedQuery.data?.data?.viewer.pinnedItems.nodes ?? []),
   );
   const recentRepos = resolveRecentRepos(
-    filterValidRepos(recentResponse.data?.viewer.repositories.nodes ?? []),
+    filterValidRepos(recentQuery.data?.data?.viewer.repositories.nodes ?? []),
   );
   const topics = collectTopics(recentRepos);
 
@@ -133,9 +157,7 @@ export function LandingProjects() {
           </p>
         </div>
 
-        <Suspense fallback={<PortfolioGridSkeleton count={MAX_LANDING_PROJECTS} />}>
-          <ProjectsContent />
-        </Suspense>
+        <ProjectsContent />
       </div>
     </LandingSection>
   );
