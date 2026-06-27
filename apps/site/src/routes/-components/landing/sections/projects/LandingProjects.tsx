@@ -4,7 +4,6 @@ import {
   pinnedReposQueryOptions,
   recentReposQueryOptions,
 } from "@/data-access-layer/github/query-options";
-import { useDebouncedValue } from "@/hooks/use-debouncer";
 import type { GithubRepoNode } from "@/types/github";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Suspense, useState } from "react";
@@ -44,8 +43,8 @@ function resolveRecentRepos(nodes: GithubRepoNode[]) {
 function ProjectsContent() {
   const [activeView, setActiveView] = useState<ProjectView>("featured");
   const [activeTopic, setActiveTopic] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
-  const { debouncedValue: debouncedSearch, isDebouncing } = useDebouncedValue(searchQuery, 300);
+  const [searchDraft, setSearchDraft] = useState("");
+  const [appliedSearch, setAppliedSearch] = useState("");
 
   const { data: pinnedResponse } = useSuspenseQuery(pinnedReposQueryOptions);
   const { data: recentResponse } = useSuspenseQuery(recentReposQueryOptions);
@@ -58,12 +57,12 @@ function ProjectsContent() {
   );
   const topics = collectTopics(recentRepos);
 
-  const isSearching = debouncedSearch.trim().length > 0;
+  const isSearching = appliedSearch.length > 0;
 
   let visibleRepos: GithubRepoNode[] = [];
   if (isSearching) {
     visibleRepos = filterReposByTopic(recentRepos, activeTopic).filter((repo) =>
-      matchesProjectSearch(repo, debouncedSearch),
+      matchesProjectSearch(repo, appliedSearch),
     );
   } else if (activeView === "featured") {
     visibleRepos = pinnedRepos.slice(0, MAX_LANDING_PROJECTS);
@@ -72,6 +71,8 @@ function ProjectsContent() {
   } else {
     visibleRepos = filterReposByTopic(recentRepos, activeTopic).slice(0, MAX_LANDING_PROJECTS);
   }
+
+  const showEmptySearchState = isSearching && visibleRepos.length === 0;
 
   return (
     <div className="space-y-10">
@@ -83,10 +84,19 @@ function ProjectsContent() {
           onTopicChange={setActiveTopic}
           onViewChange={setActiveView}
         />
-        <ProjectsSearch value={searchQuery} onChange={setSearchQuery} isDebouncing={isDebouncing} />
+        <ProjectsSearch
+          value={searchDraft}
+          onChange={setSearchDraft}
+          onSubmit={() => setAppliedSearch(searchDraft.trim())}
+          onClear={() => {
+            setSearchDraft("");
+            setAppliedSearch("");
+          }}
+          hasPendingSearch={searchDraft.trim() !== appliedSearch}
+        />
       </div>
 
-      {visibleRepos.length === 0 ? (
+      {showEmptySearchState ? (
         <p className="text-center text-sm text-landing-sage/50" data-test="projects-search-empty">
           No projects match your search.
         </p>
