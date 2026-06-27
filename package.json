@@ -6,6 +6,7 @@
     "dev": "turbo run dev --filter=site",
     "dev:site": "turbo run dev --filter=site",
     "dev:legacy": "turbo run dev --filter=legacy-next",
+    "build:legacy": "turbo run build --filter=legacy-next",
     "dev:all": "turbo run dev",
     "gh": "pnpm --filter github-cli start",
     "lint": "vp lint .",

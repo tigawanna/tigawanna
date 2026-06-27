@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useInView, useTransform, type MotionValue } from 'framer-motion';
+import { useInView, useTransform, type MotionValue, type Variants } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from '@studio-freight/lenis';
@@ -12,27 +12,29 @@ if (typeof window !== 'undefined') {
 }
 
 // Text reveal animation
+const revealEase = [0.22, 1, 0.36, 1] as const;
+
 export const revealVariants = {
   hidden: { opacity: 0, y: 50 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
-    transition: { 
-      duration: 0.5, 
-      ease: [0.22, 1, 0.36, 1],
-      staggerChildren: 0.1
-    }
-  }
-};
+    transition: {
+      duration: 0.5,
+      ease: revealEase,
+      staggerChildren: 0.1,
+    },
+  },
+} satisfies Variants;
 
 export const wordRevealVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
-  }
-};
+    transition: { duration: 0.5, ease: revealEase },
+  },
+} satisfies Variants;
 
 // Split text into words for animations
 export const splitText = (text: string) => {
