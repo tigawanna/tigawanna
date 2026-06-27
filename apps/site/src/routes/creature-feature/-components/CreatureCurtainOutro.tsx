@@ -1,6 +1,10 @@
 import { createTimeline } from "animejs";
 import { useEffect, useRef } from "react";
 
+import {
+  CREATURE_FEATURE_INSPIRATION_URL,
+  CREATURE_OUTRO_BACK_LABEL,
+} from "@/modules/creature-feature/content";
 import { CREATURE_CURTAIN_PLEATS } from "@/modules/creature-feature/curtain";
 
 interface CreatureCurtainOutroProps {
@@ -74,10 +78,19 @@ export function CreatureCurtainOutro({ onClose }: CreatureCurtainOutroProps) {
           type="button"
           data-test="creature-curtain-close"
           onClick={onClose}
-          className="pointer-events-auto rounded-full border border-[#f6deb0]/25 bg-black/40 px-6 py-3 text-xs tracking-[0.22em] text-[#f6deb0]/80 uppercase backdrop-blur transition-colors hover:border-[#f6deb0]/60 hover:text-[#f6deb0]"
+          className="pointer-events-auto rounded-full border border-[#f6deb0]/25 bg-black/40 px-6 py-3 text-xs tracking-[0.12em] text-[#f6deb0]/80 backdrop-blur transition-colors hover:border-[#f6deb0]/60 hover:text-[#f6deb0]"
         >
-          back to shipped work
+          {CREATURE_OUTRO_BACK_LABEL}
         </button>
+        <a
+          href={CREATURE_FEATURE_INSPIRATION_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-test="creature-feature-inspiration"
+          className="pointer-events-auto font-mono text-[10px] tracking-[0.2em] text-[#f6deb0]/30 transition-colors hover:text-[#f6deb0]/55"
+        >
+          inspired by @autumnlawg
+        </a>
       </div>
     </div>
   );

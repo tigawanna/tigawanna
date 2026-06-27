@@ -9,9 +9,9 @@ import { CreatureFeatureTitle } from "./CreatureFeatureTitle";
 const PANELS: CreatureRevealPanel[] = [
   {
     id: "excited",
-    eyebrow: "A tiny TypeScript horror story",
-    title: "Boy am I excited for this new TypeScript.",
-    subtitle: "I exclaimed with excitement.",
+    eyebrow: "a tiny typescript horror story",
+    title: "i'm really exciteds for the new typescript!",
+    subtitle: "i exclaims with excitement",
     variant: "cinema",
     background: "#15180f",
     foreground: "#d6d0b7",
@@ -20,7 +20,7 @@ const PANELS: CreatureRevealPanel[] = [
   },
   {
     id: "little",
-    title: "Little did I know",
+    title: "little did i know…",
     variant: "story",
     background: "#241410",
     foreground: "#e8d9b5",
@@ -29,7 +29,7 @@ const PANELS: CreatureRevealPanel[] = [
   },
   {
     id: "feature",
-    title: "It was a feature.",
+    title: "it would be a feature.",
     variant: "feature",
     background: "#1b0e0d",
     foreground: "#ead7b0",
@@ -38,7 +38,7 @@ const PANELS: CreatureRevealPanel[] = [
   },
   {
     id: "creature-feature",
-    title: "A creature feature",
+    title: "a creature feature.",
     variant: "feature",
     background: "#0c0807",
     foreground: "#ff776d",
@@ -257,9 +257,7 @@ function CreaturePanel({
         ) : null}
 
         {panel.eyebrow ? (
-          <p className="text-xs font-semibold tracking-[0.38em] uppercase opacity-50">
-            {panel.eyebrow}
-          </p>
+          <p className="text-xs font-semibold tracking-[0.28em] opacity-50">{panel.eyebrow}</p>
         ) : null}
 
         {panel.isFinale ? (
@@ -276,7 +274,7 @@ function CreaturePanel({
               {panel.title}
             </h2>
             {panel.subtitle ? (
-              <p className="max-w-md font-mono text-xs tracking-[0.18em] text-current/45 uppercase">
+              <p className="max-w-md font-mono text-xs tracking-[0.08em] text-current/45">
                 {panel.subtitle}
               </p>
             ) : null}
