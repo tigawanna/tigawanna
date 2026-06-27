@@ -8,7 +8,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { renderProjectCard } from "../../cards/ProjectCard";
 import { LandingSection, OrganicDivider, SectionEyebrow } from "../../primitives";
-import { CreatureEggLowercaseI } from "@/components/creature-egg/CreatureEggTrigger";
 import { filterReposByTopic, matchesProjectSearch } from "./-utils/project-search";
 import { ProjectsSearch } from "./ProjectsSearch";
 import { ProjectsTopicFilter, type ProjectView } from "./ProjectsTopicFilter";
@@ -147,11 +146,7 @@ export function LandingProjects() {
       <div className="container relative z-10">
         <div className="mx-auto mb-14 max-w-3xl text-center">
           <SectionEyebrow>Projects</SectionEyebrow>
-          <h2 className="landing-section-heading">
-            Th
-            <CreatureEggLowercaseI />
-            ngs I&apos;ve built.
-          </h2>
+          <h2 className="landing-section-heading">Open source projects</h2>
           <p className="landing-section-lead">
             Pinned highlights, recently pushed repos, and topic filters — pulled live from GitHub.
           </p>
