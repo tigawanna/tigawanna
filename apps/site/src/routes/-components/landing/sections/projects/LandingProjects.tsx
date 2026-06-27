@@ -12,6 +12,8 @@ import { renderProjectCard } from "../../cards/ProjectCard";
 import { LandingSection, OrganicDivider, SectionEyebrow } from "../../primitives";
 import { ProjectsTopicFilter, type ProjectView } from "./ProjectsTopicFilter";
 
+const MAX_LANDING_PROJECTS = 6;
+
 function filterValidRepos(repos: (GithubRepoNode | null | undefined)[]) {
   return repos.filter((repo): repo is GithubRepoNode => repo != null);
 }
@@ -53,9 +55,9 @@ function ProjectsContent() {
 
   let visibleRepos: GithubRepoNode[] = [];
   if (activeView === "featured") {
-    visibleRepos = pinnedRepos;
+    visibleRepos = pinnedRepos.slice(0, MAX_LANDING_PROJECTS);
   } else if (activeView === "recent") {
-    visibleRepos = recentRepos.slice(0, 6);
+    visibleRepos = recentRepos.slice(0, MAX_LANDING_PROJECTS);
   } else {
     visibleRepos = recentRepos
       .filter((repo) => {
@@ -64,7 +66,7 @@ function ProjectsContent() {
           (topic) => topic.topic.name.toLowerCase() === activeTopic.toLowerCase(),
         );
       })
-      .slice(0, 6);
+      .slice(0, MAX_LANDING_PROJECTS);
   }
 
   return (
@@ -80,12 +82,6 @@ function ProjectsContent() {
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {visibleRepos.map((repo) => renderProjectCard(repo))}
       </div>
-
-      {activeView === "recent" && recentRepos.length > 6 ? (
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {recentRepos.slice(6, 12).map((repo) => renderProjectCard(repo))}
-        </div>
-      ) : null}
     </div>
   );
 }
@@ -114,7 +110,7 @@ export function LandingProjects() {
           </p>
         </div>
 
-        <Suspense fallback={<PortfolioGridSkeleton count={6} />}>
+        <Suspense fallback={<PortfolioGridSkeleton count={MAX_LANDING_PROJECTS} />}>
           <ProjectsContent />
         </Suspense>
       </div>
