@@ -39,3 +39,10 @@ yarn-error.log*
 minio/
 .references
 /.stash
+
+# Lighthouse audit artifacts
+**/lighthouse-reports/
+**/lighthouse-reports-desktop/
+**/*lighthouse*.trace.json*
+**/*lighthouse*.json.gz
+

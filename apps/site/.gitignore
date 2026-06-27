@@ -16,3 +16,12 @@ local.db
 .vinxi
 todos.json
 /.swc
+
+# Lighthouse audit artifacts (local only)
+lighthouse-reports/
+lighthouse-reports-desktop/
+**/lighthouse-reports/
+**/lighthouse-reports-desktop/
+**/*lighthouse*.trace.json*
+**/*lighthouse*.json.gz
+

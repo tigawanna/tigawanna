@@ -11,9 +11,19 @@ export function LandingHero() {
     const section = sectionRef.current;
     if (!section || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const targets = section.querySelectorAll("[data-hero-reveal]");
+    const motionTargets = section.querySelectorAll("[data-hero-reveal-motion]");
+    const fadeTargets = section.querySelectorAll(
+      "[data-hero-reveal]:not([data-hero-reveal-motion])",
+    );
 
-    const anim = animate(targets, {
+    const motionAnim = animate(motionTargets, {
+      translateY: [28, 0],
+      duration: 1000,
+      delay: stagger(140, { start: 150 }),
+      ease: "outQuart",
+    });
+
+    const fadeAnim = animate(fadeTargets, {
       opacity: [0, 1],
       translateY: [28, 0],
       duration: 1000,
@@ -22,7 +32,8 @@ export function LandingHero() {
     });
 
     return () => {
-      anim.revert();
+      motionAnim.revert();
+      fadeAnim.revert();
     };
   }, []);
 
@@ -37,6 +48,7 @@ export function LandingHero() {
       <div className="relative z-10 flex w-full max-w-6xl flex-col items-center text-center">
         <h1
           data-hero-reveal
+          data-hero-reveal-motion
           className="w-full font-serif text-7xl leading-[0.9] font-medium tracking-[-0.04em] md:text-8xl lg:text-[7rem] lg:whitespace-nowrap xl:text-[8.5rem] 2xl:text-[9rem]"
         >
           Denn

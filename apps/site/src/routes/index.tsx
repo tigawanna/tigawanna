@@ -6,11 +6,11 @@ import { LandingNavbar } from "./-components/landing/layout/LandingNavbar";
 import { LandingHowIWork } from "./-components/landing/sections/about/LandingHowIWork";
 import { LandingArticles } from "./-components/landing/sections/articles/LandingArticles";
 import { LandingCTA } from "./-components/landing/sections/contact/LandingCTA";
-import { LandingFeatures } from "./-components/landing/sections/features/LandingFeatures";
+import { LandingFeaturesDeferred } from "./-components/landing/sections/features/LandingFeaturesDeferred";
 import { LandingHero } from "./-components/landing/sections/hero/LandingHero";
-import { LandingLessons } from "./-components/landing/sections/lessons/LandingLessons";
+import { LandingLessonsDeferred } from "./-components/landing/sections/lessons/LandingLessonsDeferred";
 import { LandingProjectsDeferred } from "./-components/landing/sections/projects/LandingProjectsDeferred";
-import { StackCube } from "./-components/landing/sections/stack-cube/StackCube";
+import { StackCubeDeferred } from "./-components/landing/sections/stack-cube/StackCubeDeferred";
 
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
@@ -30,14 +30,16 @@ function LandingPage() {
     <div data-test="landing-page" className="min-h-screen">
       <SmoothScroll />
       <LandingNavbar />
-      <LandingHero />
-      <StackCube />
-      <LandingHowIWork />
-      <LandingFeatures />
-      <LandingProjectsDeferred />
-      <LandingArticles />
-      <LandingLessons items={lessonPreviews} />
-      <LandingCTA />
+      <main id="main-content">
+        <LandingHero />
+        <StackCubeDeferred />
+        <LandingHowIWork />
+        <LandingFeaturesDeferred />
+        <LandingProjectsDeferred />
+        <LandingArticles />
+        <LandingLessonsDeferred items={lessonPreviews} />
+        <LandingCTA />
+      </main>
       <LandingFooter />
     </div>
   );

@@ -59,15 +59,18 @@ export function LandingFooter() {
               <Link to="/" className="transition-colors hover:text-primary">
                 tigawanna
               </Link>
-              <CreatureEggTrigger />
+              <CreatureEggTrigger className="ml-1 align-middle" />
             </span>
-            <p className="mt-5 max-w-xl text-base leading-7 text-base-content/55">
+            <p className="mt-5 max-w-xl text-base leading-7 text-base-content/70">
               Full-stack TypeScript, warm int
               <CreatureEggLowercaseI />
               erfaces, strict systems, and occas
               <CreatureEggLowercaseI />
               ionally a creature feature
-              <CreatureEggTrigger data-test="creature-feature-egg-period" />
+              <CreatureEggTrigger
+                className="ml-1 align-middle"
+                data-test="creature-feature-egg-period"
+              />
             </p>
           </div>
 
@@ -92,7 +95,7 @@ export function LandingFooter() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col justify-between gap-4 border-t border-base-content/10 pt-6 text-xs tracking-[0.25em] text-base-content/35 uppercase md:flex-row">
+        <div className="mt-12 flex flex-col justify-between gap-4 border-t border-base-content/10 pt-6 text-xs tracking-[0.25em] text-base-content/55 uppercase md:flex-row">
           <p>
             &copy; {currentYear} {AppConfig.name}
           </p>

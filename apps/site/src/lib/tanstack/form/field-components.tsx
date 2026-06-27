@@ -69,6 +69,7 @@ export function TextField({
   placeholder,
   className,
   orientation = "vertical",
+  id,
   ...inputProps
 }: BaseFieldProps & Omit<React.InputHTMLAttributes<HTMLInputElement>, "value" | "onChange">) {
   const field = useFieldContext<string>();
@@ -79,14 +80,15 @@ export function TextField({
     placeholder,
     field.name as string,
   );
+  const inputId = id ?? (field.name as string);
 
   return (
     <Field data-invalid={invalid} orientation={orientation} className={className}>
-      <FieldLabel htmlFor={field.name as string}>{fieldLabel}</FieldLabel>
+      <FieldLabel htmlFor={inputId}>{fieldLabel}</FieldLabel>
       {description ? <FieldDescription>{description}</FieldDescription> : null}
       <FieldContent>
         <Input
-          id={field.name as string}
+          id={inputId}
           name={field.name as string}
           placeholder={fieldPlaceholder}
           aria-invalid={invalid}

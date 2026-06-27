@@ -3,11 +3,11 @@ import {
   recentReposQueryOptions,
 } from "@/data-access-layer/github/query-options";
 import { Hydrate } from "@tanstack/react-start";
-import { visible } from "@tanstack/react-start/hydration";
 import { useQueryClient } from "@tanstack/react-query";
 import { CreatureEggLowercaseI } from "@/components/creature-egg/CreatureEggTrigger";
 import { PortfolioGridSkeleton } from "../../cards/PortfolioGridSkeleton";
 import { LandingSection, OrganicDivider, SectionEyebrow } from "../../primitives";
+import { belowFoldHydration } from "../../-utils/below-fold-hydration";
 import { LandingProjects } from "./LandingProjects";
 
 const MAX_LANDING_PROJECTS = 6;
@@ -47,7 +47,7 @@ export function LandingProjectsDeferred() {
 
   return (
     <Hydrate
-      when={visible({ rootMargin: "400px" })}
+      {...belowFoldHydration}
       prefetch={async ({ preload }) => {
         await preload();
         await Promise.all([

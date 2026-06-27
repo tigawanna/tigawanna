@@ -1,4 +1,12 @@
 //  get the month and yaer numbers from data
+export function formatDisplayDate(iso: string): string {
+  const date = new Date(iso);
+  const month = date.toLocaleString("en-US", { month: "short", timeZone: "UTC" });
+  const day = date.getUTCDate();
+  const year = date.getUTCFullYear();
+  return `${month} ${day}, ${year}`;
+}
+
 export function getMonthAndYear() {
   const date = new Date();
   return {

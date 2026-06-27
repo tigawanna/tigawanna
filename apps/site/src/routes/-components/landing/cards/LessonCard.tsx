@@ -27,12 +27,6 @@ export function LessonCard({ item, className, tone = 0 }: LessonCardProps) {
   const cardRef = useRef<HTMLElement | null>(null);
   useLandingCardMotion(cardRef);
 
-  const formattedDate = new Date(item.created).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-
   return (
     <article
       ref={cardRef}
@@ -48,7 +42,9 @@ export function LessonCard({ item, className, tone = 0 }: LessonCardProps) {
           <span className="text-[0.65rem] font-semibold tracking-[0.22em] text-landing-olive uppercase">
             {item.type}
           </span>
-          <time className="text-xs text-landing-sage/45">{formattedDate}</time>
+          <time className="text-xs text-landing-sage/60" dateTime={item.created}>
+            {item.createdLabel}
+          </time>
         </div>
 
         <h3 className="line-clamp-2 font-serif text-xl leading-snug text-landing-cream">
@@ -61,10 +57,11 @@ export function LessonCard({ item, className, tone = 0 }: LessonCardProps) {
           <Link
             to="/lessons/$lessonId"
             params={{ lessonId: item.id }}
-            className="inline-flex items-center gap-1 text-xs font-medium text-landing-sage transition-colors hover:text-landing-cream"
+            className="inline-flex min-h-6 items-center gap-1 text-xs font-medium text-landing-sage transition-colors hover:text-landing-cream"
           >
-            Read
-            <ArrowUpRight className="size-3.5" />
+            <span className="sr-only">{item.title}: </span>
+            Read lesson
+            <ArrowUpRight className="size-3.5" aria-hidden="true" />
           </Link>
 
           {item.gist ? (
@@ -82,15 +79,11 @@ export function LessonCard({ item, className, tone = 0 }: LessonCardProps) {
       </div>
 
       {item.previewHtml ? (
-        <Link
-          to="/lessons/$lessonId"
-          params={{ lessonId: item.id }}
-          className="relative mt-auto block"
-          aria-label={`Read lesson: ${item.title}`}
-        >
+        <div className="relative mt-auto block" aria-hidden="true">
           <div
             className="markdown markdown-on-panel max-h-24 overflow-hidden [&_blockquote]:hidden [&_h2]:hidden [&_li]:hidden [&_p]:hidden"
             dangerouslySetInnerHTML={{ __html: item.previewHtml }}
+            suppressHydrationWarning
           />
           <div
             className={twMerge(
@@ -111,7 +104,7 @@ export function LessonCard({ item, className, tone = 0 }: LessonCardProps) {
             )}
             aria-hidden="true"
           />
-        </Link>
+        </div>
       ) : null}
     </article>
   );

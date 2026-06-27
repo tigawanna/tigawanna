@@ -54,14 +54,14 @@ export function CurvedNumberedSections({
               }
             >
               <div data-curved-content className="relative z-10 max-w-2xl lg:max-w-3xl">
-                <p className="mb-4 font-sans text-xs font-medium tracking-[0.4em] uppercase opacity-55 sm:mb-5">
+                <p className="mb-4 font-sans text-xs font-medium tracking-[0.4em] uppercase text-inherit/80 sm:mb-5">
                   {section.eyebrow ?? `Step ${number}`}
                 </p>
                 <h3 className="font-serif text-4xl font-medium tracking-[-0.03em] sm:text-5xl lg:text-6xl xl:text-7xl">
                   {section.label}
                 </h3>
                 {section.body ? (
-                  <p className="mt-5 max-w-xl font-sans text-base leading-relaxed opacity-75 sm:mt-6 sm:text-lg lg:text-xl">
+                  <p className="mt-5 max-w-xl font-sans text-base leading-relaxed text-inherit/85 sm:mt-6 sm:text-lg lg:text-xl">
                     {section.body}
                   </p>
                 ) : null}

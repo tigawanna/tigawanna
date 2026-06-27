@@ -67,13 +67,13 @@ export function TechChoicesMobile() {
               <ChevronRight className="size-5" />
             </button>
 
-            <p className="pointer-events-none absolute inset-x-0 bottom-4 text-center text-xs tracking-[0.22em] text-landing-sage/50 uppercase">
+            <p className="pointer-events-none absolute inset-x-0 bottom-4 text-center text-xs tracking-[0.22em] text-landing-sage/70 uppercase">
               {String(activeIndex + 1).padStart(2, "0")} /{" "}
               {String(techChoices.length).padStart(2, "0")}
             </p>
           </div>
 
-          <p className="mt-4 px-4 text-center text-[10px] tracking-[0.24em] text-landing-sage/40 uppercase sm:px-6">
+          <p className="mt-4 px-4 text-center text-[10px] tracking-[0.24em] text-landing-sage/65 uppercase sm:px-6">
             Swipe the card
           </p>
         </div>

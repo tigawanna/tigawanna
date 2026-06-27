@@ -57,8 +57,12 @@ export function TechChoiceRailItem({
   return (
     <button
       type="button"
+      role="tab"
+      id={`tech-choice-tab-${choice.id}`}
+      aria-controls="tech-choice-detail-panel"
       data-test={`tech-choice-rail-${choice.id}`}
       aria-selected={isActive}
+      tabIndex={isActive ? 0 : -1}
       onClick={() => onSelect(index)}
       className={twMerge(
         "group relative w-full text-left transition-[transform,opacity] duration-500 ease-out",

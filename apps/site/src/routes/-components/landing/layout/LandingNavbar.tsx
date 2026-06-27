@@ -41,7 +41,7 @@ export function LandingNavbar() {
 
         <div className="hidden items-center gap-6 md:flex">
           <div className="hidden text-center xl:block">
-            <p className="text-[10px] tracking-[0.32em] text-landing-sage/45 uppercase">Based in</p>
+            <p className="text-[10px] tracking-[0.32em] text-landing-sage/65 uppercase">Based in</p>
             <p className="font-serif text-sm text-landing-sage/80">Nairobi</p>
           </div>
           {isLandingRoute ? (

@@ -91,7 +91,7 @@ export function StackCubeMobile() {
                   style={{ backgroundColor: style.foreground }}
                 />
 
-                <p className="text-center text-sm leading-7 opacity-55 sm:text-base sm:leading-8">
+                <p className="text-center text-sm leading-7 text-inherit/80 sm:text-base sm:leading-8">
                   {face.techs.join("  ·  ")}
                 </p>
 

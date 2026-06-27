@@ -68,6 +68,7 @@ export function ProjectsTopicFilter({
         >
           <SelectTrigger
             size="sm"
+            aria-label="Filter projects by tag"
             data-test="projects-tag-select"
             className={twMerge(
               "min-w-44 rounded-full border-landing-cream/10 bg-transparent text-sm text-landing-sage/60 shadow-none",

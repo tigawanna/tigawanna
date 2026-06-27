@@ -65,6 +65,7 @@ export function ContactForm() {
       <form.AppField name="contact">
         {(field) => (
           <field.TextField
+            id="contact-details"
             label="Contact (optional)"
             placeholder="Email, phone, or anything to reach you"
           />

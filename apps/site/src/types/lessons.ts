@@ -13,6 +13,7 @@ export interface LessonItem {
 }
 
 export interface LessonPreviewItem extends Omit<LessonItem, "markdown" | "richtext"> {
+  createdLabel: string;
   previewHtml: string | null;
 }
 

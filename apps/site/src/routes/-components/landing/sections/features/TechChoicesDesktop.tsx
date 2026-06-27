@@ -116,6 +116,9 @@ export function TechChoicesDesktop() {
             <div className="perspective-[1400px] transform-3d">
               <div
                 ref={panelRef}
+                role="tabpanel"
+                id="tech-choice-detail-panel"
+                aria-labelledby={`tech-choice-tab-${activeChoice.id}`}
                 className="origin-right px-14 pt-6 pb-14 will-change-transform transform-3d xl:px-16 xl:pt-7 xl:pb-16"
               >
                 <TechChoiceDetailPanel choice={activeChoice} index={activeIndex} />
@@ -144,7 +147,7 @@ export function TechChoicesDesktop() {
               <ChevronRight className="size-5" />
             </button>
 
-            <p className="pointer-events-none absolute inset-x-0 bottom-4 text-center text-xs tracking-[0.22em] text-landing-sage/50 uppercase">
+            <p className="pointer-events-none absolute inset-x-0 bottom-4 text-center text-xs tracking-[0.22em] text-landing-sage/70 uppercase">
               {String(activeIndex + 1).padStart(2, "0")} /{" "}
               {String(techChoices.length).padStart(2, "0")}
             </p>
@@ -155,6 +158,8 @@ export function TechChoicesDesktop() {
 
             <div
               ref={railRef}
+              role="tablist"
+              aria-label="Technology choices"
               data-test="tech-choice-rail-scroller"
               className="relative flex min-h-0 w-full max-w-md flex-1 flex-col gap-2 overflow-y-auto overscroll-contain py-2 pl-10 mask-[linear-gradient(to_bottom,transparent,black_6%,black_94%,transparent)] [scrollbar-color:color-mix(in_oklch,var(--color-landing-cream)_22%,transparent)_transparent] scrollbar-thin"
             >
@@ -171,7 +176,7 @@ export function TechChoicesDesktop() {
           </div>
         </div>
 
-        <p className="mt-4 flex shrink-0 flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[10px] tracking-[0.28em] text-landing-sage/45 uppercase">
+        <p className="mt-4 flex shrink-0 flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[10px] tracking-[0.28em] text-landing-sage/65 uppercase">
           <span className="inline-flex items-center gap-2">
             <MousePointerClick className="size-3.5" />
             Pick a tool or scroll the panel
@@ -180,7 +185,7 @@ export function TechChoicesDesktop() {
             <Keyboard className="size-3.5" />
             Arrow keys to step
           </span>
-          <span data-test="tech-choice-visit-progress" className="text-landing-sage/55">
+          <span data-test="tech-choice-visit-progress" className="text-landing-sage/75">
             {allVisited
               ? "Scroll to continue"
               : `View all tools to continue · ${visitedCount}/${techChoices.length}`}

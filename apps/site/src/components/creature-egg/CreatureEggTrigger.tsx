@@ -100,7 +100,7 @@ export function CreatureEggTrigger({
       data-test={dataTest}
       aria-label={ariaLabel}
       className={twMerge(
-        "inline-block text-primary transition-opacity hover:opacity-70",
+        "inline-flex min-h-6 min-w-6 items-center justify-center p-1.5 text-primary transition-opacity hover:opacity-70",
         className,
       )}
     >
@@ -116,7 +116,7 @@ export function CreatureEggLowercaseI({ className }: { className?: string }) {
         ı
       </span>
       <CreatureEggTrigger
-        className="absolute top-0 left-1/2 -translate-x-1/2 leading-none"
+        className="absolute top-0 left-1/2 min-h-6 min-w-6 -translate-x-1/2 leading-none"
         data-test="creature-feature-egg-i"
       />
     </span>
@@ -128,7 +128,7 @@ export function CreatureEggCapitalI({ className }: { className?: string }) {
     <span className={twMerge("relative inline-block align-baseline leading-none", className)}>
       <span className="inline-block pt-[0.35em] leading-none">I</span>
       <CreatureEggTrigger
-        className="absolute top-0 left-1/2 -translate-x-1/2 text-[0.55em] leading-none"
+        className="absolute top-0 left-1/2 min-h-6 min-w-6 -translate-x-1/2 text-[0.55em] leading-none"
         data-test="creature-feature-egg-capital-i"
       />
     </span>

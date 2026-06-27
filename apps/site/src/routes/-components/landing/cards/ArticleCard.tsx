@@ -54,21 +54,18 @@ export function ArticleCard({ article, className }: ArticleCardProps) {
 
         <div className="flex items-center justify-between gap-3 border-t border-landing-cream/8 pt-4 text-sm">
           <span className="text-xs text-landing-sage/50">
-            {new Date(article.published_at).toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            })}
+            {article.readable_publish_date}
             {article.reading_time_minutes > 0 ? ` · ${article.reading_time_minutes} min` : null}
           </span>
           <a
             href={article.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs font-medium text-landing-sage transition-colors hover:text-landing-cream"
+            className="inline-flex min-h-6 items-center gap-1 text-xs font-medium text-landing-sage transition-colors hover:text-landing-cream"
           >
-            Read
-            <ArrowUpRight className="size-3.5" />
+            <span className="sr-only">{article.title}: </span>
+            Read article
+            <ArrowUpRight className="size-3.5" aria-hidden="true" />
           </a>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import type { DevtoArticle } from "@/types/devto";
 import type { GithubRepoNode } from "@/types/github";
 import type { LessonItem, LessonPreviewItem, LessonsPreviewPage } from "@/types/lessons";
+import { formatDisplayDate } from "@/utils/date-helpers";
 
 function repo(
   overrides: Partial<GithubRepoNode> &
@@ -383,6 +384,7 @@ export function toLessonPreviewItem(item: LessonItem): LessonPreviewItem {
     collectionId: item.collectionId,
     collectionName: item.collectionName,
     created: item.created,
+    createdLabel: formatDisplayDate(item.created),
     updated: item.updated,
     title: item.title,
     description: item.description,
