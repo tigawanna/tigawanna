@@ -1,4 +1,5 @@
 import type { GithubRepoNode } from "@/types/github";
+import { matchesProjectRelevance } from "@/modules/portfolio/find-relevant-projects";
 
 function repoSearchText(repo: GithubRepoNode) {
   const tags = repo.repositoryTopics?.nodes?.map((node) => node.topic.name).join(" ") ?? "";
@@ -7,10 +8,15 @@ function repoSearchText(repo: GithubRepoNode) {
 }
 
 export function matchesProjectSearch(repo: GithubRepoNode, query: string) {
-  const normalizedQuery = query.trim().toLowerCase();
+  const normalizedQuery = query.trim();
   if (!normalizedQuery) return true;
 
-  return repoSearchText(repo).includes(normalizedQuery);
+  if (matchesProjectRelevance(repo, normalizedQuery)) {
+    return true;
+  }
+
+  const normalizedQueryLower = normalizedQuery.toLowerCase();
+  return repoSearchText(repo).includes(normalizedQueryLower);
 }
 
 export function filterReposByTopic(repos: GithubRepoNode[], topic: string) {

@@ -1,5 +1,6 @@
 import { landingLessonPreviewsQueryOptions } from "@/data-access-layer/portfolio/query-options";
 import { createFileRoute } from "@tanstack/react-router";
+import { LandingWebMcpTools } from "./-components/landing/WebMcpLandingTools";
 import { LandingFooter } from "./-components/landing/layout/LandingFooter";
 import { LandingNavbar } from "./-components/landing/layout/LandingNavbar";
 import { LandingHowIWork } from "./-components/landing/sections/about/LandingHowIWork";
@@ -28,6 +29,7 @@ function LandingPage() {
 
   return (
     <div data-test="landing-page" className="min-h-screen">
+      <LandingWebMcpTools />
       <LandingNavbar />
       <main id="main-content">
         <LandingHero />

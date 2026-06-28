@@ -1,11 +1,12 @@
 import { requestAdminOtp, verifyAdminOtp } from "@/modules/admin-auth/admin-auth.functions";
 import { viewerqueryOptions } from "@/data-access-layer/auth/viewer";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { AppConfig } from "@/utils/system";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -53,11 +54,14 @@ function BackstageSignInPage() {
   });
 
   const verifyOtpMutation = useMutation({
-    mutationFn: () => verifyAdminOtp({ data: { code } }),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries(viewerqueryOptions);
+    mutationFn: (otpCode: string) => verifyAdminOtp({ data: { code: otpCode } }),
+    onSuccess: async (viewer) => {
+      queryClient.setQueryData(viewerqueryOptions.queryKey, {
+        data: viewer,
+        error: null,
+      });
       toast.success("Signed in");
-      await navigate({ to: returnTo });
+      await navigate({ to: returnTo, replace: true });
     },
     onError: (error: unknown) => {
       toast.error("Sign in failed", {
@@ -104,23 +108,35 @@ function BackstageSignInPage() {
               className="mt-6 space-y-4"
               onSubmit={(event) => {
                 event.preventDefault();
-                verifyOtpMutation.mutate();
+                if (code.length === 6) {
+                  verifyOtpMutation.mutate(code);
+                }
               }}
             >
               <div className="space-y-2">
-                <label htmlFor="backstage-otp" className="text-sm font-medium">
+                <p id="backstage-otp-label" className="text-sm font-medium">
                   Login code
-                </label>
-                <Input
-                  id="backstage-otp"
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
+                </p>
+                <InputOTP
                   maxLength={6}
+                  pattern={REGEXP_ONLY_DIGITS}
                   value={code}
-                  onChange={(event) => setCode(event.target.value.replace(/\D/g, "").slice(0, 6))}
-                  placeholder="6-digit code"
+                  onChange={setCode}
+                  autoFocus
+                  autoComplete="one-time-code"
+                  inputMode="numeric"
+                  aria-labelledby="backstage-otp-label"
+                  disabled={verifyOtpMutation.isPending}
                   data-test="backstage-otp-input"
-                />
+                  containerClassName="justify-center"
+                  onComplete={(value) => verifyOtpMutation.mutate(value)}
+                >
+                  <InputOTPGroup>
+                    {Array.from({ length: 6 }, (_, index) => (
+                      <InputOTPSlot key={index} index={index} />
+                    ))}
+                  </InputOTPGroup>
+                </InputOTP>
               </div>
               <Button
                 type="submit"

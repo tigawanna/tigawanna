@@ -9,6 +9,7 @@ import { useState } from "react";
 import { renderProjectCard } from "../../cards/ProjectCard";
 import { LandingSection, OrganicDivider, SectionEyebrow } from "../../primitives";
 import { filterReposByTopic, matchesProjectSearch } from "./-utils/project-search";
+import { orderReposByRelevance } from "@/modules/portfolio/find-relevant-projects";
 import { ProjectsSearch } from "./ProjectsSearch";
 import { ProjectsTopicFilter, type ProjectView } from "./ProjectsTopicFilter";
 
@@ -84,8 +85,11 @@ function ProjectsContent() {
 
   let visibleRepos: GithubRepoNode[] = [];
   if (isSearching) {
-    visibleRepos = filterReposByTopic(recentRepos, activeTopic).filter((repo) =>
-      matchesProjectSearch(repo, appliedSearch),
+    visibleRepos = orderReposByRelevance(
+      filterReposByTopic(recentRepos, activeTopic).filter((repo) =>
+        matchesProjectSearch(repo, appliedSearch),
+      ),
+      appliedSearch,
     );
   } else if (activeView === "featured") {
     visibleRepos = pinnedRepos.slice(0, MAX_LANDING_PROJECTS);

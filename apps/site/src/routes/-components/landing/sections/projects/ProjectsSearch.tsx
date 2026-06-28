@@ -39,7 +39,7 @@ export function ProjectsSearch({
             onClear();
           }
         }}
-        placeholder="Search by name, tag, or description — press Enter"
+        placeholder="Search by tag, tech, or description — press Enter"
         className={twMerge(
           "h-10 rounded-full border-landing-cream/10 bg-landing-cream/5 pr-10 pl-10 text-sm text-landing-cream shadow-none placeholder:text-landing-sage/40",
           "focus-visible:border-landing-cream/25 focus-visible:ring-landing-cream/15",
