@@ -4,7 +4,7 @@ import {
   projectEmbeddingStatsQueryOptions,
 } from "@/data-access-layer/embeddings/query-options";
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { BackstageEmbeddingsContent } from "../-components/BackstageEmbeddingsContent";
+import { BackstageEmbeddingsContent } from "../-components/embeddings/BackstageEmbeddingsContent";
 
 export const Route = createFileRoute("/_backstage/backstage/embeddings/")({
   beforeLoad: ({ context }) => {

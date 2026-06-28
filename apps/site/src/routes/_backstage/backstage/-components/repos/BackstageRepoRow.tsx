@@ -10,8 +10,8 @@ import { formatDistanceToNow } from "date-fns";
 import { ExternalLink, GitFork, Star } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { RepoDeleteButton } from "./RepoDeleteButton";
-import { RepoVisibilityButton } from "./RepoVisibilityButton";
+import { RepoDeleteButton } from "../shared/RepoDeleteButton";
+import { RepoVisibilityButton } from "../shared/RepoVisibilityButton";
 
 type BackstageRepoRowProps = {
   repo: BackstageGithubRepo;

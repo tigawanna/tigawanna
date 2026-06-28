@@ -11,11 +11,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { JournalEntryFormDialog } from "@/routes/_backstage/backstage/-components/JournalEntryFormDialog";
+import { JournalEntryFormDialog } from "@/routes/_backstage/backstage/-components/journal/JournalEntryFormDialog";
 import {
   BackstageFilterField,
   BackstageFiltersDialog,
-} from "@/routes/_backstage/backstage/-components/BackstageFiltersDialog";
+} from "@/routes/_backstage/backstage/-components/shared/BackstageFiltersDialog";
 import { useTSRSearchQuery } from "@/routes/_backstage/backstage/-hooks/use-tsr-search-query";
 import { Route, type BackstageJournalSearch } from "@/routes/_backstage/backstage/journal";
 import { unwrapUnknownError } from "@/utils/errors";

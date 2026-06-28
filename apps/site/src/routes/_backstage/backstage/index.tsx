@@ -8,7 +8,7 @@ import {
   projectEnrichmentRunsQueryOptions,
   projectEnrichmentSuggestionsQueryOptions,
 } from "@/data-access-layer/backstage/projects-enrichment-query-options";
-import { BackstageHomeContent } from "@/routes/_backstage/backstage/-components/BackstageHomeContent";
+import { BackstageHomeContent } from "@/routes/_backstage/backstage/-components/home/BackstageHomeContent";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_backstage/backstage/")({

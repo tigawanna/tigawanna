@@ -3,7 +3,7 @@ import { ClientOnly } from "@/components/wrappers/ClientOnly";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { lazy, Suspense } from "react";
 import { z } from "zod";
-import { BackstageRepoPageFallback } from "./-components/BackstageRepoPageFallback";
+import { BackstageRepoPageFallback } from "./-components/shared/BackstageRepoPageFallback";
 
 export const backstageProjectsSearchSchema = z.object({
   sq: z.string().optional(),
@@ -17,7 +17,7 @@ export const backstageProjectsSearchSchema = z.object({
 export type BackstageProjectsSearch = z.infer<typeof backstageProjectsSearchSchema>;
 
 const BackstageProjectsContent = lazy(() =>
-  import("./-components/BackstageProjectsContent").then((module) => ({
+  import("./-components/projects/BackstageProjectsContent").then((module) => ({
     default: module.BackstageProjectsContent,
   })),
 );

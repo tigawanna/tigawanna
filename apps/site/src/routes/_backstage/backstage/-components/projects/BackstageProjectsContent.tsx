@@ -10,14 +10,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useTSRSearchQuery } from "@/routes/_backstage/backstage/-hooks/use-tsr-search-query";
-import { TanstackDBSortSelect } from "@/routes/_backstage/backstage/-components/TanstackDBColumnfilters";
-import { createSortableColumns } from "@/routes/_backstage/backstage/-components/sortable-columns";
+import { TanstackDBSortSelect } from "@/routes/_backstage/backstage/-components/shared/TanstackDBColumnfilters";
+import { createSortableColumns } from "@/routes/_backstage/backstage/-components/shared/sortable-columns";
 import { and, eq, ilike, isNull, IR } from "@tanstack/db";
 import { Link } from "@tanstack/react-router";
 import { useLiveSuspenseQuery } from "@tanstack/react-db";
 import { BackstageProjectRow } from "./BackstageProjectRow";
-import { BackstageFilterField, BackstageFiltersDialog } from "./BackstageFiltersDialog";
-import { Route, type BackstageProjectsSearch } from "../projects";
+import { BackstageFilterField, BackstageFiltersDialog } from "../shared/BackstageFiltersDialog";
+import { Route, type BackstageProjectsSearch } from "../../projects";
 
 const projectSortableColumns = createSortableColumns(backstageProjectsCollection, [
   { value: "repoFullName", label: "Repository" },

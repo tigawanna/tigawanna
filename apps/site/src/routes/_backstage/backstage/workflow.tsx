@@ -9,9 +9,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { format } from "date-fns";
-import { EnrichmentRunRow } from "./-components/EnrichmentRunRow";
-import { StartEnrichmentDialog } from "./-components/StartEnrichmentDialog";
-import { SuggestionReviewCard } from "./-components/SuggestionReviewCard";
+import { EnrichmentRunRow } from "./-components/enrichment/EnrichmentRunRow";
+import { StartEnrichmentDialog } from "./-components/enrichment/StartEnrichmentDialog";
+import { SuggestionReviewCard } from "./-components/enrichment/SuggestionReviewCard";
 
 type RunFilter = "all" | "running" | "completed" | "failed";
 

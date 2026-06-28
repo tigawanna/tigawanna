@@ -10,9 +10,9 @@ import { format } from "date-fns";
 import { ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { RepoDeleteButton } from "./RepoDeleteButton";
-import { RepoRemoveButton } from "./RepoRemoveButton";
-import { RepoVisibilityButton } from "./RepoVisibilityButton";
+import { RepoDeleteButton } from "../shared/RepoDeleteButton";
+import { RepoRemoveButton } from "../shared/RepoRemoveButton";
+import { RepoVisibilityButton } from "../shared/RepoVisibilityButton";
 
 type BackstageProjectRowProps = {
   project: BackstageProject;

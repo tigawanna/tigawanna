@@ -13,8 +13,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { TanstackDBSortSelect } from "@/routes/_backstage/backstage/-components/TanstackDBColumnfilters";
-import { createSortableColumns } from "@/routes/_backstage/backstage/-components/sortable-columns";
+import { TanstackDBSortSelect } from "@/routes/_backstage/backstage/-components/shared/TanstackDBColumnfilters";
+import { createSortableColumns } from "@/routes/_backstage/backstage/-components/shared/sortable-columns";
 import { useTSRSearchQuery } from "@/routes/_backstage/backstage/-hooks/use-tsr-search-query";
 import { unwrapUnknownError } from "@/utils/errors";
 import { useQuery } from "@tanstack/react-query";
@@ -23,8 +23,8 @@ import { useLiveSuspenseQuery } from "@tanstack/react-db";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { BackstageRepoRow } from "./BackstageRepoRow";
-import { BackstageFilterField, BackstageFiltersDialog } from "./BackstageFiltersDialog";
-import { Route, type BackstageReposSearch } from "../repos";
+import { BackstageFilterField, BackstageFiltersDialog } from "../shared/BackstageFiltersDialog";
+import { Route, type BackstageReposSearch } from "../../repos";
 
 const repoSortableColumns = createSortableColumns(backstageGithubReposCollection, [
   { value: "nameWithOwner", label: "Repository" },
