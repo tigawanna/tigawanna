@@ -1,0 +1,34 @@
+{
+  "name": "project-index-cli",
+  "version": "0.0.1",
+  "private": true,
+  "bin": {
+    "tigawanna-index": "./dist/index.mjs"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsdown",
+    "preindex": "pnpm build",
+    "prestart": "pnpm build",
+    "index": "node dist/index.mjs",
+    "start": "node dist/index.mjs",
+    "check-types": "tsgo --noEmit"
+  },
+  "dependencies": {
+    "@kessler/gemma-embedding": "^1.0.0",
+    "@repo/db": "workspace:*",
+    "commander": "^14.0.3",
+    "dotenv": "^16.6.1",
+    "zod": "^4.4.3"
+  },
+  "optionalDependencies": {
+    "@libsql/linux-x64-gnu": "^0.5.22"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "^25.2.0",
+    "@typescript/native-preview": "^7.0.0-dev.20260301.1",
+    "tsdown": "^0.22.3",
+    "typescript": "^6.0.3"
+  }
+}

@@ -9,6 +9,8 @@
     "build:legacy": "turbo run build --filter=legacy-next",
     "dev:all": "turbo run dev",
     "gh": "pnpm --filter github-cli start",
+    "index": "pnpm --filter project-index-cli index",
+    "index:build": "pnpm --filter project-index-cli build",
     "lint": "vp lint .",
     "lint:fix": "vp lint --fix .",
     "format": "vp fmt .",

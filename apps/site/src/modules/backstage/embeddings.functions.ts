@@ -50,6 +50,7 @@ export function buildProjectEmbedText(repo: {
 const projectEmbeddingListColumns = {
   githubRepoId: projectEmbeddings.githubRepoId,
   repoFullName: projectEmbeddings.repoFullName,
+  repoUrl: projectEmbeddings.repoUrl,
   name: projectEmbeddings.name,
   description: projectEmbeddings.description,
   topics: projectEmbeddings.topics,
@@ -61,7 +62,52 @@ const projectEmbeddingListColumns = {
 const projectEmbeddingSearchColumns = {
   ...projectEmbeddingListColumns,
   embedding: projectEmbeddings.embedding,
+  sourceEmbeddings: projectEmbeddings.sourceEmbeddings,
 };
+
+type SourceEmbeddingChunk = {
+  kind: string;
+  label: string;
+  text: string;
+  embedding: number[];
+};
+
+function parseSourceEmbeddings(raw: string | null | undefined): SourceEmbeddingChunk[] {
+  if (!raw) {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(raw) as unknown;
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+
+    return parsed.flatMap((entry) => {
+      if (
+        typeof entry !== "object" ||
+        entry == null ||
+        !Array.isArray((entry as SourceEmbeddingChunk).embedding)
+      ) {
+        return [];
+      }
+
+      return [entry as SourceEmbeddingChunk];
+    });
+  } catch {
+    return [];
+  }
+}
+
+function bestSimilarity(queryVector: number[], embedding: string, sourceEmbeddings: string) {
+  const chunks = parseSourceEmbeddings(sourceEmbeddings);
+  const vectors =
+    chunks.length > 0
+      ? chunks.map((chunk) => chunk.embedding).filter((vector) => vector.length > 0)
+      : [parseEmbedding(embedding)];
+
+  return Math.max(...vectors.map((vector) => cosine(queryVector, vector)));
+}
 
 async function getIndexedProjectCount(db: ReturnType<typeof getDb>) {
   const [result] = await db.select({ count: count() }).from(projectEmbeddings);
@@ -177,11 +223,20 @@ export const indexProjectEmbeddingsBatch = createServerFn({ method: "POST" })
           .values({
             githubRepoId: repo.id,
             repoFullName: repo.nameWithOwner,
+            repoUrl: `https://github.com/${repo.nameWithOwner}`,
             name: repo.name,
             description: repo.description,
             topics: serializeTopics(repo.topics),
             embedText,
             embedding: JSON.stringify(vector),
+            sourceEmbeddings: JSON.stringify([
+              {
+                kind: "summary",
+                label: "summary",
+                text: embedText,
+                embedding: vector,
+              },
+            ]),
             modelId,
             embeddedAt: now,
           })
@@ -189,11 +244,20 @@ export const indexProjectEmbeddingsBatch = createServerFn({ method: "POST" })
             target: projectEmbeddings.githubRepoId,
             set: {
               repoFullName: repo.nameWithOwner,
+              repoUrl: `https://github.com/${repo.nameWithOwner}`,
               name: repo.name,
               description: repo.description,
               topics: serializeTopics(repo.topics),
               embedText,
               embedding: JSON.stringify(vector),
+              sourceEmbeddings: JSON.stringify([
+                {
+                  kind: "summary",
+                  label: "summary",
+                  text: embedText,
+                  embedding: vector,
+                },
+              ]),
               modelId,
               embeddedAt: now,
             },
@@ -247,7 +311,6 @@ export const searchProjectEmbeddings = createServerFn({ method: "POST" })
 
     const results = rows
       .map((row) => {
-        const vector = parseEmbedding(row.embedding);
         return {
           githubRepoId: row.githubRepoId,
           repoFullName: row.repoFullName,
@@ -255,7 +318,7 @@ export const searchProjectEmbeddings = createServerFn({ method: "POST" })
           description: row.description,
           topics: parseTopics(row.topics),
           embedText: row.embedText,
-          similarity: cosine(queryVector, vector),
+          similarity: bestSimilarity(queryVector, row.embedding, row.sourceEmbeddings),
         };
       })
       .sort((left, right) => right.similarity - left.similarity)

@@ -36,6 +36,13 @@
       "when": 1782660390990,
       "tag": "0004_lush_old_lace",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1782670244457,
+      "tag": "0005_elite_puppet_master",
+      "breakpoints": true
     }
   ]
 }

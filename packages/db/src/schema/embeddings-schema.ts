@@ -6,11 +6,15 @@ export const projectEmbeddings = sqliteTable(
   {
     githubRepoId: text("github_repo_id").primaryKey(),
     repoFullName: text("repo_full_name").notNull().unique(),
+    repoUrl: text("repo_url").notNull(),
     name: text("name").notNull(),
     description: text("description"),
     topics: text("topics").notNull().default("[]"),
     embedText: text("embed_text").notNull(),
     embedding: text("embedding").notNull(),
+    sourceEmbeddings: text("source_embeddings").notNull().default("[]"),
+    inferredDescription: text("inferred_description"),
+    inferredTopics: text("inferred_topics"),
     modelId: text("model_id").notNull().default("embeddinggemma-300m"),
     embeddedAt: integer("embedded_at", { mode: "timestamp_ms" })
       .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
