@@ -6,6 +6,75 @@ export type InfoCard = {
   body: string;
 };
 
+export type InfoDietSourceKind = "podcast" | "blog";
+
+export type InfoDietSource = {
+  id: string;
+  name: string;
+  description: string;
+  href: string;
+  kind: InfoDietSourceKind;
+};
+
+export const infoDietSources = [
+  {
+    id: "front-end-fire",
+    name: "Front-End Fire",
+    description: "Weekly front-end news with Jack Herrington, Paige Niedringhaus, and TJ VanToll.",
+    href: "https://front-end-fire.com/",
+    kind: "podcast",
+  },
+  {
+    id: "corecursive",
+    name: "CoRecursive",
+    description: "Long-form interviews with the people behind well-known software.",
+    href: "https://corecursive.com/",
+    kind: "podcast",
+  },
+  {
+    id: "software-unscripted",
+    name: "Software Unscripted",
+    description: "Casual conversations about code with Richard Feldman.",
+    href: "https://shows.acast.com/software-unscripted",
+    kind: "podcast",
+  },
+  {
+    id: "react-native-radio",
+    name: "React Native Radio",
+    description: "Exploring React Native together, from Infinite Red.",
+    href: "https://www.reactnativeradio.com/",
+    kind: "podcast",
+  },
+  {
+    id: "syntax-fm",
+    name: "Syntax FM",
+    description: "Tasty web development treats with Wes Bos and Scott Tolinski.",
+    href: "https://syntax.fm/",
+    kind: "podcast",
+  },
+  {
+    id: "typescript-fm",
+    name: "TypeScript FM",
+    description: "Weekly TypeScript news and deep dives with Kamran Ayub and Erik Onarheim.",
+    href: "https://typescript.fm/",
+    kind: "podcast",
+  },
+  {
+    id: "podrocket",
+    name: "PodRocket",
+    description: "Frontend interviews and industry news from the LogRocket team.",
+    href: "https://podrocket.logrocket.com/",
+    kind: "podcast",
+  },
+  {
+    id: "logrocket-blog",
+    name: "LogRocket Blog",
+    description: "Frontend engineering articles, tutorials, and industry roundups.",
+    href: "https://blog.logrocket.com/",
+    kind: "blog",
+  },
+] as const satisfies readonly InfoDietSource[];
+
 export type StackCubeFace = {
   label: string;
   techs: readonly string[];

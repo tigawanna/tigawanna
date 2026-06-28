@@ -5,6 +5,7 @@ import { LandingFooter } from "./-components/landing/layout/LandingFooter";
 import { LandingNavbar } from "./-components/landing/layout/LandingNavbar";
 import { LandingHowIWork } from "./-components/landing/sections/about/LandingHowIWork";
 import { LandingArticles } from "./-components/landing/sections/articles/LandingArticles";
+import { LandingInfodiet } from "./-components/landing/sections/infodiet/LandingInfodiet";
 import { LandingCTA } from "./-components/landing/sections/contact/LandingCTA";
 import { LandingFeaturesDeferred } from "./-components/landing/sections/features/LandingFeaturesDeferred";
 import { LandingHero } from "./-components/landing/sections/hero/LandingHero";
@@ -37,6 +38,7 @@ function LandingPage() {
         <LandingFeaturesDeferred />
         <LandingProjectsDeferred />
         <LandingArticles />
+        <LandingInfodiet />
         <LandingLessonsDeferred items={lessonPreviews} />
         <LandingCTA />
       </main>

@@ -9,6 +9,7 @@ export const siteConfig = {
     { label: "Skills", href: "#skills" },
     { label: "Projects", href: "#projects" },
     { label: "Articles", href: "#articles" },
+    { label: "Infodiet", href: "#infodiet" },
     { label: "Journal", href: "#journal" },
     { label: "Contact", href: "#contact" },
   ],
