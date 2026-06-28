@@ -1,4 +1,4 @@
-import { observeLandingScrollResize, subscribeScroll } from "@/lib/scroll/landing-scroll";
+import { observeLayoutResize, subscribeScroll } from "@/lib/scroll/landing-scroll";
 import { useEffect, type RefObject } from "react";
 
 type CurvedTarget = {
@@ -83,7 +83,7 @@ export function useCurvedSectionsMotion(ref: RefObject<HTMLElement | null>) {
     update(window.scrollY);
 
     const unsubscribeScroll = subscribeScroll(onScroll);
-    const unobserveResize = observeLandingScrollResize(root);
+    const unobserveResize = observeLayoutResize(root, onResize);
     window.addEventListener("resize", onResize);
 
     return () => {

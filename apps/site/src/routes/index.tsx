@@ -1,5 +1,4 @@
 import { landingLessonPreviewsQueryOptions } from "@/data-access-layer/portfolio/query-options";
-import { SmoothScroll } from "@/components/animation/SmoothScroll";
 import { createFileRoute } from "@tanstack/react-router";
 import { LandingFooter } from "./-components/landing/layout/LandingFooter";
 import { LandingNavbar } from "./-components/landing/layout/LandingNavbar";
@@ -29,7 +28,6 @@ function LandingPage() {
 
   return (
     <div data-test="landing-page" className="min-h-screen">
-      <SmoothScroll />
       <LandingNavbar />
       <main id="main-content">
         <LandingHero />

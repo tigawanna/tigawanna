@@ -1,4 +1,4 @@
-import { observeLandingScrollResize, subscribeScroll } from "@/lib/scroll/landing-scroll";
+import { observeLayoutResize, subscribeScroll } from "@/lib/scroll/landing-scroll";
 import { useEffect, type RefObject } from "react";
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
@@ -88,7 +88,7 @@ export function useStackFacesReveal(ref: RefObject<HTMLElement | null>) {
     update(window.scrollY);
 
     const unsubscribeScroll = subscribeScroll(onScroll);
-    const unobserveResize = observeLandingScrollResize(root);
+    const unobserveResize = observeLayoutResize(root, onResize);
     window.addEventListener("resize", onResize);
 
     return () => {

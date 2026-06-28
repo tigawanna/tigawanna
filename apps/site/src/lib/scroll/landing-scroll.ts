@@ -1,26 +1,11 @@
-import type Lenis from "lenis";
-
 type ScrollListener = (scrollY: number) => void;
 
 const listeners = new Set<ScrollListener>();
-
-let lenisInstance: Lenis | null = null;
 
 function emit(scrollY: number) {
   for (const listener of listeners) {
     listener(scrollY);
   }
-}
-
-export function registerLenis(instance: Lenis) {
-  lenisInstance = instance;
-  instance.on("scroll", () => {
-    emit(window.scrollY);
-  });
-}
-
-export function unregisterLenis() {
-  lenisInstance = null;
 }
 
 export function subscribeScroll(listener: ScrollListener) {
@@ -39,17 +24,10 @@ export function subscribeScroll(listener: ScrollListener) {
   };
 }
 
-export function requestScrollResize() {
-  lenisInstance?.resize();
-}
-
-export function observeLandingScrollResize(target: Element | null) {
+export function observeLayoutResize(target: Element | null, onResize: () => void) {
   if (!target || typeof ResizeObserver === "undefined") return () => {};
 
-  const observer = new ResizeObserver(() => {
-    requestScrollResize();
-  });
-
+  const observer = new ResizeObserver(onResize);
   observer.observe(target);
 
   return () => {
