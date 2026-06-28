@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
+    "@kessler/gemma-embedding": "^1.0.0",
     "@repo/db": "workspace:*",
     "@repo/isomorphic": "workspace:*",
     "@tailwindcss/vite": "^4.1.18",

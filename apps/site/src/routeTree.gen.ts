@@ -24,6 +24,7 @@ import { Route as BackstageBackstageProjectsEnrichmentRouteImport } from './rout
 import { Route as BackstageBackstageProjectsRouteImport } from './routes/_backstage/backstage/projects'
 import { Route as BackstageBackstageMessagesRouteImport } from './routes/_backstage/backstage/messages'
 import { Route as BackstageBackstageJournalRouteImport } from './routes/_backstage/backstage/journal'
+import { Route as BackstageBackstageEmbeddingsIndexRouteImport } from './routes/_backstage/backstage/embeddings/index'
 
 const BackstageLayoutRoute = BackstageLayoutRouteImport.update({
   id: '/_backstage',
@@ -104,6 +105,12 @@ const BackstageBackstageJournalRoute =
     path: '/backstage/journal',
     getParentRoute: () => BackstageLayoutRoute,
   } as any)
+const BackstageBackstageEmbeddingsIndexRoute =
+  BackstageBackstageEmbeddingsIndexRouteImport.update({
+    id: '/backstage/embeddings/',
+    path: '/backstage/embeddings/',
+    getParentRoute: () => BackstageLayoutRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -120,6 +127,7 @@ export interface FileRoutesByFullPath {
   '/backstage/workflow': typeof BackstageBackstageWorkflowRoute
   '/backstage/': typeof BackstageBackstageIndexRoute
   '/preview/error/': typeof PreviewErrorIndexRoute
+  '/backstage/embeddings/': typeof BackstageBackstageEmbeddingsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -136,6 +144,7 @@ export interface FileRoutesByTo {
   '/backstage/workflow': typeof BackstageBackstageWorkflowRoute
   '/backstage': typeof BackstageBackstageIndexRoute
   '/preview/error': typeof PreviewErrorIndexRoute
+  '/backstage/embeddings': typeof BackstageBackstageEmbeddingsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -154,6 +163,7 @@ export interface FileRoutesById {
   '/_backstage/backstage/workflow': typeof BackstageBackstageWorkflowRoute
   '/_backstage/backstage/': typeof BackstageBackstageIndexRoute
   '/preview/error/': typeof PreviewErrorIndexRoute
+  '/_backstage/backstage/embeddings/': typeof BackstageBackstageEmbeddingsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -172,6 +182,7 @@ export interface FileRouteTypes {
     | '/backstage/workflow'
     | '/backstage/'
     | '/preview/error/'
+    | '/backstage/embeddings/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -188,6 +199,7 @@ export interface FileRouteTypes {
     | '/backstage/workflow'
     | '/backstage'
     | '/preview/error'
+    | '/backstage/embeddings'
   id:
     | '__root__'
     | '/'
@@ -205,6 +217,7 @@ export interface FileRouteTypes {
     | '/_backstage/backstage/workflow'
     | '/_backstage/backstage/'
     | '/preview/error/'
+    | '/_backstage/backstage/embeddings/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -325,6 +338,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BackstageBackstageJournalRouteImport
       parentRoute: typeof BackstageLayoutRoute
     }
+    '/_backstage/backstage/embeddings/': {
+      id: '/_backstage/backstage/embeddings/'
+      path: '/backstage/embeddings'
+      fullPath: '/backstage/embeddings/'
+      preLoaderRoute: typeof BackstageBackstageEmbeddingsIndexRouteImport
+      parentRoute: typeof BackstageLayoutRoute
+    }
   }
 }
 
@@ -336,6 +356,7 @@ interface BackstageLayoutRouteChildren {
   BackstageBackstageReposRoute: typeof BackstageBackstageReposRoute
   BackstageBackstageWorkflowRoute: typeof BackstageBackstageWorkflowRoute
   BackstageBackstageIndexRoute: typeof BackstageBackstageIndexRoute
+  BackstageBackstageEmbeddingsIndexRoute: typeof BackstageBackstageEmbeddingsIndexRoute
 }
 
 const BackstageLayoutRouteChildren: BackstageLayoutRouteChildren = {
@@ -347,6 +368,8 @@ const BackstageLayoutRouteChildren: BackstageLayoutRouteChildren = {
   BackstageBackstageReposRoute: BackstageBackstageReposRoute,
   BackstageBackstageWorkflowRoute: BackstageBackstageWorkflowRoute,
   BackstageBackstageIndexRoute: BackstageBackstageIndexRoute,
+  BackstageBackstageEmbeddingsIndexRoute:
+    BackstageBackstageEmbeddingsIndexRoute,
 }
 
 const BackstageLayoutRouteWithChildren = BackstageLayoutRoute._addFileChildren(
