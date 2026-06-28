@@ -1,4 +1,10 @@
 import { siteConfig } from "@/config/site";
+import {
+  siteSeoDescription,
+  siteSeoKeywords,
+  siteSeoOgImageAlt,
+  siteSeoTitle,
+} from "@/config/info";
 import { Code2 } from "lucide-react";
 
 function absoluteAsset(path: string) {
@@ -12,7 +18,7 @@ export const AppConfig = {
   icon: Code2,
   logo: {
     src: siteConfig.assets.ogImage,
-    alt: siteConfig.assets.ogImageAlt,
+    alt: siteSeoOgImageAlt,
     href: "/",
   },
   themeStorageKey: "tigawanna.theme",
@@ -21,4 +27,10 @@ export const AppConfig = {
   techSkills: siteConfig.techSkills,
   assets: siteConfig.assets,
   absoluteAsset,
+  seo: {
+    title: siteSeoTitle,
+    description: siteSeoDescription,
+    keywords: siteSeoKeywords,
+    ogImageAlt: siteSeoOgImageAlt,
+  },
 };

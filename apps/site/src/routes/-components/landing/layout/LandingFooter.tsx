@@ -2,16 +2,26 @@ import {
   CreatureEggLowercaseI,
   CreatureEggTrigger,
 } from "@/components/creature-egg/CreatureEggTrigger";
+import { Button } from "@/components/ui/button";
 import { useCurvedMarquee } from "@/hooks/use-curved-marquee";
+import { unwrapUnknownError } from "@/utils/errors";
 import { AppConfig } from "@/utils/system";
 import { Link } from "@tanstack/react-router";
-import { ArrowUpRight } from "lucide-react";
-import { useRef } from "react";
+import { ArrowUpRight, Check, Copy } from "lucide-react";
+import { useRef, useState } from "react";
+import { toast } from "sonner";
 
 const MARQUEE_PHRASE = "full-stack systems - warm interfaces - maintainable products - Nairobi - ";
 const MARQUEE_REPEAT = 8;
 const TEXT_SNAKE_PATH =
   "M0 191 C 140 248, 300 266, 440 242 C 540 206, 700 128, 900 137 C 1100 149, 1350 254, 1600 290";
+
+const footerContacts = [
+  { label: "GitHub", href: AppConfig.links.github, copyValue: AppConfig.links.github },
+  { label: "LinkedIn", href: AppConfig.links.linkedin, copyValue: AppConfig.links.linkedin },
+  { label: "Dev.to", href: AppConfig.links.devto, copyValue: AppConfig.links.devto },
+  { label: "Email", href: AppConfig.links.emailTo, copyValue: AppConfig.links.email },
+] as const;
 
 function FooterCurveMarquee() {
   const textPathRef = useRef<SVGTextPathElement>(null);
@@ -44,6 +54,23 @@ function FooterCurveMarquee() {
 
 export function LandingFooter() {
   const currentYear = new Date().getFullYear();
+  const [copiedLabel, setCopiedLabel] = useState<string | null>(null);
+
+  async function copyContact(label: string, value: string) {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopiedLabel(label);
+      toast.success(`${label} copied`);
+      window.setTimeout(
+        () => setCopiedLabel((current) => (current === label ? null : current)),
+        2000,
+      );
+    } catch (err: unknown) {
+      toast.error(`Could not copy ${label}`, {
+        description: unwrapUnknownError(err).message,
+      });
+    }
+  }
 
   return (
     <footer
@@ -75,23 +102,39 @@ export function LandingFooter() {
           </div>
 
           <div className="flex flex-wrap gap-3 md:justify-end">
-            {[
-              { label: "GitHub", href: AppConfig.links.github },
-              { label: "LinkedIn", href: AppConfig.links.linkedin },
-              { label: "Dev.to", href: AppConfig.links.devto },
-              { label: "Email", href: AppConfig.links.emailTo },
-            ].map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                target={link.href.startsWith("http") ? "_blank" : undefined}
-                rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="group inline-flex items-center gap-2 rounded-full border border-base-content/10 bg-base-content/[0.035] px-4 py-2 text-sm text-base-content/60 transition-colors hover:border-primary/40 hover:text-primary"
-              >
-                {link.label}
-                <ArrowUpRight className="size-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-              </a>
-            ))}
+            {footerContacts.map((link) => {
+              const isCopied = copiedLabel === link.label;
+              const isExternal = link.href.startsWith("http");
+
+              return (
+                <div
+                  key={link.label}
+                  data-test={`footer-contact-${link.label.toLowerCase()}`}
+                  className="inline-flex items-center overflow-hidden rounded-full border border-base-content/10 bg-base-content/[0.035]"
+                >
+                  <a
+                    href={link.href}
+                    target={isExternal ? "_blank" : undefined}
+                    rel={isExternal ? "noopener noreferrer" : undefined}
+                    className="group inline-flex items-center gap-2 px-4 py-2 text-sm text-base-content/60 transition-colors hover:text-primary"
+                  >
+                    {link.label}
+                    <ArrowUpRight className="size-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </a>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    data-test={`footer-contact-copy-${link.label.toLowerCase()}`}
+                    aria-label={`Copy ${link.label}`}
+                    className="h-auto rounded-none border-l border-base-content/10 px-3 py-2 text-base-content/50 hover:bg-base-content/[0.04] hover:text-primary"
+                    onClick={() => void copyContact(link.label, link.copyValue)}
+                  >
+                    {isCopied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
+                  </Button>
+                </div>
+              );
+            })}
           </div>
         </div>
 

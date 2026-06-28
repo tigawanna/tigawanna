@@ -22,9 +22,6 @@ const searchparams = z.object({
   globalSearch: z.string().optional(),
 });
 
-const seoKeywords =
-  "fullstack developer, JavaScript, React, TanStack Start, TypeScript, web development, Nairobi, tigawanna";
-
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   beforeLoad: async ({ context }) => {
     const viewer = await context.queryClient.ensureQueryData(viewerqueryOptions);
@@ -36,23 +33,25 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: AppConfig.name },
-      { name: "description", content: AppConfig.description },
-      { name: "keywords", content: seoKeywords },
-      { property: "og:title", content: AppConfig.name },
-      { property: "og:description", content: AppConfig.description },
+      { title: AppConfig.seo.title },
+      { name: "description", content: AppConfig.seo.description },
+      { name: "keywords", content: AppConfig.seo.keywords },
+      { name: "author", content: AppConfig.name },
+      { property: "og:site_name", content: AppConfig.name },
+      { property: "og:title", content: AppConfig.seo.title },
+      { property: "og:description", content: AppConfig.seo.description },
       { property: "og:url", content: AppConfig.links.website },
       { property: "og:type", content: "website" },
       {
         property: "og:image",
         content: AppConfig.absoluteAsset(AppConfig.assets.ogImage),
       },
-      { property: "og:image:alt", content: AppConfig.assets.ogImageAlt },
+      { property: "og:image:alt", content: AppConfig.seo.ogImageAlt },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@tigawanna" },
       { name: "twitter:creator", content: "@tigawanna" },
-      { name: "twitter:title", content: AppConfig.name },
-      { name: "twitter:description", content: AppConfig.description },
+      { name: "twitter:title", content: AppConfig.seo.title },
+      { name: "twitter:description", content: AppConfig.seo.description },
       {
         name: "twitter:image",
         content: AppConfig.absoluteAsset(AppConfig.assets.ogImage),

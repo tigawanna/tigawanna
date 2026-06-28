@@ -116,6 +116,11 @@ export const howIWorkCards = [
     body: "Led frontend teams, mentored juniors, tightened CI, and left codebases easier to onboard than I found them.",
   },
   {
+    tag: "Engagement",
+    title: "Any team shape, any model",
+    body: "Full-time, contract, and freelance across remote US teams, hybrid setups, and in-person. Forward-deployed too. Embedded inside your org to build the integrations and upgrades your stack needs from the inside.",
+  },
+  {
     tag: "Quality",
     title: "Maintainable by default",
     body: "Performance-minded implementations, sensible tests, and code review habits that catch issues before they ship.",
@@ -133,7 +138,7 @@ export const howIWorkCards = [
 ] as const satisfies readonly InfoCard[];
 
 export const howIWorkSummary =
-  "I own projects from architecture through deployment, designing systems teams can live with and shipping maintainable, performance-minded code. Along the way I mentor teams, collaborate across product and design, and give back to open source.";
+  "I own projects from architecture through deployment, designing systems teams can live with and shipping maintainable, performance-minded code. Full-time, contract, or freelance, remote, hybrid, or in-person. Along the way I mentor teams, collaborate across product and design, and give back to open source.";
 
 export const howIWorkSections = [
   {
@@ -158,6 +163,14 @@ export const howIWorkSections = [
     title: "Team multiplier",
     body: "I lead, mentor, and collaborate across product, design, and engineering, translating constraints so the work actually lands.",
     background: "var(--color-landing-face-3)",
+    foreground: "var(--color-landing-cream-bg)",
+  },
+  {
+    id: "engagement",
+    tag: "Engagement",
+    title: "Any team shape, any model",
+    body: "Full-time, contract, and freelance across remote US teams, hybrid setups, and in-person. Forward-deployed too. Embedded inside your org to build the integrations and upgrades your stack needs from the inside.",
+    background: "var(--color-landing-face-1)",
     foreground: "var(--color-landing-cream-bg)",
   },
   {
@@ -298,3 +311,63 @@ export const techChoices = [
     strengths: ["Expo Router", "EAS Build", "OTA updates", "Dev client"],
   },
 ] as const satisfies readonly TechChoice[];
+
+const seoKeywordTerms = [
+  ...stackCubeFaces.flatMap((face) => [face.label, ...face.techs]),
+  ...techChoices.flatMap((tech) => [tech.name, tech.category, tech.position, ...tech.strengths]),
+  ...howIWorkCards.flatMap((card) => [card.tag, card.title]),
+  ...howIWorkSections.map((section) => section.tag),
+  "full-stack developer",
+  "fullstack developer",
+  "software engineer",
+  "TypeScript developer",
+  "web developer",
+  "mobile developer",
+  "full-time",
+  "contract",
+  "freelance",
+  "remote developer",
+  "remote US teams",
+  "hybrid teams",
+  "in-person teams",
+  "forward deployed",
+  "embedded engineer",
+  "system design",
+  "software architecture",
+  "end-to-end ownership",
+  "team lead",
+  "mentorship",
+  "open source",
+  "CI/CD",
+  "performance",
+  "accessibility",
+  "Nairobi",
+  "Kenya",
+  "tigawanna",
+  "Dennis Waweru",
+  "Dennis Kinuthia",
+];
+
+function uniqueSeoKeywords(terms: readonly string[]) {
+  const seen = new Set<string>();
+  const result: string[] = [];
+
+  for (const term of terms) {
+    const trimmed = term.trim();
+    const normalized = trimmed.toLowerCase();
+    if (!normalized || seen.has(normalized)) continue;
+    seen.add(normalized);
+    result.push(trimmed);
+  }
+
+  return result.join(", ");
+}
+
+export const siteSeoKeywords = uniqueSeoKeywords(seoKeywordTerms);
+
+export const siteSeoDescription = `${howIWorkSummary} Stack: React, Next.js, TanStack, TypeScript, React Native, Expo, Node.js, Drizzle, AWS, GCP, Cloudflare, and Supabase. Forward-deployed integrations and upgrades. Based in Nairobi, Kenya.`;
+
+export const siteSeoTitle = "Dennis Waweru | Full Stack TypeScript Developer";
+
+export const siteSeoOgImageAlt =
+  "Dennis Waweru, full-stack TypeScript developer. React, Next.js, TanStack, and React Native. Remote, hybrid, and in-person across full-time, contract, freelance, and forward-deployed engagements.";

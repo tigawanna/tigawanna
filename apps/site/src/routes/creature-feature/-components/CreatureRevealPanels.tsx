@@ -305,16 +305,16 @@ function CinemaDressing() {
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute inset-x-[8vw] top-[12vh] bottom-[13vh] rounded-4xl border border-[#d6d0b7]/12 shadow-[inset_0_0_60px_rgba(0,0,0,0.45)]"
+        className="pointer-events-none absolute inset-x-[8vw] top-[12vh] bottom-[13vh] rounded-4xl border border-landing-cream-bg/12 shadow-[inset_0_0_60px_rgba(0,0,0,0.45)]"
         aria-hidden="true"
       />
       <Popcorn
-        className="pointer-events-none absolute bottom-12 left-[8vw] size-14 rotate-[-10deg] text-[#d6d0b7]/18 md:size-20"
+        className="pointer-events-none absolute bottom-12 left-[8vw] size-14 rotate-[-10deg] text-landing-cream-bg/18 md:size-20"
         strokeWidth={1.3}
         aria-hidden="true"
       />
       <Ticket
-        className="pointer-events-none absolute right-[9vw] bottom-16 size-12 rotate-12 text-[#d6d0b7]/14 md:size-16"
+        className="pointer-events-none absolute right-[9vw] bottom-16 size-12 rotate-12 text-landing-cream-bg/14 md:size-16"
         strokeWidth={1.3}
         aria-hidden="true"
       />
