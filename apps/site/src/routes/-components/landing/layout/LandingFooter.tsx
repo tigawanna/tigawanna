@@ -127,7 +127,7 @@ export function LandingFooter() {
                     size="sm"
                     data-test={`footer-contact-copy-${link.label.toLowerCase()}`}
                     aria-label={`Copy ${link.label}`}
-                    className="h-auto rounded-none border-l border-base-content/10 px-3 py-2 text-base-content/50 hover:bg-base-content/[0.04] hover:text-primary"
+                    className="h-auto rounded-none border-l border-base-content/10 px-3 py-2 text-base-content/50 hover:bg-base-content/4 hover:text-primary"
                     onClick={() => void copyContact(link.label, link.copyValue)}
                   >
                     {isCopied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
