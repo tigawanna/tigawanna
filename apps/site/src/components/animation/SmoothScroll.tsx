@@ -1,4 +1,10 @@
 import Lenis from "lenis";
+import {
+  observeLandingScrollResize,
+  registerLenis,
+  requestScrollResize,
+  unregisterLenis,
+} from "@/lib/scroll/landing-scroll";
 import { useEffect } from "react";
 
 const IDLE_TIMEOUT_MS = 4000;
@@ -12,6 +18,7 @@ export function SmoothScroll() {
     let disposed = false;
     let idleCallbackId = 0;
     let idleTimeoutId: ReturnType<typeof globalThis.setTimeout> | null = null;
+    let unobserveBody: (() => void) | undefined;
 
     function startLenis() {
       if (disposed || lenis) return;
@@ -21,7 +28,21 @@ export function SmoothScroll() {
         smoothWheel: true,
       });
 
+      registerLenis(lenis);
       document.documentElement.classList.add("lenis");
+      requestScrollResize();
+
+      unobserveBody = observeLandingScrollResize(document.body);
+
+      const main = document.getElementById("main-content");
+      if (main) {
+        const unobserveMain = observeLandingScrollResize(main);
+        const previousUnobserveBody = unobserveBody;
+        unobserveBody = () => {
+          previousUnobserveBody?.();
+          unobserveMain();
+        };
+      }
 
       function raf(time: number) {
         if (!lenis) return;
@@ -36,6 +57,10 @@ export function SmoothScroll() {
       startLenis();
     }
 
+    function onLoad() {
+      requestScrollResize();
+    }
+
     if ("requestIdleCallback" in window) {
       idleCallbackId = window.requestIdleCallback(() => startLenis(), { timeout: IDLE_TIMEOUT_MS });
     } else {
@@ -45,6 +70,7 @@ export function SmoothScroll() {
     window.addEventListener("wheel", onUserScroll, { passive: true, once: true });
     window.addEventListener("touchstart", onUserScroll, { passive: true, once: true });
     window.addEventListener("scroll", onUserScroll, { passive: true, once: true });
+    window.addEventListener("load", onLoad);
 
     return () => {
       disposed = true;
@@ -60,8 +86,12 @@ export function SmoothScroll() {
       window.removeEventListener("wheel", onUserScroll);
       window.removeEventListener("touchstart", onUserScroll);
       window.removeEventListener("scroll", onUserScroll);
+      window.removeEventListener("load", onLoad);
+
+      unobserveBody?.();
 
       if (rafId) cancelAnimationFrame(rafId);
+      unregisterLenis();
       lenis?.destroy();
       document.documentElement.classList.remove("lenis");
     };

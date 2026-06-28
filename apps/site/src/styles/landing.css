@@ -244,3 +244,9 @@
     transform: none;
   }
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  html.lenis {
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,3 +1,4 @@
+import { observeLandingScrollResize, subscribeScroll } from "@/lib/scroll/landing-scroll";
 import { useEffect, type RefObject } from "react";
 
 type CurvedTarget = {
@@ -8,14 +9,9 @@ type CurvedTarget = {
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
-function absoluteTop(element: HTMLElement | null) {
-  let offset = 0;
-  let node: HTMLElement | null = element;
-  while (node) {
-    offset += node.offsetTop;
-    node = node.offsetParent as HTMLElement | null;
-  }
-  return offset;
+function isPanelActive(panel: HTMLElement) {
+  const rect = panel.getBoundingClientRect();
+  return rect.top <= 2 && rect.bottom >= window.innerHeight * 0.45;
 }
 
 export function useCurvedSectionsMotion(ref: RefObject<HTMLElement | null>) {
@@ -37,20 +33,25 @@ export function useCurvedSectionsMotion(ref: RefObject<HTMLElement | null>) {
 
     const measure = () => {
       panelHeight = panels[0]?.offsetHeight || window.innerHeight;
-      tops = panels.map((panel) => absoluteTop(panel));
+      const rootTop = root.getBoundingClientRect().top + window.scrollY;
+      tops = panels.map((_, index) => rootTop + index * panelHeight);
     };
 
-    const update = () => {
+    const update = (scroll: number) => {
       frame = 0;
-      const scroll = window.scrollY;
 
       targets.forEach((target, index) => {
+        const panel = panels[index];
+        if (!panel) return;
+
         const progress = (scroll - tops[index]) / panelHeight;
         const rise = clamp(progress + 1, 0, 1);
         const cover = index < targets.length - 1 ? clamp(progress, 0, 1) : 0;
+        const active = isPanelActive(panel);
 
         if (target.content) {
-          const reveal = clamp(rise / 0.6, 0, 1);
+          let reveal = clamp(rise / 0.6, 0, 1);
+          if (active) reveal = Math.max(reveal, 0.98);
           target.content.style.opacity = String(reveal);
           target.content.style.transform = `translateY(${(1 - reveal) * 56}px)`;
         }
@@ -62,31 +63,42 @@ export function useCurvedSectionsMotion(ref: RefObject<HTMLElement | null>) {
         }
 
         if (target.inner) {
-          target.inner.style.opacity = String(1 - cover * 0.8);
+          const fade = active ? 0 : cover * 0.8;
+          target.inner.style.opacity = String(1 - fade);
           target.inner.style.transform = `translateY(${-52 * cover}px) scale(${1 - 0.07 * cover})`;
         }
       });
     };
 
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(update);
+    const onScroll = (scrollY: number) => {
+      if (!frame) frame = requestAnimationFrame(() => update(scrollY));
     };
 
     const onResize = () => {
       measure();
-      update();
+      update(window.scrollY);
     };
 
     measure();
-    update();
+    update(window.scrollY);
 
-    window.addEventListener("scroll", onScroll, { passive: true });
+    const unsubscribeScroll = subscribeScroll(onScroll);
+    const unobserveResize = observeLandingScrollResize(root);
     window.addEventListener("resize", onResize);
 
     return () => {
       if (frame) cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", onScroll);
+      unsubscribeScroll();
+      unobserveResize();
       window.removeEventListener("resize", onResize);
+
+      for (const target of targets) {
+        target.content?.style.removeProperty("opacity");
+        target.content?.style.removeProperty("transform");
+        target.number?.style.removeProperty("transform");
+        target.inner?.style.removeProperty("opacity");
+        target.inner?.style.removeProperty("transform");
+      }
     };
   }, [ref]);
 }

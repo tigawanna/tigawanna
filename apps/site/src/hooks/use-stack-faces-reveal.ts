@@ -1,3 +1,4 @@
+import { observeLandingScrollResize, subscribeScroll } from "@/lib/scroll/landing-scroll";
 import { useEffect, type RefObject } from "react";
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
@@ -5,16 +6,6 @@ const clamp = (value: number, min: number, max: number) => Math.min(max, Math.ma
 const circleOrigin = "50% 50%";
 const minCircleRadius = 7;
 const maxCircleRadius = 108;
-
-function absoluteTop(element: HTMLElement) {
-  let offset = 0;
-  let node: HTMLElement | null = element;
-  while (node) {
-    offset += node.offsetTop;
-    node = node.offsetParent as HTMLElement | null;
-  }
-  return offset;
-}
 
 export function useStackFacesReveal(ref: RefObject<HTMLElement | null>) {
   useEffect(() => {
@@ -41,12 +32,12 @@ export function useStackFacesReveal(ref: RefObject<HTMLElement | null>) {
 
     const measure = () => {
       vh = window.innerHeight;
-      tops = panels.map((p) => absoluteTop(p));
+      const rootTop = root.getBoundingClientRect().top + window.scrollY;
+      tops = panels.map((_, index) => rootTop + index * vh);
     };
 
-    const update = () => {
+    const update = (scroll: number) => {
       frame = 0;
-      const scroll = window.scrollY;
 
       panels.forEach((panel, index) => {
         if (index === 0) return;
@@ -84,24 +75,26 @@ export function useStackFacesReveal(ref: RefObject<HTMLElement | null>) {
       });
     };
 
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(update);
+    const onScroll = (scrollY: number) => {
+      if (!frame) frame = requestAnimationFrame(() => update(scrollY));
     };
 
     const onResize = () => {
       measure();
-      update();
+      update(window.scrollY);
     };
 
     measure();
-    update();
+    update(window.scrollY);
 
-    window.addEventListener("scroll", onScroll, { passive: true });
+    const unsubscribeScroll = subscribeScroll(onScroll);
+    const unobserveResize = observeLandingScrollResize(root);
     window.addEventListener("resize", onResize);
 
     return () => {
       if (frame) cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", onScroll);
+      unsubscribeScroll();
+      unobserveResize();
       window.removeEventListener("resize", onResize);
     };
   }, [ref]);
