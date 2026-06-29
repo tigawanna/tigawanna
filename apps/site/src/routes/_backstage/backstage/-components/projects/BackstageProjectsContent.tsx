@@ -1,5 +1,3 @@
-import { backstageGithubReposCollection } from "@/data-access-layer/backstage-github-repos-collection";
-import { backstageProjectsCollection } from "@/data-access-layer/backstage-projects-collection";
 import { SearchBox } from "@/components/search/SearchBox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -9,15 +7,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useTSRSearchQuery } from "@/routes/_backstage/backstage/-hooks/use-tsr-search-query";
+import { backstageGithubReposCollection } from "@/data-access-layer/backstage/backstage-github-repos-collection";
+import { backstageProjectsCollection } from "@/data-access-layer/backstage/backstage-projects-collection";
 import { TanstackDBSortSelect } from "@/routes/_backstage/backstage/-components/shared/TanstackDBColumnfilters";
 import { createSortableColumns } from "@/routes/_backstage/backstage/-components/shared/sortable-columns";
-import { and, eq, ilike, isNull, IR } from "@tanstack/db";
-import { Link } from "@tanstack/react-router";
+import { useTSRSearchQuery } from "@/routes/_backstage/backstage/-hooks/use-tsr-search-query";
+import { and, eq, ilike, IR, isNull } from "@tanstack/db";
 import { useLiveSuspenseQuery } from "@tanstack/react-db";
-import { BackstageProjectRow } from "./BackstageProjectRow";
-import { BackstageFilterField, BackstageFiltersDialog } from "../shared/BackstageFiltersDialog";
+import { Link } from "@tanstack/react-router";
 import { Route, type BackstageProjectsSearch } from "../../projects";
+import { BackstageFilterField, BackstageFiltersDialog } from "../shared/BackstageFiltersDialog";
+import { BackstageProjectRow } from "./BackstageProjectRow";
 
 const projectSortableColumns = createSortableColumns(backstageProjectsCollection, [
   { value: "repoFullName", label: "Repository" },
@@ -107,10 +107,6 @@ export function BackstageProjectsContent() {
             Repos imported into the database. Import more from{" "}
             <Link to="/backstage/repos" className="link link-hover">
               Repos
-            </Link>{" "}
-            or run enrichment from{" "}
-            <Link to="/backstage/workflow" className="link link-hover">
-              Workflow
             </Link>
             .
           </p>

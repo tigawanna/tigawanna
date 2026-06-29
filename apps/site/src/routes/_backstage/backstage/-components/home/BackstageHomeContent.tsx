@@ -4,16 +4,12 @@ import {
   backstageGithubReposQueryOptions,
   backstageProjectsQueryOptions,
 } from "@/data-access-layer/backstage/projects-query-options";
-import {
-  projectEnrichmentRunsQueryOptions,
-  projectEnrichmentSuggestionsQueryOptions,
-} from "@/data-access-layer/backstage/projects-enrichment-query-options";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import type { LucideIcon } from "lucide-react";
-import { BookOpen, Inbox, LayoutGrid, Workflow } from "lucide-react";
+import { BookOpen, Inbox, LayoutGrid } from "lucide-react";
 
 interface BackstageStatCardProps {
   title: string;
@@ -75,15 +71,12 @@ export function BackstageHomeContent() {
   const { data: journalEntries } = useSuspenseQuery(journalEntriesQueryOptions);
   const { data: projects } = useSuspenseQuery(backstageProjectsQueryOptions);
   const { data: githubRepos } = useSuspenseQuery(backstageGithubReposQueryOptions);
-  const { data: suggestions } = useSuspenseQuery(projectEnrichmentSuggestionsQueryOptions);
-  const { data: runs } = useSuspenseQuery(projectEnrichmentRunsQueryOptions);
 
   const importedRepoNames = new Set(projects.map((project) => project.repoFullName));
   const importableRepoCount = githubRepos.repos.filter(
     (repo) => !importedRepoNames.has(repo.nameWithOwner),
   ).length;
   const pinnedJournalCount = journalEntries.filter((entry) => entry.pinned).length;
-  const runningWorkflowCount = runs.filter((run) => run.status === "running").length;
   const completeProjectCount = projects.filter(
     (project) => project.attendance === "complete",
   ).length;
@@ -94,7 +87,7 @@ export function BackstageHomeContent() {
         <h1 className="text-2xl font-semibold tracking-tight">Backstage</h1>
         <p className="text-base-content/60 mt-2 text-sm">
           {messages.length} messages · {projects.length} projects · {journalEntries.length} journal
-          entries · {suggestions.length} pending reviews
+          entries
         </p>
       </div>
 
@@ -153,30 +146,6 @@ export function BackstageHomeContent() {
           actions={
             <Link to="/backstage/journal" className="btn btn-primary btn-sm">
               Manage journal
-            </Link>
-          }
-        />
-
-        <BackstageStatCard
-          title="Workflow"
-          description="Enrichment runs and metadata review."
-          icon={Workflow}
-          value={suggestions.length}
-          valueLabel="pending review"
-          highlights={
-            runningWorkflowCount > 0
-              ? [
-                  {
-                    label: runningWorkflowCount === 1 ? "run active" : "runs active",
-                    value: runningWorkflowCount,
-                  },
-                ]
-              : []
-          }
-          data-test="backstage-home-workflow"
-          actions={
-            <Link to="/backstage/workflow" className="btn btn-primary btn-sm">
-              Open workflow
             </Link>
           }
         />

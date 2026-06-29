@@ -1,10 +1,10 @@
+import { Badge } from "@/components/ui/badge";
 import {
   deleteBackstageGithubRepo,
   removeBackstageProject,
   setBackstageRepoVisibility,
-} from "@/data-access-layer/backstage-collection-mutations";
+} from "@/data-access-layer/backstage/backstage-collection-mutations";
 import type { BackstageProject } from "@/types/backstage";
-import { Badge } from "@/components/ui/badge";
 import { unwrapUnknownError } from "@/utils/errors";
 import { format } from "date-fns";
 import { ExternalLink } from "lucide-react";

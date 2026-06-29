@@ -1,5 +1,5 @@
-import { backstageGithubReposCollection } from "@/data-access-layer/backstage-github-repos-collection";
-import { backstageProjectsCollection } from "@/data-access-layer/backstage-projects-collection";
+import { backstageGithubReposCollection } from "@/data-access-layer/backstage/backstage-github-repos-collection";
+import { backstageProjectsCollection } from "@/data-access-layer/backstage/backstage-projects-collection";
 import { importProjectRepo } from "@/modules/backstage/projects.functions";
 import { createOptimisticAction } from "@tanstack/db";
 

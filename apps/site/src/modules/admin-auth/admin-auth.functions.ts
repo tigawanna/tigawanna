@@ -16,6 +16,7 @@ import {
   verifyAdminSessionToken,
 } from "@/modules/admin-auth/session";
 import { adminLoginChallenges, and, count, desc, eq, gt, lt } from "@repo/db";
+import { requireHumanVerification } from "@/lib/botid/require-human-verification";
 import { getDb } from "@/lib/db/get-db";
 import { TelegramNotifier } from "@/lib/telegram/client";
 import { getServerEnv } from "@/lib/envs/server-env";
@@ -106,6 +107,7 @@ export const getAdminSession = createServerFn({ method: "GET" }).handler(async (
  * Sets the `admin_otp_challenge` httpOnly cookie that must be present during verification.
  */
 export const requestAdminOtp = createServerFn({ method: "POST" }).handler(async () => {
+  await requireHumanVerification();
   await purgeExpiredChallenges();
 
   const requestIp = getClientIp();
@@ -177,6 +179,7 @@ export const requestAdminOtp = createServerFn({ method: "POST" }).handler(async 
 export const verifyAdminOtp = createServerFn({ method: "POST" })
   .validator((input: { code: string }) => verifyOtpSchema.parse(input))
   .handler(async ({ data }) => {
+    await requireHumanVerification();
     const challengeId = getCookie(adminOtpCookie.name);
     if (!challengeId) {
       throw new Error("Request a new login code first.");

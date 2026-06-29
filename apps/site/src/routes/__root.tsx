@@ -4,6 +4,8 @@ import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/reac
 
 import appCss from "../styles.css?url";
 
+import { BotIdSetup } from "@/components/botid/BotIdSetup";
+import { ClientOnly } from "@/components/wrappers/ClientOnly";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { TanstackDevtools } from "@/lib/tanstack/devtools/devtools";
@@ -87,6 +89,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
+        <ClientOnly>
+          <BotIdSetup />
+        </ClientOnly>
         <TooltipProvider>
           {children}
           <TanstackDevtools />

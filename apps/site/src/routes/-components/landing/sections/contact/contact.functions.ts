@@ -1,3 +1,4 @@
+import { requireHumanVerification } from "@/lib/botid/require-human-verification";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { contactFormSchema, type ContactFormValues } from "./contact-schema";
@@ -12,6 +13,7 @@ function createMessageId() {
 export const sendContactMessage = createServerFn({ method: "POST" })
   .validator((input: ContactFormValues) => contactFormSchema.parse(input))
   .handler(async ({ data }) => {
+    await requireHumanVerification();
     const hasContact = Boolean(data.contact && data.contact.trim().length > 0);
     const headers = getRequestHeaders();
     const ipAddress =

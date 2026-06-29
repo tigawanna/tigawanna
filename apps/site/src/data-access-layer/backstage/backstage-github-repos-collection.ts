@@ -1,11 +1,11 @@
-import { backstageProjectsCollection } from "@/data-access-layer/backstage-projects-collection";
+import { backstageProjectsCollection } from "@/data-access-layer/backstage/backstage-projects-collection";
 import { queryKeyPrefixes } from "@/data-access-layer/query-keys";
+import { getTanstackQueryContext } from "@/lib/tanstack/query/query-provider";
 import {
   deleteGithubRepoForBackstage,
   listGithubReposForBackstage,
   setGithubRepoVisibilityForBackstage,
 } from "@/modules/backstage/projects.functions";
-import { getTanstackQueryContext } from "@/lib/tanstack/query/query-provider";
 import type { BackstageGithubRepo } from "@/types/backstage";
 import { BasicIndex, createCollection } from "@tanstack/db";
 import { queryCollectionOptions } from "@tanstack/query-db-collection";
