@@ -1,6 +1,6 @@
 import { queryKeyPrefixes } from "@/data-access-layer/query-keys";
-import { listGithubReposForBackstage } from "@/modules/backstage/projects.functions";
-import { listProjectRepos } from "@/modules/backstage/projects-enrichment.functions";
+import { listGithubReposForBackstage } from "@/modules/backstage/github-repos.functions";
+import { listProjectRepos } from "@/modules/backstage/projects.functions";
 import { queryOptions } from "@tanstack/react-query";
 
 type BackstageInvalidateKey = [typeof queryKeyPrefixes.backstage, ...(readonly unknown[])];

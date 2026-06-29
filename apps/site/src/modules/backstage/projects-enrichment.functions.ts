@@ -60,18 +60,6 @@ export const listProjectEnrichmentSuggestions = createServerFn({ method: "GET" }
   },
 );
 
-export const listProjectRepos = createServerFn({ method: "GET" }).handler(async () => {
-  await requireAdminSession();
-  const db = getDb();
-
-  const rows = await db.select().from(projectRepos).orderBy(desc(projectRepos.lastGithubSyncAt));
-
-  return rows.map((row) => ({
-    ...row,
-    currentTopics: parseTopics(row.currentTopics),
-  }));
-});
-
 export const listProjectEnrichmentRuns = createServerFn({ method: "GET" }).handler(async () => {
   await requireAdminSession();
   const db = getDb();

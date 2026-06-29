@@ -2,8 +2,8 @@ import { queryKeyPrefixes } from "@/data-access-layer/query-keys";
 import {
   listProjectEnrichmentRuns,
   listProjectEnrichmentSuggestions,
-  listProjectRepos,
 } from "@/modules/backstage/projects-enrichment.functions";
+import { listProjectRepos } from "@/modules/backstage/projects.functions";
 import { queryOptions } from "@tanstack/react-query";
 
 export const projectEnrichmentSuggestionsQueryOptions = queryOptions({
