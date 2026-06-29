@@ -16,10 +16,10 @@ import {
   verifyAdminSessionToken,
 } from "@/modules/admin-auth/session";
 import { adminLoginChallenges, and, count, desc, eq, gt, lt } from "@repo/db";
-import { requireHumanVerification } from "@/lib/botid/require-human-verification";
 import { getDb } from "@/lib/db/get-db";
 import { TelegramNotifier } from "@/lib/telegram/client";
 import { getServerEnv } from "@/lib/envs/server-env";
+import { unwrapUnknownError } from "@/utils/errors";
 import { createServerFn } from "@tanstack/react-start";
 import {
   deleteCookie,
@@ -107,63 +107,67 @@ export const getAdminSession = createServerFn({ method: "GET" }).handler(async (
  * Sets the `admin_otp_challenge` httpOnly cookie that must be present during verification.
  */
 export const requestAdminOtp = createServerFn({ method: "POST" }).handler(async () => {
-  await requireHumanVerification();
-  await purgeExpiredChallenges();
+  try {
+    await purgeExpiredChallenges();
 
-  const requestIp = getClientIp();
-  const db = getDb();
+    const requestIp = getClientIp();
+    const db = getDb();
 
-  const recentRequestCount = await countRecentOtpRequests(requestIp);
-  if (recentRequestCount >= MAX_OTP_REQUESTS_PER_HOUR) {
-    throw new Error("Too many login code requests. Try again later.");
-  }
-
-  const [recentChallenge] = await db
-    .select()
-    .from(adminLoginChallenges)
-    .where(eq(adminLoginChallenges.requestIp, requestIp))
-    .orderBy(desc(adminLoginChallenges.createdAt))
-    .limit(1);
-
-  if (recentChallenge) {
-    const elapsed = Date.now() - recentChallenge.createdAt.getTime();
-    if (elapsed < getOtpResendCooldownMs()) {
-      throw new Error("Wait a minute before requesting another code.");
+    const recentRequestCount = await countRecentOtpRequests(requestIp);
+    if (recentRequestCount >= MAX_OTP_REQUESTS_PER_HOUR) {
+      throw new Error("Too many login code requests. Try again later.");
     }
+
+    const [recentChallenge] = await db
+      .select()
+      .from(adminLoginChallenges)
+      .where(eq(adminLoginChallenges.requestIp, requestIp))
+      .orderBy(desc(adminLoginChallenges.createdAt))
+      .limit(1);
+
+    if (recentChallenge) {
+      const elapsed = Date.now() - recentChallenge.createdAt.getTime();
+      if (elapsed < getOtpResendCooldownMs()) {
+        throw new Error("Wait a minute before requesting another code.");
+      }
+    }
+
+    const code = generateOtpCode();
+    const challengeId = crypto.randomUUID();
+    const codeHash = await hashOtpCode(code);
+    const expiresAt = getOtpExpiryDate();
+
+    await db.insert(adminLoginChallenges).values({
+      id: challengeId,
+      codeHash,
+      expiresAt,
+      requestIp,
+    });
+
+    const notifier = new TelegramNotifier();
+    const result = await notifier.send(
+      [
+        "Backstage login code",
+        "",
+        code,
+        "",
+        "Expires in 10 minutes.",
+        "If you did not request this, ignore it.",
+      ].join("\n"),
+    );
+
+    if (!result.success) {
+      await db.delete(adminLoginChallenges).where(eq(adminLoginChallenges.id, challengeId));
+      throw new Error("Could not send the login code to Telegram.");
+    }
+
+    setCookie(adminOtpCookie.name, challengeId, cookieOptions(adminOtpCookie.maxAge));
+
+    return { success: true as const };
+  } catch (error: unknown) {
+    console.error("[requestAdminOtp]", unwrapUnknownError(error));
+    throw error;
   }
-
-  const code = generateOtpCode();
-  const challengeId = crypto.randomUUID();
-  const codeHash = await hashOtpCode(code);
-  const expiresAt = getOtpExpiryDate();
-
-  await db.insert(adminLoginChallenges).values({
-    id: challengeId,
-    codeHash,
-    expiresAt,
-    requestIp,
-  });
-
-  const notifier = new TelegramNotifier();
-  const result = await notifier.send(
-    [
-      "Backstage login code",
-      "",
-      code,
-      "",
-      "Expires in 10 minutes.",
-      "If you did not request this, ignore it.",
-    ].join("\n"),
-  );
-
-  if (!result.success) {
-    await db.delete(adminLoginChallenges).where(eq(adminLoginChallenges.id, challengeId));
-    throw new Error("Could not send the login code to Telegram.");
-  }
-
-  setCookie(adminOtpCookie.name, challengeId, cookieOptions(adminOtpCookie.maxAge));
-
-  return { success: true as const };
 });
 
 /**
@@ -179,7 +183,6 @@ export const requestAdminOtp = createServerFn({ method: "POST" }).handler(async 
 export const verifyAdminOtp = createServerFn({ method: "POST" })
   .validator((input: { code: string }) => verifyOtpSchema.parse(input))
   .handler(async ({ data }) => {
-    await requireHumanVerification();
     const challengeId = getCookie(adminOtpCookie.name);
     if (!challengeId) {
       throw new Error("Request a new login code first.");

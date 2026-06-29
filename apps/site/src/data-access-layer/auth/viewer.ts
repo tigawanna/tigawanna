@@ -24,6 +24,7 @@ export const viewerqueryOptions = queryOptions({
       error: null,
     };
   },
+  staleTime: 0,
 });
 
 /**
