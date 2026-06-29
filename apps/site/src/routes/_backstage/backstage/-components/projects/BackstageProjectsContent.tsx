@@ -12,19 +12,19 @@ import { backstageProjectsCollection } from "@/data-access-layer/backstage/backs
 import { TanstackDBSortSelect } from "@/routes/_backstage/backstage/-components/shared/TanstackDBColumnfilters";
 import { createSortableColumns } from "@/routes/_backstage/backstage/-components/shared/sortable-columns";
 import { useTSRSearchQuery } from "@/routes/_backstage/backstage/-hooks/use-tsr-search-query";
-import { and, eq, ilike, IR, isNull } from "@tanstack/db";
+import { and, eq, ilike, IR } from "@tanstack/db";
 import { useLiveSuspenseQuery } from "@tanstack/react-db";
 import { Link } from "@tanstack/react-router";
 import { Route, type BackstageProjectsSearch } from "../../projects";
 import { BackstageFilterField, BackstageFiltersDialog } from "../shared/BackstageFiltersDialog";
 import { BackstageProjectRow } from "./BackstageProjectRow";
 
-const projectSortableColumns = createSortableColumns(backstageProjectsCollection, [
-  { value: "repoFullName", label: "Repository" },
-  { value: "lastGithubSyncAt", label: "Last GitHub sync" },
-  { value: "createdAt", label: "Created" },
-  { value: "updatedAt", label: "Updated" },
-  { value: "attendance", label: "Attendance" },
+const projectSortableColumns = createSortableColumns(backstageGithubReposCollection, [
+  { value: "nameWithOwner", label: "Repository" },
+  { value: "name", label: "Name" },
+  { value: "pushedAt", label: "Last pushed" },
+  { value: "stargazerCount", label: "Stars" },
+  { value: "forkCount", label: "Forks" },
 ]);
 
 function combineWhereClauses(clauses: Array<IR.BasicExpression<boolean>>) {
@@ -42,8 +42,8 @@ export function BackstageProjectsContent() {
       debounce_delay: 400,
     });
 
-  const sortBy = search.sortBy ?? "repoFullName";
-  const sortDirection = search.sortDirection ?? "asc";
+  const sortBy = search.sortBy ?? "nameWithOwner";
+  const sortDirection = search.sortDirection ?? "desc";
   const visibility = search.visibility ?? "all";
   const hasActiveFilters = Boolean(debouncedValue || visibility !== "all");
 
@@ -67,8 +67,6 @@ export function BackstageProjectsContent() {
             clauses.push(eq(github.isPrivate, true));
           } else if (visibility === "public") {
             clauses.push(eq(github.isPrivate, false));
-          } else if (visibility === "unknown") {
-            clauses.push(isNull(github));
           }
 
           return combineWhereClauses(clauses);
@@ -78,14 +76,14 @@ export function BackstageProjectsContent() {
       return query
         .orderBy(({ projects }) => {
           switch (sortBy) {
-            case "lastGithubSyncAt":
+            case "name":
+              return projects.repoFullName;
+            case "pushedAt":
               return projects.lastGithubSyncAt;
-            case "createdAt":
-              return projects.createdAt;
-            case "updatedAt":
-              return projects.updatedAt;
-            case "attendance":
+            case "stargazerCount":
               return projects.attendance;
+            case "forkCount":
+              return projects.updatedAt;
             default:
               return projects.repoFullName;
           }
@@ -150,19 +148,18 @@ export function BackstageProjectsContent() {
                 <SelectItem value="all">All visibility</SelectItem>
                 <SelectItem value="public">Public</SelectItem>
                 <SelectItem value="private">Private</SelectItem>
-                <SelectItem value="unknown">Unknown</SelectItem>
               </SelectContent>
             </Select>
           </BackstageFilterField>
           <BackstageFilterField label="Sort">
             <TanstackDBSortSelect
               layout="stacked"
-              collection={backstageProjectsCollection}
+              collection={backstageGithubReposCollection}
               sortableColumns={projectSortableColumns}
               search={search}
               navigate={navigate}
-              defaultSortBy="repoFullName"
-              defaultSortDirection="asc"
+              defaultSortBy="nameWithOwner"
+              defaultSortDirection="desc"
             />
           </BackstageFilterField>
         </BackstageFiltersDialog>

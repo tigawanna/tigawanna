@@ -7,11 +7,11 @@ import { BackstageRepoPageFallback } from "../-components/shared/BackstageRepoPa
 
 export const backstageProjectsSearchSchema = z.object({
   sq: z.string().optional(),
-  sortBy: z
-    .enum(["repoFullName", "lastGithubSyncAt", "createdAt", "updatedAt", "attendance"])
-    .optional(),
+  sortBy: z.enum(["nameWithOwner", "name", "pushedAt", "stargazerCount", "forkCount"]).optional(),
   sortDirection: z.enum(["asc", "desc"]).optional(),
-  visibility: z.enum(["all", "public", "private", "unknown"]).optional(),
+  tracked: z.enum(["all", "tracked", "untracked"]).optional(),
+  visibility: z.enum(["all", "public", "private"]).optional(),
+  archived: z.enum(["all", "active", "archived"]).optional(),
 });
 
 export type BackstageProjectsSearch = z.infer<typeof backstageProjectsSearchSchema>;

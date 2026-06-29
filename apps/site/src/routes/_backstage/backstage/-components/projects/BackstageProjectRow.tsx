@@ -18,13 +18,19 @@ type BackstageProjectRowProps = {
   project: BackstageProject;
   isPrivate: boolean | null;
   disabled?: boolean;
+  showImportedBadge?: boolean;
 };
 
 function attendanceLabel(attendance: string) {
   return attendance.replaceAll("_", " ");
 }
 
-export function BackstageProjectRow({ project, isPrivate, disabled }: BackstageProjectRowProps) {
+export function BackstageProjectRow({
+  project,
+  isPrivate,
+  disabled,
+  showImportedBadge,
+}: BackstageProjectRowProps) {
   const [pendingAction, setPendingAction] = useState<"visibility" | "remove" | "delete" | null>(
     null,
   );
@@ -91,6 +97,11 @@ export function BackstageProjectRow({ project, isPrivate, disabled }: BackstageP
           >
             {project.repoFullName}
           </a>
+          {showImportedBadge ? (
+            <Badge variant="secondary" data-test="project-status-badge">
+              Imported
+            </Badge>
+          ) : null}
           <Badge variant="secondary">{attendanceLabel(project.attendance)}</Badge>
           {project.hasCustomSocialPreview ? <Badge variant="outline">custom preview</Badge> : null}
         </div>

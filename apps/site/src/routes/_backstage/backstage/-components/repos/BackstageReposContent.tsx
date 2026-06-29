@@ -20,7 +20,7 @@ import { unwrapUnknownError } from "@/utils/errors";
 import { and, eq, ilike, IR, isNull, not, or } from "@tanstack/db";
 import { useLiveSuspenseQuery } from "@tanstack/react-db";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Route, type BackstageReposSearch } from "../../repos";
 import { BackstageFilterField, BackstageFiltersDialog } from "../shared/BackstageFiltersDialog";
@@ -131,19 +131,6 @@ export function BackstageReposContent() {
   });
   const [runEnrichmentOnImport, setRunEnrichmentOnImport] = useState(false);
   const [importingRepo, setImportingRepo] = useState<string | null>(null);
-  const githubErrorsWarned = useRef(false);
-
-  useEffect(() => {
-    if (githubErrorsWarned.current || githubErrors.length === 0) {
-      return;
-    }
-    githubErrorsWarned.current = true;
-    const description =
-      githubErrors.length > 1
-        ? `${githubErrors[0]} (+${githubErrors.length - 1} more)`
-        : githubErrors[0];
-    toast.warning("Some repos could not be loaded from GitHub", { description });
-  }, [githubErrors]);
 
   const trackedCount = repoRows.filter((row) => row.isTracked).length;
 
