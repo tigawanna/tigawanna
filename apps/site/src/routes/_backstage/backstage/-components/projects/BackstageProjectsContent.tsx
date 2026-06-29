@@ -17,7 +17,7 @@ import { useLiveSuspenseQuery } from "@tanstack/react-db";
 import { Link } from "@tanstack/react-router";
 import { Route, type BackstageProjectsSearch } from "../../projects";
 import { BackstageFilterField, BackstageFiltersDialog } from "../shared/BackstageFiltersDialog";
-import { BackstageProjectRow } from "./BackstageProjectRow";
+import { BackstageProjectRow, resolveGithubRepo } from "./BackstageProjectRow";
 
 const projectSortableColumns = createSortableColumns(backstageGithubReposCollection, [
   { value: "nameWithOwner", label: "Repository" },
@@ -90,7 +90,7 @@ export function BackstageProjectsContent() {
         }, sortDirection)
         .select(({ projects, github }) => ({
           project: projects,
-          isPrivate: github == null ? null : github.isPrivate,
+          github,
         }));
     },
     [debouncedValue, sortBy, sortDirection, visibility],
@@ -193,8 +193,8 @@ export function BackstageProjectsContent() {
             {projects.map((row) => (
               <BackstageProjectRow
                 key={row.project.githubRepoId}
+                github={resolveGithubRepo(row.github, row.project)}
                 project={row.project}
-                isPrivate={row.isPrivate ?? null}
               />
             ))}
           </CardContent>
