@@ -49,24 +49,6 @@ function cookieOptions(maxAge: number) {
   };
 }
 
-async function readAdminViewerFromCookie() {
-  const token = getCookie(adminSessionCookie.name);
-  if (!token) {
-    return null;
-  }
-
-  const payload = await verifyAdminSessionToken(token);
-  if (!payload) {
-    return null;
-  }
-
-  return {
-    isAdmin: true as const,
-    name: payload.name,
-    email: payload.email,
-  };
-}
-
 async function purgeExpiredChallenges() {
   const db = getDb();
   await db.delete(adminLoginChallenges).where(lt(adminLoginChallenges.expiresAt, new Date()));
@@ -97,7 +79,21 @@ function invalidateOtpChallengeCookie() {
  * Returns `null` when unauthenticated or when the token is invalid/expired.
  */
 export const getAdminSession = createServerFn({ method: "GET" }).handler(async () => {
-  return readAdminViewerFromCookie();
+  const token = getCookie(adminSessionCookie.name);
+  if (!token) {
+    return null;
+  }
+
+  const payload = await verifyAdminSessionToken(token);
+  if (!payload) {
+    return null;
+  }
+
+  return {
+    isAdmin: true as const,
+    name: payload.name,
+    email: payload.email,
+  };
 });
 
 /**
