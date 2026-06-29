@@ -16,9 +16,14 @@ export const backstageProjectsSearchSchema = z.object({
 
 export type BackstageProjectsSearch = z.infer<typeof backstageProjectsSearchSchema>;
 
-const BackstageProjectsContent = lazy(() =>
-  import("../-components/projects/BackstageProjectsContent").then((module) => ({
-    default: module.BackstageProjectsContent,
+// const BackstageProjectsContent = lazy(() =>
+//   import("../-components/projects/BackstageProjectsContent").then((module) => ({
+//     default: module.BackstageProjectsContent,
+//   })),
+// );
+const BackstageProjects = lazy(() =>
+  import("../-components/projects/BackstageProjects").then((module) => ({
+    default: module.BackstageProjects,
   })),
 );
 
@@ -36,7 +41,7 @@ function BackstageProjectsPage() {
   return (
     <ClientOnly fallback={<BackstageRepoPageFallback />}>
       <Suspense fallback={<BackstageRepoPageFallback />}>
-        <BackstageProjectsContent />
+        <BackstageProjects />
       </Suspense>
     </ClientOnly>
   );
