@@ -1,13 +1,16 @@
 import { getServerEnv } from "@/lib/envs/server-env";
+import { z } from "zod";
 
 const SESSION_COOKIE = "admin_session";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 30;
 
-interface AdminSessionPayload {
-  exp: number;
-  email: string;
-  name: string;
-}
+const adminSessionPayloadSchema = z.object({
+  exp: z.number().int().positive(),
+  email: z.string().min(1),
+  name: z.string().min(1),
+});
+
+type AdminSessionPayload = z.infer<typeof adminSessionPayloadSchema>;
 
 function getSessionSecret() {
   const secret = getServerEnv().ADMIN_SESSION_SECRET;
@@ -46,6 +49,15 @@ function fromBase64Url(value: string) {
   return bytes;
 }
 
+/**
+ * Creates a signed, httpOnly-compatible admin session token for the given identity.
+ *
+ * Token format: `{base64url(payload)}.{base64url(hmac-sha256)}`.
+ *
+ * @param email - Admin email stored in the session payload.
+ * @param name - Display name derived from or paired with the admin email.
+ * @returns Signed session token suitable for the `admin_session` cookie.
+ */
 export async function createAdminSessionToken(email: string, name: string) {
   const payload: AdminSessionPayload = {
     exp: Math.floor(Date.now() / 1000) + SESSION_MAX_AGE_SECONDS,
@@ -58,6 +70,12 @@ export async function createAdminSessionToken(email: string, name: string) {
   return `${payloadPart}.${toBase64Url(new Uint8Array(signature))}`;
 }
 
+/**
+ * Verifies an admin session token signature and expiry.
+ *
+ * @param token - Value from the `admin_session` cookie.
+ * @returns Parsed payload when valid; `null` for invalid, expired, or malformed tokens.
+ */
 export async function verifyAdminSessionToken(token: string) {
   const [payloadPart, signaturePart] = token.split(".");
   if (!payloadPart || !signaturePart) {
@@ -76,16 +94,30 @@ export async function verifyAdminSessionToken(token: string) {
     return null;
   }
 
-  const payload = JSON.parse(
-    new TextDecoder().decode(fromBase64Url(payloadPart)),
-  ) as AdminSessionPayload;
-  if (payload.exp < Math.floor(Date.now() / 1000)) {
+  let decoded: unknown;
+  try {
+    decoded = JSON.parse(new TextDecoder().decode(fromBase64Url(payloadPart)));
+  } catch {
     return null;
   }
 
-  return payload;
+  const parsed = adminSessionPayloadSchema.safeParse(decoded);
+  if (!parsed.success) {
+    return null;
+  }
+
+  if (parsed.data.exp < Math.floor(Date.now() / 1000)) {
+    return null;
+  }
+
+  return parsed.data;
 }
 
+/**
+ * Cookie metadata for the signed admin session token.
+ *
+ * `maxAge` matches the 30-day expiry embedded in the token payload.
+ */
 export const adminSessionCookie = {
   name: SESSION_COOKIE,
   maxAge: SESSION_MAX_AGE_SECONDS,

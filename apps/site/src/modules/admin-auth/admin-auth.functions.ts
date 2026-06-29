@@ -2,16 +2,20 @@ import {
   adminOtpCookie,
   generateOtpCode,
   getOtpExpiryDate,
+  getOtpRequestWindowMs,
   getOtpResendCooldownMs,
   hashOtpCode,
+  MAX_OTP_REQUESTS_PER_HOUR,
+  MAX_OTP_VERIFY_ATTEMPTS,
   verifyOtpCode,
 } from "@/modules/admin-auth/otp";
+import { getClientIp } from "@/modules/admin-auth/request-ip";
 import {
   adminSessionCookie,
   createAdminSessionToken,
   verifyAdminSessionToken,
 } from "@/modules/admin-auth/session";
-import { adminLoginChallenges, and, desc, eq, gt, lt } from "@repo/db";
+import { adminLoginChallenges, and, count, desc, eq, gt, lt } from "@repo/db";
 import { getDb } from "@/lib/db/get-db";
 import { TelegramNotifier } from "@/lib/telegram/client";
 import { getServerEnv } from "@/lib/envs/server-env";
@@ -24,6 +28,7 @@ import {
 } from "@tanstack/react-start/server";
 import { z } from "zod";
 
+/** Authenticated backstage viewer returned after a successful OTP login. */
 export type AdminViewer = {
   isAdmin: true;
   name: string;
@@ -50,20 +55,16 @@ async function readAdminViewerFromCookie() {
     return null;
   }
 
-  try {
-    const payload = await verifyAdminSessionToken(token);
-    if (!payload) {
-      return null;
-    }
-
-    return {
-      isAdmin: true as const,
-      name: payload.name,
-      email: payload.email,
-    };
-  } catch {
+  const payload = await verifyAdminSessionToken(token);
+  if (!payload) {
     return null;
   }
+
+  return {
+    isAdmin: true as const,
+    name: payload.name,
+    email: payload.email,
+  };
 }
 
 async function purgeExpiredChallenges() {
@@ -71,21 +72,61 @@ async function purgeExpiredChallenges() {
   await db.delete(adminLoginChallenges).where(lt(adminLoginChallenges.expiresAt, new Date()));
 }
 
+async function countRecentOtpRequests(requestIp: string) {
+  const db = getDb();
+  const windowStart = new Date(Date.now() - getOtpRequestWindowMs());
+  const [result] = await db
+    .select({ total: count() })
+    .from(adminLoginChallenges)
+    .where(
+      and(
+        eq(adminLoginChallenges.requestIp, requestIp),
+        gt(adminLoginChallenges.createdAt, windowStart),
+      ),
+    );
+
+  return result?.total ?? 0;
+}
+
+function invalidateOtpChallengeCookie() {
+  deleteCookie(adminOtpCookie.name, { path: "/" });
+}
+
+/**
+ * Reads the current admin session from the `admin_session` cookie.
+ * Returns `null` when unauthenticated or when the token is invalid/expired.
+ */
 export const getAdminSession = createServerFn({ method: "GET" }).handler(async () => {
   return readAdminViewerFromCookie();
 });
 
+/**
+ * Starts a backstage login by creating an OTP challenge and sending the code to Telegram.
+ *
+ * Rate limits:
+ * - One resend per client IP every {@link getOtpResendCooldownMs}.
+ * - At most {@link MAX_OTP_REQUESTS_PER_HOUR} requests per client IP per hour.
+ *
+ * Sets the `admin_otp_challenge` httpOnly cookie that must be present during verification.
+ */
 export const requestAdminOtp = createServerFn({ method: "POST" }).handler(async () => {
   await purgeExpiredChallenges();
 
+  const requestIp = getClientIp();
   const db = getDb();
-  const latestChallenge = await db
+
+  const recentRequestCount = await countRecentOtpRequests(requestIp);
+  if (recentRequestCount >= MAX_OTP_REQUESTS_PER_HOUR) {
+    throw new Error("Too many login code requests. Try again later.");
+  }
+
+  const [recentChallenge] = await db
     .select()
     .from(adminLoginChallenges)
+    .where(eq(adminLoginChallenges.requestIp, requestIp))
     .orderBy(desc(adminLoginChallenges.createdAt))
     .limit(1);
 
-  const recentChallenge = latestChallenge[0];
   if (recentChallenge) {
     const elapsed = Date.now() - recentChallenge.createdAt.getTime();
     if (elapsed < getOtpResendCooldownMs()) {
@@ -102,6 +143,7 @@ export const requestAdminOtp = createServerFn({ method: "POST" }).handler(async 
     id: challengeId,
     codeHash,
     expiresAt,
+    requestIp,
   });
 
   const notifier = new TelegramNotifier();
@@ -126,6 +168,16 @@ export const requestAdminOtp = createServerFn({ method: "POST" }).handler(async 
   return { success: true as const };
 });
 
+/**
+ * Completes backstage login by verifying the OTP against the challenge bound to
+ * the `admin_otp_challenge` cookie.
+ *
+ * On success, clears the OTP cookie, sets the signed `admin_session` cookie,
+ * and returns the authenticated viewer.
+ *
+ * Failed attempts increment a per-challenge counter and invalidate the challenge
+ * after {@link MAX_OTP_VERIFY_ATTEMPTS} failures.
+ */
 export const verifyAdminOtp = createServerFn({ method: "POST" })
   .validator((input: { code: string }) => verifyOtpSchema.parse(input))
   .handler(async ({ data }) => {
@@ -147,24 +199,36 @@ export const verifyAdminOtp = createServerFn({ method: "POST" })
         ),
       );
 
-    if (!challenge || challenge.id !== challengeId) {
-      deleteCookie(adminOtpCookie.name, { path: "/" });
+    if (!challenge) {
+      invalidateOtpChallengeCookie();
       throw new Error("This login code expired. Request a new one.");
     }
 
     const isValid = await verifyOtpCode(data.code, challenge.codeHash);
     if (!isValid) {
+      const nextAttemptCount = challenge.attemptCount + 1;
+      if (nextAttemptCount >= MAX_OTP_VERIFY_ATTEMPTS) {
+        await db.delete(adminLoginChallenges).where(eq(adminLoginChallenges.id, challengeId));
+        invalidateOtpChallengeCookie();
+        throw new Error("Too many failed attempts. Request a new code.");
+      }
+
+      await db
+        .update(adminLoginChallenges)
+        .set({ attemptCount: nextAttemptCount })
+        .where(eq(adminLoginChallenges.id, challengeId));
+
       throw new Error("Invalid login code.");
     }
 
-    await db.delete(adminLoginChallenges).where(gt(adminLoginChallenges.expiresAt, new Date(0)));
+    await db.delete(adminLoginChallenges).where(eq(adminLoginChallenges.id, challengeId));
 
     const env = getServerEnv();
     const email = env.ADMIN_EMAIL ?? "admin@backstage.local";
     const name = email.split("@")[0] ?? "Admin";
     const sessionToken = await createAdminSessionToken(email, name);
 
-    deleteCookie(adminOtpCookie.name, { path: "/" });
+    invalidateOtpChallengeCookie();
     setCookie(adminSessionCookie.name, sessionToken, cookieOptions(adminSessionCookie.maxAge));
 
     return {
@@ -174,8 +238,12 @@ export const verifyAdminOtp = createServerFn({ method: "POST" })
     };
   });
 
+/**
+ * Clears backstage auth cookies and ends the current admin session in the browser.
+ * Existing signed session tokens remain valid until expiry if reused directly.
+ */
 export const signOutAdmin = createServerFn({ method: "POST" }).handler(async () => {
   deleteCookie(adminSessionCookie.name, { path: "/" });
-  deleteCookie(adminOtpCookie.name, { path: "/" });
+  invalidateOtpChallengeCookie();
   return { success: true as const };
 });

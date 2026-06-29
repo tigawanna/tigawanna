@@ -467,3 +467,7 @@ DON'T
       toast.error("Failed to create organization", { description: String(err?.message ?? err) });
     },
 ```
+
+## general rules
+- documnent all util functions with jsdoc
+- run vp check after every big changes

@@ -20,7 +20,6 @@ import { Route as PreviewErrorIndexRouteImport } from './routes/preview/error/in
 import { Route as BackstageBackstageIndexRouteImport } from './routes/_backstage/backstage/index'
 import { Route as BackstageBackstageWorkflowRouteImport } from './routes/_backstage/backstage/workflow'
 import { Route as BackstageBackstageReposRouteImport } from './routes/_backstage/backstage/repos'
-import { Route as BackstageBackstageProjectsEnrichmentRouteImport } from './routes/_backstage/backstage/projects-enrichment'
 import { Route as BackstageBackstageProjectsRouteImport } from './routes/_backstage/backstage/projects'
 import { Route as BackstageBackstageMessagesRouteImport } from './routes/_backstage/backstage/messages'
 import { Route as BackstageBackstageJournalRouteImport } from './routes/_backstage/backstage/journal'
@@ -81,12 +80,6 @@ const BackstageBackstageReposRoute = BackstageBackstageReposRouteImport.update({
   path: '/backstage/repos',
   getParentRoute: () => BackstageLayoutRoute,
 } as any)
-const BackstageBackstageProjectsEnrichmentRoute =
-  BackstageBackstageProjectsEnrichmentRouteImport.update({
-    id: '/backstage/projects-enrichment',
-    path: '/backstage/projects-enrichment',
-    getParentRoute: () => BackstageLayoutRoute,
-  } as any)
 const BackstageBackstageProjectsRoute =
   BackstageBackstageProjectsRouteImport.update({
     id: '/backstage/projects',
@@ -122,7 +115,6 @@ export interface FileRoutesByFullPath {
   '/backstage/journal': typeof BackstageBackstageJournalRoute
   '/backstage/messages': typeof BackstageBackstageMessagesRoute
   '/backstage/projects': typeof BackstageBackstageProjectsRoute
-  '/backstage/projects-enrichment': typeof BackstageBackstageProjectsEnrichmentRoute
   '/backstage/repos': typeof BackstageBackstageReposRoute
   '/backstage/workflow': typeof BackstageBackstageWorkflowRoute
   '/backstage/': typeof BackstageBackstageIndexRoute
@@ -139,7 +131,6 @@ export interface FileRoutesByTo {
   '/backstage/journal': typeof BackstageBackstageJournalRoute
   '/backstage/messages': typeof BackstageBackstageMessagesRoute
   '/backstage/projects': typeof BackstageBackstageProjectsRoute
-  '/backstage/projects-enrichment': typeof BackstageBackstageProjectsEnrichmentRoute
   '/backstage/repos': typeof BackstageBackstageReposRoute
   '/backstage/workflow': typeof BackstageBackstageWorkflowRoute
   '/backstage': typeof BackstageBackstageIndexRoute
@@ -158,7 +149,6 @@ export interface FileRoutesById {
   '/_backstage/backstage/journal': typeof BackstageBackstageJournalRoute
   '/_backstage/backstage/messages': typeof BackstageBackstageMessagesRoute
   '/_backstage/backstage/projects': typeof BackstageBackstageProjectsRoute
-  '/_backstage/backstage/projects-enrichment': typeof BackstageBackstageProjectsEnrichmentRoute
   '/_backstage/backstage/repos': typeof BackstageBackstageReposRoute
   '/_backstage/backstage/workflow': typeof BackstageBackstageWorkflowRoute
   '/_backstage/backstage/': typeof BackstageBackstageIndexRoute
@@ -177,7 +167,6 @@ export interface FileRouteTypes {
     | '/backstage/journal'
     | '/backstage/messages'
     | '/backstage/projects'
-    | '/backstage/projects-enrichment'
     | '/backstage/repos'
     | '/backstage/workflow'
     | '/backstage/'
@@ -194,7 +183,6 @@ export interface FileRouteTypes {
     | '/backstage/journal'
     | '/backstage/messages'
     | '/backstage/projects'
-    | '/backstage/projects-enrichment'
     | '/backstage/repos'
     | '/backstage/workflow'
     | '/backstage'
@@ -212,7 +200,6 @@ export interface FileRouteTypes {
     | '/_backstage/backstage/journal'
     | '/_backstage/backstage/messages'
     | '/_backstage/backstage/projects'
-    | '/_backstage/backstage/projects-enrichment'
     | '/_backstage/backstage/repos'
     | '/_backstage/backstage/workflow'
     | '/_backstage/backstage/'
@@ -310,13 +297,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BackstageBackstageReposRouteImport
       parentRoute: typeof BackstageLayoutRoute
     }
-    '/_backstage/backstage/projects-enrichment': {
-      id: '/_backstage/backstage/projects-enrichment'
-      path: '/backstage/projects-enrichment'
-      fullPath: '/backstage/projects-enrichment'
-      preLoaderRoute: typeof BackstageBackstageProjectsEnrichmentRouteImport
-      parentRoute: typeof BackstageLayoutRoute
-    }
     '/_backstage/backstage/projects': {
       id: '/_backstage/backstage/projects'
       path: '/backstage/projects'
@@ -352,7 +332,6 @@ interface BackstageLayoutRouteChildren {
   BackstageBackstageJournalRoute: typeof BackstageBackstageJournalRoute
   BackstageBackstageMessagesRoute: typeof BackstageBackstageMessagesRoute
   BackstageBackstageProjectsRoute: typeof BackstageBackstageProjectsRoute
-  BackstageBackstageProjectsEnrichmentRoute: typeof BackstageBackstageProjectsEnrichmentRoute
   BackstageBackstageReposRoute: typeof BackstageBackstageReposRoute
   BackstageBackstageWorkflowRoute: typeof BackstageBackstageWorkflowRoute
   BackstageBackstageIndexRoute: typeof BackstageBackstageIndexRoute
@@ -363,8 +342,6 @@ const BackstageLayoutRouteChildren: BackstageLayoutRouteChildren = {
   BackstageBackstageJournalRoute: BackstageBackstageJournalRoute,
   BackstageBackstageMessagesRoute: BackstageBackstageMessagesRoute,
   BackstageBackstageProjectsRoute: BackstageBackstageProjectsRoute,
-  BackstageBackstageProjectsEnrichmentRoute:
-    BackstageBackstageProjectsEnrichmentRoute,
   BackstageBackstageReposRoute: BackstageBackstageReposRoute,
   BackstageBackstageWorkflowRoute: BackstageBackstageWorkflowRoute,
   BackstageBackstageIndexRoute: BackstageBackstageIndexRoute,

@@ -11,7 +11,15 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 const searchparams = z.object({
-  returnTo: z.string().default("/backstage"),
+  returnTo: z
+    .string()
+    .default("/backstage")
+    .transform((value) => {
+      if (value.startsWith("/") && !value.startsWith("//")) {
+        return value;
+      }
+      return "/backstage";
+    }),
 });
 
 export const Route = createFileRoute("/backstage/sign-in")({

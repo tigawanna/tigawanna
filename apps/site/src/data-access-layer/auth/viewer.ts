@@ -10,6 +10,11 @@ import { adminSessionCookie, verifyAdminSessionToken } from "@/modules/admin-aut
 
 export type TViewer = AdminViewer;
 
+/**
+ * React Query options for the current admin viewer session.
+ *
+ * Loads via {@link getAdminSession}; `data` is `null` when signed out.
+ */
 export const viewerqueryOptions = queryOptions({
   queryKey: ["viewer"],
   queryFn: async () => {
@@ -21,6 +26,11 @@ export const viewerqueryOptions = queryOptions({
   },
 });
 
+/**
+ * Client hook exposing the admin viewer, admin flag, and sign-out mutation.
+ *
+ * Sign-out clears server cookies, invalidates the viewer query, and redirects home.
+ */
 export function useViewer() {
   const queryClient = useQueryClient();
   const logoutMutation = useMutation({
@@ -40,6 +50,13 @@ export function useViewer() {
   } as const;
 }
 
+/**
+ * Server middleware that attaches an admin viewer to backstage route context.
+ *
+ * When {@link isAuthBypassEnabledOnServer} is active, injects a synthetic admin viewer.
+ * Otherwise verifies the `admin_session` cookie and redirects unauthenticated requests
+ * to `/backstage/sign-in` with a `returnTo` search param.
+ */
 export const backstageViewerMiddleware = createMiddleware().server(async ({ next, request }) => {
   if (isAuthBypassEnabledOnServer(getServerEnv())) {
     const email = getServerEnv().ADMIN_EMAIL ?? "admin@backstage.local";

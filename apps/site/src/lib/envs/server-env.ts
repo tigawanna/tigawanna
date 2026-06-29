@@ -2,6 +2,7 @@ import { DEFAULT_DATABASE_URL } from "@repo/db";
 
 export type ServerEnv = {
   ADMIN_EMAIL: string;
+  ADMIN_OTP_PEPPER?: string;
   ADMIN_SESSION_SECRET: string;
   TELEGRAM_BOT_TOKEN: string;
   TELEGRAM_CHANNEL_ID: string;
@@ -18,6 +19,7 @@ export type ServerEnv = {
 export function getServerEnv(): ServerEnv {
   return {
     ADMIN_EMAIL: process.env.ADMIN_EMAIL ?? "",
+    ADMIN_OTP_PEPPER: process.env.ADMIN_OTP_PEPPER,
     ADMIN_SESSION_SECRET: process.env.ADMIN_SESSION_SECRET ?? "",
     TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN ?? "",
     TELEGRAM_CHANNEL_ID: process.env.TELEGRAM_CHANNEL_ID ?? "",

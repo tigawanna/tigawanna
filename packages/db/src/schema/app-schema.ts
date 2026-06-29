@@ -41,11 +41,16 @@ export const adminLoginChallenges = sqliteTable(
     id: text("id").primaryKey(),
     codeHash: text("code_hash").notNull(),
     expiresAt: integer("expires_at", { mode: "timestamp_ms" }).notNull(),
+    attemptCount: integer("attempt_count").notNull().default(0),
+    requestIp: text("request_ip"),
     createdAt: integer("created_at", { mode: "timestamp_ms" })
       .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
       .notNull(),
   },
-  (table) => [index("admin_login_challenges_expires_at_idx").on(table.expiresAt)],
+  (table) => [
+    index("admin_login_challenges_expires_at_idx").on(table.expiresAt),
+    index("admin_login_challenges_request_ip_idx").on(table.requestIp),
+  ],
 );
 
 export type ContactMessageRow = typeof contactMessages.$inferSelect;
