@@ -1,5 +1,7 @@
 import { getAdminSession, signOutAdmin } from "@/modules/admin-auth/admin-auth.functions";
 import type { AdminViewer } from "@/modules/admin-auth/admin-auth.functions";
+import { getAdminIdentity } from "@/modules/admin-auth/admin-identity";
+import { logAuthEvent } from "@/modules/admin-auth/auth-log";
 import { isAuthBypassEnabledOnServer } from "@/data-access-layer/auth/auth-utils";
 import { getServerEnv } from "@/lib/envs/server-env";
 import { queryOptions, useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
@@ -59,13 +61,22 @@ export function useViewer() {
  * to `/backstage/sign-in` with a `returnTo` search param.
  */
 export const backstageViewerMiddleware = createMiddleware().server(async ({ next, request }) => {
+  const pathname = new URL(request.url).pathname;
+
   if (isAuthBypassEnabledOnServer(getServerEnv())) {
-    const email = getServerEnv().ADMIN_EMAIL ?? "admin@backstage.local";
+    const { email, name } = getAdminIdentity();
+    logAuthEvent({
+      action: "backstage_route_guard",
+      outcome: "success",
+      reason: "auth_bypass",
+      email,
+      path: pathname,
+    });
     return await next({
       context: {
         viewer: {
           isAdmin: true as const,
-          name: email.split("@")[0] ?? "Admin",
+          name,
           email,
         },
       },
@@ -74,17 +85,34 @@ export const backstageViewerMiddleware = createMiddleware().server(async ({ next
 
   const token = getCookieFromRequest(request, adminSessionCookie.name);
   if (!token) {
-    const pathname = new URL(request.url).pathname;
     const returnTo = pathname.startsWith("/backstage/sign-in") ? "/backstage" : pathname;
+    logAuthEvent({
+      action: "backstage_route_guard",
+      outcome: "redirect",
+      reason: "missing_session",
+      path: pathname,
+    });
     throw redirect({ to: "/backstage/sign-in", search: { returnTo } });
   }
 
   const payload = await verifyAdminSessionToken(token);
   if (!payload) {
-    const pathname = new URL(request.url).pathname;
     const returnTo = pathname.startsWith("/backstage/sign-in") ? "/backstage" : pathname;
+    logAuthEvent({
+      action: "backstage_route_guard",
+      outcome: "redirect",
+      reason: "invalid_session",
+      path: pathname,
+    });
     throw redirect({ to: "/backstage/sign-in", search: { returnTo } });
   }
+
+  logAuthEvent({
+    action: "backstage_route_guard",
+    outcome: "success",
+    email: payload.email,
+    path: pathname,
+  });
 
   return await next({
     context: {

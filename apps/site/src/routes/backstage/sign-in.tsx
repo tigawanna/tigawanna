@@ -8,6 +8,7 @@ import { Link, createFileRoute, redirect, useNavigate } from "@tanstack/react-ro
 import { useState } from "react";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { toast } from "sonner";
+import { parseError } from "evlog";
 import { z } from "zod";
 
 const searchparams = z.object({
@@ -40,6 +41,11 @@ export const Route = createFileRoute("/backstage/sign-in")({
   }),
 });
 
+function authErrorDescription(error: unknown) {
+  const { message, why, fix } = parseError(error);
+  return [why, fix].filter(Boolean).join(" ") || message;
+}
+
 function BackstageSignInPage() {
   const { returnTo } = Route.useSearch();
   const navigate = useNavigate();
@@ -56,7 +62,7 @@ function BackstageSignInPage() {
     },
     onError: (error: unknown) => {
       toast.error("Could not send login code", {
-        description: error instanceof Error ? error.message : "Please try again.",
+        description: authErrorDescription(error),
       });
     },
   });
@@ -73,7 +79,7 @@ function BackstageSignInPage() {
     },
     onError: (error: unknown) => {
       toast.error("Sign in failed", {
-        description: error instanceof Error ? error.message : "Please try again.",
+        description: authErrorDescription(error),
       });
     },
   });

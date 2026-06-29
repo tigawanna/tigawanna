@@ -7,6 +7,7 @@ import { createLogger, defineConfig } from "vite-plus";
 import { workflow } from "workflow/vite";
 
 import tailwindcss from "@tailwindcss/vite";
+import evlog from "evlog/vite";
 
 const logger = createLogger();
 const loggerWarn = logger.warn.bind(logger);
@@ -34,6 +35,7 @@ const config = defineConfig({
   plugins: [
     workflow(),
     devtools(),
+    evlog({ service: "tigawanna-site", sourceLocation: "dev" }),
     tanstackStart({
       router: {
         routeToken: "layout",

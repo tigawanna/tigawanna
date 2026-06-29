@@ -11,6 +11,17 @@ import {
 } from "@/modules/admin-auth/otp";
 import { getClientIp } from "@/modules/admin-auth/request-ip";
 import {
+  adminOtpAttemptsExceededError,
+  adminOtpChallengeMissingError,
+  adminOtpCooldownError,
+  adminOtpExpiredError,
+  adminOtpInvalidError,
+  adminOtpRateLimitedError,
+  adminOtpTelegramError,
+} from "@/modules/admin-auth/auth-errors";
+import { getAdminIdentity } from "@/modules/admin-auth/admin-identity";
+import { logAuthEvent } from "@/modules/admin-auth/auth-log";
+import {
   adminSessionCookie,
   createAdminSessionToken,
   verifyAdminSessionToken,
@@ -18,8 +29,6 @@ import {
 import { adminLoginChallenges, and, count, desc, eq, gt, lt } from "@repo/db";
 import { getDb } from "@/lib/db/get-db";
 import { TelegramNotifier } from "@/lib/telegram/client";
-import { getServerEnv } from "@/lib/envs/server-env";
-import { unwrapUnknownError } from "@/utils/errors";
 import { createServerFn } from "@tanstack/react-start";
 import {
   deleteCookie,
@@ -82,13 +91,29 @@ function invalidateOtpChallengeCookie() {
 export const getAdminSession = createServerFn({ method: "GET" }).handler(async () => {
   const token = getCookie(adminSessionCookie.name);
   if (!token) {
+    logAuthEvent({
+      action: "get_admin_session",
+      outcome: "failure",
+      reason: "missing_cookie",
+    });
     return null;
   }
 
   const payload = await verifyAdminSessionToken(token);
   if (!payload) {
+    logAuthEvent({
+      action: "get_admin_session",
+      outcome: "failure",
+      reason: "invalid_token",
+    });
     return null;
   }
+
+  logAuthEvent({
+    action: "get_admin_session",
+    outcome: "success",
+    email: payload.email,
+  });
 
   return {
     isAdmin: true as const,
@@ -107,67 +132,87 @@ export const getAdminSession = createServerFn({ method: "GET" }).handler(async (
  * Sets the `admin_otp_challenge` httpOnly cookie that must be present during verification.
  */
 export const requestAdminOtp = createServerFn({ method: "POST" }).handler(async () => {
-  try {
-    await purgeExpiredChallenges();
+  await purgeExpiredChallenges();
 
-    const requestIp = getClientIp();
-    const db = getDb();
+  const requestIp = getClientIp();
+  const db = getDb();
 
-    const recentRequestCount = await countRecentOtpRequests(requestIp);
-    if (recentRequestCount >= MAX_OTP_REQUESTS_PER_HOUR) {
-      throw new Error("Too many login code requests. Try again later.");
-    }
-
-    const [recentChallenge] = await db
-      .select()
-      .from(adminLoginChallenges)
-      .where(eq(adminLoginChallenges.requestIp, requestIp))
-      .orderBy(desc(adminLoginChallenges.createdAt))
-      .limit(1);
-
-    if (recentChallenge) {
-      const elapsed = Date.now() - recentChallenge.createdAt.getTime();
-      if (elapsed < getOtpResendCooldownMs()) {
-        throw new Error("Wait a minute before requesting another code.");
-      }
-    }
-
-    const code = generateOtpCode();
-    const challengeId = crypto.randomUUID();
-    const codeHash = await hashOtpCode(code);
-    const expiresAt = getOtpExpiryDate();
-
-    await db.insert(adminLoginChallenges).values({
-      id: challengeId,
-      codeHash,
-      expiresAt,
+  const recentRequestCount = await countRecentOtpRequests(requestIp);
+  if (recentRequestCount >= MAX_OTP_REQUESTS_PER_HOUR) {
+    logAuthEvent({
+      action: "request_admin_otp",
+      outcome: "failure",
+      reason: "rate_limited",
       requestIp,
     });
-
-    const notifier = new TelegramNotifier();
-    const result = await notifier.send(
-      [
-        "Backstage login code",
-        "",
-        code,
-        "",
-        "Expires in 10 minutes.",
-        "If you did not request this, ignore it.",
-      ].join("\n"),
-    );
-
-    if (!result.success) {
-      await db.delete(adminLoginChallenges).where(eq(adminLoginChallenges.id, challengeId));
-      throw new Error("Could not send the login code to Telegram.");
-    }
-
-    setCookie(adminOtpCookie.name, challengeId, cookieOptions(adminOtpCookie.maxAge));
-
-    return { success: true as const };
-  } catch (error: unknown) {
-    console.error("[requestAdminOtp]", unwrapUnknownError(error));
-    throw error;
+    throw adminOtpRateLimitedError();
   }
+
+  const [recentChallenge] = await db
+    .select()
+    .from(adminLoginChallenges)
+    .where(eq(adminLoginChallenges.requestIp, requestIp))
+    .orderBy(desc(adminLoginChallenges.createdAt))
+    .limit(1);
+
+  if (recentChallenge) {
+    const elapsed = Date.now() - recentChallenge.createdAt.getTime();
+    if (elapsed < getOtpResendCooldownMs()) {
+      logAuthEvent({
+        action: "request_admin_otp",
+        outcome: "failure",
+        reason: "cooldown",
+        requestIp,
+      });
+      throw adminOtpCooldownError();
+    }
+  }
+
+  const code = generateOtpCode();
+  const challengeId = crypto.randomUUID();
+  const codeHash = await hashOtpCode(code);
+  const expiresAt = getOtpExpiryDate();
+
+  await db.insert(adminLoginChallenges).values({
+    id: challengeId,
+    codeHash,
+    expiresAt,
+    requestIp,
+  });
+
+  const notifier = new TelegramNotifier();
+  const result = await notifier.send(
+    [
+      "Backstage login code",
+      "",
+      code,
+      "",
+      "Expires in 10 minutes.",
+      "If you did not request this, ignore it.",
+    ].join("\n"),
+  );
+
+  if (!result.success) {
+    await db.delete(adminLoginChallenges).where(eq(adminLoginChallenges.id, challengeId));
+    logAuthEvent({
+      action: "request_admin_otp",
+      outcome: "failure",
+      reason: "telegram_failed",
+      requestIp,
+    });
+    throw adminOtpTelegramError();
+  }
+
+  setCookie(adminOtpCookie.name, challengeId, cookieOptions(adminOtpCookie.maxAge));
+
+  logAuthEvent({
+    action: "request_admin_otp",
+    outcome: "success",
+    reason: "code_sent",
+    requestIp,
+  });
+
+  return { success: true as const };
 });
 
 /**
@@ -185,7 +230,12 @@ export const verifyAdminOtp = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const challengeId = getCookie(adminOtpCookie.name);
     if (!challengeId) {
-      throw new Error("Request a new login code first.");
+      logAuthEvent({
+        action: "verify_admin_otp",
+        outcome: "failure",
+        reason: "missing_challenge_cookie",
+      });
+      throw adminOtpChallengeMissingError();
     }
 
     await purgeExpiredChallenges();
@@ -203,7 +253,12 @@ export const verifyAdminOtp = createServerFn({ method: "POST" })
 
     if (!challenge) {
       invalidateOtpChallengeCookie();
-      throw new Error("This login code expired. Request a new one.");
+      logAuthEvent({
+        action: "verify_admin_otp",
+        outcome: "failure",
+        reason: "challenge_expired",
+      });
+      throw adminOtpExpiredError();
     }
 
     const isValid = await verifyOtpCode(data.code, challenge.codeHash);
@@ -212,7 +267,12 @@ export const verifyAdminOtp = createServerFn({ method: "POST" })
       if (nextAttemptCount >= MAX_OTP_VERIFY_ATTEMPTS) {
         await db.delete(adminLoginChallenges).where(eq(adminLoginChallenges.id, challengeId));
         invalidateOtpChallengeCookie();
-        throw new Error("Too many failed attempts. Request a new code.");
+        logAuthEvent({
+          action: "verify_admin_otp",
+          outcome: "failure",
+          reason: "attempts_exceeded",
+        });
+        throw adminOtpAttemptsExceededError();
       }
 
       await db
@@ -220,18 +280,27 @@ export const verifyAdminOtp = createServerFn({ method: "POST" })
         .set({ attemptCount: nextAttemptCount })
         .where(eq(adminLoginChallenges.id, challengeId));
 
-      throw new Error("Invalid login code.");
+      logAuthEvent({
+        action: "verify_admin_otp",
+        outcome: "failure",
+        reason: "invalid_code",
+      });
+      throw adminOtpInvalidError();
     }
 
     await db.delete(adminLoginChallenges).where(eq(adminLoginChallenges.id, challengeId));
 
-    const env = getServerEnv();
-    const email = env.ADMIN_EMAIL ?? "admin@backstage.local";
-    const name = email.split("@")[0] ?? "Admin";
+    const { email, name } = getAdminIdentity();
     const sessionToken = await createAdminSessionToken(email, name);
 
     invalidateOtpChallengeCookie();
     setCookie(adminSessionCookie.name, sessionToken, cookieOptions(adminSessionCookie.maxAge));
+
+    logAuthEvent({
+      action: "verify_admin_otp",
+      outcome: "success",
+      email,
+    });
 
     return {
       isAdmin: true as const,
@@ -245,6 +314,10 @@ export const verifyAdminOtp = createServerFn({ method: "POST" })
  * Existing signed session tokens remain valid until expiry if reused directly.
  */
 export const signOutAdmin = createServerFn({ method: "POST" }).handler(async () => {
+  logAuthEvent({
+    action: "sign_out_admin",
+    outcome: "success",
+  });
   deleteCookie(adminSessionCookie.name, { path: "/" });
   invalidateOtpChallengeCookie();
   return { success: true as const };
