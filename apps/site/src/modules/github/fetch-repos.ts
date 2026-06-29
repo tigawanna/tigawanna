@@ -1,9 +1,33 @@
 import type { GithubRepoNode } from "@/types/github";
 import { getServerEnv } from "@/lib/envs/server-env";
 
-const RECENT_REPOS_QUERY = `query getViewerRecentlyPushedRepos {
+export type GithubRepoOrderField =
+  | "CREATED_AT"
+  | "UPDATED_AT"
+  | "PUSHED_AT"
+  | "NAME"
+  | "STARGAZERS";
+export type GithubOrderDirection = "ASC" | "DESC";
+
+export type FetchRecentReposOptions = {
+  first?: number;
+  isFork?: boolean;
+  orderField?: GithubRepoOrderField;
+  orderDirection?: GithubOrderDirection;
+};
+
+const RECENT_REPOS_QUERY = `query getViewerRecentlyPushedRepos(
+  $first: Int!,
+  $isFork: Boolean,
+  $orderField: RepositoryOrderField!,
+  $orderDirection: OrderDirection!
+) {
   viewer {
-    repositories(orderBy: { field: PUSHED_AT, direction: DESC }, first: 100, isFork: false) {
+    repositories(
+      orderBy: { field: $orderField, direction: $orderDirection },
+      first: $first,
+      isFork: $isFork
+    ) {
       nodes {
         ... on Repository {
           name
@@ -84,7 +108,7 @@ function getGithubPat() {
 
 export async function githubGraphql<T>(
   query: string,
-  options?: { cache?: RequestCache },
+  options?: { cache?: RequestCache; variables?: Record<string, unknown> },
 ): Promise<T> {
   const res = await fetch("https://api.github.com/graphql", {
     method: "POST",
@@ -93,7 +117,10 @@ export async function githubGraphql<T>(
       Authorization: `Bearer ${getGithubPat()}`,
     },
     cache: options?.cache,
-    body: JSON.stringify({ query }),
+    body: JSON.stringify({
+      query,
+      variables: options?.variables,
+    }),
   });
 
   if (!res.ok) {
@@ -104,7 +131,14 @@ export async function githubGraphql<T>(
 }
 
 export async function fetchRecentReposForIndexing() {
-  const result = await githubGraphql<RecentReposResponse>(RECENT_REPOS_QUERY);
+  const result = await githubGraphql<RecentReposResponse>(RECENT_REPOS_QUERY, {
+    variables: {
+      first: 100,
+      isFork: false,
+      orderField: "PUSHED_AT",
+      orderDirection: "DESC",
+    },
+  });
   const nodes = (result.data?.viewer.repositories.nodes ?? []).filter(
     (repo): repo is GithubRepoNode => repo != null,
   );
@@ -118,9 +152,22 @@ export async function fetchPinnedReposFromGithub() {
   );
 }
 
-export async function fetchRecentReposFromGithub() {
+/**
+ * Fetches the viewer's recent GitHub repositories via GraphQL.
+ *
+ * @param options - Query limits and GitHub-side sort (`orderField` / `orderDirection`).
+ */
+export async function fetchRecentReposFromGithub(options: FetchRecentReposOptions = {}) {
+  const {
+    first = 100,
+    isFork = false,
+    orderField = "PUSHED_AT",
+    orderDirection = "DESC",
+  } = options;
+
   const result = await githubGraphql<RecentReposResponse>(RECENT_REPOS_QUERY, {
     cache: "no-store",
+    variables: { first, isFork, orderField, orderDirection },
   });
   return {
     data: result.data,

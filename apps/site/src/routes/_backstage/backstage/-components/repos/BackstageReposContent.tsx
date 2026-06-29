@@ -49,7 +49,7 @@ export function BackstageReposContent() {
       debounce_delay: 400,
     });
 
-  const sortBy = search.sortBy ?? "nameWithOwner";
+  const sortBy = search.sortBy ?? "pushedAt";
   const sortDirection = search.sortDirection ?? "desc";
   const tracked = search.tracked ?? "all";
   const visibility = search.visibility ?? "all";
@@ -252,7 +252,7 @@ export function BackstageReposContent() {
               sortableColumns={repoSortableColumns}
               search={search}
               navigate={navigate}
-              defaultSortBy="nameWithOwner"
+              defaultSortBy="pushedAt"
               defaultSortDirection="desc"
             />
           </BackstageFilterField>
