@@ -18,21 +18,28 @@ import {
 import { backstageGithubReposCollection } from "@/data-access-layer/backstage/backstage-github-repos-collection";
 import { nullableBackstageProject } from "@/data-access-layer/backstage/backstage-project-mapper";
 import { backstageProjectsCollection } from "@/data-access-layer/backstage/backstage-projects-collection";
-import { importBackstageProject } from "@/data-access-layer/backstage/backstage-collection-mutations";
+import {
+  importBackstageProject,
+  bulkImportBackstageProjects,
+} from "@/data-access-layer/backstage/backstage-collection-mutations";
 import { TanstackDBSortSelect } from "@/routes/_backstage/backstage/-components/shared/TanstackDBColumnfilters";
 import { createSortableColumns } from "@/routes/_backstage/backstage/-components/shared/sortable-columns";
 import { useTSRSearchQuery } from "@/routes/_backstage/backstage/-hooks/use-tsr-search-query";
-import type { ImportProjectOptions } from "@/routes/_backstage/backstage/-utils/import-options";
+import type {
+  BulkImportProjectOptions,
+  ImportProjectOptions,
+} from "@/routes/_backstage/backstage/-utils/import-options";
 import { unwrapUnknownError } from "@/utils/errors";
 import { and, eq, ilike, IR, isNull, not, or } from "@tanstack/db";
 import { useLiveQuery } from "@tanstack/react-db";
 import { useMutation } from "@tanstack/react-query";
-import { FolderCodeIcon, Loader, RefreshCcwIcon } from "lucide-react";
+import { Download, FolderCodeIcon, Loader, RefreshCcwIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Route, type BackstageProjectsSearch } from "../../projects";
 import { BackstageFilterField, BackstageFiltersDialog } from "../shared/BackstageFiltersDialog";
 import { BackstageProjectRow } from "./BackstageProjectRow";
+import { BulkImportDialog } from "./BulkImportDialog";
 
 const projectSortableColumns = createSortableColumns(backstageGithubReposCollection, [
   { value: "nameWithOwner", label: "Repository" },
@@ -48,6 +55,7 @@ function combineWhereClauses(clauses: Array<IR.BasicExpression<boolean>>) {
 
 export function BackstageProjects() {
   const [importingRepo, setImportingRepo] = useState<string | null>(null);
+  const [bulkImportOpen, setBulkImportOpen] = useState(false);
 
   const importMutation = useMutation({
     mutationFn: async (options: ImportProjectOptions) => {
@@ -67,6 +75,20 @@ export function BackstageProjects() {
       toast.error("Import failed", { description: unwrapUnknownError(err).message });
     },
   });
+
+  const bulkImportMutation = useMutation({
+    mutationFn: (options: BulkImportProjectOptions) => bulkImportBackstageProjects(options),
+    onSuccess(result) {
+      toast.success(`Imported ${result.importedCount} repos`, {
+        description: result.runId ? "Workflow started" : "Import only",
+      });
+    },
+    onError(err: unknown) {
+      toast.error("Bulk import failed", { description: unwrapUnknownError(err).message });
+    },
+  });
+
+  const isImportBusy = importingRepo != null || bulkImportMutation.isPending;
 
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
@@ -146,11 +168,22 @@ export function BackstageProjects() {
     projects: nullableBackstageProject(row.projects),
   }));
 
+  const untrackedRepoFullNames = joinedRows
+    .filter((row) => row.projects == null)
+    .map((row) => row.github.nameWithOwner);
+
   return (
     <div
       className="mx-auto flex w-full max-w-6xl flex-col gap-6 max-h-screen"
       data-test="backstage-projects"
     >
+      <BulkImportDialog
+        open={bulkImportOpen}
+        onOpenChange={setBulkImportOpen}
+        repoFullNames={untrackedRepoFullNames}
+        isImporting={bulkImportMutation.isPending}
+        onConfirm={(options) => bulkImportMutation.mutate(options)}
+      />
       <div className="w-full sticky top-0 z-20 p-1 rounded">
         <div className="flex flex-wrap items-start justify-between gap-4 w-full">
           <h1 className="text-2xl font-semibold tracking-tight md:flex-1">Projects</h1>
@@ -236,17 +269,30 @@ export function BackstageProjects() {
           <p className="text-base-content/60 mt-2 text-sm">
             Public GitHub repos only — import any repo to start tracking it on the site.
           </p>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => backstageGithubReposCollection.utils.refetch()}
-            disabled={isLoading}
-          >
-            <RefreshCcwIcon
-              data-loading={isLoading}
-              className="size-4 data-[loading=true]:animate-spin"
-            />
-          </Button>
+          <div className="flex items-center gap-1">
+            <Button
+              variant="outline"
+              size="icon-sm"
+              data-test="bulk-import-open"
+              title="Import all untracked"
+              aria-label="Import all untracked repos"
+              disabled={isImportBusy || untrackedRepoFullNames.length === 0}
+              onClick={() => setBulkImportOpen(true)}
+            >
+              <Download className="size-3.5" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => backstageGithubReposCollection.utils.refetch()}
+              disabled={isLoading}
+            >
+              <RefreshCcwIcon
+                data-loading={isLoading}
+                className="size-4 data-[loading=true]:animate-spin"
+              />
+            </Button>
+          </div>
         </div>
       </div>
       <div className="flex flex-col gap-2 h-[90vh] overflow-y-auto">
@@ -255,7 +301,7 @@ export function BackstageProjects() {
             <Loader className="size-4 animate-spin" />
           </div>
         ) : null}
-        {!joinedRows || joinedRows.length === 0 ? (
+        {!isLoading && (!joinedRows || joinedRows.length === 0) ? (
           <div className="flex items-center justify-center h-full">
             <Empty>
               <EmptyHeader>
@@ -268,7 +314,9 @@ export function BackstageProjects() {
                 </EmptyDescription>
               </EmptyHeader>
               <EmptyContent className="flex-row justify-center gap-2">
-                <Button variant="outline">Import Project</Button>
+                <Button variant="outline" onClick={() => setBulkImportOpen(true)}>
+                  Import all
+                </Button>
                 <Button
                   variant="outline"
                   onClick={() =>
@@ -292,7 +340,7 @@ export function BackstageProjects() {
               project={row.projects}
               onRequestImport={(options) => importMutation.mutate(options)}
               isImporting={importingRepo === row.github.nameWithOwner}
-              importDisabled={importingRepo != null}
+              importDisabled={isImportBusy}
             />
           ))}
       </div>

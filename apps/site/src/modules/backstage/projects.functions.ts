@@ -244,10 +244,70 @@ export const updateProjectRepo = createServerFn({ method: "POST" })
 const importProjectRepoInputSchema = z.object({
   repoFullName: repoFullNameSchema,
   runEnrichment: z.boolean().optional(),
+  forceEnrichment: z.boolean().optional(),
   runEmbedding: z.boolean().optional(),
   skipEmbeddingIfComplete: z.boolean().optional(),
   forceEmbedding: z.boolean().optional(),
 });
+
+const importAllProjectReposInputSchema = z.object({
+  repoFullNames: z.array(repoFullNameSchema).min(1),
+  runEnrichment: z.boolean().optional(),
+  forceEnrichment: z.boolean().optional(),
+  runEmbedding: z.boolean().optional(),
+  skipEmbeddingIfComplete: z.boolean().optional(),
+  forceEmbedding: z.boolean().optional(),
+});
+
+type ImportWorkflowInput = {
+  runEnrichment?: boolean;
+  forceEnrichment?: boolean;
+  runEmbedding?: boolean;
+  skipEmbeddingIfComplete?: boolean;
+  forceEmbedding?: boolean;
+};
+
+/**
+ * Starts the enrichment/embedding workflow for one or more repos when requested.
+ */
+async function startImportWorkflow(repoFullNames: string[], data: ImportWorkflowInput) {
+  const wantsEnrichment = data.runEnrichment === true;
+  const wantsEmbedding = data.runEmbedding === true;
+  const embeddingEnabled = isServerEmbeddingEnabled();
+  const shouldStartWorkflow = wantsEnrichment || (wantsEmbedding && embeddingEnabled);
+
+  if (!shouldStartWorkflow) {
+    return null;
+  }
+
+  const runId = await createRunRecord("manual", repoFullNames);
+  const forceEnrichment = data.forceEnrichment ?? (repoFullNames.length === 1 ? true : false);
+
+  const params: EnrichmentRunParams = {
+    runId,
+    trigger: "manual",
+    limit: repoFullNames.length,
+    repos: repoFullNames,
+    force: forceEnrichment,
+    runEnrichment: wantsEnrichment,
+    runEmbedding: wantsEmbedding && embeddingEnabled,
+    skipEmbeddingIfComplete: data.skipEmbeddingIfComplete ?? true,
+    forceEmbedding: data.forceEmbedding ?? false,
+  };
+
+  logEnrichmentEvent({
+    workflow: "project-enrichment",
+    runId,
+    step: "startWorkflow",
+    outcome: "started",
+    trigger: "manual",
+    repoCount: repoFullNames.length,
+    force: forceEnrichment,
+  });
+
+  await start(enrichProjectsWorkflow, [params]);
+  return runId;
+}
 
 /**
  * Fetches a GitHub repository snapshot and upserts it into `project_repos`.
@@ -273,41 +333,40 @@ export const importProjectRepo = createServerFn({ method: "POST" })
 
     await importRepoSnapshot(repo);
 
-    const wantsEnrichment = data.runEnrichment === true;
-    const wantsEmbedding = data.runEmbedding === true;
-    const embeddingEnabled = isServerEmbeddingEnabled();
-    const shouldStartWorkflow = wantsEnrichment || (wantsEmbedding && embeddingEnabled);
+    const runId = await startImportWorkflow([data.repoFullName], data);
+    return { imported: true as const, runId };
+  });
 
-    if (shouldStartWorkflow) {
-      const runId = await createRunRecord("manual", [data.repoFullName]);
-      const params: EnrichmentRunParams = {
-        runId,
-        trigger: "manual",
-        limit: 1,
-        repos: [data.repoFullName],
-        force: true,
-        runEnrichment: wantsEnrichment,
-        runEmbedding: wantsEmbedding && embeddingEnabled,
-        skipEmbeddingIfComplete: data.skipEmbeddingIfComplete ?? true,
-        forceEmbedding: data.forceEmbedding ?? false,
-      };
+/**
+ * Imports multiple GitHub repositories and optionally starts one shared workflow.
+ *
+ * Requires an authenticated admin session.
+ */
+export const importAllProjectRepos = createServerFn({ method: "POST" })
+  .validator((input: z.infer<typeof importAllProjectReposInputSchema>) =>
+    importAllProjectReposInputSchema.parse(input),
+  )
+  .handler(async ({ data }) => {
+    await requireAdminSession();
+    const pat = requirePat();
 
-      logEnrichmentEvent({
-        workflow: "project-enrichment",
-        runId,
-        step: "startWorkflow",
-        outcome: "started",
-        trigger: "manual",
-        repoFullName: data.repoFullName,
-        repoCount: 1,
-        force: true,
-      });
-
-      await start(enrichProjectsWorkflow, [params]);
-      return { imported: true as const, runId };
+    const repos = await fetchReposByFullNames(pat, data.repoFullNames);
+    if (repos.length === 0) {
+      throw new Error("No repos found or all are private");
     }
 
-    return { imported: true as const, runId: null };
+    for (const repo of repos) {
+      await importRepoSnapshot(repo);
+    }
+
+    const importedNames = repos.map((repo) => repo.nameWithOwner);
+    const runId = await startImportWorkflow(importedNames, data);
+
+    return {
+      imported: true as const,
+      importedCount: repos.length,
+      runId,
+    };
   });
 
 /**

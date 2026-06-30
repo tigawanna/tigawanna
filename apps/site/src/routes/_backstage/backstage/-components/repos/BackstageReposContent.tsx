@@ -140,6 +140,7 @@ export function BackstageReposContent() {
       const tx = importBackstageProject({
         repoFullName,
         runEnrichment: runEnrichmentOnImport,
+        forceEnrichment: runEnrichmentOnImport,
         runEmbedding: false,
         skipEmbeddingIfComplete: true,
         forceEmbedding: false,

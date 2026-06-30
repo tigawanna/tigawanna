@@ -1,7 +1,7 @@
 import { backstageGithubReposCollection } from "@/data-access-layer/backstage/backstage-github-repos-collection";
 import { backstageProjectsCollection } from "@/data-access-layer/backstage/backstage-projects-collection";
 import { deleteGithubRepoForBackstage } from "@/modules/backstage/github-repos.functions";
-import { importProjectRepo } from "@/modules/backstage/projects.functions";
+import { importAllProjectRepos, importProjectRepo } from "@/modules/backstage/projects.functions";
 import { logTanstackDbCollection } from "@/lib/tanstack/db/collection-logging";
 import { unwrapUnknownError } from "@/utils/errors";
 import { createOptimisticAction } from "@tanstack/db";
@@ -9,6 +9,16 @@ import { createOptimisticAction } from "@tanstack/db";
 export type ImportBackstageProjectInput = {
   repoFullName: string;
   runEnrichment: boolean;
+  forceEnrichment: boolean;
+  runEmbedding: boolean;
+  skipEmbeddingIfComplete: boolean;
+  forceEmbedding: boolean;
+};
+
+export type BulkImportBackstageProjectsInput = {
+  repoFullNames: string[];
+  runEnrichment: boolean;
+  forceEnrichment: boolean;
   runEmbedding: boolean;
   skipEmbeddingIfComplete: boolean;
   forceEmbedding: boolean;
@@ -24,6 +34,31 @@ export const importBackstageProject = createOptimisticAction<ImportBackstageProj
     ]);
   },
 });
+
+/**
+ * Bulk-imports repos and starts one shared enrichment/embedding workflow.
+ */
+export async function bulkImportBackstageProjects(input: BulkImportBackstageProjectsInput) {
+  logTanstackDbCollection("backstage-projects", "mutation:bulk-import:start", {
+    repoCount: input.repoFullNames.length,
+    forceEnrichment: input.forceEnrichment,
+  });
+
+  try {
+    const result = await importAllProjectRepos({ data: input });
+    await Promise.all([
+      backstageProjectsCollection.utils.refetch(),
+      backstageGithubReposCollection.utils.refetch(),
+    ]);
+    logTanstackDbCollection("backstage-projects", "mutation:bulk-import:complete", {
+      repoCount: result.importedCount,
+      runId: result.runId,
+    });
+    return result;
+  } catch (err: unknown) {
+    throw unwrapUnknownError(err);
+  }
+}
 
 export async function removeBackstageProject(githubRepoId: string) {
   logTanstackDbCollection("backstage-projects", "mutation:remove:start", { githubRepoId });

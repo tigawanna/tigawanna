@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -8,7 +7,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import {
   deleteBackstageGithubRepo,
@@ -16,7 +14,11 @@ import {
   setBackstageRepoVisibility,
 } from "@/data-access-layer/backstage/backstage-collection-mutations";
 import { isServerEmbeddingAvailableInClient } from "@/lib/envs/server-embedding";
-import type { ImportProjectOptions } from "@/routes/_backstage/backstage/-utils/import-options";
+import {
+  defaultSingleImportWorkflowOptions,
+  type ImportProjectOptions,
+  type ImportWorkflowOptions,
+} from "@/routes/_backstage/backstage/-utils/import-options";
 import { isGithubRepoDeletePermissionError } from "@/routes/_backstage/backstage/-utils/github-repo-delete-errors";
 import type { BackstageGithubRepo, BackstageProject } from "@/types/backstage";
 import { unwrapUnknownError } from "@/utils/errors";
@@ -25,6 +27,7 @@ import { Download, Eye, EyeOff, Loader, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { AdminPatDialog } from "./AdminPatDialog";
+import { ImportWorkflowOptionsFields } from "./ImportWorkflowOptionsFields";
 
 type ProjectActionsDialogProps = {
   github: BackstageGithubRepo;
@@ -50,10 +53,9 @@ export function ProjectActionsDialog({
 
   const serverEmbeddingAvailable = isServerEmbeddingAvailableInClient();
 
-  const [runEnrichment, setRunEnrichment] = useState(true);
-  const [runEmbedding, setRunEmbedding] = useState(serverEmbeddingAvailable);
-  const [skipEmbeddingIfComplete, setSkipEmbeddingIfComplete] = useState(true);
-  const [forceEmbedding, setForceEmbedding] = useState(false);
+  const [importOptions, setImportOptions] = useState<ImportWorkflowOptions>(() =>
+    defaultSingleImportWorkflowOptions(serverEmbeddingAvailable),
+  );
   const [adminPatOpen, setAdminPatOpen] = useState(false);
   const [confirmDeleteRepo, setConfirmDeleteRepo] = useState(false);
   const [confirmDeleteProject, setConfirmDeleteProject] = useState(false);
@@ -63,8 +65,9 @@ export function ProjectActionsDialog({
       setConfirmDeleteRepo(false);
       setConfirmDeleteProject(false);
       setAdminPatOpen(false);
+      setImportOptions(defaultSingleImportWorkflowOptions(serverEmbeddingAvailable));
     }
-  }, [open]);
+  }, [open, serverEmbeddingAvailable]);
 
   const visibilityMutation = useMutation({
     mutationFn: (visibility: "public" | "private") =>
@@ -123,10 +126,7 @@ export function ProjectActionsDialog({
   const handleImport = () => {
     onRequestImport({
       repoFullName: github.nameWithOwner,
-      runEnrichment,
-      runEmbedding,
-      skipEmbeddingIfComplete,
-      forceEmbedding,
+      ...importOptions,
     });
     onOpenChange(false);
   };
@@ -153,84 +153,11 @@ export function ProjectActionsDialog({
                 </p>
               </div>
 
-              <div className="flex flex-col gap-4">
-                <div className="flex items-start gap-3">
-                  <Checkbox
-                    id="import-run-enrichment"
-                    data-test="import-run-enrichment"
-                    checked={runEnrichment}
-                    onCheckedChange={(checked) => setRunEnrichment(checked === true)}
-                  />
-                  <div className="grid gap-1">
-                    <Label htmlFor="import-run-enrichment">Run metadata enrichment</Label>
-                    <p className="text-base-content/60 text-sm">
-                      Starts the enrichment workflow to infer missing description and tags.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <Checkbox
-                    id="import-run-embedding"
-                    data-test="import-run-embedding"
-                    checked={runEmbedding}
-                    disabled={!serverEmbeddingAvailable}
-                    onCheckedChange={(checked) => setRunEmbedding(checked === true)}
-                  />
-                  <div className="grid gap-1">
-                    <Label htmlFor="import-run-embedding">Run Gemma embeddings</Label>
-                    <p className="text-base-content/60 text-sm">
-                      {serverEmbeddingAvailable
-                        ? "Introspects README and nested package.json files, then indexes vectors for search. Runs locally after enrichment."
-                        : "Server-side embedding is disabled in production. Run bulk imports locally in dev to index vectors."}
-                    </p>
-                  </div>
-                </div>
-
-                {serverEmbeddingAvailable ? (
-                  <div className="border-base-content/10 ml-7 flex flex-col gap-3 border-l pl-4">
-                    <div className="flex items-start gap-3">
-                      <Checkbox
-                        id="import-skip-embedding-if-complete"
-                        data-test="import-skip-embedding-if-complete"
-                        checked={skipEmbeddingIfComplete}
-                        disabled={!runEmbedding || forceEmbedding}
-                        onCheckedChange={(checked) => setSkipEmbeddingIfComplete(checked === true)}
-                      />
-                      <div className="grid gap-1">
-                        <Label htmlFor="import-skip-embedding-if-complete">
-                          Skip if already complete
-                        </Label>
-                        <p className="text-base-content/60 text-sm">
-                          Skip embedding when description and tags exist on GitHub or in the README.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start gap-3">
-                      <Checkbox
-                        id="import-force-embedding"
-                        data-test="import-force-embedding"
-                        checked={forceEmbedding}
-                        disabled={!runEmbedding}
-                        onCheckedChange={(checked) => {
-                          const next = checked === true;
-                          setForceEmbedding(next);
-                          if (next) {
-                            setSkipEmbeddingIfComplete(false);
-                          }
-                        }}
-                      />
-                      <div className="grid gap-1">
-                        <Label htmlFor="import-force-embedding">Re-embed anyway</Label>
-                        <p className="text-base-content/60 text-sm">
-                          Force a fresh embedding run even when tags and description are present.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ) : null}
-              </div>
+              <ImportWorkflowOptionsFields
+                idPrefix="import"
+                options={importOptions}
+                onChange={setImportOptions}
+              />
 
               <Button
                 data-test="import-project-confirm"
