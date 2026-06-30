@@ -1,6 +1,6 @@
 import { isAdminUser } from "@/data-access-layer/auth/auth-utils";
 import { backstageViewerMiddleware, viewerqueryOptions } from "@/data-access-layer/auth/viewer";
-import { RouterNotFoundComponent } from "@/lib/tanstack/router/RouterNotFoundComponent";
+import { RouterNotFoundSection } from "@/lib/tanstack/router/RouterNotFoundComponent";
 import { RouterPendingComponent } from "@/lib/tanstack/router/RouterPendingComponent";
 import { RouterErrorComponent } from "@/lib/tanstack/router/routerErrorComponent";
 import { AppConfig } from "@/utils/system";
@@ -10,7 +10,7 @@ import { backstage_routes } from "./-components/backstage-sidebar/backstage_rout
 
 export const Route = createFileRoute("/_backstage")({
   pendingComponent: () => <RouterPendingComponent />,
-  notFoundComponent: () => <RouterNotFoundComponent />,
+  notFoundComponent: () => <RouterNotFoundSection />,
   errorComponent: ({ error }) => <RouterErrorComponent error={error} />,
   server: {
     middleware: [backstageViewerMiddleware],

@@ -22,6 +22,7 @@ import { Route as BackstageBackstageReposRouteImport } from './routes/_backstage
 import { Route as BackstageBackstageMessagesRouteImport } from './routes/_backstage/backstage/messages'
 import { Route as BackstageBackstageJournalRouteImport } from './routes/_backstage/backstage/journal'
 import { Route as BackstageBackstageProjectsIndexRouteImport } from './routes/_backstage/backstage/projects/index'
+import { Route as BackstageBackstageProjectsOwnerIndexRouteImport } from './routes/_backstage/backstage/projects/$owner/index'
 import { Route as BackstageBackstageProjectsOwnerRepoIndexRouteImport } from './routes/_backstage/backstage/projects/$owner/$repo/index'
 
 const BackstageLayoutRoute = BackstageLayoutRouteImport.update({
@@ -91,6 +92,12 @@ const BackstageBackstageProjectsIndexRoute =
     path: '/backstage/projects/',
     getParentRoute: () => BackstageLayoutRoute,
   } as any)
+const BackstageBackstageProjectsOwnerIndexRoute =
+  BackstageBackstageProjectsOwnerIndexRouteImport.update({
+    id: '/backstage/projects/$owner/',
+    path: '/backstage/projects/$owner/',
+    getParentRoute: () => BackstageLayoutRoute,
+  } as any)
 const BackstageBackstageProjectsOwnerRepoIndexRoute =
   BackstageBackstageProjectsOwnerRepoIndexRouteImport.update({
     id: '/backstage/projects/$owner/$repo/',
@@ -111,6 +118,7 @@ export interface FileRoutesByFullPath {
   '/backstage/': typeof BackstageBackstageIndexRoute
   '/preview/error/': typeof PreviewErrorIndexRoute
   '/backstage/projects/': typeof BackstageBackstageProjectsIndexRoute
+  '/backstage/projects/$owner/': typeof BackstageBackstageProjectsOwnerIndexRoute
   '/backstage/projects/$owner/$repo/': typeof BackstageBackstageProjectsOwnerRepoIndexRoute
 }
 export interface FileRoutesByTo {
@@ -126,6 +134,7 @@ export interface FileRoutesByTo {
   '/backstage': typeof BackstageBackstageIndexRoute
   '/preview/error': typeof PreviewErrorIndexRoute
   '/backstage/projects': typeof BackstageBackstageProjectsIndexRoute
+  '/backstage/projects/$owner': typeof BackstageBackstageProjectsOwnerIndexRoute
   '/backstage/projects/$owner/$repo': typeof BackstageBackstageProjectsOwnerRepoIndexRoute
 }
 export interface FileRoutesById {
@@ -143,6 +152,7 @@ export interface FileRoutesById {
   '/_backstage/backstage/': typeof BackstageBackstageIndexRoute
   '/preview/error/': typeof PreviewErrorIndexRoute
   '/_backstage/backstage/projects/': typeof BackstageBackstageProjectsIndexRoute
+  '/_backstage/backstage/projects/$owner/': typeof BackstageBackstageProjectsOwnerIndexRoute
   '/_backstage/backstage/projects/$owner/$repo/': typeof BackstageBackstageProjectsOwnerRepoIndexRoute
 }
 export interface FileRouteTypes {
@@ -160,6 +170,7 @@ export interface FileRouteTypes {
     | '/backstage/'
     | '/preview/error/'
     | '/backstage/projects/'
+    | '/backstage/projects/$owner/'
     | '/backstage/projects/$owner/$repo/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -175,6 +186,7 @@ export interface FileRouteTypes {
     | '/backstage'
     | '/preview/error'
     | '/backstage/projects'
+    | '/backstage/projects/$owner'
     | '/backstage/projects/$owner/$repo'
   id:
     | '__root__'
@@ -191,6 +203,7 @@ export interface FileRouteTypes {
     | '/_backstage/backstage/'
     | '/preview/error/'
     | '/_backstage/backstage/projects/'
+    | '/_backstage/backstage/projects/$owner/'
     | '/_backstage/backstage/projects/$owner/$repo/'
   fileRoutesById: FileRoutesById
 }
@@ -298,6 +311,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BackstageBackstageProjectsIndexRouteImport
       parentRoute: typeof BackstageLayoutRoute
     }
+    '/_backstage/backstage/projects/$owner/': {
+      id: '/_backstage/backstage/projects/$owner/'
+      path: '/backstage/projects/$owner'
+      fullPath: '/backstage/projects/$owner/'
+      preLoaderRoute: typeof BackstageBackstageProjectsOwnerIndexRouteImport
+      parentRoute: typeof BackstageLayoutRoute
+    }
     '/_backstage/backstage/projects/$owner/$repo/': {
       id: '/_backstage/backstage/projects/$owner/$repo/'
       path: '/backstage/projects/$owner/$repo'
@@ -314,6 +334,7 @@ interface BackstageLayoutRouteChildren {
   BackstageBackstageReposRoute: typeof BackstageBackstageReposRoute
   BackstageBackstageIndexRoute: typeof BackstageBackstageIndexRoute
   BackstageBackstageProjectsIndexRoute: typeof BackstageBackstageProjectsIndexRoute
+  BackstageBackstageProjectsOwnerIndexRoute: typeof BackstageBackstageProjectsOwnerIndexRoute
   BackstageBackstageProjectsOwnerRepoIndexRoute: typeof BackstageBackstageProjectsOwnerRepoIndexRoute
 }
 
@@ -323,6 +344,8 @@ const BackstageLayoutRouteChildren: BackstageLayoutRouteChildren = {
   BackstageBackstageReposRoute: BackstageBackstageReposRoute,
   BackstageBackstageIndexRoute: BackstageBackstageIndexRoute,
   BackstageBackstageProjectsIndexRoute: BackstageBackstageProjectsIndexRoute,
+  BackstageBackstageProjectsOwnerIndexRoute:
+    BackstageBackstageProjectsOwnerIndexRoute,
   BackstageBackstageProjectsOwnerRepoIndexRoute:
     BackstageBackstageProjectsOwnerRepoIndexRoute,
 }

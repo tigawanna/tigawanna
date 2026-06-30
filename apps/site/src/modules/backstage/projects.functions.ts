@@ -62,6 +62,7 @@ export type BackstageProjectEnrichment = {
     homepage: number;
   } | null;
   enrichedAt: Date;
+  applyError: string | null;
 };
 
 /** Indexed embedding metadata for a backstage project. */
@@ -223,6 +224,7 @@ function resolveProjectEnrichment(
       briefSummary: analysis?.briefSummary ?? project.enrichedSummary,
       confidence: analysis?.confidence ?? null,
       enrichedAt: project.enrichedAt ?? suggestionRow.createdAt,
+      applyError: suggestionRow.applyError,
     };
   }
 
@@ -238,6 +240,7 @@ function resolveProjectEnrichment(
       briefSummary: project.enrichedSummary,
       confidence: null,
       enrichedAt: project.enrichedAt ?? project.updatedAt,
+      applyError: null,
     };
   }
 
@@ -266,6 +269,7 @@ function resolveProjectEnrichment(
     briefSummary,
     confidence: null,
     enrichedAt: project.enrichedAt ?? embedding?.embeddedAt ?? project.lastGithubSyncAt,
+    applyError: null,
   };
 }
 

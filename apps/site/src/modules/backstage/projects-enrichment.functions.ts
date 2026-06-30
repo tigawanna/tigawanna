@@ -98,6 +98,7 @@ export const approveProjectEnrichmentSuggestion = createServerFn({ method: "POST
       description: string;
       homepage?: string | null;
       topics: string[];
+      enrichedSummary?: string | null;
     }) => input,
   )
   .handler(async ({ data }) => {
@@ -149,6 +150,19 @@ export const approveProjectEnrichmentSuggestion = createServerFn({ method: "POST
     }
 
     const now = new Date();
+    const enrichedSummary = data.enrichedSummary?.trim() || null;
+    let analysisSummary = row.suggestion.analysisSummary;
+
+    if (enrichedSummary) {
+      try {
+        const existing = analysisSummary
+          ? (JSON.parse(analysisSummary) as Record<string, unknown>)
+          : {};
+        analysisSummary = JSON.stringify({ ...existing, reasoning: enrichedSummary });
+      } catch {
+        analysisSummary = JSON.stringify({ reasoning: enrichedSummary });
+      }
+    }
 
     await db
       .update(projectEnrichmentSuggestions)
@@ -160,6 +174,7 @@ export const approveProjectEnrichmentSuggestion = createServerFn({ method: "POST
         reviewedAt: now,
         appliedAt: now,
         applyError: null,
+        ...(analysisSummary !== row.suggestion.analysisSummary ? { analysisSummary } : {}),
       })
       .where(eq(projectEnrichmentSuggestions.id, data.suggestionId));
 
@@ -171,6 +186,9 @@ export const approveProjectEnrichmentSuggestion = createServerFn({ method: "POST
         currentTopics: JSON.stringify(data.topics),
         attendance: "applied",
         lastAppliedAt: now,
+        enrichedSummary: enrichedSummary ?? row.repo.enrichedSummary,
+        enrichedAt: row.repo.enrichedAt ?? now,
+        enrichedByAi: true,
         updatedAt: now,
       })
       .where(eq(projectRepos.githubRepoId, row.repo.githubRepoId));

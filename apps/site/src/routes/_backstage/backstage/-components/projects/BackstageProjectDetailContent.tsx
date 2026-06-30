@@ -10,12 +10,14 @@ import type {
   BackstageProjectDetail,
   BackstageProjectEmbedding,
 } from "@/modules/backstage/projects.functions";
+import { EnrichmentReviewDialog } from "@/routes/_backstage/backstage/-components/projects/EnrichmentReviewDialog";
 import { attendanceLabel } from "@/routes/_backstage/backstage/-components/projects/helpers";
 import { unwrapUnknownError } from "@/utils/errors";
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { format } from "date-fns";
-import { ExternalLink, Github, Globe, Loader, Sparkles } from "lucide-react";
+import { ExternalLink, Github, Globe, Loader, Pencil, Sparkles } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 type BackstageProjectDetailContentProps = {
@@ -143,14 +145,19 @@ function enrichmentSourceLabel(enrichment: NonNullable<BackstageProjectDetail["e
 
 function EnrichmentSection({
   repoFullName,
+  project,
   enrichment,
   embedding,
 }: {
   repoFullName: string;
+  project: BackstageProject;
   enrichment: BackstageProjectDetail["enrichment"];
   embedding: BackstageProjectEmbedding | null;
 }) {
   const queryClient = useQueryClient();
+  const [reviewOpen, setReviewOpen] = useState(false);
+
+  const needsReview = enrichment?.status === "pending_review" && enrichment.suggestionId != null;
 
   const enrichMutation = useMutation({
     mutationFn: () =>
@@ -187,6 +194,19 @@ function EnrichmentSection({
     </Button>
   );
 
+  const reviewButton = needsReview ? (
+    <Button
+      size="sm"
+      variant="default"
+      className="gap-1.5"
+      data-test="project-review-enrichment"
+      onClick={() => setReviewOpen(true)}
+    >
+      <Pencil className="size-3.5" />
+      Review & apply
+    </Button>
+  ) : null;
+
   if (!enrichment) {
     return (
       <Card data-test="project-detail-enrichment">
@@ -213,92 +233,128 @@ function EnrichmentSection({
     enrichment.suggestedTopics.length > 0 && enrichment.source !== "metadata";
 
   return (
-    <Card data-test="project-detail-enrichment">
-      <CardHeader className="flex flex-row flex-wrap items-start justify-between gap-4">
-        <div className="space-y-2">
-          <div className="flex flex-wrap items-center gap-2">
-            <CardTitle>Enrichment</CardTitle>
-            <Badge
-              variant="outline"
-              className={cn(enrichmentSourceBadgeClass(enrichment.source))}
-              data-test="project-enrichment-source-badge"
-            >
-              {enrichmentSourceLabel(enrichment)}
-            </Badge>
-            {enrichment.source === "ai_suggestion" ? (
-              <Badge variant="outline" className={cn("capitalize", readableBadgeClass)}>
-                {enrichment.status.replaceAll("_", " ")}
+    <>
+      <Card data-test="project-detail-enrichment">
+        <CardHeader className="flex flex-row flex-wrap items-start justify-between gap-4">
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <CardTitle>Enrichment</CardTitle>
+              <Badge
+                variant="outline"
+                className={cn(enrichmentSourceBadgeClass(enrichment.source))}
+                data-test="project-enrichment-source-badge"
+              >
+                {enrichmentSourceLabel(enrichment)}
               </Badge>
-            ) : null}
+              {enrichment.source === "ai_suggestion" ? (
+                <Badge
+                  variant="outline"
+                  className={cn(
+                    "capitalize",
+                    enrichment.status === "pending_review"
+                      ? attendanceBadgeClass("pending_review")
+                      : readableBadgeClass,
+                  )}
+                >
+                  {enrichment.status.replaceAll("_", " ")}
+                </Badge>
+              ) : null}
+            </div>
+            <CardDescription>
+              {needsReview ? (
+                <>
+                  AI suggestions are ready but not applied to GitHub yet. Use{" "}
+                  <span className="text-base-content font-medium">Review & apply</span> to edit and
+                  publish.
+                </>
+              ) : (
+                <>
+                  {enrichment.isAiEnriched ? "Enriched" : "Recorded"}{" "}
+                  {format(new Date(enrichment.enrichedAt), "PPp")}
+                  {enrichment.confidence ? (
+                    <>
+                      {" "}
+                      · confidence desc {Math.round(enrichment.confidence.description * 100)}% /
+                      tags {Math.round(enrichment.confidence.topics * 100)}%
+                    </>
+                  ) : null}
+                  {embedding ? (
+                    <> · embedded {format(new Date(embedding.embeddedAt), "PP")}</>
+                  ) : null}
+                </>
+              )}
+            </CardDescription>
           </div>
-          <CardDescription>
-            {enrichment.isAiEnriched ? "Enriched" : "Recorded"}{" "}
-            {format(new Date(enrichment.enrichedAt), "PPp")}
-            {enrichment.confidence ? (
-              <>
-                {" "}
-                · confidence desc {Math.round(enrichment.confidence.description * 100)}% / tags{" "}
-                {Math.round(enrichment.confidence.topics * 100)}%
-              </>
-            ) : null}
-            {embedding ? <> · embedded {format(new Date(embedding.embeddedAt), "PP")}</> : null}
-          </CardDescription>
-        </div>
-        {enrichButton}
-      </CardHeader>
-      <CardContent className="flex flex-col gap-6">
-        {enrichment.briefSummary ? (
-          <section className="flex flex-col gap-2">
-            <h3 className="text-sm font-medium">
-              {enrichment.isAiEnriched ? "Enriched summary" : "Project summary"}
-            </h3>
-            <p
-              className="text-base-content/80 text-sm leading-relaxed"
-              data-test="project-brief-summary"
-            >
-              {enrichment.briefSummary}
+          <div className="flex flex-wrap gap-2">
+            {reviewButton}
+            {enrichButton}
+          </div>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-6">
+          {enrichment.briefSummary ? (
+            <section className="flex flex-col gap-2">
+              <h3 className="text-sm font-medium">
+                {enrichment.isAiEnriched ? "Enriched summary" : "Project summary"}
+              </h3>
+              <p
+                className="text-base-content/80 text-sm leading-relaxed"
+                data-test="project-brief-summary"
+              >
+                {enrichment.briefSummary}
+              </p>
+            </section>
+          ) : null}
+
+          {showSuggestedDescription ? (
+            <section className="flex flex-col gap-2">
+              <h3 className="text-sm font-medium">Suggested description</h3>
+              <p className="text-base-content/80 text-sm leading-relaxed">
+                {enrichment.suggestedDescription}
+              </p>
+            </section>
+          ) : null}
+
+          {showSuggestedTags ? (
+            <section className="flex flex-col gap-2">
+              <h3 className="text-sm font-medium">Suggested tags</h3>
+              <TagList tags={enrichment.suggestedTopics} testId="project-suggested-tags" />
+            </section>
+          ) : null}
+
+          {enrichment.suggestedHomepage && enrichment.source !== "metadata" ? (
+            <section className="flex flex-col gap-2">
+              <h3 className="text-sm font-medium">Suggested homepage</h3>
+              <a
+                href={enrichment.suggestedHomepage}
+                target="_blank"
+                rel="noreferrer"
+                className="text-primary inline-flex items-center gap-1 text-sm hover:underline"
+              >
+                {enrichment.suggestedHomepage}
+                <ExternalLink className="size-3.5" />
+              </a>
+            </section>
+          ) : null}
+
+          {embedding ? (
+            <p className="text-base-content/60 text-sm">
+              Vectors indexed {format(new Date(embedding.embeddedAt), "PPp")} via{" "}
+              {embedding.modelId}.
             </p>
-          </section>
-        ) : null}
+          ) : null}
+        </CardContent>
+      </Card>
 
-        {showSuggestedDescription ? (
-          <section className="flex flex-col gap-2">
-            <h3 className="text-sm font-medium">Suggested description</h3>
-            <p className="text-base-content/80 text-sm leading-relaxed">
-              {enrichment.suggestedDescription}
-            </p>
-          </section>
-        ) : null}
-
-        {showSuggestedTags ? (
-          <section className="flex flex-col gap-2">
-            <h3 className="text-sm font-medium">Suggested tags</h3>
-            <TagList tags={enrichment.suggestedTopics} testId="project-suggested-tags" />
-          </section>
-        ) : null}
-
-        {enrichment.suggestedHomepage && enrichment.source !== "metadata" ? (
-          <section className="flex flex-col gap-2">
-            <h3 className="text-sm font-medium">Suggested homepage</h3>
-            <a
-              href={enrichment.suggestedHomepage}
-              target="_blank"
-              rel="noreferrer"
-              className="text-primary inline-flex items-center gap-1 text-sm hover:underline"
-            >
-              {enrichment.suggestedHomepage}
-              <ExternalLink className="size-3.5" />
-            </a>
-          </section>
-        ) : null}
-
-        {embedding ? (
-          <p className="text-base-content/60 text-sm">
-            Vectors indexed {format(new Date(embedding.embeddedAt), "PPp")} via {embedding.modelId}.
-          </p>
-        ) : null}
-      </CardContent>
-    </Card>
+      {needsReview ? (
+        <EnrichmentReviewDialog
+          open={reviewOpen}
+          onOpenChange={setReviewOpen}
+          repoFullName={repoFullName}
+          project={project}
+          enrichment={enrichment}
+        />
+      ) : null}
+    </>
   );
 }
 
@@ -385,6 +441,7 @@ export function BackstageProjectDetailContent({
 
       <EnrichmentSection
         repoFullName={repoFullName}
+        project={project}
         enrichment={enrichment}
         embedding={embedding}
       />

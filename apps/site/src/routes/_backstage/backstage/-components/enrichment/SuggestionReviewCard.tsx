@@ -27,6 +27,18 @@ export function SuggestionReviewCard({
   const [description, setDescription] = useState(suggestion.suggestedDescription ?? "");
   const [homepage, setHomepage] = useState(suggestion.suggestedHomepage ?? "");
   const [topics, setTopics] = useState(suggestion.suggestedTopics.join(", "));
+  const [summary, setSummary] = useState(() => {
+    if (!suggestion.analysisSummary) {
+      return "";
+    }
+
+    try {
+      const parsed = JSON.parse(suggestion.analysisSummary) as { reasoning?: string };
+      return typeof parsed.reasoning === "string" ? parsed.reasoning : "";
+    } catch {
+      return "";
+    }
+  });
 
   const approve = useMutation({
     mutationFn: approveProjectEnrichmentSuggestion,
@@ -83,6 +95,13 @@ export function SuggestionReviewCard({
         <div className="space-y-3">
           <p className="text-base-content/60 text-xs font-medium uppercase">Suggested</p>
           <Textarea
+            data-test="suggestion-summary"
+            placeholder="Enriched summary"
+            value={summary}
+            onChange={(event) => setSummary(event.target.value)}
+            rows={3}
+          />
+          <Textarea
             data-test="suggestion-description"
             value={description}
             onChange={(event) => setDescription(event.target.value)}
@@ -110,6 +129,7 @@ export function SuggestionReviewCard({
                     suggestionId: suggestion.id,
                     description,
                     homepage,
+                    enrichedSummary: summary,
                     topics: topics
                       .split(",")
                       .map((topic) => topic.trim())
