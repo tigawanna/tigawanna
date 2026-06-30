@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { BackstageGithubRepo, BackstageProject } from "@/types/backstage";
 import { cn } from "@/lib/utils";
-import type { ImportJobOptions } from "@/routes/_backstage/backstage/-hooks/use-import-queue";
+import type { ImportProjectOptions } from "@/routes/_backstage/backstage/-utils/import-options";
 import { format, formatDistanceToNow } from "date-fns";
 import { EllipsisVertical, ExternalLink, GitFork, Github, Star } from "lucide-react";
 import { useState } from "react";
@@ -13,7 +13,7 @@ type BackstageProjectRowProps = {
   github: BackstageGithubRepo;
   project: BackstageProject | null;
   disabled?: boolean;
-  onRequestImport?: (options: ImportJobOptions) => void;
+  onRequestImport?: (options: ImportProjectOptions) => void;
   isImporting?: boolean;
   importDisabled?: boolean;
 };

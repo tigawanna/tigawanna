@@ -1,4 +1,5 @@
 import { requireAdminSession } from "@/modules/admin-auth/require-admin";
+import { logEnrichmentEvent } from "@/lib/evlog/enrichment-log";
 import { applyRepoMetadata } from "@/modules/github/apply-repo-metadata";
 import { getDb } from "@/lib/db/get-db";
 import { createRunRecord } from "@/modules/project-enrichment/run-enrichment";
@@ -222,6 +223,16 @@ export const triggerProjectEnrichmentRun = createServerFn({ method: "POST" })
       repos: data.repos,
       force: data.force ?? false,
     };
+
+    logEnrichmentEvent({
+      workflow: "project-enrichment",
+      runId,
+      step: "startWorkflow",
+      outcome: "started",
+      trigger,
+      repoCount: data.repos?.length,
+      force: data.force ?? false,
+    });
 
     await start(enrichProjectsWorkflow, [params]);
 

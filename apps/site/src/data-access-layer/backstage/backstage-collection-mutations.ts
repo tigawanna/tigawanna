@@ -9,6 +9,9 @@ import { createOptimisticAction } from "@tanstack/db";
 export type ImportBackstageProjectInput = {
   repoFullName: string;
   runEnrichment: boolean;
+  runEmbedding: boolean;
+  skipEmbeddingIfComplete: boolean;
+  forceEmbedding: boolean;
 };
 
 export const importBackstageProject = createOptimisticAction<ImportBackstageProjectInput>({

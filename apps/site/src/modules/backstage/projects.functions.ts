@@ -1,5 +1,7 @@
 import { requireAdminSession } from "@/modules/admin-auth/require-admin";
+import { logEnrichmentEvent } from "@/lib/evlog/enrichment-log";
 import { getDb } from "@/lib/db/get-db";
+import { isServerEmbeddingEnabled } from "@/lib/envs/server-embedding";
 import { fetchReposByFullNames } from "@/modules/project-enrichment/github-client";
 import { createRunRecord, importRepoSnapshot } from "@/modules/project-enrichment/run-enrichment";
 import type { EnrichmentRunParams } from "@/modules/project-enrichment/types";
@@ -242,12 +244,16 @@ export const updateProjectRepo = createServerFn({ method: "POST" })
 const importProjectRepoInputSchema = z.object({
   repoFullName: repoFullNameSchema,
   runEnrichment: z.boolean().optional(),
+  runEmbedding: z.boolean().optional(),
+  skipEmbeddingIfComplete: z.boolean().optional(),
+  forceEmbedding: z.boolean().optional(),
 });
 
 /**
  * Fetches a GitHub repository snapshot and upserts it into `project_repos`.
  *
- * Optionally starts a manual enrichment workflow when `runEnrichment` is true.
+ * Optionally starts a manual enrichment workflow when `runEnrichment` or
+ * server-side `runEmbedding` is requested (embedding runs in dev/local only).
  *
  * Requires an authenticated admin session.
  */
@@ -267,7 +273,12 @@ export const importProjectRepo = createServerFn({ method: "POST" })
 
     await importRepoSnapshot(repo);
 
-    if (data.runEnrichment) {
+    const wantsEnrichment = data.runEnrichment === true;
+    const wantsEmbedding = data.runEmbedding === true;
+    const embeddingEnabled = isServerEmbeddingEnabled();
+    const shouldStartWorkflow = wantsEnrichment || (wantsEmbedding && embeddingEnabled);
+
+    if (shouldStartWorkflow) {
       const runId = await createRunRecord("manual", [data.repoFullName]);
       const params: EnrichmentRunParams = {
         runId,
@@ -275,7 +286,23 @@ export const importProjectRepo = createServerFn({ method: "POST" })
         limit: 1,
         repos: [data.repoFullName],
         force: true,
+        runEnrichment: wantsEnrichment,
+        runEmbedding: wantsEmbedding && embeddingEnabled,
+        skipEmbeddingIfComplete: data.skipEmbeddingIfComplete ?? true,
+        forceEmbedding: data.forceEmbedding ?? false,
       };
+
+      logEnrichmentEvent({
+        workflow: "project-enrichment",
+        runId,
+        step: "startWorkflow",
+        outcome: "started",
+        trigger: "manual",
+        repoFullName: data.repoFullName,
+        repoCount: 1,
+        force: true,
+      });
+
       await start(enrichProjectsWorkflow, [params]);
       return { imported: true as const, runId };
     }

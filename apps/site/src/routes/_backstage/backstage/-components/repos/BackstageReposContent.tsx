@@ -137,7 +137,13 @@ export function BackstageReposContent() {
   const handleImport = async (repoFullName: string) => {
     setImportingRepo(repoFullName);
     try {
-      const tx = importBackstageProject({ repoFullName, runEnrichment: runEnrichmentOnImport });
+      const tx = importBackstageProject({
+        repoFullName,
+        runEnrichment: runEnrichmentOnImport,
+        runEmbedding: false,
+        skipEmbeddingIfComplete: true,
+        forceEmbedding: false,
+      });
       await tx.isPersisted.promise;
       toast.success(
         runEnrichmentOnImport ? "Imported and enrichment started" : "Imported to projects",

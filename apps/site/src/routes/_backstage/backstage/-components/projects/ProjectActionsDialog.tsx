@@ -15,7 +15,8 @@ import {
   removeBackstageProject,
   setBackstageRepoVisibility,
 } from "@/data-access-layer/backstage/backstage-collection-mutations";
-import type { ImportJobOptions } from "@/routes/_backstage/backstage/-hooks/use-import-queue";
+import { isServerEmbeddingAvailableInClient } from "@/lib/envs/server-embedding";
+import type { ImportProjectOptions } from "@/routes/_backstage/backstage/-utils/import-options";
 import { isGithubRepoDeletePermissionError } from "@/routes/_backstage/backstage/-utils/github-repo-delete-errors";
 import type { BackstageGithubRepo, BackstageProject } from "@/types/backstage";
 import { unwrapUnknownError } from "@/utils/errors";
@@ -30,7 +31,7 @@ type ProjectActionsDialogProps = {
   project: BackstageProject | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onRequestImport: (options: ImportJobOptions) => void;
+  onRequestImport: (options: ImportProjectOptions) => void;
   isImporting?: boolean;
   importDisabled?: boolean;
 };
@@ -47,8 +48,10 @@ export function ProjectActionsDialog({
   const isImported = project != null;
   const repoFullName = isImported ? project.repoFullName : github.nameWithOwner;
 
+  const serverEmbeddingAvailable = isServerEmbeddingAvailableInClient();
+
   const [runEnrichment, setRunEnrichment] = useState(true);
-  const [runEmbedding, setRunEmbedding] = useState(true);
+  const [runEmbedding, setRunEmbedding] = useState(serverEmbeddingAvailable);
   const [skipEmbeddingIfComplete, setSkipEmbeddingIfComplete] = useState(true);
   const [forceEmbedding, setForceEmbedding] = useState(false);
   const [adminPatOpen, setAdminPatOpen] = useState(false);
@@ -171,58 +174,62 @@ export function ProjectActionsDialog({
                     id="import-run-embedding"
                     data-test="import-run-embedding"
                     checked={runEmbedding}
+                    disabled={!serverEmbeddingAvailable}
                     onCheckedChange={(checked) => setRunEmbedding(checked === true)}
                   />
                   <div className="grid gap-1">
                     <Label htmlFor="import-run-embedding">Run Gemma embeddings</Label>
                     <p className="text-base-content/60 text-sm">
-                      Introspects README and nested package.json files, then indexes vectors for
-                      search.
+                      {serverEmbeddingAvailable
+                        ? "Introspects README and nested package.json files, then indexes vectors for search. Runs locally after enrichment."
+                        : "Server-side embedding is disabled in production. Run bulk imports locally in dev to index vectors."}
                     </p>
                   </div>
                 </div>
 
-                <div className="border-base-content/10 ml-7 flex flex-col gap-3 border-l pl-4">
-                  <div className="flex items-start gap-3">
-                    <Checkbox
-                      id="import-skip-embedding-if-complete"
-                      data-test="import-skip-embedding-if-complete"
-                      checked={skipEmbeddingIfComplete}
-                      disabled={!runEmbedding || forceEmbedding}
-                      onCheckedChange={(checked) => setSkipEmbeddingIfComplete(checked === true)}
-                    />
-                    <div className="grid gap-1">
-                      <Label htmlFor="import-skip-embedding-if-complete">
-                        Skip if already complete
-                      </Label>
-                      <p className="text-base-content/60 text-sm">
-                        Skip embedding when description and tags exist on GitHub or in the README.
-                      </p>
+                {serverEmbeddingAvailable ? (
+                  <div className="border-base-content/10 ml-7 flex flex-col gap-3 border-l pl-4">
+                    <div className="flex items-start gap-3">
+                      <Checkbox
+                        id="import-skip-embedding-if-complete"
+                        data-test="import-skip-embedding-if-complete"
+                        checked={skipEmbeddingIfComplete}
+                        disabled={!runEmbedding || forceEmbedding}
+                        onCheckedChange={(checked) => setSkipEmbeddingIfComplete(checked === true)}
+                      />
+                      <div className="grid gap-1">
+                        <Label htmlFor="import-skip-embedding-if-complete">
+                          Skip if already complete
+                        </Label>
+                        <p className="text-base-content/60 text-sm">
+                          Skip embedding when description and tags exist on GitHub or in the README.
+                        </p>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="flex items-start gap-3">
-                    <Checkbox
-                      id="import-force-embedding"
-                      data-test="import-force-embedding"
-                      checked={forceEmbedding}
-                      disabled={!runEmbedding}
-                      onCheckedChange={(checked) => {
-                        const next = checked === true;
-                        setForceEmbedding(next);
-                        if (next) {
-                          setSkipEmbeddingIfComplete(false);
-                        }
-                      }}
-                    />
-                    <div className="grid gap-1">
-                      <Label htmlFor="import-force-embedding">Re-embed anyway</Label>
-                      <p className="text-base-content/60 text-sm">
-                        Force a fresh embedding run even when tags and description are present.
-                      </p>
+                    <div className="flex items-start gap-3">
+                      <Checkbox
+                        id="import-force-embedding"
+                        data-test="import-force-embedding"
+                        checked={forceEmbedding}
+                        disabled={!runEmbedding}
+                        onCheckedChange={(checked) => {
+                          const next = checked === true;
+                          setForceEmbedding(next);
+                          if (next) {
+                            setSkipEmbeddingIfComplete(false);
+                          }
+                        }}
+                      />
+                      <div className="grid gap-1">
+                        <Label htmlFor="import-force-embedding">Re-embed anyway</Label>
+                        <p className="text-base-content/60 text-sm">
+                          Force a fresh embedding run even when tags and description are present.
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                ) : null}
               </div>
 
               <Button

@@ -1,23 +1,15 @@
 import { requireAdminSession } from "@/modules/admin-auth/require-admin";
+import { indexRepoEmbedding } from "@/modules/backstage/index-repo-embedding";
 import {
-  embedDocument,
-  getEmbeddingModelId,
   getGemmaEmbedding,
+  getEmbeddingModelId,
 } from "@/modules/backstage/gemma-embedding-service";
-import {
-  fetchRepoExtraction,
-  readmeHasDescription,
-  readmeHasTags,
-  summarizePackageJson,
-} from "@/modules/github/repo-extraction";
-import {
-  fetchRecentRepos,
-  fetchReposByFullNames,
-} from "@/modules/project-enrichment/github-client";
+import { isServerEmbeddingEnabled } from "@/lib/envs/server-embedding";
+import { fetchRecentRepos } from "@/modules/project-enrichment/github-client";
 import { getDb } from "@/lib/db/get-db";
 import { getServerEnv } from "@/lib/envs/server-env";
 import { cosine } from "@kessler/gemma-embedding";
-import { asc, count, eq, projectEmbeddings } from "@repo/db";
+import { asc, count, projectEmbeddings } from "@repo/db";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
@@ -190,6 +182,10 @@ export const indexProjectEmbeddingsBatch = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     await requireAdminSession();
 
+    if (!isServerEmbeddingEnabled()) {
+      throw new Error("Server-side embedding is disabled in this environment");
+    }
+
     const env = getServerEnv();
     const pat = env.GH_PAT;
     if (!pat) {
@@ -360,47 +356,6 @@ const indexSingleInputSchema = z.object({
   force: z.boolean().optional(),
 });
 
-function shouldSkipEmbedding(input: {
-  force: boolean;
-  skipIfComplete: boolean;
-  repo: { description: string | null; topics: string[] };
-  stored: {
-    sourceEmbeddings: SourceEmbeddingChunk[];
-    inferredDescription: string | null;
-    inferredTopics: string | null;
-    topics: string;
-  } | null;
-  extraction: { readme: string | null };
-}) {
-  if (input.force || !input.skipIfComplete || !input.stored) {
-    return null;
-  }
-
-  if (input.stored.sourceEmbeddings.length === 0) {
-    return null;
-  }
-
-  const readme = input.extraction.readme ?? "";
-  const description =
-    input.repo.description?.trim() ||
-    input.stored.inferredDescription?.trim() ||
-    (readme && readmeHasDescription(readme) ? "readme-description" : "");
-  const topics =
-    input.repo.topics.length > 0
-      ? input.repo.topics
-      : input.stored.inferredTopics
-        ? parseTopics(input.stored.inferredTopics)
-        : readme && readmeHasTags(readme)
-          ? ["readme-tags"]
-          : parseTopics(input.stored.topics);
-
-  if (description.length > 0 && topics.length > 0) {
-    return "Embeddings, description, and tags already present";
-  }
-
-  return null;
-}
-
 /**
  * Indexes one repository with multi-source Gemma embeddings (README, package.json, tags, summary).
  */
@@ -408,141 +363,9 @@ export const indexProjectEmbedding = createServerFn({ method: "POST" })
   .validator((input: z.infer<typeof indexSingleInputSchema>) => indexSingleInputSchema.parse(input))
   .handler(async ({ data }) => {
     await requireAdminSession();
-
-    const env = getServerEnv();
-    const pat = env.GH_PAT;
-    if (!pat) {
-      throw new Error("GH_PAT is not configured");
-    }
-
-    const repos = await fetchReposByFullNames(pat, [data.repoFullName]);
-    const repo = repos[0];
-    if (!repo) {
-      throw new Error("Repo not found or is private");
-    }
-
-    const db = getDb();
-    const [storedRow] = await db
-      .select({
-        sourceEmbeddings: projectEmbeddings.sourceEmbeddings,
-        inferredDescription: projectEmbeddings.inferredDescription,
-        inferredTopics: projectEmbeddings.inferredTopics,
-        topics: projectEmbeddings.topics,
-      })
-      .from(projectEmbeddings)
-      .where(eq(projectEmbeddings.githubRepoId, repo.id))
-      .limit(1);
-
-    const stored = storedRow
-      ? {
-          sourceEmbeddings: parseSourceEmbeddings(storedRow.sourceEmbeddings),
-          inferredDescription: storedRow.inferredDescription,
-          inferredTopics: storedRow.inferredTopics,
-          topics: storedRow.topics,
-        }
-      : null;
-
-    const extraction = await fetchRepoExtraction(pat, repo);
-    const skipReason = shouldSkipEmbedding({
-      force: data.force ?? false,
-      skipIfComplete: data.skipIfComplete ?? true,
-      repo,
-      stored,
-      extraction,
-    });
-
-    if (skipReason) {
-      return { status: "skipped" as const, reason: skipReason, repoFullName: data.repoFullName };
-    }
-
-    const description = repo.description?.trim() ?? "";
-    const topics = [...repo.topics];
-    const sourceEmbeddings: SourceEmbeddingChunk[] = [];
-
-    if (extraction.readme?.trim()) {
-      const vector = await embedDocument(extraction.readme);
-      sourceEmbeddings.push({
-        kind: "readme",
-        label: extraction.readmePath ?? "README.md",
-        text: extraction.readme,
-        embedding: vector,
-      });
-    }
-
-    for (const chunk of extraction.packageJsonChunks) {
-      const text = summarizePackageJson(chunk.path, chunk.content);
-      if (!text.trim()) continue;
-      const vector = await embedDocument(text);
-      sourceEmbeddings.push({
-        kind: "package-json",
-        label: chunk.path,
-        text,
-        embedding: vector,
-      });
-    }
-
-    if (topics.length > 0) {
-      const tagsText = `Topics: ${topics.join(", ")}`;
-      const vector = await embedDocument(tagsText);
-      sourceEmbeddings.push({
-        kind: "tags",
-        label: "tags",
-        text: tagsText,
-        embedding: vector,
-      });
-    }
-
-    const embedText = buildProjectEmbedText({
-      name: repo.name,
-      nameWithOwner: repo.nameWithOwner,
-      description: description || null,
-      topics,
-    });
-    const summaryVector = await embedDocument(embedText);
-    sourceEmbeddings.push({
-      kind: "summary",
-      label: "summary",
-      text: embedText,
-      embedding: summaryVector,
-    });
-
-    const modelId = getEmbeddingModelId();
-    const now = new Date();
-
-    await db
-      .insert(projectEmbeddings)
-      .values({
-        githubRepoId: repo.id,
-        repoFullName: repo.nameWithOwner,
-        repoUrl: `https://github.com/${repo.nameWithOwner}`,
-        name: repo.name,
-        description: description || null,
-        topics: serializeTopics(topics),
-        embedText,
-        embedding: JSON.stringify(summaryVector),
-        sourceEmbeddings: JSON.stringify(sourceEmbeddings),
-        modelId,
-        embeddedAt: now,
-      })
-      .onConflictDoUpdate({
-        target: projectEmbeddings.githubRepoId,
-        set: {
-          repoFullName: repo.nameWithOwner,
-          repoUrl: `https://github.com/${repo.nameWithOwner}`,
-          name: repo.name,
-          description: description || null,
-          topics: serializeTopics(topics),
-          embedText,
-          embedding: JSON.stringify(summaryVector),
-          sourceEmbeddings: JSON.stringify(sourceEmbeddings),
-          modelId,
-          embeddedAt: now,
-        },
-      });
-
-    return {
-      status: "processed" as const,
+    return indexRepoEmbedding({
       repoFullName: data.repoFullName,
-      sourceCount: sourceEmbeddings.length,
-    };
+      skipIfComplete: data.skipIfComplete,
+      force: data.force,
+    });
   });

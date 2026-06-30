@@ -4,4 +4,8 @@ export type EnrichmentRunParams = {
   limit?: number;
   repos?: string[];
   force?: boolean;
+  runEnrichment?: boolean;
+  runEmbedding?: boolean;
+  skipEmbeddingIfComplete?: boolean;
+  forceEmbedding?: boolean;
 };

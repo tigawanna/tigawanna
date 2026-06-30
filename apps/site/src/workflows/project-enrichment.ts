@@ -4,6 +4,7 @@ import { sleep } from "workflow";
 import {
   fetchReposStep,
   finalizeRunStep,
+  indexEmbeddingStep,
   markRunFailedStep,
   processRepoStep,
 } from "./project-enrichment.steps";
@@ -12,13 +13,25 @@ export async function enrichProjectsWorkflow(params: EnrichmentRunParams) {
   "use workflow";
 
   const deltas: Awaited<ReturnType<typeof processRepoStep>>[] = [];
+  const runEnrichment = params.runEnrichment !== false;
+  const runEmbedding = params.runEmbedding === true;
 
   try {
     const repos = await fetchReposStep(params);
 
     for (const repo of repos) {
-      const delta = await processRepoStep(params.runId, repo, params.force ?? false);
-      deltas.push(delta);
+      if (runEnrichment) {
+        const delta = await processRepoStep(params.runId, repo, params.force ?? false);
+        deltas.push(delta);
+      }
+
+      if (runEmbedding) {
+        await indexEmbeddingStep(params.runId, repo, {
+          skipIfComplete: params.skipEmbeddingIfComplete ?? true,
+          force: params.forceEmbedding ?? false,
+        });
+      }
+
       await sleep("2s");
     }
 

@@ -18,13 +18,18 @@ import {
 import { backstageGithubReposCollection } from "@/data-access-layer/backstage/backstage-github-repos-collection";
 import { nullableBackstageProject } from "@/data-access-layer/backstage/backstage-project-mapper";
 import { backstageProjectsCollection } from "@/data-access-layer/backstage/backstage-projects-collection";
+import { importBackstageProject } from "@/data-access-layer/backstage/backstage-collection-mutations";
 import { TanstackDBSortSelect } from "@/routes/_backstage/backstage/-components/shared/TanstackDBColumnfilters";
 import { createSortableColumns } from "@/routes/_backstage/backstage/-components/shared/sortable-columns";
-import { useImportQueue } from "@/routes/_backstage/backstage/-hooks/use-import-queue";
 import { useTSRSearchQuery } from "@/routes/_backstage/backstage/-hooks/use-tsr-search-query";
+import type { ImportProjectOptions } from "@/routes/_backstage/backstage/-utils/import-options";
+import { unwrapUnknownError } from "@/utils/errors";
 import { and, eq, ilike, IR, isNull, not, or } from "@tanstack/db";
 import { useLiveQuery } from "@tanstack/react-db";
+import { useMutation } from "@tanstack/react-query";
 import { FolderCodeIcon, Loader, RefreshCcwIcon } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import { Route, type BackstageProjectsSearch } from "../../projects";
 import { BackstageFilterField, BackstageFiltersDialog } from "../shared/BackstageFiltersDialog";
 import { BackstageProjectRow } from "./BackstageProjectRow";
@@ -42,7 +47,26 @@ function combineWhereClauses(clauses: Array<IR.BasicExpression<boolean>>) {
 }
 
 export function BackstageProjects() {
-  const importQueue = useImportQueue();
+  const [importingRepo, setImportingRepo] = useState<string | null>(null);
+
+  const importMutation = useMutation({
+    mutationFn: async (options: ImportProjectOptions) => {
+      const tx = importBackstageProject(options);
+      await tx.isPersisted.promise;
+    },
+    onMutate: (options) => {
+      setImportingRepo(options.repoFullName);
+    },
+    onSettled: () => {
+      setImportingRepo(null);
+    },
+    onSuccess(_data, options) {
+      toast.success("Imported to projects", { description: options.repoFullName });
+    },
+    onError(err: unknown) {
+      toast.error("Import failed", { description: unwrapUnknownError(err).message });
+    },
+  });
 
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
@@ -266,9 +290,9 @@ export function BackstageProjects() {
               key={row.github.nameWithOwner}
               github={row.github}
               project={row.projects}
-              onRequestImport={importQueue.enqueue}
-              isImporting={importQueue.activeRepo === row.github.nameWithOwner}
-              importDisabled={importQueue.isBusy}
+              onRequestImport={(options) => importMutation.mutate(options)}
+              isImporting={importingRepo === row.github.nameWithOwner}
+              importDisabled={importingRepo != null}
             />
           ))}
       </div>
