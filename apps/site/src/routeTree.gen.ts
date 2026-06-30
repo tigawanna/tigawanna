@@ -22,6 +22,7 @@ import { Route as BackstageBackstageReposRouteImport } from './routes/_backstage
 import { Route as BackstageBackstageMessagesRouteImport } from './routes/_backstage/backstage/messages'
 import { Route as BackstageBackstageJournalRouteImport } from './routes/_backstage/backstage/journal'
 import { Route as BackstageBackstageProjectsIndexRouteImport } from './routes/_backstage/backstage/projects/index'
+import { Route as BackstageBackstageProjectsOwnerRepoIndexRouteImport } from './routes/_backstage/backstage/projects/$owner/$repo/index'
 
 const BackstageLayoutRoute = BackstageLayoutRouteImport.update({
   id: '/_backstage',
@@ -90,6 +91,12 @@ const BackstageBackstageProjectsIndexRoute =
     path: '/backstage/projects/',
     getParentRoute: () => BackstageLayoutRoute,
   } as any)
+const BackstageBackstageProjectsOwnerRepoIndexRoute =
+  BackstageBackstageProjectsOwnerRepoIndexRouteImport.update({
+    id: '/backstage/projects/$owner/$repo/',
+    path: '/backstage/projects/$owner/$repo/',
+    getParentRoute: () => BackstageLayoutRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -104,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/backstage/': typeof BackstageBackstageIndexRoute
   '/preview/error/': typeof PreviewErrorIndexRoute
   '/backstage/projects/': typeof BackstageBackstageProjectsIndexRoute
+  '/backstage/projects/$owner/$repo/': typeof BackstageBackstageProjectsOwnerRepoIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -118,6 +126,7 @@ export interface FileRoutesByTo {
   '/backstage': typeof BackstageBackstageIndexRoute
   '/preview/error': typeof PreviewErrorIndexRoute
   '/backstage/projects': typeof BackstageBackstageProjectsIndexRoute
+  '/backstage/projects/$owner/$repo': typeof BackstageBackstageProjectsOwnerRepoIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -134,6 +143,7 @@ export interface FileRoutesById {
   '/_backstage/backstage/': typeof BackstageBackstageIndexRoute
   '/preview/error/': typeof PreviewErrorIndexRoute
   '/_backstage/backstage/projects/': typeof BackstageBackstageProjectsIndexRoute
+  '/_backstage/backstage/projects/$owner/$repo/': typeof BackstageBackstageProjectsOwnerRepoIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -150,6 +160,7 @@ export interface FileRouteTypes {
     | '/backstage/'
     | '/preview/error/'
     | '/backstage/projects/'
+    | '/backstage/projects/$owner/$repo/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -164,6 +175,7 @@ export interface FileRouteTypes {
     | '/backstage'
     | '/preview/error'
     | '/backstage/projects'
+    | '/backstage/projects/$owner/$repo'
   id:
     | '__root__'
     | '/'
@@ -179,6 +191,7 @@ export interface FileRouteTypes {
     | '/_backstage/backstage/'
     | '/preview/error/'
     | '/_backstage/backstage/projects/'
+    | '/_backstage/backstage/projects/$owner/$repo/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -285,6 +298,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BackstageBackstageProjectsIndexRouteImport
       parentRoute: typeof BackstageLayoutRoute
     }
+    '/_backstage/backstage/projects/$owner/$repo/': {
+      id: '/_backstage/backstage/projects/$owner/$repo/'
+      path: '/backstage/projects/$owner/$repo'
+      fullPath: '/backstage/projects/$owner/$repo/'
+      preLoaderRoute: typeof BackstageBackstageProjectsOwnerRepoIndexRouteImport
+      parentRoute: typeof BackstageLayoutRoute
+    }
   }
 }
 
@@ -294,6 +314,7 @@ interface BackstageLayoutRouteChildren {
   BackstageBackstageReposRoute: typeof BackstageBackstageReposRoute
   BackstageBackstageIndexRoute: typeof BackstageBackstageIndexRoute
   BackstageBackstageProjectsIndexRoute: typeof BackstageBackstageProjectsIndexRoute
+  BackstageBackstageProjectsOwnerRepoIndexRoute: typeof BackstageBackstageProjectsOwnerRepoIndexRoute
 }
 
 const BackstageLayoutRouteChildren: BackstageLayoutRouteChildren = {
@@ -302,6 +323,8 @@ const BackstageLayoutRouteChildren: BackstageLayoutRouteChildren = {
   BackstageBackstageReposRoute: BackstageBackstageReposRoute,
   BackstageBackstageIndexRoute: BackstageBackstageIndexRoute,
   BackstageBackstageProjectsIndexRoute: BackstageBackstageProjectsIndexRoute,
+  BackstageBackstageProjectsOwnerRepoIndexRoute:
+    BackstageBackstageProjectsOwnerRepoIndexRoute,
 }
 
 const BackstageLayoutRouteWithChildren = BackstageLayoutRoute._addFileChildren(

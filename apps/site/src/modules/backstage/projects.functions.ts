@@ -6,13 +6,17 @@ import { fetchReposByFullNames } from "@/modules/project-enrichment/github-clien
 import { createRunRecord, importRepoSnapshot } from "@/modules/project-enrichment/run-enrichment";
 import type { EnrichmentRunParams } from "@/modules/project-enrichment/types";
 import { getServerEnv } from "@/lib/envs/server-env";
+import { fetchRepoReadmeHtml } from "@/modules/github/repo-detail";
 import { enrichProjectsWorkflow } from "@/workflows/project-enrichment";
 import {
   desc,
   eq,
   projectAttendanceValues,
+  projectEmbeddings,
+  projectEnrichmentSuggestions,
   projectRepos,
   type ProjectAttendance,
+  type ProjectEnrichmentSuggestionStatus,
   type ProjectRepoRow,
 } from "@repo/db";
 import { createServerFn } from "@tanstack/react-start";
@@ -39,6 +43,101 @@ function parseTopics(raw: string) {
   }
 }
 
+/** How backstage resolved enrichment for display. */
+export type BackstageEnrichmentSource = "ai_suggestion" | "ai_record" | "metadata";
+
+/** Enrichment suggestion surfaced on the backstage project detail page. */
+export type BackstageProjectEnrichment = {
+  source: BackstageEnrichmentSource;
+  isAiEnriched: boolean;
+  suggestionId: string | null;
+  status: ProjectEnrichmentSuggestionStatus | "complete";
+  suggestedDescription: string | null;
+  suggestedTopics: string[];
+  suggestedHomepage: string | null;
+  briefSummary: string | null;
+  confidence: {
+    description: number;
+    topics: number;
+    homepage: number;
+  } | null;
+  enrichedAt: Date;
+};
+
+/** Indexed embedding metadata for a backstage project. */
+export type BackstageProjectEmbedding = {
+  modelId: string;
+  embeddedAt: Date;
+  sourceCount: number;
+};
+
+/** Full backstage project detail payload. */
+export type BackstageProjectDetail = {
+  project: BackstageProject;
+  github: {
+    description: string | null;
+    homepageUrl: string | null;
+    topics: string[];
+  } | null;
+  enrichment: BackstageProjectEnrichment | null;
+  embedding: BackstageProjectEmbedding | null;
+  readmeHtml: string | null;
+};
+
+/**
+ * Counts stored source embedding chunks from serialized JSON.
+ */
+function countSourceEmbeddings(raw: string | null | undefined) {
+  if (!raw) {
+    return 0;
+  }
+
+  try {
+    const parsed = JSON.parse(raw) as unknown;
+    return Array.isArray(parsed) ? parsed.length : 0;
+  } catch {
+    return 0;
+  }
+}
+/**
+ * Parses enrichment analysis metadata stored on suggestions.
+ */
+function parseAnalysisSummary(raw: string | null | undefined) {
+  if (!raw) {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(raw) as {
+      reasoning?: string;
+      confidence?: {
+        description?: number;
+        topics?: number;
+        homepage?: number;
+      };
+    };
+
+    const confidence =
+      parsed.confidence &&
+      typeof parsed.confidence.description === "number" &&
+      typeof parsed.confidence.topics === "number" &&
+      typeof parsed.confidence.homepage === "number"
+        ? {
+            description: parsed.confidence.description,
+            topics: parsed.confidence.topics,
+            homepage: parsed.confidence.homepage,
+          }
+        : null;
+
+    return {
+      briefSummary: typeof parsed.reasoning === "string" ? parsed.reasoning : null,
+      confidence,
+    };
+  } catch {
+    return null;
+  }
+}
+
 /** Backstage-facing project row with parsed topic tags. */
 export type BackstageProject = {
   githubRepoId: string;
@@ -49,6 +148,9 @@ export type BackstageProject = {
   currentOgImageUrl: string | null;
   hasCustomSocialPreview: boolean;
   attendance: ProjectAttendance;
+  enrichedSummary: string | null;
+  enrichedAt: Date | null;
+  enrichedByAi: boolean;
   lastGithubSyncAt: Date;
   lastAppliedAt: Date | null;
   createdAt: Date;
@@ -70,10 +172,100 @@ function mapProjectRepoRow(row: ProjectRepoRow): BackstageProject {
     currentOgImageUrl: row.currentOgImageUrl,
     hasCustomSocialPreview: row.hasCustomSocialPreview,
     attendance: row.attendance,
+    enrichedSummary: row.enrichedSummary,
+    enrichedAt: row.enrichedAt,
+    enrichedByAi: row.enrichedByAi,
     lastGithubSyncAt: row.lastGithubSyncAt,
     lastAppliedAt: row.lastAppliedAt,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
+  };
+}
+
+type EnrichmentSuggestionRow = typeof projectEnrichmentSuggestions.$inferSelect;
+
+type EmbeddingEnrichmentHints = {
+  embedText: string | null;
+  inferredDescription: string | null;
+  embeddedAt: Date;
+  sourceCount: number;
+};
+
+/**
+ * Returns true when a project has both a non-empty description and at least one tag.
+ */
+function hasCompleteProjectMetadata(project: BackstageProject) {
+  return (project.currentDescription?.trim().length ?? 0) > 0 && project.currentTopics.length > 0;
+}
+
+/**
+ * Resolves enrichment display data from suggestions, AI records, or stored metadata.
+ *
+ * Priority: latest AI suggestion → persisted AI enrichment record → description/tags or
+ * indexed vectors (metadata-complete path).
+ */
+function resolveProjectEnrichment(
+  project: BackstageProject,
+  suggestionRow: EnrichmentSuggestionRow | undefined,
+  embedding: EmbeddingEnrichmentHints | null,
+): BackstageProjectEnrichment | null {
+  if (suggestionRow) {
+    const analysis = parseAnalysisSummary(suggestionRow.analysisSummary);
+
+    return {
+      source: "ai_suggestion",
+      isAiEnriched: true,
+      suggestionId: suggestionRow.id,
+      status: suggestionRow.status,
+      suggestedDescription: suggestionRow.suggestedDescription,
+      suggestedTopics: parseTopics(suggestionRow.suggestedTopics),
+      suggestedHomepage: suggestionRow.suggestedHomepage,
+      briefSummary: analysis?.briefSummary ?? project.enrichedSummary,
+      confidence: analysis?.confidence ?? null,
+      enrichedAt: project.enrichedAt ?? suggestionRow.createdAt,
+    };
+  }
+
+  if (project.enrichedByAi && project.enrichedSummary) {
+    return {
+      source: "ai_record",
+      isAiEnriched: true,
+      suggestionId: null,
+      status: project.attendance === "pending_review" ? "pending_review" : "complete",
+      suggestedDescription: project.currentDescription,
+      suggestedTopics: project.currentTopics,
+      suggestedHomepage: project.currentHomepage,
+      briefSummary: project.enrichedSummary,
+      confidence: null,
+      enrichedAt: project.enrichedAt ?? project.updatedAt,
+    };
+  }
+
+  const metadataComplete = hasCompleteProjectMetadata(project);
+  const hasVectors = embedding != null && embedding.sourceCount > 0;
+
+  if (!metadataComplete && !hasVectors) {
+    return null;
+  }
+
+  const briefSummary =
+    project.enrichedSummary?.trim() ||
+    embedding?.inferredDescription?.trim() ||
+    embedding?.embedText?.trim() ||
+    project.currentDescription?.trim() ||
+    null;
+
+  return {
+    source: "metadata",
+    isAiEnriched: false,
+    suggestionId: null,
+    status: "complete",
+    suggestedDescription: project.currentDescription,
+    suggestedTopics: project.currentTopics,
+    suggestedHomepage: project.currentHomepage,
+    briefSummary,
+    confidence: null,
+    enrichedAt: project.enrichedAt ?? embedding?.embeddedAt ?? project.lastGithubSyncAt,
   };
 }
 
@@ -382,4 +574,93 @@ export const removeProjectRepo = createServerFn({ method: "POST" })
     await requireAdminSession();
     await deleteProjectRepoByFullName(data.repoFullName);
     return { ok: true as const };
+  });
+
+/**
+ * Loads a backstage project with GitHub metadata, enrichment output, and README HTML.
+ */
+export const getBackstageProjectDetail = createServerFn({ method: "GET" })
+  .validator((input: { repoFullName: string }) => ({
+    repoFullName: repoFullNameSchema.parse(input.repoFullName),
+  }))
+  .handler(async ({ data }) => {
+    await requireAdminSession();
+    const db = getDb();
+
+    const [row] = await db
+      .select()
+      .from(projectRepos)
+      .where(eq(projectRepos.repoFullName, data.repoFullName))
+      .limit(1);
+
+    if (!row) {
+      throw new Error("Project not found");
+    }
+
+    const project = mapProjectRepoRow(row);
+
+    const [suggestionRow] = await db
+      .select()
+      .from(projectEnrichmentSuggestions)
+      .where(eq(projectEnrichmentSuggestions.githubRepoId, row.githubRepoId))
+      .orderBy(desc(projectEnrichmentSuggestions.createdAt))
+      .limit(1);
+
+    const [embeddingRow] = await db
+      .select({
+        modelId: projectEmbeddings.modelId,
+        embeddedAt: projectEmbeddings.embeddedAt,
+        sourceEmbeddings: projectEmbeddings.sourceEmbeddings,
+        embedText: projectEmbeddings.embedText,
+        inferredDescription: projectEmbeddings.inferredDescription,
+      })
+      .from(projectEmbeddings)
+      .where(eq(projectEmbeddings.githubRepoId, row.githubRepoId))
+      .limit(1);
+
+    const embeddingSourceCount = countSourceEmbeddings(embeddingRow?.sourceEmbeddings);
+    const embeddingHints: EmbeddingEnrichmentHints | null = embeddingRow
+      ? {
+          embedText: embeddingRow.embedText,
+          inferredDescription: embeddingRow.inferredDescription,
+          embeddedAt: embeddingRow.embeddedAt,
+          sourceCount: embeddingSourceCount,
+        }
+      : null;
+
+    const enrichment = resolveProjectEnrichment(project, suggestionRow, embeddingHints);
+
+    const embedding: BackstageProjectEmbedding | null = embeddingRow
+      ? {
+          modelId: embeddingRow.modelId,
+          embeddedAt: embeddingRow.embeddedAt,
+          sourceCount: embeddingSourceCount,
+        }
+      : null;
+
+    const [owner, repoName] = data.repoFullName.split("/");
+    const readmeHtml = owner && repoName ? await fetchRepoReadmeHtml(owner, repoName) : null;
+
+    const pat = getServerEnv().GH_PAT;
+    let github: BackstageProjectDetail["github"] = null;
+
+    if (pat) {
+      const repos = await fetchReposByFullNames(pat, [data.repoFullName]);
+      const snapshot = repos[0];
+      if (snapshot) {
+        github = {
+          description: snapshot.description,
+          homepageUrl: snapshot.homepageUrl,
+          topics: snapshot.topics,
+        };
+      }
+    }
+
+    return {
+      project,
+      github,
+      enrichment,
+      embedding,
+      readmeHtml,
+    } satisfies BackstageProjectDetail;
   });

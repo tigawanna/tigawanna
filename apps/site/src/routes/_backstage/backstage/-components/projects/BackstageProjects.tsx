@@ -18,10 +18,9 @@ import {
 import { backstageGithubReposCollection } from "@/data-access-layer/backstage/backstage-github-repos-collection";
 import { nullableBackstageProject } from "@/data-access-layer/backstage/backstage-project-mapper";
 import { backstageProjectsCollection } from "@/data-access-layer/backstage/backstage-projects-collection";
-import {
-  importBackstageProject,
-  bulkImportBackstageProjects,
-} from "@/data-access-layer/backstage/backstage-collection-mutations";
+import { bulkImportBackstageProjects } from "@/data-access-layer/backstage/backstage-collection-mutations";
+import { importProjectRepo } from "@/modules/backstage/projects.functions";
+import { useEnrichmentRunProgress } from "@/routes/_backstage/backstage/-hooks/use-enrichment-run-progress";
 import { TanstackDBSortSelect } from "@/routes/_backstage/backstage/-components/shared/TanstackDBColumnfilters";
 import { createSortableColumns } from "@/routes/_backstage/backstage/-components/shared/sortable-columns";
 import { useTSRSearchQuery } from "@/routes/_backstage/backstage/-hooks/use-tsr-search-query";
@@ -34,7 +33,7 @@ import { and, eq, ilike, IR, isNull, not, or } from "@tanstack/db";
 import { useLiveQuery } from "@tanstack/react-db";
 import { useMutation } from "@tanstack/react-query";
 import { Download, FolderCodeIcon, Loader, RefreshCcwIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Route, type BackstageProjectsSearch } from "../../projects";
 import { BackstageFilterField, BackstageFiltersDialog } from "../shared/BackstageFiltersDialog";
@@ -56,11 +55,36 @@ function combineWhereClauses(clauses: Array<IR.BasicExpression<boolean>>) {
 export function BackstageProjects() {
   const [importingRepo, setImportingRepo] = useState<string | null>(null);
   const [bulkImportOpen, setBulkImportOpen] = useState(false);
+  const [activeRunId, setActiveRunId] = useState<string | null>(null);
+  const { workingRepoFullName, isRunning } = useEnrichmentRunProgress(activeRunId);
+
+  useEffect(() => {
+    if (activeRunId && !isRunning) {
+      setActiveRunId(null);
+      void backstageProjectsCollection.utils.refetch();
+    }
+  }, [activeRunId, isRunning]);
+
+  useEffect(() => {
+    if (!activeRunId || !isRunning) {
+      return;
+    }
+
+    const intervalId = window.setInterval(() => {
+      void backstageProjectsCollection.utils.refetch();
+    }, 3000);
+
+    return () => window.clearInterval(intervalId);
+  }, [activeRunId, isRunning]);
 
   const importMutation = useMutation({
     mutationFn: async (options: ImportProjectOptions) => {
-      const tx = importBackstageProject(options);
-      await tx.isPersisted.promise;
+      const result = await importProjectRepo({ data: options });
+      await Promise.all([
+        backstageProjectsCollection.utils.refetch(),
+        backstageGithubReposCollection.utils.refetch(),
+      ]);
+      return result;
     },
     onMutate: (options) => {
       setImportingRepo(options.repoFullName);
@@ -68,8 +92,11 @@ export function BackstageProjects() {
     onSettled: () => {
       setImportingRepo(null);
     },
-    onSuccess(_data, options) {
+    onSuccess(result, options) {
       toast.success("Imported to projects", { description: options.repoFullName });
+      if (result.runId) {
+        setActiveRunId(result.runId);
+      }
     },
     onError(err: unknown) {
       toast.error("Import failed", { description: unwrapUnknownError(err).message });
@@ -80,15 +107,18 @@ export function BackstageProjects() {
     mutationFn: (options: BulkImportProjectOptions) => bulkImportBackstageProjects(options),
     onSuccess(result) {
       toast.success(`Imported ${result.importedCount} repos`, {
-        description: result.runId ? "Workflow started" : "Import only",
+        description: result.runId ? "Workflow running…" : "Import only",
       });
+      if (result.runId) {
+        setActiveRunId(result.runId);
+      }
     },
     onError(err: unknown) {
       toast.error("Bulk import failed", { description: unwrapUnknownError(err).message });
     },
   });
 
-  const isImportBusy = importingRepo != null || bulkImportMutation.isPending;
+  const isImportBusy = importingRepo != null || bulkImportMutation.isPending || activeRunId != null;
 
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
@@ -171,6 +201,11 @@ export function BackstageProjects() {
   const untrackedRepoFullNames = joinedRows
     .filter((row) => row.projects == null)
     .map((row) => row.github.nameWithOwner);
+
+  const isRowWorking = (repoFullName: string) =>
+    importingRepo === repoFullName ||
+    workingRepoFullName === repoFullName ||
+    (bulkImportMutation.isPending && untrackedRepoFullNames.includes(repoFullName));
 
   return (
     <div
@@ -339,7 +374,7 @@ export function BackstageProjects() {
               github={row.github}
               project={row.projects}
               onRequestImport={(options) => importMutation.mutate(options)}
-              isImporting={importingRepo === row.github.nameWithOwner}
+              isImporting={isRowWorking(row.github.nameWithOwner)}
               importDisabled={isImportBusy}
             />
           ))}

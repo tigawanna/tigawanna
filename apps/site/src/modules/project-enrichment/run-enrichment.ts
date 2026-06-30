@@ -140,6 +140,17 @@ export async function processRepoForRun(
     createdAt: new Date(),
   });
 
+  const enrichedAt = new Date();
+  await db
+    .update(projectRepos)
+    .set({
+      enrichedSummary: enrichment.reasoning,
+      enrichedAt,
+      enrichedByAi: true,
+      updatedAt: enrichedAt,
+    })
+    .where(eq(projectRepos.githubRepoId, repo.id));
+
   return { reposSynced: 0, reposSkipped: 0, reposEnriched: 1 };
 }
 
@@ -154,6 +165,26 @@ export async function updateRunSuccess(runId: string, counters: RunCounters) {
       reposEnriched: counters.reposEnriched,
       finishedAt: new Date(),
       error: null,
+    })
+    .where(eq(projectEnrichmentRuns.id, runId));
+}
+
+/**
+ * Persists in-flight workflow counters while a run is still `running`.
+ */
+export async function updateRunProgress(
+  runId: string,
+  counters: RunCounters,
+  processedRepoCount: number,
+) {
+  const db = getDb();
+  await db
+    .update(projectEnrichmentRuns)
+    .set({
+      reposSynced: counters.reposSynced,
+      reposSkipped: counters.reposSkipped,
+      reposEnriched: counters.reposEnriched,
+      processedRepoCount,
     })
     .where(eq(projectEnrichmentRuns.id, runId));
 }

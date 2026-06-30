@@ -7,6 +7,7 @@ import {
   indexEmbeddingStep,
   markRunFailedStep,
   processRepoStep,
+  updateRunProgressStep,
 } from "./project-enrichment.steps";
 
 export async function enrichProjectsWorkflow(params: EnrichmentRunParams) {
@@ -19,7 +20,7 @@ export async function enrichProjectsWorkflow(params: EnrichmentRunParams) {
   try {
     const repos = await fetchReposStep(params);
 
-    for (const repo of repos) {
+    for (const [index, repo] of repos.entries()) {
       if (runEnrichment) {
         const delta = await processRepoStep(params.runId, repo, params.force ?? false);
         deltas.push(delta);
@@ -32,6 +33,7 @@ export async function enrichProjectsWorkflow(params: EnrichmentRunParams) {
         });
       }
 
+      await updateRunProgressStep(params.runId, sumDeltas(deltas), index + 1);
       await sleep("2s");
     }
 

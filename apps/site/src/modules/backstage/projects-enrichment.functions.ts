@@ -71,6 +71,26 @@ export const listProjectEnrichmentRuns = createServerFn({ method: "GET" }).handl
     .limit(20);
 });
 
+export const getProjectEnrichmentRun = createServerFn({ method: "GET" })
+  .validator((input: { runId: string }) => ({
+    runId: z.string().uuid().parse(input.runId),
+  }))
+  .handler(async ({ data }) => {
+    await requireAdminSession();
+    const db = getDb();
+    const [row] = await db
+      .select()
+      .from(projectEnrichmentRuns)
+      .where(eq(projectEnrichmentRuns.id, data.runId))
+      .limit(1);
+
+    if (!row) {
+      throw new Error("Enrichment run not found");
+    }
+
+    return row;
+  });
+
 export const approveProjectEnrichmentSuggestion = createServerFn({ method: "POST" })
   .validator(
     (input: {

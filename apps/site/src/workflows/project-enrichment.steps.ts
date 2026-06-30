@@ -10,6 +10,7 @@ import {
 import {
   processRepoForRun,
   updateRunFailure,
+  updateRunProgress,
   updateRunSuccess,
 } from "@/modules/project-enrichment/run-enrichment";
 import type { EnrichmentRunParams } from "@/modules/project-enrichment/types";
@@ -121,6 +122,29 @@ export async function indexEmbeddingStep(
     return result;
   } catch (err: unknown) {
     logEnrichmentError(runId, "indexEmbedding", err, { repoFullName: repo.nameWithOwner });
+    throw err;
+  }
+}
+
+export async function updateRunProgressStep(
+  runId: string,
+  counters: RunCounters,
+  processedRepoCount: number,
+) {
+  "use step";
+
+  logEnrichmentEvent({
+    workflow: "project-enrichment",
+    runId,
+    step: "updateRunProgress",
+    outcome: "success",
+    counters,
+  });
+
+  try {
+    await updateRunProgress(runId, counters, processedRepoCount);
+  } catch (err: unknown) {
+    logEnrichmentError(runId, "updateRunProgress", err, { counters });
     throw err;
   }
 }

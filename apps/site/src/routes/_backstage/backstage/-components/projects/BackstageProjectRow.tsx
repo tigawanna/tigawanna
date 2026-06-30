@@ -4,9 +4,10 @@ import type { BackstageGithubRepo, BackstageProject } from "@/types/backstage";
 import { cn } from "@/lib/utils";
 import type { ImportProjectOptions } from "@/routes/_backstage/backstage/-utils/import-options";
 import { format, formatDistanceToNow } from "date-fns";
-import { EllipsisVertical, ExternalLink, GitFork, Github, Star } from "lucide-react";
+import { EllipsisVertical, ExternalLink, GitFork, Github, Loader, Star } from "lucide-react";
 import { useState } from "react";
-import { attendanceLabel } from "./helpers";
+import { Link } from "@tanstack/react-router";
+import { attendanceLabel, backstageProjectDetailRoute } from "./helpers";
 import { ProjectActionsDialog } from "./ProjectActionsDialog";
 
 type BackstageProjectRowProps = {
@@ -36,6 +37,7 @@ export function BackstageProjectRow({
     ? project.currentDescription || "(no description)"
     : github.description || "(no description)";
   const homepageUrl = isImported ? project.currentHomepage : github.homepageUrl;
+  const detailRoute = isImported ? backstageProjectDetailRoute(project.repoFullName) : null;
 
   return (
     <>
@@ -53,8 +55,10 @@ export function BackstageProjectRow({
         className={cn(
           "flex flex-wrap items-start gap-4 px-4 py-4",
           !isImported && "border-base-content/10 bg-base-100/50 border border-dashed",
+          isImporting && "bg-primary/5 border-primary/20",
         )}
         data-test={isImported ? "project-row" : "github-only-project-row"}
+        data-working={isImporting ? "true" : undefined}
       >
         {imageUrl ? (
           <img
@@ -73,14 +77,34 @@ export function BackstageProjectRow({
 
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <a
-              href={repoUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="font-medium hover:underline"
-            >
-              {repoName}
-            </a>
+            {detailRoute ? (
+              <Link
+                {...detailRoute}
+                className="font-medium hover:underline"
+                data-test="project-detail-link"
+              >
+                {repoName}
+              </Link>
+            ) : (
+              <a
+                href={repoUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="font-medium hover:underline"
+              >
+                {repoName}
+              </a>
+            )}
+            {isImporting ? (
+              <Badge
+                variant="outline"
+                className="border-primary/30 bg-primary/10 text-primary gap-1"
+                data-test="project-working-badge"
+              >
+                <Loader className="size-3 animate-spin" />
+                Working…
+              </Badge>
+            ) : null}
             {isImported ? (
               <Badge variant="secondary" data-test="project-status-badge">
                 Imported

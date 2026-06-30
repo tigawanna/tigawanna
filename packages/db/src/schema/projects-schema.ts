@@ -39,6 +39,7 @@ export const projectEnrichmentRuns = sqliteTable(
     reposSynced: integer("repos_synced").notNull().default(0),
     reposSkipped: integer("repos_skipped").notNull().default(0),
     reposEnriched: integer("repos_enriched").notNull().default(0),
+    processedRepoCount: integer("processed_repo_count").notNull().default(0),
     error: text("error"),
     startedAt: integer("started_at", { mode: "timestamp_ms" })
       .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
@@ -64,6 +65,9 @@ export const projectRepos = sqliteTable(
       .notNull()
       .default(false),
     attendance: text("attendance").notNull().$type<ProjectAttendance>(),
+    enrichedSummary: text("enriched_summary"),
+    enrichedAt: integer("enriched_at", { mode: "timestamp_ms" }),
+    enrichedByAi: integer("enriched_by_ai", { mode: "boolean" }).notNull().default(false),
     lastGithubSyncAt: integer("last_github_sync_at", { mode: "timestamp_ms" })
       .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
       .notNull(),
