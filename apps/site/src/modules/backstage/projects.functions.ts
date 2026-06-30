@@ -5,7 +5,14 @@ import { createRunRecord, importRepoSnapshot } from "@/modules/project-enrichmen
 import type { EnrichmentRunParams } from "@/modules/project-enrichment/types";
 import { getServerEnv } from "@/lib/envs/server-env";
 import { enrichProjectsWorkflow } from "@/workflows/project-enrichment";
-import { desc, eq, projectAttendanceValues, projectRepos, type ProjectRepoRow } from "@repo/db";
+import {
+  desc,
+  eq,
+  projectAttendanceValues,
+  projectRepos,
+  type ProjectAttendance,
+  type ProjectRepoRow,
+} from "@repo/db";
 import { createServerFn } from "@tanstack/react-start";
 import { start } from "workflow/api";
 import { z } from "zod";
@@ -30,15 +37,41 @@ function parseTopics(raw: string) {
   }
 }
 
+/** Backstage-facing project row with parsed topic tags. */
+export type BackstageProject = {
+  githubRepoId: string;
+  repoFullName: string;
+  currentDescription: string | null;
+  currentTopics: string[];
+  currentHomepage: string | null;
+  currentOgImageUrl: string | null;
+  hasCustomSocialPreview: boolean;
+  attendance: ProjectAttendance;
+  lastGithubSyncAt: Date;
+  lastAppliedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 /**
  * Maps a `project_repos` row to the backstage project shape with parsed topics.
  *
  * @param row - Raw database row.
  */
-function mapProjectRepoRow(row: ProjectRepoRow) {
+function mapProjectRepoRow(row: ProjectRepoRow): BackstageProject {
   return {
-    ...row,
+    githubRepoId: row.githubRepoId,
+    repoFullName: row.repoFullName,
+    currentDescription: row.currentDescription,
     currentTopics: parseTopics(row.currentTopics),
+    currentHomepage: row.currentHomepage,
+    currentOgImageUrl: row.currentOgImageUrl,
+    hasCustomSocialPreview: row.hasCustomSocialPreview,
+    attendance: row.attendance,
+    lastGithubSyncAt: row.lastGithubSyncAt,
+    lastAppliedAt: row.lastAppliedAt,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
   };
 }
 

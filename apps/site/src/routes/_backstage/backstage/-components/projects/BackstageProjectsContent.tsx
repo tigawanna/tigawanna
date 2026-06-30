@@ -10,7 +10,8 @@ import { useLiveSuspenseQuery } from "@tanstack/react-db";
 import { Link } from "@tanstack/react-router";
 import { Route, type BackstageProjectsSearch } from "../../projects";
 import { BackstageFilterField, BackstageFiltersDialog } from "../shared/BackstageFiltersDialog";
-import { BackstageProjectRow, resolveGithubRepo } from "./BackstageProjectRow";
+import { BackstageProjectRow } from "./BackstageProjectRow";
+import { resolveGithubRepo } from "./helpers";
 
 const projectSortableColumns = createSortableColumns(backstageGithubReposCollection, [
   { value: "nameWithOwner", label: "Repository" },

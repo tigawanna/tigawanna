@@ -9,12 +9,13 @@ import type { BackstageGithubRepo, BackstageProject } from "@/types/backstage";
 import { unwrapUnknownError } from "@/utils/errors";
 import { cn } from "@/lib/utils";
 import { format, formatDistanceToNow } from "date-fns";
+import { useMutation } from "@tanstack/react-query";
 import { Download, ExternalLink, GitFork, Github, Loader, Star } from "lucide-react";
-import { useState } from "react";
 import { toast } from "sonner";
 import { RepoDeleteButton } from "../shared/RepoDeleteButton";
 import { RepoRemoveButton } from "../shared/RepoRemoveButton";
 import { RepoVisibilityButton } from "../shared/RepoVisibilityButton";
+import { attendanceLabel } from "./helpers";
 
 type BackstageProjectRowProps = {
   github: BackstageGithubRepo;
@@ -25,73 +26,6 @@ type BackstageProjectRowProps = {
   importDisabled?: boolean;
 };
 
-function attendanceLabel(attendance: string) {
-  return attendance.replaceAll("_", " ");
-}
-
-/**
- * Builds a backstage GitHub repo shape from an imported project when join data is missing.
- *
- * @param project - Imported project row from the database.
- */
-export function githubRepoFromProject(project: BackstageProject): BackstageGithubRepo {
-  const slash = project.repoFullName.lastIndexOf("/");
-  const name = slash >= 0 ? project.repoFullName.slice(slash + 1) : project.repoFullName;
-
-  return {
-    id: project.repoFullName,
-    name,
-    nameWithOwner: project.repoFullName,
-    description: project.currentDescription,
-    homepageUrl: project.currentHomepage,
-    url: `https://github.com/${project.repoFullName}`,
-    openGraphImageUrl: project.currentOgImageUrl,
-    pushedAt:
-      typeof project.lastGithubSyncAt === "string"
-        ? project.lastGithubSyncAt
-        : project.lastGithubSyncAt.toISOString(),
-    isPrivate: false,
-    isFork: false,
-    isArchived: false,
-    stargazerCount: 0,
-    forkCount: 0,
-    topics: project.currentTopics,
-  };
-}
-
-/**
- * Resolves GitHub repo list data from a join row, falling back to project fields.
- *
- * @param github - Optional GitHub repo from a TanStack DB join.
- * @param project - Imported project row used when join data is incomplete.
- */
-export function resolveGithubRepo(
-  github: Partial<BackstageGithubRepo> | null | undefined,
-  project: BackstageProject,
-): BackstageGithubRepo {
-  const fallback = githubRepoFromProject(project);
-  if (!github?.nameWithOwner) {
-    return fallback;
-  }
-
-  return {
-    id: github.id ?? github.nameWithOwner,
-    name: github.name ?? fallback.name,
-    nameWithOwner: github.nameWithOwner,
-    description: github.description ?? fallback.description,
-    homepageUrl: github.homepageUrl ?? fallback.homepageUrl,
-    url: github.url ?? fallback.url,
-    openGraphImageUrl: github.openGraphImageUrl ?? fallback.openGraphImageUrl,
-    pushedAt: github.pushedAt ?? fallback.pushedAt,
-    isPrivate: github.isPrivate ?? fallback.isPrivate,
-    isFork: github.isFork ?? fallback.isFork,
-    isArchived: github.isArchived ?? fallback.isArchived,
-    stargazerCount: github.stargazerCount ?? fallback.stargazerCount,
-    forkCount: github.forkCount ?? fallback.forkCount,
-    topics: github.topics ?? fallback.topics,
-  };
-}
-
 export function BackstageProjectRow({
   github,
   project,
@@ -101,52 +35,47 @@ export function BackstageProjectRow({
   importDisabled,
 }: BackstageProjectRowProps) {
   const isImported = project != null;
-  const [pendingAction, setPendingAction] = useState<"visibility" | "remove" | "delete" | null>(
-    null,
-  );
 
-  const actionsDisabled = disabled || pendingAction != null || importDisabled;
-
-  const handleVisibility = async (visibility: "public" | "private") => {
-    if (!project) return;
-    setPendingAction("visibility");
-    try {
-      await setBackstageRepoVisibility(project.repoFullName, visibility);
+  const visibilityMutation = useMutation({
+    mutationFn: (input: { visibility: "public" | "private"; repoFullName: string }) =>
+      setBackstageRepoVisibility(input.repoFullName, input.visibility),
+    onSuccess(_data, { visibility, repoFullName }) {
       toast.success(visibility === "private" ? "Repo is now private" : "Repo is now public", {
-        description: project.repoFullName,
+        description: repoFullName,
       });
-    } catch (err: unknown) {
+    },
+    onError(err: unknown) {
       toast.error("Visibility update failed", { description: unwrapUnknownError(err).message });
-    } finally {
-      setPendingAction(null);
-    }
-  };
+    },
+  });
 
-  const handleRemove = async () => {
-    if (!project) return;
-    setPendingAction("remove");
-    try {
-      await removeBackstageProject(project.githubRepoId);
-      toast.success("Removed from projects", { description: project.repoFullName });
-    } catch (err: unknown) {
+  const removeMutation = useMutation({
+    mutationFn: (input: { githubRepoId: string; repoFullName: string }) =>
+      removeBackstageProject(input.githubRepoId),
+    onSuccess(_data, { repoFullName }) {
+      toast.success("Removed from projects", { description: repoFullName });
+    },
+    onError(err: unknown) {
       toast.error("Remove failed", { description: unwrapUnknownError(err).message });
-    } finally {
-      setPendingAction(null);
-    }
-  };
+    },
+  });
 
-  const handleDelete = async () => {
-    if (!project) return;
-    setPendingAction("delete");
-    try {
-      await deleteBackstageGithubRepo(project.repoFullName);
-      toast.success("Repository deleted", { description: project.repoFullName });
-    } catch (err: unknown) {
+  const deleteMutation = useMutation({
+    mutationFn: (repoFullName: string) => deleteBackstageGithubRepo(repoFullName),
+    onSuccess(_data, repoFullName) {
+      toast.success("Repository deleted", { description: repoFullName });
+    },
+    onError(err: unknown) {
       toast.error("Delete failed", { description: unwrapUnknownError(err).message });
-    } finally {
-      setPendingAction(null);
-    }
-  };
+    },
+  });
+
+  const actionsDisabled =
+    disabled ||
+    importDisabled ||
+    visibilityMutation.isPending ||
+    removeMutation.isPending ||
+    deleteMutation.isPending;
 
   const imageUrl = isImported ? project.currentOgImageUrl : github.openGraphImageUrl;
   const repoName = isImported ? project.repoFullName : github.nameWithOwner;
@@ -266,20 +195,27 @@ export function BackstageProjectRow({
               repoFullName={project.repoFullName}
               isPrivate={github.isPrivate}
               disabled={actionsDisabled}
-              isPending={pendingAction === "visibility"}
-              onConfirm={handleVisibility}
+              isPending={visibilityMutation.isPending}
+              onConfirm={(visibility) =>
+                visibilityMutation.mutate({ visibility, repoFullName: project.repoFullName })
+              }
             />
             <RepoRemoveButton
               repoFullName={project.repoFullName}
               disabled={actionsDisabled}
-              isPending={pendingAction === "remove"}
-              onConfirm={handleRemove}
+              isPending={removeMutation.isPending}
+              onConfirm={() =>
+                removeMutation.mutate({
+                  githubRepoId: project.githubRepoId,
+                  repoFullName: project.repoFullName,
+                })
+              }
             />
             <RepoDeleteButton
               repoFullName={project.repoFullName}
               disabled={actionsDisabled}
-              isPending={pendingAction === "delete"}
-              onConfirm={handleDelete}
+              isPending={deleteMutation.isPending}
+              onConfirm={() => deleteMutation.mutate(project.repoFullName)}
             />
           </>
         ) : (

@@ -1,6 +1,6 @@
-import type { listProjectRepos } from "@/modules/backstage/projects.functions";
+import type { BackstageProject } from "@/modules/backstage/projects.functions";
 
-export type BackstageProject = Awaited<ReturnType<typeof listProjectRepos>>[number];
+export type { BackstageProject };
 
 export type BackstageGithubRepo = {
   id: string;
