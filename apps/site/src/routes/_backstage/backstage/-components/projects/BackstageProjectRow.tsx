@@ -2,16 +2,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   deleteBackstageGithubRepo,
-  importBackstageProject,
   removeBackstageProject,
   setBackstageRepoVisibility,
-  type ImportBackstageProjectInput,
 } from "@/data-access-layer/backstage/backstage-collection-mutations";
-import { queryKeyPrefixes } from "@/data-access-layer/query-keys";
 import type { BackstageGithubRepo, BackstageProject } from "@/types/backstage";
 import { unwrapUnknownError } from "@/utils/errors";
 import { cn } from "@/lib/utils";
-import { useMutation, useIsMutating } from "@tanstack/react-query";
 import { format, formatDistanceToNow } from "date-fns";
 import { Download, ExternalLink, GitFork, Github, Loader, Star } from "lucide-react";
 import { useState } from "react";
@@ -20,15 +16,13 @@ import { RepoDeleteButton } from "../shared/RepoDeleteButton";
 import { RepoRemoveButton } from "../shared/RepoRemoveButton";
 import { RepoVisibilityButton } from "../shared/RepoVisibilityButton";
 
-const importProjectMutationKey = [queryKeyPrefixes.backstage, "import-project"] as [
-  typeof queryKeyPrefixes.backstage,
-  "import-project",
-];
-
 type BackstageProjectRowProps = {
   github: BackstageGithubRepo;
   project: BackstageProject | null;
   disabled?: boolean;
+  onRequestImport?: () => void;
+  isImporting?: boolean;
+  importDisabled?: boolean;
 };
 
 function attendanceLabel(attendance: string) {
@@ -98,38 +92,20 @@ export function resolveGithubRepo(
   };
 }
 
-export function BackstageProjectRow({ github, project, disabled }: BackstageProjectRowProps) {
+export function BackstageProjectRow({
+  github,
+  project,
+  disabled,
+  onRequestImport,
+  isImporting,
+  importDisabled,
+}: BackstageProjectRowProps) {
   const isImported = project != null;
   const [pendingAction, setPendingAction] = useState<"visibility" | "remove" | "delete" | null>(
     null,
   );
 
-  const importMutation = useMutation({
-    mutationKey: importProjectMutationKey,
-    mutationFn: async (input: ImportBackstageProjectInput) => {
-      const tx = importBackstageProject(input);
-      await tx.isPersisted.promise;
-    },
-    onSuccess(_data, input) {
-      toast.success("Imported to projects", { description: input.repoFullName });
-    },
-    onError(err: unknown) {
-      toast.error("Import failed", { description: unwrapUnknownError(err).message });
-    },
-  });
-
-  const importingCount = useIsMutating({ mutationKey: importProjectMutationKey });
-  const isImporting =
-    importMutation.isPending && importMutation.variables?.repoFullName === github.nameWithOwner;
-  const importDisabled = disabled || importingCount > 0;
-  const actionsDisabled = disabled || pendingAction != null || importingCount > 0;
-
-  const handleImport = () => {
-    importMutation.mutate({
-      repoFullName: github.nameWithOwner,
-      runEnrichment: false,
-    });
-  };
+  const actionsDisabled = disabled || pendingAction != null || importDisabled;
 
   const handleVisibility = async (visibility: "public" | "private") => {
     if (!project) return;
@@ -235,10 +211,7 @@ export function BackstageProjectRow({ github, project, disabled }: BackstageProj
               ) : null}
             </>
           ) : (
-            <>
-              {github.isPrivate ? <Badge variant="outline">private</Badge> : null}
-              {github.isArchived ? <Badge variant="outline">archived</Badge> : null}
-            </>
+            <>{github.isArchived ? <Badge variant="outline">archived</Badge> : null}</>
           )}
         </div>
 
@@ -314,7 +287,7 @@ export function BackstageProjectRow({ github, project, disabled }: BackstageProj
             data-test="import-github-project"
             size="sm"
             disabled={importDisabled || isImporting}
-            onClick={handleImport}
+            onClick={onRequestImport}
             className="gap-1.5"
           >
             {isImporting ? (

@@ -25,9 +25,12 @@ import type { BackstageGithubRepo, BackstageProject } from "@/types/backstage";
 import { and, eq, ilike, IR, isNull, not, or } from "@tanstack/db";
 import { useLiveSuspenseQuery } from "@tanstack/react-db";
 import { FolderCodeIcon } from "lucide-react";
+import { useState } from "react";
 import { Route, type BackstageProjectsSearch } from "../../projects";
+import { useImportQueue } from "@/routes/_backstage/backstage/-hooks/use-import-queue";
 import { BackstageFilterField, BackstageFiltersDialog } from "../shared/BackstageFiltersDialog";
 import { BackstageProjectRow } from "./BackstageProjectRow";
+import { ImportProjectDialog } from "./ImportProjectDialog";
 
 const projectSortableColumns = createSortableColumns(backstageGithubReposCollection, [
   { value: "nameWithOwner", label: "Repository" },
@@ -47,6 +50,9 @@ function combineWhereClauses(clauses: Array<IR.BasicExpression<boolean>>) {
 }
 
 export function BackstageProjects() {
+  const importQueue = useImportQueue();
+  const [importRepo, setImportRepo] = useState<BackstageGithubRepo | null>(null);
+
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
   const { debouncedValue, isDebouncing, keyword, setKeyword, setSearchParams } =
@@ -60,11 +66,8 @@ export function BackstageProjects() {
   const sortBy = search.sortBy ?? "pushedAt";
   const sortDirection = search.sortDirection ?? "desc";
   const tracked = search.tracked ?? "all";
-  const visibility = search.visibility ?? "all";
   const archived = search.archived ?? "all";
-  const hasActiveFilters = Boolean(
-    debouncedValue || tracked !== "all" || visibility !== "all" || archived !== "all",
-  );
+  const hasActiveFilters = Boolean(debouncedValue || tracked !== "all" || archived !== "all");
 
   const { data: rows } = useLiveSuspenseQuery(
     (q) => {
@@ -72,11 +75,9 @@ export function BackstageProjects() {
         .from({ github: backstageGithubReposCollection })
         .leftJoin({ projects: backstageProjectsCollection }, ({ github, projects }) =>
           eq(github.nameWithOwner, projects.repoFullName),
-        );
-
-      if (debouncedValue || tracked !== "all" || visibility !== "all" || archived !== "all") {
-        query = query.where(({ github, projects }) => {
-          const clauses: Array<IR.BasicExpression<boolean>> = [];
+        )
+        .where(({ github, projects }) => {
+          const clauses: Array<IR.BasicExpression<boolean>> = [eq(github.isPrivate, false)];
 
           if (debouncedValue) {
             clauses.push(
@@ -94,12 +95,6 @@ export function BackstageProjects() {
             clauses.push(isNull(projects));
           }
 
-          if (visibility === "public") {
-            clauses.push(eq(github.isPrivate, false));
-          } else if (visibility === "private") {
-            clauses.push(eq(github.isPrivate, true));
-          }
-
           if (archived === "active") {
             clauses.push(eq(github.isArchived, false));
           } else if (archived === "archived") {
@@ -108,7 +103,6 @@ export function BackstageProjects() {
 
           return combineWhereClauses(clauses);
         });
-      }
 
       return query
         .orderBy(({ github }) => {
@@ -130,7 +124,7 @@ export function BackstageProjects() {
           projects,
         }));
     },
-    [debouncedValue, sortBy, sortDirection, tracked, visibility, archived],
+    [debouncedValue, sortBy, sortDirection, tracked, archived],
   );
 
   const joinedRows = rows as JoinedRepoRow[];
@@ -145,7 +139,7 @@ export function BackstageProjects() {
           </EmptyMedia>
           <EmptyTitle>No Projects Yet</EmptyTitle>
           <EmptyDescription>
-            No GitHub repos are available yet. Connect GitHub or sync repos to get started.
+            No public GitHub repos are available yet. Private repos are managed from Repos.
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent className="flex-row justify-center gap-2">
@@ -157,10 +151,22 @@ export function BackstageProjects() {
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6" data-test="backstage-projects">
+      <ImportProjectDialog
+        repo={importRepo}
+        open={importRepo != null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setImportRepo(null);
+          }
+        }}
+        onConfirm={importQueue.enqueue}
+        isBusy={importQueue.isBusy}
+      />
+
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Projects</h1>
         <p className="text-base-content/60 mt-2 text-sm">
-          All GitHub repos — import any repo to start tracking it.
+          Public GitHub repos only — import any repo to start tracking it on the site.
         </p>
       </div>
 
@@ -178,15 +184,10 @@ export function BackstageProjects() {
         </div>
         <BackstageFiltersDialog
           data-test="backstage-projects-filters"
-          activeFilterCount={
-            (tracked !== "all" ? 1 : 0) +
-            (visibility !== "all" ? 1 : 0) +
-            (archived !== "all" ? 1 : 0)
-          }
+          activeFilterCount={(tracked !== "all" ? 1 : 0) + (archived !== "all" ? 1 : 0)}
           onClear={() =>
             setSearchParams({
               tracked: undefined,
-              visibility: undefined,
               archived: undefined,
             })
           }
@@ -208,26 +209,6 @@ export function BackstageProjects() {
                 <SelectItem value="all">All repos</SelectItem>
                 <SelectItem value="tracked">Imported</SelectItem>
                 <SelectItem value="untracked">Not imported</SelectItem>
-              </SelectContent>
-            </Select>
-          </BackstageFilterField>
-          <BackstageFilterField label="Visibility">
-            <Select
-              value={visibility}
-              onValueChange={(value) =>
-                setSearchParams({
-                  visibility:
-                    value === "all" ? undefined : (value as BackstageProjectsSearch["visibility"]),
-                })
-              }
-            >
-              <SelectTrigger className="w-full" data-test="backstage-projects-visibility-filter">
-                <SelectValue placeholder="Visibility" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All visibility</SelectItem>
-                <SelectItem value="public">Public</SelectItem>
-                <SelectItem value="private">Private</SelectItem>
               </SelectContent>
             </Select>
           </BackstageFilterField>
@@ -267,10 +248,15 @@ export function BackstageProjects() {
 
       <Card>
         <CardHeader>
-          <CardTitle>All repos</CardTitle>
+          <CardTitle>Public repos</CardTitle>
           <CardDescription>
             {joinedRows.length} {hasActiveFilters ? "matching" : ""}{" "}
             {joinedRows.length === 1 ? "repo" : "repos"} · {importedCount} imported
+            {importQueue.queuedCount > 0
+              ? ` · ${importQueue.queuedCount} queued`
+              : importQueue.activeRepo
+                ? ` · importing ${importQueue.activeRepo}`
+                : ""}
           </CardDescription>
         </CardHeader>
         <CardContent className="divide-base-content/10 divide-y rounded-lg border border-base-content/10 p-0">
@@ -284,6 +270,9 @@ export function BackstageProjects() {
                 key={row.github.nameWithOwner}
                 github={row.github}
                 project={row.projects}
+                onRequestImport={() => setImportRepo(row.github)}
+                isImporting={importQueue.activeRepo === row.github.nameWithOwner}
+                importDisabled={importQueue.isBusy}
               />
             ))
           )}

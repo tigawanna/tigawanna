@@ -33,6 +33,14 @@ export function getEmbeddingModelId() {
   return EMBEDDING_MODEL_ID;
 }
 
+/**
+ * Embeds document text with the shared Gemma instance.
+ */
+export async function embedDocument(text: string) {
+  const embedding = await getGemmaEmbedding();
+  return embedding.embed(text, "document");
+}
+
 export async function unloadGemmaEmbedding() {
   if (embeddingInstance?.isLoaded()) {
     await embeddingInstance.unload();

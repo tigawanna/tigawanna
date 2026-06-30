@@ -1,18 +1,11 @@
 import { SearchBox } from "@/components/search/SearchBox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { backstageGithubReposCollection } from "@/data-access-layer/backstage/backstage-github-repos-collection";
 import { backstageProjectsCollection } from "@/data-access-layer/backstage/backstage-projects-collection";
 import { TanstackDBSortSelect } from "@/routes/_backstage/backstage/-components/shared/TanstackDBColumnfilters";
 import { createSortableColumns } from "@/routes/_backstage/backstage/-components/shared/sortable-columns";
 import { useTSRSearchQuery } from "@/routes/_backstage/backstage/-hooks/use-tsr-search-query";
-import { and, eq, ilike, IR } from "@tanstack/db";
+import { and, eq, ilike, IR, isNull, not, or } from "@tanstack/db";
 import { useLiveSuspenseQuery } from "@tanstack/react-db";
 import { Link } from "@tanstack/react-router";
 import { Route, type BackstageProjectsSearch } from "../../projects";
@@ -34,7 +27,7 @@ function combineWhereClauses(clauses: Array<IR.BasicExpression<boolean>>) {
 export function BackstageProjectsContent() {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
-  const { debouncedValue, isDebouncing, keyword, setKeyword, setSearchParams } =
+  const { debouncedValue, isDebouncing, keyword, setKeyword } =
     useTSRSearchQuery<BackstageProjectsSearch>({
       search,
       navigate,
@@ -42,10 +35,9 @@ export function BackstageProjectsContent() {
       debounce_delay: 400,
     });
 
-  const sortBy = search.sortBy ?? "nameWithOwner";
+  const sortBy = search.sortBy ?? "pushedAt";
   const sortDirection = search.sortDirection ?? "desc";
-  const visibility = search.visibility ?? "all";
-  const hasActiveFilters = Boolean(debouncedValue || visibility !== "all");
+  const hasActiveFilters = Boolean(debouncedValue);
 
   const { data: projects } = useLiveSuspenseQuery(
     (q) => {
@@ -53,25 +45,18 @@ export function BackstageProjectsContent() {
         .from({ projects: backstageProjectsCollection })
         .leftJoin({ github: backstageGithubReposCollection }, ({ projects, github }) =>
           eq(projects.repoFullName, github.nameWithOwner),
-        );
-
-      if (debouncedValue || visibility !== "all") {
-        query = query.where(({ projects, github }) => {
-          const clauses: Array<IR.BasicExpression<boolean>> = [];
+        )
+        .where(({ projects, github }) => {
+          const clauses: Array<IR.BasicExpression<boolean>> = [
+            or(isNull(github), not(eq(github.isPrivate, true))),
+          ];
 
           if (debouncedValue) {
             clauses.push(ilike(projects.repoFullName, `%${debouncedValue}%`));
           }
 
-          if (visibility === "private") {
-            clauses.push(eq(github.isPrivate, true));
-          } else if (visibility === "public") {
-            clauses.push(eq(github.isPrivate, false));
-          }
-
           return combineWhereClauses(clauses);
         });
-      }
 
       return query
         .orderBy(({ projects }) => {
@@ -93,7 +78,7 @@ export function BackstageProjectsContent() {
           github,
         }));
     },
-    [debouncedValue, sortBy, sortDirection, visibility],
+    [debouncedValue, sortBy, sortDirection],
   );
 
   return (
@@ -128,29 +113,9 @@ export function BackstageProjectsContent() {
         </div>
         <BackstageFiltersDialog
           data-test="backstage-projects-filters"
-          activeFilterCount={visibility !== "all" ? 1 : 0}
-          onClear={() => setSearchParams({ visibility: undefined })}
+          activeFilterCount={0}
+          onClear={() => undefined}
         >
-          <BackstageFilterField label="Visibility">
-            <Select
-              value={visibility}
-              onValueChange={(value) =>
-                setSearchParams({
-                  visibility:
-                    value === "all" ? undefined : (value as BackstageProjectsSearch["visibility"]),
-                })
-              }
-            >
-              <SelectTrigger className="w-full" data-test="backstage-projects-visibility-filter">
-                <SelectValue placeholder="Visibility" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All visibility</SelectItem>
-                <SelectItem value="public">Public</SelectItem>
-                <SelectItem value="private">Private</SelectItem>
-              </SelectContent>
-            </Select>
-          </BackstageFilterField>
           <BackstageFilterField label="Sort">
             <TanstackDBSortSelect
               layout="stacked"
