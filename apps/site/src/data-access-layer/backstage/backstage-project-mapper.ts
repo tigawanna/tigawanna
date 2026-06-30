@@ -31,6 +31,7 @@ export function nullableBackstageProject(
     enrichedSummary: project.enrichedSummary ?? null,
     enrichedAt: project.enrichedAt ?? null,
     enrichedByAi: project.enrichedByAi ?? false,
+    needsEnrichmentReview: project.needsEnrichmentReview ?? false,
     lastGithubSyncAt: project.lastGithubSyncAt ?? new Date(0),
     lastAppliedAt: project.lastAppliedAt ?? null,
     createdAt: project.createdAt ?? new Date(0),

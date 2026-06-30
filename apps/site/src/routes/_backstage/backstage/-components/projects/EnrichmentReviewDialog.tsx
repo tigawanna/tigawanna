@@ -10,7 +10,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { queryKeyPrefixes } from "@/data-access-layer/query-keys";
+import {
+  afterBackstageEnrichmentMutation,
+  backstageEnrichmentMutationInvalidatesForRepo,
+} from "@/data-access-layer/backstage/enrichment-mutation-side-effects";
 import {
   approveProjectEnrichmentSuggestion,
   rejectProjectEnrichmentSuggestion,
@@ -61,7 +64,8 @@ export function EnrichmentReviewDialog({
 
   const approve = useMutation({
     mutationFn: approveProjectEnrichmentSuggestion,
-    onSuccess() {
+    async onSuccess() {
+      await afterBackstageEnrichmentMutation();
       toast.success("Applied to GitHub", { description: repoFullName });
       onOpenChange(false);
     },
@@ -69,18 +73,14 @@ export function EnrichmentReviewDialog({
       toast.error("Approve failed", { description: unwrapUnknownError(err).message });
     },
     meta: {
-      invalidates: [
-        [queryKeyPrefixes.backstage, "github-repos"],
-        [queryKeyPrefixes.backstage, "projects"],
-        [queryKeyPrefixes.backstage, "project-enrichment"],
-        [queryKeyPrefixes.backstage, "projects", "detail", repoFullName],
-      ],
+      invalidates: backstageEnrichmentMutationInvalidatesForRepo(repoFullName),
     },
   });
 
   const reject = useMutation({
     mutationFn: rejectProjectEnrichmentSuggestion,
-    onSuccess() {
+    async onSuccess() {
+      await afterBackstageEnrichmentMutation();
       toast.success("Suggestion rejected");
       onOpenChange(false);
     },
@@ -88,12 +88,7 @@ export function EnrichmentReviewDialog({
       toast.error("Reject failed", { description: unwrapUnknownError(err).message });
     },
     meta: {
-      invalidates: [
-        [queryKeyPrefixes.backstage, "github-repos"],
-        [queryKeyPrefixes.backstage, "projects"],
-        [queryKeyPrefixes.backstage, "project-enrichment"],
-        [queryKeyPrefixes.backstage, "projects", "detail", repoFullName],
-      ],
+      invalidates: backstageEnrichmentMutationInvalidatesForRepo(repoFullName),
     },
   });
 

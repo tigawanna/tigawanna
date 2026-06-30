@@ -60,6 +60,16 @@ export async function bulkImportBackstageProjects(input: BulkImportBackstageProj
   }
 }
 
+/**
+ * Refetches TanStack DB collections backed by backstage project and GitHub repo queries.
+ */
+export async function refetchBackstageProjectCollections() {
+  await Promise.all([
+    backstageProjectsCollection.utils.refetch(),
+    backstageGithubReposCollection.utils.refetch(),
+  ]);
+}
+
 export async function removeBackstageProject(githubRepoId: string) {
   logTanstackDbCollection("backstage-projects", "mutation:remove:start", { githubRepoId });
   const tx = backstageProjectsCollection.delete(githubRepoId);

@@ -7,7 +7,13 @@ import { format, formatDistanceToNow } from "date-fns";
 import { EllipsisVertical, ExternalLink, GitFork, Github, Loader, Star } from "lucide-react";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { attendanceLabel, backstageProjectDetailRoute } from "./helpers";
+import { EnrichmentReviewDialogLoader } from "./EnrichmentReviewDialogLoader";
+import {
+  attendanceLabel,
+  backstageProjectDetailRoute,
+  pendingReviewBadgeClass,
+  projectNeedsEnrichmentReview,
+} from "./helpers";
 import { ProjectActionsDialog } from "./ProjectActionsDialog";
 
 type BackstageProjectRowProps = {
@@ -28,7 +34,9 @@ export function BackstageProjectRow({
   importDisabled,
 }: BackstageProjectRowProps) {
   const [actionsOpen, setActionsOpen] = useState(false);
+  const [reviewOpen, setReviewOpen] = useState(false);
   const isImported = project != null;
+  const needsReview = isImported && projectNeedsEnrichmentReview(project);
 
   const imageUrl = isImported ? project.currentOgImageUrl : github.openGraphImageUrl;
   const repoName = isImported ? project.repoFullName : github.nameWithOwner;
@@ -47,9 +55,22 @@ export function BackstageProjectRow({
         open={actionsOpen}
         onOpenChange={setActionsOpen}
         onRequestImport={(options) => onRequestImport?.(options)}
+        onRequestReview={() => {
+          setActionsOpen(false);
+          setReviewOpen(true);
+        }}
         isImporting={isImporting}
         importDisabled={importDisabled || disabled}
       />
+
+      {needsReview ? (
+        <EnrichmentReviewDialogLoader
+          open={reviewOpen}
+          onOpenChange={setReviewOpen}
+          repoFullName={project.repoFullName}
+          project={project}
+        />
+      ) : null}
 
       <div
         className={cn(
@@ -121,7 +142,30 @@ export function BackstageProjectRow({
             )}
             {isImported ? (
               <>
-                <Badge variant="secondary">{attendanceLabel(project.attendance)}</Badge>
+                {needsReview ? (
+                  <button
+                    type="button"
+                    className={cn(
+                      "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors",
+                      pendingReviewBadgeClass,
+                    )}
+                    data-test="project-needs-review-badge"
+                    onClick={() => setReviewOpen(true)}
+                  >
+                    Needs approval
+                  </button>
+                ) : (
+                  <Badge variant="secondary">{attendanceLabel(project.attendance)}</Badge>
+                )}
+                {project.enrichedByAi && !needsReview ? (
+                  <Badge
+                    variant="outline"
+                    className="border-violet-400/60 bg-violet-950 text-violet-50"
+                    data-test="project-ai-enriched-badge"
+                  >
+                    AI enriched
+                  </Badge>
+                ) : null}
                 {project.hasCustomSocialPreview ? (
                   <Badge variant="outline">custom preview</Badge>
                 ) : null}

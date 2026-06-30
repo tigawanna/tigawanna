@@ -1,4 +1,8 @@
 import {
+  afterBackstageEnrichmentMutation,
+  backstageEnrichmentMutationInvalidates,
+} from "@/data-access-layer/backstage/enrichment-mutation-side-effects";
+import {
   approveProjectEnrichmentSuggestion,
   rejectProjectEnrichmentSuggestion,
 } from "@/modules/backstage/projects-enrichment.functions";
@@ -42,7 +46,8 @@ export function SuggestionReviewCard({
 
   const approve = useMutation({
     mutationFn: approveProjectEnrichmentSuggestion,
-    onSuccess() {
+    async onSuccess() {
+      await afterBackstageEnrichmentMutation();
       toast.success("Applied to GitHub");
       onDone();
     },
@@ -50,13 +55,14 @@ export function SuggestionReviewCard({
       toast.error("Approve failed", { description: unwrapUnknownError(err).message });
     },
     meta: {
-      invalidates: [["backstage", "project-enrichment"]],
+      invalidates: backstageEnrichmentMutationInvalidates,
     },
   });
 
   const reject = useMutation({
     mutationFn: rejectProjectEnrichmentSuggestion,
-    onSuccess() {
+    async onSuccess() {
+      await afterBackstageEnrichmentMutation();
       toast.success("Suggestion rejected");
       onDone();
     },
@@ -64,7 +70,7 @@ export function SuggestionReviewCard({
       toast.error("Reject failed", { description: unwrapUnknownError(err).message });
     },
     meta: {
-      invalidates: [["backstage", "project-enrichment"]],
+      invalidates: backstageEnrichmentMutationInvalidates,
     },
   });
 

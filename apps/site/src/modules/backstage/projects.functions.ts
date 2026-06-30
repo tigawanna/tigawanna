@@ -9,6 +9,7 @@ import { getServerEnv } from "@/lib/envs/server-env";
 import { fetchRepoReadmeHtml } from "@/modules/github/repo-detail";
 import { enrichProjectsWorkflow } from "@/workflows/project-enrichment";
 import {
+  and,
   desc,
   eq,
   projectAttendanceValues,
@@ -152,6 +153,8 @@ export type BackstageProject = {
   enrichedSummary: string | null;
   enrichedAt: Date | null;
   enrichedByAi: boolean;
+  /** True when a `pending_review` enrichment suggestion exists for this repo. */
+  needsEnrichmentReview: boolean;
   lastGithubSyncAt: Date;
   lastAppliedAt: Date | null;
   createdAt: Date;
@@ -163,7 +166,10 @@ export type BackstageProject = {
  *
  * @param row - Raw database row.
  */
-function mapProjectRepoRow(row: ProjectRepoRow): BackstageProject {
+function mapProjectRepoRow(
+  row: ProjectRepoRow,
+  options?: { needsEnrichmentReview?: boolean },
+): BackstageProject {
   return {
     githubRepoId: row.githubRepoId,
     repoFullName: row.repoFullName,
@@ -176,6 +182,7 @@ function mapProjectRepoRow(row: ProjectRepoRow): BackstageProject {
     enrichedSummary: row.enrichedSummary,
     enrichedAt: row.enrichedAt,
     enrichedByAi: row.enrichedByAi,
+    needsEnrichmentReview: options?.needsEnrichmentReview ?? false,
     lastGithubSyncAt: row.lastGithubSyncAt,
     lastAppliedAt: row.lastAppliedAt,
     createdAt: row.createdAt,
@@ -307,7 +314,18 @@ export const listProjectRepos = createServerFn({ method: "GET" }).handler(async 
 
   const rows = await db.select().from(projectRepos).orderBy(desc(projectRepos.lastGithubSyncAt));
 
-  return rows.map(mapProjectRepoRow);
+  const pendingRows = await db
+    .select({ githubRepoId: projectEnrichmentSuggestions.githubRepoId })
+    .from(projectEnrichmentSuggestions)
+    .where(eq(projectEnrichmentSuggestions.status, "pending_review"));
+
+  const pendingReviewRepoIds = new Set(pendingRows.map((pendingRow) => pendingRow.githubRepoId));
+
+  return rows.map((row) =>
+    mapProjectRepoRow(row, {
+      needsEnrichmentReview: pendingReviewRepoIds.has(row.githubRepoId),
+    }),
+  );
 });
 
 const createProjectRepoInputSchema = z.object({
@@ -601,14 +619,26 @@ export const getBackstageProjectDetail = createServerFn({ method: "GET" })
       throw new Error("Project not found");
     }
 
-    const project = mapProjectRepoRow(row);
+    const [pendingSuggestionRow] = await db
+      .select()
+      .from(projectEnrichmentSuggestions)
+      .where(
+        and(
+          eq(projectEnrichmentSuggestions.githubRepoId, row.githubRepoId),
+          eq(projectEnrichmentSuggestions.status, "pending_review"),
+        ),
+      )
+      .orderBy(desc(projectEnrichmentSuggestions.createdAt))
+      .limit(1);
 
-    const [suggestionRow] = await db
+    const [latestSuggestionRow] = await db
       .select()
       .from(projectEnrichmentSuggestions)
       .where(eq(projectEnrichmentSuggestions.githubRepoId, row.githubRepoId))
       .orderBy(desc(projectEnrichmentSuggestions.createdAt))
       .limit(1);
+
+    const suggestionRow = pendingSuggestionRow ?? latestSuggestionRow;
 
     const [embeddingRow] = await db
       .select({
@@ -632,7 +662,15 @@ export const getBackstageProjectDetail = createServerFn({ method: "GET" })
         }
       : null;
 
+    const project = mapProjectRepoRow(row, {
+      needsEnrichmentReview: pendingSuggestionRow != null,
+    });
     const enrichment = resolveProjectEnrichment(project, suggestionRow, embeddingHints);
+    const projectWithReview: BackstageProject = {
+      ...project,
+      needsEnrichmentReview:
+        enrichment?.status === "pending_review" && enrichment.suggestionId != null,
+    };
 
     const embedding: BackstageProjectEmbedding | null = embeddingRow
       ? {
@@ -661,7 +699,7 @@ export const getBackstageProjectDetail = createServerFn({ method: "GET" })
     }
 
     return {
-      project,
+      project: projectWithReview,
       github,
       enrichment,
       embedding,

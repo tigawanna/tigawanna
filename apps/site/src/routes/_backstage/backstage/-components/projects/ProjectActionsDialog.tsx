@@ -23,7 +23,8 @@ import { isGithubRepoDeletePermissionError } from "@/routes/_backstage/backstage
 import type { BackstageGithubRepo, BackstageProject } from "@/types/backstage";
 import { unwrapUnknownError } from "@/utils/errors";
 import { useMutation } from "@tanstack/react-query";
-import { Download, Eye, EyeOff, Loader, Trash2 } from "lucide-react";
+import { projectNeedsEnrichmentReview } from "@/routes/_backstage/backstage/-components/projects/helpers";
+import { Download, Eye, EyeOff, Loader, Pencil, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { AdminPatDialog } from "./AdminPatDialog";
@@ -35,6 +36,7 @@ type ProjectActionsDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onRequestImport: (options: ImportProjectOptions) => void;
+  onRequestReview?: () => void;
   isImporting?: boolean;
   importDisabled?: boolean;
 };
@@ -45,10 +47,12 @@ export function ProjectActionsDialog({
   open,
   onOpenChange,
   onRequestImport,
+  onRequestReview,
   isImporting,
   importDisabled,
 }: ProjectActionsDialogProps) {
   const isImported = project != null;
+  const needsReview = isImported && projectNeedsEnrichmentReview(project);
   const repoFullName = isImported ? project.repoFullName : github.nameWithOwner;
 
   const serverEmbeddingAvailable = isServerEmbeddingAvailableInClient();
@@ -180,6 +184,27 @@ export function ProjectActionsDialog({
             </section>
           ) : (
             <section className="flex flex-col gap-3">
+              {needsReview ? (
+                <div className="border-amber-400/30 bg-amber-500/5 flex flex-col gap-3 rounded-lg border p-3">
+                  <div>
+                    <h3 className="text-sm font-medium">Enrichment review</h3>
+                    <p className="text-base-content/60 mt-1 text-sm">
+                      AI suggestions are ready but not applied to GitHub yet.
+                    </p>
+                  </div>
+                  <Button
+                    size="sm"
+                    className="gap-1.5 self-start"
+                    data-test="project-actions-review-enrichment"
+                    disabled={isBusy}
+                    onClick={() => onRequestReview?.()}
+                  >
+                    <Pencil className="size-3.5" />
+                    Review & apply
+                  </Button>
+                </div>
+              ) : null}
+
               <div>
                 <h3 className="text-sm font-medium">Project</h3>
                 <p className="text-base-content/60 mt-1 text-sm">
