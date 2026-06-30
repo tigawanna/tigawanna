@@ -1,8 +1,8 @@
 import { requireAdminSession } from "@/modules/admin-auth/require-admin";
 import { extractRepoTags, fetchRecentReposFromGithub } from "@/modules/github/fetch-repos";
-import { deleteGithubRepo, setGithubRepoVisibility } from "@/modules/github/repo-admin";
-import { removeProjectRepo } from "@/modules/backstage/projects.functions";
 import { getServerEnv } from "@/lib/envs/server-env";
+import { removeProjectRepo } from "@/modules/backstage/projects.functions";
+import { deleteGithubRepo, setGithubRepoVisibility } from "@/modules/github/repo-admin";
 import type { GithubRepoNode } from "@/types/github";
 import type { BackstageGithubRepo, BackstageGithubReposResponse } from "@/types/backstage";
 import { createServerFn } from "@tanstack/react-start";
@@ -72,14 +72,35 @@ export const listGithubReposForBackstage = createServerFn({ method: "GET" }).han
  *
  * Requires an authenticated admin session.
  */
+const deleteGithubRepoInputSchema = z.object({
+  repoFullName: repoFullNameSchema,
+  overridePat: z.string().min(1).optional(),
+});
+
+/**
+ * Deletes a repository on GitHub and removes its matching `project_repos` row.
+ *
+ * When `overridePat` is provided, it is used instead of the server `GH_PAT`.
+ * The override token is supplied by the client (typically from browser local storage)
+ * and is never persisted server-side.
+ *
+ * Requires an authenticated admin session.
+ */
 export const deleteGithubRepoForBackstage = createServerFn({ method: "POST" })
-  .validator((input: { repoFullName: string }) => ({
-    repoFullName: repoFullNameSchema.parse(input.repoFullName),
-  }))
+  .validator((input: z.infer<typeof deleteGithubRepoInputSchema>) =>
+    deleteGithubRepoInputSchema.parse(input),
+  )
   .handler(async ({ data }) => {
     await requireAdminSession();
-    const pat = requirePat();
-    await deleteGithubRepo(pat, data.repoFullName);
+    const pat = data.overridePat ?? requirePat();
+
+    try {
+      await deleteGithubRepo(pat, data.repoFullName);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      throw new Error(message);
+    }
+
     await removeProjectRepo({ data: { repoFullName: data.repoFullName } });
     return { ok: true as const };
   });

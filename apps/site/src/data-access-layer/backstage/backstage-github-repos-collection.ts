@@ -2,6 +2,13 @@ import { backstageProjectsCollection } from "@/data-access-layer/backstage/backs
 import { queryKeyPrefixes } from "@/data-access-layer/query-keys";
 import { getTanstackQueryContext } from "@/lib/tanstack/query/query-provider";
 import {
+  attachTanstackDbCollectionLogging,
+  withCollectionDeleteLogging,
+  withCollectionQueryLogging,
+  withCollectionUpdateLogging,
+} from "@/lib/tanstack/db/collection-logging";
+import { unwrapUnknownError } from "@/utils/errors";
+import {
   deleteGithubRepoForBackstage,
   listGithubReposForBackstage,
   setGithubRepoVisibilityForBackstage,
@@ -11,17 +18,18 @@ import { BasicIndex, createCollection } from "@tanstack/db";
 import { queryCollectionOptions } from "@tanstack/query-db-collection";
 
 const { queryClient } = getTanstackQueryContext();
+const COLLECTION_ID = "backstage-github-repos";
 
 export const backstageGithubReposCollection = createCollection(
   queryCollectionOptions({
-    id: "backstage-github-repos",
+    id: COLLECTION_ID,
     queryKey: [queryKeyPrefixes.backstage, "github-repos"],
-    queryFn: () => listGithubReposForBackstage(),
+    queryFn: withCollectionQueryLogging(COLLECTION_ID, () => listGithubReposForBackstage()),
     select: (data) => data.repos,
     queryClient,
     defaultIndexType: BasicIndex,
     getKey: (item: BackstageGithubRepo) => item.nameWithOwner,
-    onUpdate: async ({ transaction }) => {
+    onUpdate: withCollectionUpdateLogging(COLLECTION_ID, async ({ transaction }) => {
       await Promise.all(
         transaction.mutations.map((mutation) => {
           const visibility = mutation.modified.isPrivate ? "private" : "public";
@@ -31,19 +39,24 @@ export const backstageGithubReposCollection = createCollection(
         }),
       );
       await backstageGithubReposCollection.utils.refetch();
-    },
-    onDelete: async ({ transaction }) => {
-      await Promise.all(
-        transaction.mutations.map((mutation) =>
-          deleteGithubRepoForBackstage({ data: { repoFullName: String(mutation.key) } }),
-        ),
-      );
-      await Promise.all([
-        backstageGithubReposCollection.utils.refetch(),
-        backstageProjectsCollection.utils.refetch(),
-      ]);
-    },
+    }),
+    onDelete: withCollectionDeleteLogging(COLLECTION_ID, async ({ transaction }) => {
+      try {
+        await Promise.all(
+          transaction.mutations.map((mutation) =>
+            deleteGithubRepoForBackstage({ data: { repoFullName: String(mutation.key) } }),
+          ),
+        );
+        await Promise.all([
+          backstageGithubReposCollection.utils.refetch(),
+          backstageProjectsCollection.utils.refetch(),
+        ]);
+      } catch (err: unknown) {
+        throw unwrapUnknownError(err);
+      }
+    }),
   }),
 );
 
 backstageGithubReposCollection.createIndex((row) => row.nameWithOwner);
+attachTanstackDbCollectionLogging(backstageGithubReposCollection, COLLECTION_ID);
