@@ -16,7 +16,7 @@ import {
   BackstageFilterField,
   BackstageFiltersDialog,
 } from "@/routes/_backstage/backstage/-components/shared/BackstageFiltersDialog";
-import { useTSRSearchQuery } from "@/routes/_backstage/backstage/-hooks/use-tsr-search-query";
+import { useTSRSearchQuery } from "@/hooks/use-tsr-search-query";
 import { Route, type BackstageJournalSearch } from "@/routes/_backstage/backstage/journal";
 import { unwrapUnknownError } from "@/utils/errors";
 import { journalEntryTypeValues, type JournalEntryRow } from "@repo/db";

@@ -23,7 +23,7 @@ import { importProjectRepo } from "@/modules/backstage/projects.functions";
 import { useEnrichmentRunProgress } from "@/routes/_backstage/backstage/-hooks/use-enrichment-run-progress";
 import { TanstackDBSortSelect } from "@/routes/_backstage/backstage/-components/shared/TanstackDBColumnfilters";
 import { createSortableColumns } from "@/routes/_backstage/backstage/-components/shared/sortable-columns";
-import { useTSRSearchQuery } from "@/routes/_backstage/backstage/-hooks/use-tsr-search-query";
+import { useTSRSearchQuery } from "@/hooks/use-tsr-search-query";
 import type {
   BulkImportProjectOptions,
   ImportProjectOptions,

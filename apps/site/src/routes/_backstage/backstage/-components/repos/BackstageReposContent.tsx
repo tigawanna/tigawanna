@@ -15,7 +15,7 @@ import { backstageProjectsCollection } from "@/data-access-layer/backstage/backs
 import { backstageGithubReposQueryOptions } from "@/data-access-layer/backstage/projects-query-options";
 import { TanstackDBSortSelect } from "@/routes/_backstage/backstage/-components/shared/TanstackDBColumnfilters";
 import { createSortableColumns } from "@/routes/_backstage/backstage/-components/shared/sortable-columns";
-import { useTSRSearchQuery } from "@/routes/_backstage/backstage/-hooks/use-tsr-search-query";
+import { useTSRSearchQuery } from "@/hooks/use-tsr-search-query";
 import { unwrapUnknownError } from "@/utils/errors";
 import { and, eq, ilike, IR, isNull, not, or } from "@tanstack/db";
 import { useLiveSuspenseQuery } from "@tanstack/react-db";

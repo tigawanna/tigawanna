@@ -1,4 +1,4 @@
-import { useDebouncedValue } from "@/hooks/use-debouncer";
+import { useDebouncedValue } from "@tanstack/react-pacer";
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -146,7 +146,9 @@ export function AsyncSelect<T>({
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const { debouncedValue: debouncedSearchTerm } = useDebouncedValue(searchTerm, preload ? 0 : 300);
+  const [debouncedSearchTerm] = useDebouncedValue(searchTerm, {
+    wait: preload ? 0 : 300,
+  });
   const [selectedValue, setSelectedValue] = useState(value);
   const [selectedOption, setSelectedOption] = useState<T | null>(null);
   const [filteredOptions, setFilteredOptions] = useState<T[]>([]);
