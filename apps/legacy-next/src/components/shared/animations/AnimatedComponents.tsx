@@ -13,28 +13,28 @@ interface AnimatedSectionProps {
   id?: string;
 }
 
-export function AnimatedSection({ 
-  children, 
-  className = "", 
+export function AnimatedSection({
+  children,
+  className = "",
   delay = 0,
   threshold = 0.1,
-  id
+  id,
 }: AnimatedSectionProps) {
   const { ref, isInView } = useScrollAnimation(threshold);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
     // Check for reduced motion preference
-    if (typeof window !== 'undefined') {
-      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (typeof window !== "undefined") {
+      const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
       setPrefersReducedMotion(mediaQuery.matches);
-      
+
       // Listen for changes
       const handleChange = () => setPrefersReducedMotion(mediaQuery.matches);
-      mediaQuery.addEventListener('change', handleChange);
-      
+      mediaQuery.addEventListener("change", handleChange);
+
       return () => {
-        mediaQuery.removeEventListener('change', handleChange);
+        mediaQuery.removeEventListener("change", handleChange);
       };
     }
   }, []);
@@ -59,7 +59,7 @@ export function AnimatedSection({
       transition={{
         delay: delay,
         duration: 0.5,
-        ease: [0.22, 1, 0.36, 1]
+        ease: [0.22, 1, 0.36, 1],
       }}
     >
       {children}
@@ -80,36 +80,32 @@ export function AnimatedText({
   className = "",
   element = "p",
   delay = 0,
-  threshold = 0.1
+  threshold = 0.1,
 }: AnimatedTextProps) {
   const { ref, isInView } = useScrollAnimation(threshold);
   const words = text.split(" ");
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const Tag = element;
-  
+
   useEffect(() => {
     // Check for reduced motion preference
-    if (typeof window !== 'undefined') {
-      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (typeof window !== "undefined") {
+      const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
       setPrefersReducedMotion(mediaQuery.matches);
-      
+
       // Listen for changes
       const handleChange = () => setPrefersReducedMotion(mediaQuery.matches);
-      mediaQuery.addEventListener('change', handleChange);
-      
+      mediaQuery.addEventListener("change", handleChange);
+
       return () => {
-        mediaQuery.removeEventListener('change', handleChange);
+        mediaQuery.removeEventListener("change", handleChange);
       };
     }
   }, []);
-  
+
   // Skip animations for users who prefer reduced motion
   if (prefersReducedMotion) {
-    return (
-      <Tag className={className}>
-        {text}
-      </Tag>
-    );
+    return <Tag className={className}>{text}</Tag>;
   }
 
   return (
@@ -158,68 +154,54 @@ interface ParallaxImageProps {
   speed?: number;
 }
 
-export function ParallaxImage({
-  src,
-  alt,
-  className = "",
-  speed = 0.5,
-}: ParallaxImageProps) {
+export function ParallaxImage({ src, alt, className = "", speed = 0.5 }: ParallaxImageProps) {
   const { ref, isInView } = useScrollAnimation(0);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  
+
   useEffect(() => {
     // Check for reduced motion preference
-    if (typeof window !== 'undefined') {
-      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (typeof window !== "undefined") {
+      const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
       setPrefersReducedMotion(mediaQuery.matches);
-      
+
       // Listen for changes
       const handleChange = () => setPrefersReducedMotion(mediaQuery.matches);
-      mediaQuery.addEventListener('change', handleChange);
-      
+      mediaQuery.addEventListener("change", handleChange);
+
       return () => {
-        mediaQuery.removeEventListener('change', handleChange);
+        mediaQuery.removeEventListener("change", handleChange);
       };
     }
   }, []);
-  
+
   // Skip the parallax effect for users who prefer reduced motion
   if (prefersReducedMotion) {
     return (
       <div className={`relative overflow-hidden ${className}`}>
         <div className="w-full h-full">
-          <img
-            src={src}
-            alt={alt}
-            className="w-full h-full object-cover"
-          />
+          <img src={src} alt={alt} className="w-full h-full object-cover" />
         </div>
       </div>
     );
   }
-  
+
   // Adjust speed based on device capabilities
   const adjustedSpeed = speed * 0.5;
-  
+
   return (
     <div className={`relative overflow-hidden ${className}`} ref={ref}>
       <motion.div
         initial={{ scale: 1.2 }}
         animate={isInView ? { y: `${-adjustedSpeed * 10}%`, scale: 1 } : { y: "0%", scale: 1.2 }}
-        transition={{ 
-          duration: 1.2, 
+        transition={{
+          duration: 1.2,
           ease: [0.22, 1, 0.36, 1],
           // Use lighter animations for better performance
-          type: "tween" 
+          type: "tween",
         }}
         className="w-full h-full"
       >
-        <img
-          src={src}
-          alt={alt}
-          className="w-full h-full object-cover"
-          loading="lazy"
-        />
+        <img src={src} alt={alt} className="w-full h-full object-cover" loading="lazy" />
       </motion.div>
     </div>
   );
@@ -242,55 +224,56 @@ export function FadeIn({
 }: FadeInProps) {
   const { ref, isInView } = useScrollAnimation(0.1);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  
+
   useEffect(() => {
     // Check for reduced motion preference
-    if (typeof window !== 'undefined') {
-      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (typeof window !== "undefined") {
+      const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
       setPrefersReducedMotion(mediaQuery.matches);
-      
+
       // Listen for changes
       const handleChange = () => setPrefersReducedMotion(mediaQuery.matches);
-      mediaQuery.addEventListener('change', handleChange);
-      
+      mediaQuery.addEventListener("change", handleChange);
+
       return () => {
-        mediaQuery.removeEventListener('change', handleChange);
+        mediaQuery.removeEventListener("change", handleChange);
       };
     }
   }, []);
-  
+
   const getDirectionOffset = () => {
     // Adjust distance based on performance considerations
     const adjustedDistance = prefersReducedMotion ? 0 : distance;
-    
+
     switch (direction) {
-      case "up": return { y: adjustedDistance };
-      case "down": return { y: -adjustedDistance };
-      case "left": return { x: adjustedDistance };
-      case "right": return { x: -adjustedDistance };
-      default: return { y: adjustedDistance };
+      case "up":
+        return { y: adjustedDistance };
+      case "down":
+        return { y: -adjustedDistance };
+      case "left":
+        return { x: adjustedDistance };
+      case "right":
+        return { x: -adjustedDistance };
+      default:
+        return { y: adjustedDistance };
     }
   };
-  
+
   // Skip animations for users who prefer reduced motion
   if (prefersReducedMotion) {
-    return (
-      <div className={className}>
-        {children}
-      </div>
-    );
+    return <div className={className}>{children}</div>;
   }
-  
+
   return (
     <motion.div
       ref={ref}
       className={className}
       initial={{ opacity: 0, ...getDirectionOffset() }}
       animate={isInView ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, ...getDirectionOffset() }}
-      transition={{ 
-        duration: 0.6, 
-        delay, 
-        ease: [0.22, 1, 0.36, 1] 
+      transition={{
+        duration: 0.6,
+        delay,
+        ease: [0.22, 1, 0.36, 1],
       }}
     >
       {children}

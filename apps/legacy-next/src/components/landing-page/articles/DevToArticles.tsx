@@ -18,7 +18,8 @@ export async function DevToArticles({}: DevToArticlesProps) {
             <li
               key={article.id}
               className="card w-full sm:h-[350px] 
-                md:w-[48%] lg:w-[28%] shadow-lg shadow-base-200 rounded-xl">
+                md:w-[48%] lg:w-[28%] shadow-lg shadow-base-200 rounded-xl"
+            >
               <figure>
                 <Image
                   src={article.social_image}
@@ -45,7 +46,8 @@ export async function DevToArticles({}: DevToArticlesProps) {
                     className="hover:text-accent"
                     href={article.url}
                     target="_blank"
-                    rel="noopener noreferrer">
+                    rel="noopener noreferrer"
+                  >
                     read more
                   </Link>
                 </div>

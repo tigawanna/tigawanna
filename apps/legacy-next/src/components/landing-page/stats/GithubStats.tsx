@@ -1,9 +1,6 @@
 import { Suspense } from "react";
 import { TopJavascriptFramewoorks } from "./frameworks/TopJavascriptFramewoorks";
-import {
-  TopLibraries,
-  TopLibrariesSuspenseFallback,
-} from "./libraries/TopLibraries";
+import { TopLibraries, TopLibrariesSuspenseFallback } from "./libraries/TopLibraries";
 import { getViewerLibraries } from "./libraries/helpers/api";
 
 type GithubStatsProps = {};

@@ -5,7 +5,6 @@ import { HiOutlineMail } from "react-icons/hi";
 import { siteConfig } from "./container/site";
 import { CopyAllLinksButton } from "./CopyAlLinks";
 
-
 interface ContactLinksProps {
   navbar?: boolean;
   footer?: boolean;
@@ -64,7 +63,8 @@ export function ContactLinks({
     <div className="flex flex-col items-center gap-2">
       <div
         data-navbar={navbar}
-        className="p-1 flex gap-3 glass md:data-[navbar=true]:flex-col rounded-lg px-2 z-50">
+        className="p-1 flex gap-3 glass md:data-[navbar=true]:flex-col rounded-lg px-2 z-50"
+      >
         {links.map((link, index) => (
           <Link
             key={index}
@@ -72,7 +72,8 @@ export function ContactLinks({
             target="_blank"
             rel="noopener noreferrer"
             title={link.title}
-            className="flex items-center gap-2 hover:text-secondary active:scale-95 transition-transform">
+            className="flex items-center gap-2 hover:text-secondary active:scale-95 transition-transform"
+          >
             {link.icon}
             {showText && <span>{link.text}</span>}
           </Link>

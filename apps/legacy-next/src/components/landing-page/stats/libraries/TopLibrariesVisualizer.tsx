@@ -21,12 +21,10 @@ interface Circle {
   y: number;
 }
 export function TopLibrariesVisualizer({ libs }: TopLibrariesVisualizerProps) {
-  const languages = Object.entries(libs?.library_stats ?? {}).map(
-    ([key, value]) => ({
-      key,
-      value,
-    }),
-  );
+  const languages = Object.entries(libs?.library_stats ?? {}).map(([key, value]) => ({
+    key,
+    value,
+  }));
 
   const pack = React.useMemo(
     () => ({
@@ -92,18 +90,15 @@ export function TopLibrariesVisualizer({ libs }: TopLibrariesVisualizerProps) {
                       <div>
                         {[...circles].reverse().map((circ, i) => {
                           const circle = circ as any as Circle;
-                          const tooltipX =
-                            circle.x > width / 2 ? "left" : "right";
-                          const tooltipY =
-                            circle.y > width / 2 ? "top" : "bottom";
+                          const tooltipX = circle.x > width / 2 ? "left" : "right";
+                          const tooltipY = circle.y > width / 2 ? "top" : "bottom";
 
                           return (
                             <a
                               key={`circle-${i}`}
                               href={`https://github.com/${circle.data.key}`}
                               className={
-                                `spon-link ` +
-                                `absolute shadow-lg bg-white rounded-full z-0`
+                                `spon-link ` + `absolute shadow-lg bg-white rounded-full z-0`
                               }
                               style={{
                                 left: circle.x,
@@ -140,9 +135,7 @@ export function TopLibrariesVisualizer({ libs }: TopLibrariesVisualizerProps) {
                                     : `bottom-1/4 translate-y-full`,
                                 )}
                               >
-                                <p className={`whitespace-nowrap font-bold`}>
-                                  {circle.data.key}
-                                </p>
+                                <p className={`whitespace-nowrap font-bold`}>{circle.data.key}</p>
                               </div>
                             </a>
                           );
@@ -171,8 +164,8 @@ export function TopLibrariesVisualizer({ libs }: TopLibrariesVisualizerProps) {
           ></path>
         </svg>
         <span>
-          Images above might be inaccurate as the repository names might not
-          match the npm package name
+          Images above might be inaccurate as the repository names might not match the npm package
+          name
         </span>
       </div>
     </div>

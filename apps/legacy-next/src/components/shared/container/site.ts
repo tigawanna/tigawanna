@@ -57,4 +57,4 @@ export const techSkills = [
   "CI/CD",
   "Performance Optimization",
   "Accessibility",
-] as const
+] as const;

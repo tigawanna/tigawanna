@@ -36,17 +36,11 @@ export function RepoListCard({ one_repo }: RepoListCardProps) {
           <h2 className="text-2xl  justify-between">{one_repo.name}</h2>
           <div className="min-w-fit flex  items-center  gap-1">
             <h3 className="text-xs  text-center">last updated</h3>
-            <TimeCompponent
-              time={one_repo.pushedAt}
-              className="text-sm font-thin p-0 "
-              relative
-            />
+            <TimeCompponent time={one_repo.pushedAt} className="text-sm font-thin p-0 " relative />
           </div>
         </div>
 
-        <p className=" font-sans text-sm line-clamp-2 brightness-90">
-          {one_repo.description}
-        </p>
+        <p className=" font-sans text-sm line-clamp-2 brightness-90">{one_repo.description}</p>
         <ul className="flex flex-wrap gap-2 w-full">
           {one_repo?.repositoryTopics?.nodes.slice(0, 4).map((topic) => {
             return (

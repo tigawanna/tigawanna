@@ -9,7 +9,7 @@ import { useGSAPAnimation } from "@/lib/animations/scroll-animations";
 interface TechItemProps {
   name: string;
   icon: string;
-  category: 'frontend' | 'backend' | 'tool';
+  category: "frontend" | "backend" | "tool";
   delay: number;
 }
 
@@ -17,35 +17,31 @@ function TechItem({ name, icon, category, delay }: TechItemProps) {
   const categories = {
     frontend: "bg-gradient-to-r from-primary/30 to-secondary/30",
     backend: "bg-gradient-to-r from-secondary/30 to-accent/30",
-    tool: "bg-gradient-to-r from-accent/30 to-primary/30"
+    tool: "bg-gradient-to-r from-accent/30 to-primary/30",
   };
 
   const itemVariants = {
     hidden: { opacity: 0 },
-    visible: { 
+    visible: {
       opacity: 1,
       transition: {
         duration: 0.5,
-        delay: delay * 0.05  // Reduced delay for smoother appearance
-      }
-    }
+        delay: delay * 0.05, // Reduced delay for smoother appearance
+      },
+    },
   };
 
   return (
     <motion.div
       className={`tech-item flex flex-col items-center p-4 rounded-lg ${categories[category]} backdrop-blur-sm`}
       variants={itemVariants}
-      whileHover={{ scale: 1.05 }}  // Only scale on hover, no y-movement
+      whileHover={{ scale: 1.05 }} // Only scale on hover, no y-movement
       transition={{ duration: 0.2 }} // Make hover effect quick and smooth
     >
-      <div className="relative w-16 h-16 mb-3"> {/* Increased size */}
-        <Image
-          src={icon}
-          alt={name}
-          fill
-          sizes="64px" 
-          className="object-contain"
-        />
+      <div className="relative w-16 h-16 mb-3">
+        {" "}
+        {/* Increased size */}
+        <Image src={icon} alt={name} fill sizes="64px" className="object-contain" />
       </div>
       <span className="text-sm font-medium">{name}</span> {/* Slightly larger text */}
     </motion.div>
@@ -57,9 +53,9 @@ interface TechStackProps {
   description?: string;
 }
 
-export function TechStack({ 
-  title = "Technologies I Work With", 
-  description = "A collection of technologies I use to create exceptional web experiences" 
+export function TechStack({
+  title = "Technologies I Work With",
+  description = "A collection of technologies I use to create exceptional web experiences",
 }: TechStackProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -77,7 +73,7 @@ export function TechStack({
     { name: "Qwik", icon: "/frameworks/qwik.png", category: "frontend" as const },
     { name: "Solid", icon: "/frameworks/solid.jpg", category: "frontend" as const },
     { name: "Astro", icon: "/frameworks/astro.jpeg", category: "frontend" as const },
-    { name: "Svelte", icon: "/frameworks/svelte.png", category: "frontend" as const }
+    { name: "Svelte", icon: "/frameworks/svelte.png", category: "frontend" as const },
   ];
 
   // Remove the floating animation reference
@@ -89,7 +85,7 @@ export function TechStack({
     { name: "Tailwind", icon: "/blobby.svg", category: "frontend" as const },
     { name: "GraphQL", icon: "/frameworks/relay.webp", category: "backend" as const },
     { name: "Vite", icon: "/frameworks/vite.svg", category: "tool" as const },
-    { name: "Deno", icon: "/frameworks/deno.png", category: "backend" as const }
+    { name: "Deno", icon: "/frameworks/deno.png", category: "backend" as const },
   ];
 
   return (
@@ -102,7 +98,7 @@ export function TechStack({
         className="container mx-auto px-4"
       >
         <div className="text-center mb-12">
-          <motion.h2 
+          <motion.h2
             className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -111,7 +107,7 @@ export function TechStack({
           >
             {title}
           </motion.h2>
-          <motion.p 
+          <motion.p
             className="text-base-content/70 max-w-xl mx-auto"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -137,12 +133,12 @@ export function TechStack({
             viewport={{ once: true, amount: 0.1 }}
           >
             {technologies.map((tech, index) => (
-              <TechItem 
-                key={tech.name} 
-                name={tech.name} 
-                icon={tech.icon} 
+              <TechItem
+                key={tech.name}
+                name={tech.name}
+                icon={tech.icon}
                 category={tech.category}
-                delay={index} 
+                delay={index}
               />
             ))}
           </motion.div>

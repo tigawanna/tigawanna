@@ -59,7 +59,7 @@ export function TailwindFadeIn({
   };
 
   return (
-    <div 
+    <div
       className={`
         animate-in ${getDirectionClasses()} duration-500 ${getDelayClass()}
         @starting-style:opacity-0 @starting-style:translate-y-4

@@ -1,20 +1,11 @@
 import { envVariables } from "@/env";
 
-export async function getOneRepoRest({
-  repo,
-  owner,
-}: {
-  repo: string;
-  owner: string;
-}) {
+export async function getOneRepoRest({ repo, owner }: { repo: string; owner: string }) {
   try {
     const headers = {
       Authorization: `Bearer ${envVariables.GH_PAT}`,
     };
-    const response = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}`,
-      { headers },
-    );
+    const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`, { headers });
     if (!response.ok) {
       throw new Error(response.statusText);
     }

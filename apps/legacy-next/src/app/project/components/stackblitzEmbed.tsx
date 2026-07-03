@@ -38,10 +38,7 @@ export function StackblitzEmbed({ owner, repo }: stackblitzEmbedProps) {
       >
         Open in new window
       </button>
-      <div
-        id="embed"
-        className="mt-5 p-5 w-[95%] h-full flex items-center justify-center"
-      >
+      <div id="embed" className="mt-5 p-5 w-[95%] h-full flex items-center justify-center">
         B
       </div>
     </div>

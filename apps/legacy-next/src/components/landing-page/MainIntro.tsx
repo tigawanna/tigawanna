@@ -14,14 +14,16 @@ export default function Intro() {
               relative
               w-56 h-56 sm:w-60 sm:h-60 md:w-64 md:h-64 lg:w-56 lg:h-56 xl:w-64 xl:h-64
               group
-            ">
+            "
+            >
               {/* Glow effect */}
               <div
                 className={`
                 absolute inset-0 -z-10
                 before:absolute before:inset-0 before:bg-primary/30 before:rounded-full before:blur-2xl 
                 after:absolute after:inset-0 after:bg-secondary/20 after:rounded-full after:blur-xl 
-              `}></div>
+              `}
+              ></div>
 
               <div
                 className="
@@ -31,7 +33,8 @@ export default function Intro() {
                 relative z-10
                 transition-all duration-500
                 hover:scale-105 hover:shadow-2xl hover:shadow-primary/20 hover:border-primary/60
-              ">
+              "
+              >
                 <Image
                   src="/moi.jpg"
                   alt="Dennis Kinuthia"
@@ -77,12 +80,14 @@ export default function Intro() {
             <div className="mt-6 md:mt-8 flex flex-wrap gap-4 justify-center md:justify-start">
               <a
                 href="#about"
-                className="btn btn-primary transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/20">
+                className="btn btn-primary transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/20"
+              >
                 Learn More
               </a>
               <a
                 href="#contact"
-                className="btn btn-outline transition-all duration-300 hover:scale-105 hover:border-primary/60">
+                className="btn btn-outline transition-all duration-300 hover:scale-105 hover:border-primary/60"
+              >
                 Contact Me
               </a>
             </div>

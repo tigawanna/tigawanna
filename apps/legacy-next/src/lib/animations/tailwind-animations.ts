@@ -32,7 +32,7 @@ export function usePrefersReducedMotion() {
 /**
  * A utility to conditionally include Tailwind animation classes
  * based on the user's preference for reduced motion
- * 
+ *
  * @param animationClasses - Tailwind animation classes to apply when animations are enabled
  * @returns The animation classes or an empty string if reduced motion is preferred
  */

@@ -1,17 +1,9 @@
 export function isLocalhost(url: string): boolean {
-  return (
-    url.includes("localhost") ||
-    url.includes("127.0.0.1") ||
-    url.includes("[::1]")
-  );
+  return url.includes("localhost") || url.includes("127.0.0.1") || url.includes("[::1]");
 }
 
 export function isLAN(url: string): boolean {
-  return (
-    url.startsWith("192.168.") ||
-    url.startsWith("10.") ||
-    url.startsWith("172.")
-  );
+  return url.startsWith("192.168.") || url.startsWith("10.") || url.startsWith("172.");
 }
 
 export function stringOrURLToString(url: string | URL) {

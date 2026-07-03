@@ -29,7 +29,8 @@ export function FilterByTopics({ topics }: FilterByTopicsProps) {
                 className={`btn btn-primary btn-sm brightness-150 font-semibold`}
                 onClick={() => {
                   setTopic(item);
-                }}>
+                }}
+              >
                 {item}
                 {TechIcons.map((tech) => {
                   if (tech.name.toLowerCase().includes(item.toLowerCase())) {
@@ -46,7 +47,8 @@ export function FilterByTopics({ topics }: FilterByTopicsProps) {
               className={`btn btn-primary btn-sm btn-outline brightness-125  font-semibold`}
               onClick={() => {
                 setTopic(item);
-              }}>
+              }}
+            >
               {item}
               {TechIcons.map((tech) => {
                 if (tech.name.toLowerCase().includes(item.toLowerCase())) {

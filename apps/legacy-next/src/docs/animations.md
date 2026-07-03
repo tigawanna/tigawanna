@@ -16,9 +16,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <SmoothScroll>
-          {children}
-        </SmoothScroll>
+        <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
   );
@@ -30,11 +28,11 @@ export default function RootLayout({ children }) {
 Use the provided animation components for consistent effects:
 
 ```tsx
-import { 
+import {
   AnimatedSection,
   AnimatedText,
   ParallaxImage,
-  FadeIn 
+  FadeIn,
 } from "@/components/shared/animations/AnimatedComponents";
 
 export default function MyPage() {
@@ -44,20 +42,20 @@ export default function MyPage() {
         <h1>This section animates on scroll</h1>
         <p>Content here...</p>
       </AnimatedSection>
-      
-      <AnimatedText 
-        text="This text animates character by character" 
+
+      <AnimatedText
+        text="This text animates character by character"
         element="h2"
-        className="my-heading" 
+        className="my-heading"
       />
-      
+
       <ParallaxImage
         src="/path/to/image.jpg"
         alt="Description"
         className="w-full h-96 my-8"
         speed={0.5}
       />
-      
+
       <FadeIn direction="up" delay={0.2}>
         <div>This fades in from below</div>
       </FadeIn>
@@ -77,18 +75,18 @@ const timelineItems = [
   {
     year: "2023",
     title: "Senior Developer",
-    description: "Led development of key features for enterprise clients."
+    description: "Led development of key features for enterprise clients.",
   },
   {
     year: "2021",
     title: "Full Stack Developer",
-    description: "Worked on front-end and back-end solutions."
+    description: "Worked on front-end and back-end solutions.",
   },
   {
     year: "2019",
     title: "Junior Developer",
-    description: "Started career with focus on React development."
-  }
+    description: "Started career with focus on React development.",
+  },
 ];
 
 export default function CareerPage() {
@@ -107,16 +105,19 @@ export default function CareerPage() {
 Use the performance hook to optimize animations based on device capabilities:
 
 ```tsx
-import { useAnimationPerformance, PerformanceLevel } from "@/lib/animations/use-animation-performance";
+import {
+  useAnimationPerformance,
+  PerformanceLevel,
+} from "@/lib/animations/use-animation-performance";
 
 function MyComponent() {
   const { performanceLevel, isReducedMotion, getAnimationParams } = useAnimationPerformance();
-  
+
   // Skip animations for users who prefer reduced motion
   if (isReducedMotion) {
     return <div>Static Content</div>;
   }
-  
+
   // Get appropriate animation parameters based on device capability
   const animationParams = getAnimationParams(
     // High performance devices
@@ -124,14 +125,11 @@ function MyComponent() {
     // Medium performance devices
     { duration: 0.6, staggerChildren: 0.05, type: "tween" },
     // Low performance devices
-    { duration: 0.3, staggerChildren: 0, type: "tween" }
+    { duration: 0.3, staggerChildren: 0, type: "tween" },
   );
-  
+
   return (
-    <motion.div
-      animate={{ opacity: 1, y: 0 }}
-      transition={animationParams}
-    >
+    <motion.div animate={{ opacity: 1, y: 0 }} transition={animationParams}>
       Optimized animations!
     </motion.div>
   );
@@ -146,16 +144,13 @@ Simplify animations with the optimized animation hook:
 import { useOptimizedAnimation } from "@/lib/animations/use-optimized-animation";
 
 function MyComponent() {
-  const { ref, isInView, style, className } = useOptimizedAnimation(
-    'fadeInUp',
-    { 
-      threshold: 0.2, 
-      delay: 0.3,
-      duration: 0.6,
-      once: true
-    }
-  );
-  
+  const { ref, isInView, style, className } = useOptimizedAnimation("fadeInUp", {
+    threshold: 0.2,
+    delay: 0.3,
+    duration: 0.6,
+    once: true,
+  });
+
   return (
     <div ref={ref} style={style} className={className}>
       This component animates with optimal settings!

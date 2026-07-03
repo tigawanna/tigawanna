@@ -7,7 +7,7 @@ import { FadeIn } from "@/components/shared/animations/AnimatedComponents";
 interface TechItemProps {
   name: string;
   icon: string;
-  category: 'frontend' | 'backend' | 'tool';
+  category: "frontend" | "backend" | "tool";
   index: number;
 }
 
@@ -15,22 +15,18 @@ function TechItem({ name, icon, category, index }: TechItemProps) {
   const categories = {
     frontend: "bg-gradient-to-r from-primary/30 to-secondary/30",
     backend: "bg-gradient-to-r from-secondary/30 to-accent/30",
-    tool: "bg-gradient-to-r from-accent/30 to-primary/30"
+    tool: "bg-gradient-to-r from-accent/30 to-primary/30",
   };
 
   return (
-    <FadeIn 
-      delay={index * 0.1} 
+    <FadeIn
+      delay={index * 0.1}
       className={`flex flex-col items-center p-5 rounded-lg ${categories[category]} backdrop-blur-sm h-full`}
     >
-      <div className="w-20 h-20 mb-4"> {/* Fixed size without position:relative */}
-        <Image
-          src={icon}
-          alt={name}
-          width={80}
-          height={80}
-          className="object-contain"
-        />
+      <div className="w-20 h-20 mb-4">
+        {" "}
+        {/* Fixed size without position:relative */}
+        <Image src={icon} alt={name} width={80} height={80} className="object-contain" />
       </div>
       <span className="text-base font-medium text-center">{name}</span>
     </FadeIn>
@@ -42,9 +38,9 @@ interface SimplifiedTechStackProps {
   description?: string;
 }
 
-export function SimplifiedTechStack({ 
-  title = "Technologies I Work With", 
-  description = "A collection of technologies I use to create exceptional web experiences" 
+export function SimplifiedTechStack({
+  title = "Technologies I Work With",
+  description = "A collection of technologies I use to create exceptional web experiences",
 }: SimplifiedTechStackProps) {
   // Only favorite languages, limited to 8
   const favoriteLanguages = [
@@ -55,7 +51,7 @@ export function SimplifiedTechStack({
     { name: "Tailwind", icon: "/blobby.svg", category: "frontend" as const },
     { name: "GraphQL", icon: "/frameworks/relay.webp", category: "backend" as const },
     { name: "Vite", icon: "/frameworks/vite.svg", category: "tool" as const },
-    { name: "Deno", icon: "/frameworks/deno.png", category: "backend" as const }
+    { name: "Deno", icon: "/frameworks/deno.png", category: "backend" as const },
   ];
 
   return (
@@ -67,21 +63,19 @@ export function SimplifiedTechStack({
               {title}
             </h2>
           </FadeIn>
-          
+
           <FadeIn delay={0.2}>
-            <p className="text-base-content/70 max-w-xl mx-auto">
-              {description}
-            </p>
+            <p className="text-base-content/70 max-w-xl mx-auto">{description}</p>
           </FadeIn>
         </div>
 
         {/* Simple grid without position:relative */}
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {favoriteLanguages.map((tech, index) => (
-            <TechItem 
-              key={tech.name} 
-              name={tech.name} 
-              icon={tech.icon} 
+            <TechItem
+              key={tech.name}
+              name={tech.name}
+              icon={tech.icon}
               category={tech.category}
               index={index}
             />

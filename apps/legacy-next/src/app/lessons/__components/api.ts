@@ -22,7 +22,7 @@ export interface LessonsItem {
   gist?: string;
 }
 
-export async function getLessons(page:number,perPage:number): Promise<LessonsRoot> {
+export async function getLessons(page: number, perPage: number): Promise<LessonsRoot> {
   try {
     const endpoint = `${envVariables.PB_URL}/api/collections/portfolio_milestones/records?sort=-created,id&page=${page}&perPage=${perPage}`;
     const res = await fetch(endpoint);
@@ -38,13 +38,13 @@ export async function getLessons(page:number,perPage:number): Promise<LessonsRoo
     return res.json() as Promise<LessonsRoot>;
   } catch (error) {
     console.log("=== error fetching lessons ===", error);
-      return {
-        page: 0,
-        perPage: 0,
-        totalPages: 0,
-        totalItems: 0,
-        items: [],
-      };
+    return {
+      page: 0,
+      perPage: 0,
+      totalPages: 0,
+      totalItems: 0,
+      items: [],
+    };
   }
 }
 export async function getOneLesson(id: string): Promise<LessonsItem | undefined> {
@@ -53,7 +53,7 @@ export async function getOneLesson(id: string): Promise<LessonsItem | undefined>
     const res = await fetch(endpoint);
     if (!res.ok) {
       console.log("=== error fetchin one lesson ===", res.statusText);
-      return
+      return;
     }
     return res.json() as Promise<LessonsItem | undefined>;
   } catch (error) {

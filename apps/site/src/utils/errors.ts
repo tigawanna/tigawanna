@@ -26,8 +26,22 @@ export function collectErrorMessages(err: unknown): string[] {
       return;
     }
 
-    if (typeof value !== "object") {
+    if (typeof value === "number" || typeof value === "boolean" || typeof value === "bigint") {
       messages.push(String(value));
+      return;
+    }
+
+    if (typeof value === "symbol") {
+      messages.push(value.toString());
+      return;
+    }
+
+    if (typeof value === "function") {
+      messages.push(value.name || "[function]");
+      return;
+    }
+
+    if (typeof value !== "object") {
       return;
     }
 

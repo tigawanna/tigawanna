@@ -1,4 +1,3 @@
-
 import { CheckCircle2, CircleAlert, CircleX } from "lucide-react";
 import toast, { ToastOptions } from "react-hot-toast";
 
@@ -29,8 +28,9 @@ export function makeHotToast({ title, description, variant = "info", ...props }:
       return (
         <div
           className={`${t.visible ? "animate-enter" : "animate-leave"} ${toastVariantStyle(
-            variant
-          )} shadow-sm pointer-events-auto flex w-full max-w-md rounded-lg bg-base-100 dark:shadow-xs`}>
+            variant,
+          )} shadow-sm pointer-events-auto flex w-full max-w-md rounded-lg bg-base-100 dark:shadow-xs`}
+        >
           <div className="w-0 flex-1 p-4">
             <div className="flex items-center justify-center">
               <div className="h-full shrink-0 items-center justify-center pt-0.5">
@@ -57,6 +57,6 @@ export function makeHotToast({ title, description, variant = "info", ...props }:
         </div>
       );
     },
-    { ...props, position: "bottom-left" }
+    { ...props, position: "bottom-left" },
   );
 }

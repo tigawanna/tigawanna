@@ -4,11 +4,11 @@ import { Lock } from "lucide-react";
 import { TimeCompponent } from "@/components/shared/TimeCompponent";
 
 interface PinnedGithubProjectsProps {
-  pinned:Error | PinnedViewerReposResponse
+  pinned: Error | PinnedViewerReposResponse;
 }
 
-export function PinnedGithubProjects({pinned}: PinnedGithubProjectsProps) {
-const data = pinned
+export function PinnedGithubProjects({ pinned }: PinnedGithubProjectsProps) {
+  const data = pinned;
   if ((data && "errors" in data) || "message" in data) {
     return null;
   }
@@ -52,9 +52,7 @@ const data = pinned
                 </div>
               </div>
             );
-          return (
-            <RepoListCard one_repo={one_repo} key={one_repo.nameWithOwner} />
-          );
+          return <RepoListCard one_repo={one_repo} key={one_repo.nameWithOwner} />;
         })}
       </div>
     </div>

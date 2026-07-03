@@ -10,3 +10,4 @@
                 Type '{ id: string; updated_at: string | null; created_at: string | null; ipAddress: string | null; userId: string | null; action: "UPDATE" | "DELETE" | "CREATE" | "LIST" | "LOGIN" | "LOGOUT" | "PASSWORD_RESET" | "EMAIL_VERIFY"; table: string; oldData: { [x: string]: any; } | null; newData: { [x: string]: any; } | null; }' is not assignable to type '{ [x: string]: any; id?: undefined; updated_at?: undefined; created_at?: undefined; ipAddress?: undefined; userId?: undefined; action?: undefined; table?: undefined; oldData?: undefined; newData?: undefined; user?: undefined; }'.
                   Types of property 'id' are incompatible.
                     Type 'string' is not assignable to type 'undefined'.
+```

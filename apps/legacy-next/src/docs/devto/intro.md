@@ -2,21 +2,16 @@
 
 Are developers engineers? Maybe not in the strictest sense, but sometimes we like to geek out and over-engineer things, especially when it comes to our own portfolios.
 
-Portfolio websites are the perfect playground for unleashing our creativity and showcasing our skills without worrying about going overboard. In this mini-series, we'll be transforming our  [portfolio site](https://tigawanna-portfolio.vercel.app/) 
+Portfolio websites are the perfect playground for unleashing our creativity and showcasing our skills without worrying about going overboard. In this mini-series, we'll be transforming our [portfolio site](https://tigawanna-portfolio.vercel.app/)
 into an expressive masterpiece that truly reflects who we are as developers.
-
 
 To begin, we'll lay the groundwork with our signature color scheme and a hero section featuring a striking image of ourselves. Get ready to dive into the world of code and design as we breathe life into our digital canvas!
 
-
 ![site hero section](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/q98jelwjetzaaoqcy59n.png)
-
-
-
 
 Next, we'll unveil a curated showcase of our most impressive projects, seamlessly integrated into the site. While hardcoding them is an option, we'll opt for a more dynamic approach by fetching them directly from our GitHub repository. This ensures our portfolio always reflects our latest and greatest creations.
 
-But why stop at a simple project list when we can paint a richer portrait of our coding prowess? Let's infuse the site with captivating programming language statistics, revealing the languages we've mastered and the depths of our expertise. While pre-built solutions like  [github-readme-stats](https://github.com/anuraghazra/github-readme-stats) 
+But why stop at a simple project list when we can paint a richer portrait of our coding prowess? Let's infuse the site with captivating programming language statistics, revealing the languages we've mastered and the depths of our expertise. While pre-built solutions like [github-readme-stats](https://github.com/anuraghazra/github-readme-stats)
 that we can embed directly into our markdown or html ,
 It's limitation is that it'll only fetch the first 100 repos.
 
@@ -55,7 +50,7 @@ const fetcher = (variables, token) => {
 ```
 
 This is good enough but in my case I have at least 200 (i plan to delete most of these as soon as I fix up [another tool](https://github.com/tigawanna/repo-manager) for that 😜)
- 
+
 So I made a recursive version of it to fetch all our repositories
 
 ```ts
@@ -63,7 +58,6 @@ export async function getViewerRepos(
   viewer_token: string,
   cursor: string | null = null,
 ): Promise<{ data: ViewerRepos | null; error: BadDataGitHubError | null }> {
-
   const query = `
     query($first: Int!,$after: String) {
     viewer {
@@ -103,9 +97,9 @@ export async function getViewerRepos(
     const response = await fetch("https://api.github.com/graphql", {
       method: "POST",
       headers: {
-        "Authorization": `bearer ${viewer_token}`,
+        Authorization: `bearer ${viewer_token}`,
         "Content-Type": "application/json",
-        "accept": "application/vnd.github.hawkgirl-preview+json",
+        accept: "application/vnd.github.hawkgirl-preview+json",
       },
       body: JSON.stringify({
         query,
@@ -116,7 +110,7 @@ export async function getViewerRepos(
         // operationName,
       }),
     });
-    const data = await response.json() as unknown as ViewerRepos;
+    const data = (await response.json()) as unknown as ViewerRepos;
 
     if ("message" in data) {
       console.log("throw error fetching viewer repos  ==> ", data);
@@ -183,10 +177,10 @@ export interface BadDataGitHubError {
   message: string;
   documentation_url: string;
 }
-
 ```
 
-recursively fetch all the repos 
+recursively fetch all the repos
+
 ```ts
 async function fetchReposRecursivelyWithGQL({
   viewer_token,
@@ -198,8 +192,7 @@ async function fetchReposRecursivelyWithGQL({
     if (repos.data) {
       const fetched_repos = repos.data.data.viewer.repositories.edges;
       const totalCount = repos.data.data.viewer.repositories.totalCount;
-      const next_cursor =
-        repos.data.data.viewer.repositories.pageInfo.endCursor;
+      const next_cursor = repos.data.data.viewer.repositories.pageInfo.endCursor;
       const new_repos = all_repos.concat(fetched_repos);
 
       console.log({
@@ -221,71 +214,72 @@ async function fetchReposRecursivelyWithGQL({
     logError(error);
   }
 }
-
 ```
-then we'll loop over these with .reduce and output the languages stats and return an array of type 
+
+then we'll loop over these with .reduce and output the languages stats and return an array of type
 
 ```ts
-const top_langs: {
-    name: string;
-    color: string;
-    percentage: number;
-}[] | undefined
+const top_langs:
+  | {
+      name: string;
+      color: string;
+      percentage: number;
+    }[]
+  | undefined;
 ```
 
 ```tsx
-
 import { LanguagePercentage } from "./helpers";
 
 interface GithubLangiagesProps {
   top_langs: LanguagePercentage[];
-
 }
 
-export function GithubLangiagesPercentage({top_langs}:GithubLangiagesProps){
+export function GithubLangiagesPercentage({ top_langs }: GithubLangiagesProps) {
+  if (!top_langs) {
+    return null;
+  }
 
-if(!top_langs){
-  return null
-}
-
-return (
-  <div className="w-full h-full  flex items-center py-2 ">
-    <div className="w-full h-full">
-      <ul className="w-full flex flex-wrap  list-none m-0 px-5 gap-3  ">
-        {top_langs.map(({color,name,percentage}, index: number) => {
-          const percent = percentage
-          const percetage = percent < 5 ? percent + 2 : percent;
-          if(percentage<1){
-            return null
-          }
-          return (
-            <li
-              key={name + index}
-              className=" md:max-w-[70%] min-w-fit gap-1 flex flex-col justify-center "
-              style={{
-                width: `${percetage}%`,
-              }}>
-              <div
-                className="min-w-[20%]  rounded-xl w-full h-4"
+  return (
+    <div className="w-full h-full  flex items-center py-2 ">
+      <div className="w-full h-full">
+        <ul className="w-full flex flex-wrap  list-none m-0 px-5 gap-3  ">
+          {top_langs.map(({ color, name, percentage }, index: number) => {
+            const percent = percentage;
+            const percetage = percent < 5 ? percent + 2 : percent;
+            if (percentage < 1) {
+              return null;
+            }
+            return (
+              <li
+                key={name + index}
+                className=" md:max-w-[70%] min-w-fit gap-1 flex flex-col justify-center "
                 style={{
-                  backgroundColor: color ?? "",
-                }}>
-                
-              </div>
-              <div className="pl-1 text-xs flex min-w-fit gap-2">
-                <div>{name}</div>
-                <div> {percentage}%</div>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
+                  width: `${percetage}%`,
+                }}
+              >
+                <div
+                  className="min-w-[20%]  rounded-xl w-full h-4"
+                  style={{
+                    backgroundColor: color ?? "",
+                  }}
+                ></div>
+                <div className="pl-1 text-xs flex min-w-fit gap-2">
+                  <div>{name}</div>
+                  <div> {percentage}%</div>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </div>
-  </div>
-);
+  );
 }
 ```
+
 finally we display the stats bars
+
 ```tsx
 export async function GithubLanguages({}: LanguagesProps) {
   const top_langs = await getGithubViewerLanguages();
@@ -295,18 +289,16 @@ export async function GithubLanguages({}: LanguagesProps) {
     <div
       className=" w-full  h-full   p-5 
         flex flex-wrap items-center justify-center text-xs md:text-base
-        gap-2  rounded-xl ">
+        gap-2  rounded-xl "
+    >
       <SectionHeader heading="Languages Stats on Github" id="stats" />
-    <GithubLangiagesPercentage top_langs={top_langs} />
+      <GithubLangiagesPercentage top_langs={top_langs} />
     </div>
   );
 }
 ```
+
 ![programming languages stats](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/7xlu1mh86rjwxzl75nyc.png)
 [](https://tigawanna-portfolio.vercel.app/#stats)
 
-
 In the next part we fix react's biggest problem: the lack of a cool ".react" file extension like Vue or svelte , because how else are people going to know what all that html,CSS and JavaScript was being used for
-
-
-

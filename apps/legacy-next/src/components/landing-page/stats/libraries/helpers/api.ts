@@ -7,7 +7,7 @@ export interface ViewerLibraries {
 }
 export async function getViewerLibraries() {
   const deno_url = envVariables.DENO_URL;
-  const pat = envVariables.GH_PAT
+  const pat = envVariables.GH_PAT;
 
   if (!deno_url || !pat) return;
 

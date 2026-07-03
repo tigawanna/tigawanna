@@ -20,9 +20,7 @@ interface Circle {
   x: number;
   y: number;
 }
-export function TopFrameworksVisualizer({
-  pkgs,
-}: TopFrameworksVisualizerProps) {
+export function TopFrameworksVisualizer({ pkgs }: TopFrameworksVisualizerProps) {
   const pack = React.useMemo(
     () => ({
       children: pkgs,
@@ -89,17 +87,14 @@ export function TopFrameworksVisualizer({
                       <div>
                         {[...circles].reverse().map((circ, i) => {
                           const circle = circ as any as Circle;
-                          const tooltipX =
-                            circle.x > width / 2 ? "left" : "right";
-                          const tooltipY =
-                            circle.y > width / 2 ? "top" : "bottom";
+                          const tooltipX = circle.x > width / 2 ? "left" : "right";
+                          const tooltipY = circle.y > width / 2 ? "top" : "bottom";
 
                           return (
                             <div
                               key={`circle-${i}`}
                               className={
-                                `spon-link ` +
-                                `absolute shadow-lg bg-white rounded-xl z-0`
+                                `spon-link ` + `absolute shadow-lg bg-white rounded-xl z-0`
                               }
                               style={{
                                 left: circle.x,
@@ -140,9 +135,7 @@ export function TopFrameworksVisualizer({
                                     : `bottom-1/4 translate-y-full`,
                                 )}
                               >
-                                <p className={`whitespace-nowrap font-bold`}>
-                                  {circle.data.name}
-                                </p>
+                                <p className={`whitespace-nowrap font-bold`}>{circle.data.name}</p>
                               </div>
                             </div>
                           );

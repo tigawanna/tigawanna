@@ -17,10 +17,10 @@ export function convertMarkdownToHtml(markdown: string): string {
             wholeMatch: string,
             match: string,
             left: string,
-            right: string
+            right: string,
           ): string => {
             match = htmlunencode(match);
-            var lang = (left.match(/class=\"([^ \"]+)/) || [])[1];
+            var lang = (left.match(/class="([^ "]+)/) || [])[1];
             left = left.slice(0, 18) + "hljs " + left.slice(18);
             if (lang && hljs.getLanguage(lang)) {
               return left + hljs.highlight(match, { language: lang }).value + right;
@@ -78,7 +78,6 @@ export function convertMarkdownToHtml(markdown: string): string {
     .replace("<p>[!WARNING]", "<p class='warning'> <span> 🚨 Warning </span>")
     .replace("<p>[!IMPORTANT]", "<p class='important'><span> 🔥 Important </span>")
     .replace("<p>[!CAUTION]", "<p class='caution'> <span>⚠️ Caution </span>");
-
 
   const html: string = preContent + generatedHtml + postContent;
 

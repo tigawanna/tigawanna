@@ -1,10 +1,10 @@
-
 # Aggregating libraries,frameworks and languages used on github
-The github API doesn't give us a way to get our most used languagesor libraries so we'll have to get craetive, 
+
+The github API doesn't give us a way to get our most used languagesor libraries so we'll have to get craetive,
 
 First we'll need to fetch all our repos and get their languages and then we'll aggregate them.
 
-but the Github API has a response limit of 100 items at a time , i had over 200 repos , so i made  recusive function to get all the repositories
+but the Github API has a response limit of 100 items at a time , i had over 200 repos , so i made recusive function to get all the repositories
 
 We'll be using the graphql API which will return each repositories languages too withour have to fetch them separately.
 
@@ -15,7 +15,6 @@ export async function getViewerRepos(
   viewer_token: string,
   cursor: string | null = null,
 ): Promise<{ data: ViewerRepos | null; error: BadDataGitHubError | null }> {
-
   const query = `
     query($first: Int!,$after: String) {
     viewer {
@@ -55,9 +54,9 @@ export async function getViewerRepos(
     const response = await fetch("https://api.github.com/graphql", {
       method: "POST",
       headers: {
-        "Authorization": `bearer ${viewer_token}`,
+        Authorization: `bearer ${viewer_token}`,
         "Content-Type": "application/json",
-        "accept": "application/vnd.github.hawkgirl-preview+json",
+        accept: "application/vnd.github.hawkgirl-preview+json",
       },
       body: JSON.stringify({
         query,
@@ -68,7 +67,7 @@ export async function getViewerRepos(
         // operationName,
       }),
     });
-    const data = await response.json() as unknown as ViewerRepos;
+    const data = (await response.json()) as unknown as ViewerRepos;
 
     if ("message" in data) {
       console.log("throw error fetching viewer repos  ==> ", data);
@@ -135,10 +134,10 @@ export interface BadDataGitHubError {
   message: string;
   documentation_url: string;
 }
-
 ```
 
-recursively fetch all the repos 
+recursively fetch all the repos
+
 ```ts
 async function fetchReposRecursivelyWithGQL({
   viewer_token,
@@ -150,8 +149,7 @@ async function fetchReposRecursivelyWithGQL({
     if (repos.data) {
       const fetched_repos = repos.data.data.viewer.repositories.edges;
       const totalCount = repos.data.data.viewer.repositories.totalCount;
-      const next_cursor =
-        repos.data.data.viewer.repositories.pageInfo.endCursor;
+      const next_cursor = repos.data.data.viewer.repositories.pageInfo.endCursor;
       const new_repos = all_repos.concat(fetched_repos);
 
       console.log({
@@ -173,13 +171,11 @@ async function fetchReposRecursivelyWithGQL({
     logError(error);
   }
 }
-
-
 ```
 
 then we loop through those and get the languaes used .
 
-as for the libraries and pachkages  we/ll need to grab each item's `package.json` using this snippet
+as for the libraries and pachkages we/ll need to grab each item's `package.json` using this snippet
 
 ```ts
 // deno-lint-ignore-file no-explicit-any ban-ts-comment
@@ -258,7 +254,7 @@ export const mostFaveDepsList = [
   "tanastck",
   "material",
   "mantine",
- 
+
   "zustand",
   "shadcn",
   "ark",
@@ -281,7 +277,7 @@ export const mostFaveDepsList = [
   "jest",
   "vitest",
   "nodemon",
-  "@tanstack"
+  "@tanstack",
 ];
 
 //  modify package.json to addthe pkg_type
@@ -314,10 +310,7 @@ export function modifyPackageJson(pgkjson: DecodedPackageJson) {
 }
 
 // get repository package.json
-export async function getOneRepoPackageJson(
-  owner_repo: string,
-  viewer_token: string,
-) {
+export async function getOneRepoPackageJson(owner_repo: string, viewer_token: string) {
   try {
     const headersList = {
       Authorization: `bearer ${viewer_token}`,
@@ -336,9 +329,7 @@ export async function getOneRepoPackageJson(
     // console.log("package.json data ==== ", data);
 
     if (data && data.encoding === "base64" && data.content) {
-      const stringBuffer = new TextDecoder().decode(
-        base64ToUint8Array(data.content),
-      );
+      const stringBuffer = new TextDecoder().decode(base64ToUint8Array(data.content));
       const pkgjson = JSON.parse(stringBuffer) as DecodedPackageJson;
       return await modifyPackageJson(pkgjson);
     }
@@ -352,9 +343,7 @@ export async function getOneRepoPackageJson(
     );
     const deno_lock_data = await deno_lock_response.json();
 
-    if (
-      !("documentation_url" in deno_lock_data && "message" in deno_lock_data)
-    ) {
+    if (!("documentation_url" in deno_lock_data && "message" in deno_lock_data)) {
       return {
         name: owner_repo.split("/")[1],
         favdeps: ["deno"],
@@ -371,9 +360,7 @@ export async function getOneRepoPackageJson(
     );
     const deno_json_data = await deno_json_response.json();
 
-    if (
-      !("documentation_url" in deno_json_data && "message" in deno_json_data)
-    ) {
+    if (!("documentation_url" in deno_json_data && "message" in deno_json_data)) {
       return {
         name: owner_repo.split("/")[1],
         favdeps: ["deno"],
@@ -429,10 +416,7 @@ export async function computeAllPkgJsons(viewer_token: string) {
     if (all_repos.data?.data) {
       const reposList = all_repos.data?.data.viewer.repositories.edges;
       for await (const repo of reposList) {
-        const pkgjson = await getOneRepoPackageJson(
-          repo.node.nameWithOwner,
-          viewer_token,
-        );
+        const pkgjson = await getOneRepoPackageJson(repo.node.nameWithOwner, viewer_token);
         if ("message" in pkgjson && "documentation_url" in pkgjson) {
           continue;
         }
@@ -495,11 +479,11 @@ export interface RequiredDecodedPackageJson {
 
 export type DecodedPackageJson =
   | (RequiredDecodedPackageJson & {
-    nameWithOwner: string;
-    favdeps?: string[];
-    pkg_type?: TPkgType;
-    languages?: LanguageEdge[];
-  })
+      nameWithOwner: string;
+      favdeps?: string[];
+      pkg_type?: TPkgType;
+      languages?: LanguageEdge[];
+    })
   | BadDataGitHubError;
 
 export type PlainDecodedPackageJson = RequiredDecodedPackageJson & {
@@ -571,11 +555,9 @@ export interface PkgsRequest extends Request {
   pkgs?: IPkgRepo[];
   pkg_jsons?: DecodedPackageJson[];
 }
-
 ```
 
-
-and using that we'll loop over all our items and call 
+and using that we'll loop over all our items and call
 
 ```ts
 const viewer_token"ghp_0Bw5w5H5e8u7v9wjVBw5w5H5e8uw7W1e3z5n2vZr4P6qPq";
@@ -604,8 +586,8 @@ const viewer_token"ghp_0Bw5w5H5e8u7v9wjVBw5w5H5e8uw7W1e3z5n2vZr4P6qPq";
 ```
 
 > ⚠ **Warning:** This method will hit the github api limit very quickly and you might get timed out.
-Deno queues could help at this by staggering the requests [example with deno queues](https://github.com/tigawanna/library-stats/blob/4569d944082d5f0bb8bfe74e19bba6f5b3a93d7e/routes/stats/helpers/computeLibStats.ts)
- writing the reponses to a db is probably a good idea so that we don't have to run this everytime 
+> Deno queues could help at this by staggering the requests [example with deno queues](https://github.com/tigawanna/library-stats/blob/4569d944082d5f0bb8bfe74e19bba6f5b3a93d7e/routes/stats/helpers/computeLibStats.ts)
+> writing the reponses to a db is probably a good idea so that we don't have to run this everytime
 
 > ℹ️ **Info:** the deno queues are not working on deploy only locally , where you'll have to write to a remote kv depployed on deploy .
-If anyone knows how to make that deno queue work in deploy let me know i haven't been successful with that
+> If anyone knows how to make that deno queue work in deploy let me know i haven't been successful with that

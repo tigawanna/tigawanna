@@ -2,9 +2,7 @@ import { SectionHeader } from "../../../shared/SectionHeader";
 import { GithubLangiagesPercentage } from "./GithubLangiagesPercentage";
 import { getGithubViewerLanguages } from "./deno";
 
-type LanguagesProps = {
-
-};
+type LanguagesProps = {};
 
 export async function GithubLanguages({}: LanguagesProps) {
   const top_langs = await getGithubViewerLanguages();

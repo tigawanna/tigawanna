@@ -2,8 +2,12 @@
 
 /* Fade In animations */
 @keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes fade-in-up {
@@ -52,7 +56,8 @@
 
 /* Slow pulse animation for glow effects */
 @keyframes pulse-slow {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.5;
     transform: scale(0.95);
   }

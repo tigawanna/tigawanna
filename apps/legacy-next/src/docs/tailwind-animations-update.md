@@ -1,17 +1,20 @@
 # Tailwind CSS v4 Animation Updates
 
 ## Overview
+
 This update replaces Framer Motion and GSAP animations with native Tailwind CSS v4 animations, improving performance and reducing bundle size. The changes focus on using Tailwind's new animation features including `@starting-style` for initial load animations.
 
 ## Key Changes
 
 ### New Animation Utilities
+
 - Created `/src/lib/animations/tailwind-animations.ts` with:
   - `usePrefersReducedMotion()` - Respects user's motion preferences
   - `useAnimationClasses()` - Conditionally includes animation classes
   - `getDelayClass()` - Utility for consistent animation delays
 
 ### Updated Components
+
 1. **Hero Section (UpdatedIntro):**
    - Side-by-side layout (image and text)
    - Responsive design (flex-col on mobile, flex-row on larger screens)
@@ -42,6 +45,7 @@ This update replaces Framer Motion and GSAP animations with native Tailwind CSS 
    - Improved button hover states throughout the site
 
 ## Animation Classes Used
+
 - `animate-in` - Base animation class
 - `fade-in` - Opacity transition
 - `slide-in-from-bottom-X` - Vertical entry
@@ -53,6 +57,7 @@ This update replaces Framer Motion and GSAP animations with native Tailwind CSS 
 - `@starting-style:scale-X` - Initial scale states
 
 ## Benefits
+
 - Reduced JavaScript bundle size by removing animation libraries
 - Better performance with CSS-driven animations
 - Proper respect for user's reduced motion preferences

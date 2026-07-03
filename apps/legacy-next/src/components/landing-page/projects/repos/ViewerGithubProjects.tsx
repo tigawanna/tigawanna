@@ -8,15 +8,14 @@ import { Lock } from "lucide-react";
 import { FilterByTopics } from "./FilterByTopics";
 import { useQueryState } from "nuqs";
 import { PinnedGithubProjects } from "./PinnedGithubProjects";
-import {  PinnedViewerReposResponse } from "@/state/api/repos";
+import { PinnedViewerReposResponse } from "@/state/api/repos";
 interface ViewerGithubProjectsProps {
   data: ViewerPinnedRepoData | null;
   errors: RequestError[];
-    pinned:Error | PinnedViewerReposResponse
+  pinned: Error | PinnedViewerReposResponse;
 }
 
-export function ViewerGithubProjects({ data, errors,pinned }: ViewerGithubProjectsProps) {
-
+export function ViewerGithubProjects({ data, errors, pinned }: ViewerGithubProjectsProps) {
   const [topic, setTopic] = useQueryState("topic", { defaultValue: "featured" });
   if (errors && errors.length > 0 && !data) {
     return null;
@@ -43,14 +42,12 @@ export function ViewerGithubProjects({ data, errors,pinned }: ViewerGithubProjec
       return true;
     }
     if (project?.repositoryTopics?.nodes) {
-      return project.repositoryTopics.nodes.some(
-        (t) => t.topic?.name?.toLowerCase()?.includes(topic?.toLocaleLowerCase())
+      return project.repositoryTopics.nodes.some((t) =>
+        t.topic?.name?.toLowerCase()?.includes(topic?.toLocaleLowerCase()),
       );
     }
     return false;
   });
-
-
 
   return (
     <div className="w-full h-full flex flex-col items-center bg-base-200/40 p-4 rounede-xl justify-center">
@@ -69,7 +66,8 @@ export function ViewerGithubProjects({ data, errors,pinned }: ViewerGithubProjec
                 <div
                   key={one_repo.nameWithOwner}
                   className="card w-full sm:h-[350px] 
-                 md:w-[45%] lg:w-[30%] shadow-lg shadow-base-200 rounded-xl relative glass">
+                 md:w-[45%] lg:w-[30%] shadow-lg shadow-base-200 rounded-xl relative glass"
+                >
                   <div className="w-full h-full  flex flex-col justify-center items-center gap-2   z-40">
                     <div className="flex items-center gap-0.5 rounded-lg">
                       <h3>{one_repo.name.slice(0, 2)}</h3>

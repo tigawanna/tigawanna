@@ -40,9 +40,7 @@
       "indexes": {
         "admin_login_challenges_expires_at_idx": {
           "name": "admin_login_challenges_expires_at_idx",
-          "columns": [
-            "expires_at"
-          ],
+          "columns": ["expires_at"],
           "isUnique": false
         }
       },
@@ -116,9 +114,7 @@
       "indexes": {
         "contact_messages_created_at_idx": {
           "name": "contact_messages_created_at_idx",
-          "columns": [
-            "created_at"
-          ],
+          "columns": ["created_at"],
           "isUnique": false
         }
       },
@@ -172,16 +168,12 @@
       "indexes": {
         "featured_projects_repo_name_unique": {
           "name": "featured_projects_repo_name_unique",
-          "columns": [
-            "repo_name"
-          ],
+          "columns": ["repo_name"],
           "isUnique": true
         },
         "featured_projects_sort_order_idx": {
           "name": "featured_projects_sort_order_idx",
-          "columns": [
-            "sort_order"
-          ],
+          "columns": ["sort_order"],
           "isUnique": false
         }
       },
@@ -289,9 +281,7 @@
       "indexes": {
         "account_userId_idx": {
           "name": "account_userId_idx",
-          "columns": [
-            "user_id"
-          ],
+          "columns": ["user_id"],
           "isUnique": false
         }
       },
@@ -300,12 +290,8 @@
           "name": "account_user_id_user_id_fk",
           "tableFrom": "account",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -385,16 +371,12 @@
       "indexes": {
         "session_token_unique": {
           "name": "session_token_unique",
-          "columns": [
-            "token"
-          ],
+          "columns": ["token"],
           "isUnique": true
         },
         "session_userId_idx": {
           "name": "session_userId_idx",
-          "columns": [
-            "user_id"
-          ],
+          "columns": ["user_id"],
           "isUnique": false
         }
       },
@@ -403,12 +385,8 @@
           "name": "session_user_id_user_id_fk",
           "tableFrom": "session",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -506,9 +484,7 @@
       "indexes": {
         "user_email_unique": {
           "name": "user_email_unique",
-          "columns": [
-            "email"
-          ],
+          "columns": ["email"],
           "isUnique": true
         }
       },
@@ -568,9 +544,7 @@
       "indexes": {
         "verification_identifier_idx": {
           "name": "verification_identifier_idx",
-          "columns": [
-            "identifier"
-          ],
+          "columns": ["identifier"],
           "isUnique": false
         }
       },
@@ -660,16 +634,12 @@
       "indexes": {
         "project_enrichment_runs_status_idx": {
           "name": "project_enrichment_runs_status_idx",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "isUnique": false
         },
         "project_enrichment_runs_started_at_idx": {
           "name": "project_enrichment_runs_started_at_idx",
-          "columns": [
-            "started_at"
-          ],
+          "columns": ["started_at"],
           "isUnique": false
         }
       },
@@ -778,23 +748,17 @@
       "indexes": {
         "project_enrichment_suggestions_status_idx": {
           "name": "project_enrichment_suggestions_status_idx",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "isUnique": false
         },
         "project_enrichment_suggestions_github_repo_id_idx": {
           "name": "project_enrichment_suggestions_github_repo_id_idx",
-          "columns": [
-            "github_repo_id"
-          ],
+          "columns": ["github_repo_id"],
           "isUnique": false
         },
         "project_enrichment_suggestions_run_id_idx": {
           "name": "project_enrichment_suggestions_run_id_idx",
-          "columns": [
-            "run_id"
-          ],
+          "columns": ["run_id"],
           "isUnique": false
         }
       },
@@ -803,12 +767,8 @@
           "name": "project_enrichment_suggestions_run_id_project_enrichment_runs_id_fk",
           "tableFrom": "project_enrichment_suggestions",
           "tableTo": "project_enrichment_runs",
-          "columnsFrom": [
-            "run_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["run_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -816,12 +776,8 @@
           "name": "project_enrichment_suggestions_github_repo_id_project_repos_github_repo_id_fk",
           "tableFrom": "project_enrichment_suggestions",
           "tableTo": "project_repos",
-          "columnsFrom": [
-            "github_repo_id"
-          ],
-          "columnsTo": [
-            "github_repo_id"
-          ],
+          "columnsFrom": ["github_repo_id"],
+          "columnsTo": ["github_repo_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -926,23 +882,17 @@
       "indexes": {
         "project_repos_repo_full_name_unique": {
           "name": "project_repos_repo_full_name_unique",
-          "columns": [
-            "repo_full_name"
-          ],
+          "columns": ["repo_full_name"],
           "isUnique": true
         },
         "project_repos_attendance_idx": {
           "name": "project_repos_attendance_idx",
-          "columns": [
-            "attendance"
-          ],
+          "columns": ["attendance"],
           "isUnique": false
         },
         "project_repos_repo_full_name_idx": {
           "name": "project_repos_repo_full_name_idx",
-          "columns": [
-            "repo_full_name"
-          ],
+          "columns": ["repo_full_name"],
           "isUnique": false
         }
       },

@@ -21,7 +21,8 @@ export function CertificateSection() {
                 border border-primary/10 shadow-lg
                 transition-all duration-300
                 hover:scale-[1.01]
-              ">
+              "
+            >
               <div className="relative aspect-[16/9] w-full">
                 <Image
                   src="/alx.png"
@@ -70,7 +71,8 @@ export function CertificateSection() {
                     href="https://www.alxafrica.com/software-engineering/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn btn-primary btn-outline">
+                    className="btn btn-primary btn-outline"
+                  >
                     Learn More About ALX
                   </a>
                 </div>
@@ -78,18 +80,21 @@ export function CertificateSection() {
             </div>
           </TailwindFadeIn>
 
-          <div className="
+          <div
+            className="
             mt-6 flex items-center justify-center 
             text-center text-base-content/60 text-sm
             animate-in fade-in duration-700 delay-300
             @starting-style:opacity-0
-          ">
+          "
+          >
             <p>Certificate verification: Scan the QR code or visit</p>
             <a
               className="btn btn-link"
               target="_blank"
               rel="noopener noreferrer"
-              href="https://savanna.alxafrica.com/certificates/y2xLJ9eFhY">
+              href="https://savanna.alxafrica.com/certificates/y2xLJ9eFhY"
+            >
               this link
             </a>
           </div>

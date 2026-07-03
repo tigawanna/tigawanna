@@ -5,14 +5,11 @@ export async function fetchMyLatstDevToArticles() {
     const apiKey = envVariables.DEV_TO_KEY;
     const username = "tigawanna";
 
-    const articles = await fetch(
-      `https://dev.to/api/articles?username=${username}&per_page=4`,
-      {
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-        },
+    const articles = await fetch(`https://dev.to/api/articles?username=${username}&per_page=4`, {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
       },
-    )
+    })
       .then((response: Response) => {
         if (!response.ok) {
           throw new Error(response.statusText);

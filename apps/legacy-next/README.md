@@ -2,7 +2,8 @@ Typescript enjoyer
 
 [![GitHub Streak](https://github-readme-streak-stats.herokuapp.com?user=tigawanna&theme=navy-gear)](https://git.io/streak-stats)
 
-How to reach me: 
+How to reach me:
+
 - LinkedIn: https://linkedin.com/in/dennis-kinuthia-waweru
 - Github: https://github.com/tigawanna
 - website: https://tigawanna-portfolio.vercel.app

@@ -32,17 +32,10 @@ export function randownNumberBasedOnDate(min: number, max: number) {
 
   const dayOfYear = Math.floor(
     // @ts-expect-error
-    (currentDate - new Date(currentDate.getFullYear(), 0, 0)) /
-      1000 /
-      60 /
-      60 /
-      24,
+    (currentDate - new Date(currentDate.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24,
   );
   const randomSeed =
-    dayOfYear +
-    currentDate.getHours() +
-    currentDate.getMinutes() +
-    currentDate.getSeconds();
+    dayOfYear + currentDate.getHours() + currentDate.getMinutes() + currentDate.getSeconds();
   const randomNumber = Math.floor(randomSeed * Math.random() * max) + min;
   return randomNumber;
 }

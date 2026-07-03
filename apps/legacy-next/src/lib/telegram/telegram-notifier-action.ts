@@ -15,7 +15,7 @@ export interface ContactFormState {
 
 export async function sendTelegramNotificationAction(
   prevState: ContactFormState,
-  formData: FormData
+  formData: FormData,
 ) {
   try {
     const tg = new TelegramNotifier();

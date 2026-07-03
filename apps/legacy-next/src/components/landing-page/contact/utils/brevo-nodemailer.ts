@@ -4,7 +4,6 @@ import { envVariables } from "@/env";
 import { sendEmailMessage } from "@/lib/message/deno-echo";
 import { TelegramNotifier } from "@/lib/telegram/client";
 
-
 export interface ContactFormState {
   message: string;
   error: boolean;
@@ -17,10 +16,9 @@ export interface ContactFormState {
 }
 export async function sendEmailwithBrevoSmtpAction(
   prevState: ContactFormState,
-  formData: FormData
+  formData: FormData,
 ) {
-
-  const tg = new TelegramNotifier()
+  const tg = new TelegramNotifier();
   // console.log({prevState, formData});
   const mail_from = envVariables.EMAIL_FROM;
   const mail_to = envVariables.EMAIL_FROM;
@@ -64,53 +62,54 @@ export async function sendEmailwithBrevoSmtpAction(
     ...mailOptions,
     tg: true,
     persist: true,
-  }).then((res) => {
-    return {
-      message: "Successfully sent, Thank you!",
-      error: false,
-      success: true,
-      fieldValues: {
-        sender_name: "",
-        sender_email: "",
-        sender_message: "",
-      },
-    }
-  }).catch((err) => {
-    return {
-      message: "Something went wrong",
-      error: true,
-      success: false,
-      fieldValues: prevState?.fieldValues,
-    }
   })
-
+    .then((res) => {
+      return {
+        message: "Successfully sent, Thank you!",
+        error: false,
+        success: true,
+        fieldValues: {
+          sender_name: "",
+          sender_email: "",
+          sender_message: "",
+        },
+      };
+    })
+    .catch((err) => {
+      return {
+        message: "Something went wrong",
+        error: true,
+        success: false,
+        fieldValues: prevState?.fieldValues,
+      };
+    });
 
   // async function asyncsendMail() {
   //   return new Promise<ContactFormState>((resolve, reject) => {
-      // transporter.sendMail(mailOptions, (error: any, info: any) => {
-      //   if (error) {
-      //     // no("error sending email   =============== ", error);
-      //     resolve({
-      //       message: "Something went wrong",
-      //       error: true,
-      //       success: false,
-      //       fieldValues: prevState.fieldValues,
-      //     });
-      //   } else {
-      //     // no("Email sent: " + info.response);
-      //     resolve({
-      //       message: "Successfully sent, Thank you!",
-      //       error: false,
-      //       success: true,
-      //       fieldValues: {
-      //         sender_name: "",
-      //         sender_email: "",
-      //         sender_message: "",
-      //       },
-      //     });
-      //   }
-      // });
-    // });
+  // transporter.sendMail(mailOptions, (error: any, info: any) => {
+  //   if (error) {
+  //     // no("error sending email   =============== ", error);
+  //     resolve({
+  //       message: "Something went wrong",
+  //       error: true,
+  //       success: false,
+  //       fieldValues: prevState.fieldValues,
+  //     });
+  //   } else {
+  //     // no("Email sent: " + info.response);
+  //     resolve({
+  //       message: "Successfully sent, Thank you!",
+  //       error: false,
+  //       success: true,
+  //       fieldValues: {
+  //         sender_name: "",
+  //         sender_email: "",
+  //         sender_message: "",
+  //       },
+  //     });
+  //   }
+  // });
+  // });
   // }
 
   // return await asyncsendMail();

@@ -25,7 +25,8 @@ export function TalksSection() {
                 transition-all duration-300 h-full
                 hover:shadow-xl hover:scale-[1.01]
                 group
-              ">
+              "
+            >
               <div className="relative h-56 w-full">
                 <Image
                   src="/Rendercon.png"
@@ -55,7 +56,8 @@ export function TalksSection() {
                     href={siteConfig.links.renderconke_talk}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn btn-link">
+                    className="btn btn-link"
+                  >
                     View Presentation
                     <ExternalLink className="size-3 ml-2" />
                   </a>
@@ -64,7 +66,8 @@ export function TalksSection() {
                     href={siteConfig.links.renderconke}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn btn-outline btn-primary btn-sm">
+                    className="btn btn-outline btn-primary btn-sm"
+                  >
                     Learn more about RenderCon
                     <ExternalLink className="size-3 ml-2" />
                   </a>
@@ -82,7 +85,8 @@ export function TalksSection() {
                 transition-all duration-300 h-full
                 hover:shadow-xl hover:scale-[1.01]
                 group
-              ">
+              "
+            >
               <div className="relative h-56 w-full">
                 <Image
                   src="/react-dev-ke.png"
@@ -112,7 +116,8 @@ export function TalksSection() {
                     href={siteConfig.links.reactdevske_01_2025_talk}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn btn-link">
+                    className="btn btn-link"
+                  >
                     View Repository
                     <ExternalLink className="size-3 ml-2" />
                   </a>
@@ -121,7 +126,8 @@ export function TalksSection() {
                     href={siteConfig.links.reactdevske}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn btn-outline btn-secondary btn-sm">
+                    className="btn btn-outline btn-secondary btn-sm"
+                  >
                     Learn more about React Devs KE
                     <ExternalLink className="size-3 ml-2" />
                   </a>

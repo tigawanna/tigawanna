@@ -3,7 +3,6 @@ import ResponsivePagination from "react-responsive-pagination";
 import { useQueryState, parseAsInteger } from "nuqs";
 import { usePathname, useRouter } from "next/navigation";
 
-
 interface ListingsPaginationProps {
   total_pages: number;
 }
@@ -11,7 +10,7 @@ interface ListingsPaginationProps {
 export function ListPagination({ total_pages }: ListingsPaginationProps) {
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const router = useRouter();
-  const pathname = usePathname()
+  const pathname = usePathname();
   return (
     <div className="flex w-full items-center justify-center">
       <ResponsivePagination

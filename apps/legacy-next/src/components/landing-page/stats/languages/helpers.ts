@@ -103,14 +103,10 @@ export interface LanguagePercentage {
   percentage: number;
 }
 
-export function getMostFrequentLanguages(
-  repositories: Repositories,
-): LanguagePercentage[] {
+export function getMostFrequentLanguages(repositories: Repositories): LanguagePercentage[] {
   type LanguageCount = { [key: string]: { count: number; color: string } };
   const languageCount: LanguageCount = {};
-  const langsArr = repositories.edges.flatMap(
-    (edge) => edge.node.languages.edges,
-  );
+  const langsArr = repositories.edges.flatMap((edge) => edge.node.languages.edges);
   langsArr.forEach((lang) => {
     const languageName = lang.node.name;
     if (languageCount[languageName] && languageCount[languageName]["count"]) {
@@ -140,18 +136,13 @@ export function getMostFrequentLanguages(
   delete languageCount["JavaScript"];
   delete languageCount["TypeScript"];
 
-  const langsTotalCount = Object.values(languageCount).reduce(
-    (a, b) => a + b.count,
-    0,
-  );
+  const langsTotalCount = Object.values(languageCount).reduce((a, b) => a + b.count, 0);
   return Object.entries(languageCount)
     .map(([key, value]) => {
       return {
         name: key,
         color: value.color,
-        percentage: Number.parseInt(
-          ((value.count / langsTotalCount) * 100).toString(),
-        ),
+        percentage: Number.parseInt(((value.count / langsTotalCount) * 100).toString()),
       };
     })
     .sort((a, b) => b.percentage - a.percentage);

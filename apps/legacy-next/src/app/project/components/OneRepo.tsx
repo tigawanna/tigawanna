@@ -58,7 +58,6 @@ export async function OneRepo({ params, ...props }: { params: string }) {
   const topics = data.data?.repository.repositoryTopics?.edges;
   return (
     <div className="w-full flex flex-col z-10 items-center gap-5">
-
       <div className="w-full flex    gap-2 justify-center items-center p-5">
         {/* github stats */}
         <div className="w-full p-2 px-4 h-full flex flex-col gap-2  justify-center bg-base-200 rounded-xl">
@@ -69,7 +68,8 @@ export async function OneRepo({ params, ...props }: { params: string }) {
                 <Link
                   href={homepage_url}
                   target="_blank"
-                  className="flex items-center justify-center gap-1 text-sm hover:text-secondary">
+                  className="flex items-center justify-center gap-1 text-sm hover:text-secondary"
+                >
                   <Globe className="w-5 h-5" />
                   site
                 </Link>
@@ -79,7 +79,8 @@ export async function OneRepo({ params, ...props }: { params: string }) {
                   href={repo_url}
                   className="text-sm hover:text-secondary flex items-center gap-2 "
                   target="_blank"
-                  rel="noreferrer">
+                  rel="noreferrer"
+                >
                   View on Github <GithubIcon className="w-5 h-5" />
                 </Link>
               )}
@@ -92,7 +93,8 @@ export async function OneRepo({ params, ...props }: { params: string }) {
               {topics.map((topic) => (
                 <li
                   key={topic.node.id}
-                  className="text-sm  badge badge-ghost shadow-base-300 shadow-sm rounded-lg">
+                  className="text-sm  badge badge-ghost shadow-base-300 shadow-sm rounded-lg"
+                >
                   {topic.node.topic.name}
                 </li>
               ))}

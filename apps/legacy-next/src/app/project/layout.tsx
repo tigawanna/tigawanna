@@ -1,10 +1,6 @@
 import Link from "next/link";
 
-export default function OneRepoLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function OneRepoLayout({ children }: { children: React.ReactNode }) {
   const links = [
     { label: "repo", href: "#", route: "" },
     { label: "readme", href: "#readme", route: "readme" },

@@ -11,12 +11,7 @@ interface TimeCompponentProps extends React.HTMLAttributes<HTMLDivElement> {
   format?: string;
 }
 
-export function TimeCompponent({
-  time,
-  format,
-  relative,
-  ...props
-}: TimeCompponentProps) {
+export function TimeCompponent({ time, format, relative, ...props }: TimeCompponentProps) {
   const date_format = format ?? "ddd, MMM D, YYYY h:mm A";
   const date_time = dayjs(time).format(date_format);
 
@@ -29,16 +24,12 @@ export function TimeCompponent({
   // const realative_format =
 
   // Set the display time to relative time if the time was more than 4 weeks ago
-  const display_time =
-    is_more_than_4_weeks || relative ? dayjs().to(time) : date_time;
+  const display_time = is_more_than_4_weeks || relative ? dayjs().to(time) : date_time;
 
   return (
     <div
       {...props}
-      className={twMerge(
-        "text-xs font-bold text-secondary-foreground p-1",
-        props.className,
-      )}
+      className={twMerge("text-xs font-bold text-secondary-foreground p-1", props.className)}
     >
       {display_time}
     </div>

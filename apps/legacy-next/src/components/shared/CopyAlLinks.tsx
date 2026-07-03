@@ -13,7 +13,7 @@ interface CopyAllLinksButtonProps {
 export function CopyAllLinksButton({
   className = "",
   title = "Copy all contact links",
-   showTitle = false,
+  showTitle = false,
 }: CopyAllLinksButtonProps) {
   const [copying, setCopying] = useState(false);
 
@@ -24,7 +24,7 @@ export function CopyAllLinksButton({
     const linksToCopy = [
       { name: "Phone", url: siteConfig.links.phone },
       { name: "WhatsApp", url: siteConfig.links.whatsappNumber },
-      { name: "Email", url: siteConfig.links.email},
+      { name: "Email", url: siteConfig.links.email },
       { name: "Portfolio", url: window.location.origin },
       { name: "GitHub", url: siteConfig.links.github },
       { name: "LinkedIn", url: siteConfig.links.linkedin },
@@ -52,7 +52,8 @@ export function CopyAllLinksButton({
       className={`btn btn-sm btn-ghost gap-2 ${copying ? "btn-disabled" : ""} ${className}`}
       title={title}
       aria-label={title}
-      disabled={copying}>
+      disabled={copying}
+    >
       {copying ? (
         <>
           <FiCheck className="w-4 h-4" />

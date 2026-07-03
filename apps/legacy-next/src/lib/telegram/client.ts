@@ -12,17 +12,17 @@ interface ResponseData {
 // telgram api anatomy https://api.telegram.org/bot<token>/getChat?chat_id=<chat_id>
 export class TelegramNotifier {
   private readonly apiUrl: string;
-private readonly config: TelegramConfig;
-  
+  private readonly config: TelegramConfig;
+
   constructor() {
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
     const channelId = process.env.TELEGRAM_CHANNEL_ID;
     console.log("Telegram Notifier Config:", { botToken, channelId });
     if (!botToken || botToken.trim() === "") {
-        throw new Error("Telegram bot token must be provided");
+      throw new Error("Telegram bot token must be provided");
     }
     if (!channelId || channelId.trim() === "") {
-        throw new Error("Telegram channel ID must be provided");
+      throw new Error("Telegram channel ID must be provided");
     }
     this.config = {
       botToken,

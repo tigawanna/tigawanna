@@ -2,10 +2,7 @@
 import { revalidatePath } from "next/cache";
 import type { ContactFormState } from "./brevo-nodemailer";
 
-export async function testAction(
-  prevState: ContactFormState,
-  formData: FormData,
-) {
+export async function testAction(prevState: ContactFormState, formData: FormData) {
   // // no({initialState,formData})
 
   await new Promise((resolve) => setTimeout(resolve, 3000)); // Delay for 3 seconds

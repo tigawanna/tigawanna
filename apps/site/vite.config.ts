@@ -20,10 +20,8 @@ logger.warn = (msg, options) => {
 };
 
 const config = defineConfig({
+  root: fileURLToPath(new URL(".", import.meta.url)),
   customLogger: logger,
-  fmt: {
-    ignorePatterns: ["**/routeTree.gen.ts"],
-  },
   server: {
     host: "::",
   },

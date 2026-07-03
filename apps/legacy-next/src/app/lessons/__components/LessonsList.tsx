@@ -24,7 +24,9 @@ export async function LessonsList({ page = 1, perPage = 6, date = defaultDate }:
         })}
       </ul>
       <div className="w-full sticky bottom-[5%]">
-        {perPage > 6 && lessons.totalPages > 1 && <ListPagination total_pages={lessons.totalPages} />}
+        {perPage > 6 && lessons.totalPages > 1 && (
+          <ListPagination total_pages={lessons.totalPages} />
+        )}
       </div>
     </div>
   );

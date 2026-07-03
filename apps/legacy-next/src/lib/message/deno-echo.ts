@@ -25,10 +25,10 @@ type EmailMessagePayload = {
 };
 
 export async function sendEmailMessage(message: EmailMessagePayload) {
-  const { MESSAGE_API_URL, MESSAGE_API_KEY } = envVariables
-//   const { MESSAGE_API_URL, MESSAGE_API_KEY } = process.env;
-//   if (!MESSAGE_API_URL) throw new Error("Message API URL is not defined");
-//   if (!MESSAGE_API_KEY) throw new Error("Message API key is not defined");
+  const { MESSAGE_API_URL, MESSAGE_API_KEY } = envVariables;
+  //   const { MESSAGE_API_URL, MESSAGE_API_KEY } = process.env;
+  //   if (!MESSAGE_API_URL) throw new Error("Message API URL is not defined");
+  //   if (!MESSAGE_API_KEY) throw new Error("Message API key is not defined");
   try {
     const res = await fetch(`${MESSAGE_API_URL}/messages/email`, {
       method: "POST",
@@ -40,21 +40,21 @@ export async function sendEmailMessage(message: EmailMessagePayload) {
     });
 
     if (!res.ok) {
-    //   throw new Error(`Failed to send email: ${res.statusText}`);
-    return
+      //   throw new Error(`Failed to send email: ${res.statusText}`);
+      return;
     }
-    const resjson = res.json() as unknown as RequestResult
+    const resjson = res.json() as unknown as RequestResult;
     if (resjson.type === "error") {
-      return
+      return;
     }
     return resjson;
   } catch (error) {
     if (error instanceof Error) {
       console.error("Error sending email:", error.message);
-      return
+      return;
     }
     console.error("Error sending email:", error);
-    return
+    return;
   }
 }
 
@@ -66,12 +66,12 @@ type TelegramPayload = {
 };
 
 export async function sendTelegramMessage(message: TelegramPayload) {
-      const { MESSAGE_API_URL, MESSAGE_API_KEY } = envVariables
-//   const { MESSAGE_API_URL, MESSAGE_API_KEY } = process.env;
-//   if (!MESSAGE_API_URL) throw new Error("Message API URL is not defined");
-//   if (!MESSAGE_API_KEY) throw new Error("Message API key is not defined");
+  const { MESSAGE_API_URL, MESSAGE_API_KEY } = envVariables;
+  //   const { MESSAGE_API_URL, MESSAGE_API_KEY } = process.env;
+  //   if (!MESSAGE_API_URL) throw new Error("Message API URL is not defined");
+  //   if (!MESSAGE_API_KEY) throw new Error("Message API key is not defined");
   try {
-   const res = await fetch(`${MESSAGE_API_URL}/messages/tg`, {
+    const res = await fetch(`${MESSAGE_API_URL}/messages/tg`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -83,7 +83,7 @@ export async function sendTelegramMessage(message: TelegramPayload) {
     if (!res.ok) {
       throw new Error(`Failed to send Telegram message: ${res.statusText}`);
     }
-    const resjson = res.json() as unknown as RequestResult
+    const resjson = res.json() as unknown as RequestResult;
     if (resjson.type === "error") {
       throw new Error(resjson.message);
     }

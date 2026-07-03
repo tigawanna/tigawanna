@@ -8,7 +8,10 @@ interface PageProps {
   params: Promise<{ lesson: string }>;
 }
 
-export async function generateMetadata(props: PageProps, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata(
+  props: PageProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
   const params = await props.params;
   const item = await getOneLesson(params.lesson);
   return {
@@ -54,7 +57,8 @@ export default async function page(props: PageProps) {
           <a
             href={item.gist}
             target="_blank"
-            className="link hover:text-accent flex justify-center items-center gap-1">
+            className="link hover:text-accent flex justify-center items-center gap-1"
+          >
             Gist <ExternalLink className="h-4 w-4" />
           </a>
         )}

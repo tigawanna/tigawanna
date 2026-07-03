@@ -14,7 +14,8 @@ export function LessonCard({ item }: { item: LessonsItem }) {
       className="card w-full sm:h-[410px]  transition-transform hover:text-accent 
       hover:shadow-xs hover:shadow-accent duration-300 ease-in-out
         md:w-[48%] lg:w-[30%] shadow-lg shadow-base-200 p-1 rounded-xl flex flex-col gap-0.5"
-      suppressHydrationWarning>
+      suppressHydrationWarning
+    >
       <Link href={`/lessons/${item.id}`} className=" p-3 rounded-xl flex flex-col gap-0.5">
         <h2 className="text-2xl font-bold line-clamp-1">{item.title}</h2>{" "}
         <p className="text-sm brightness-75 line-clamp-3">{item.description}</p>
@@ -34,7 +35,8 @@ export function LessonCard({ item }: { item: LessonsItem }) {
         <a
           href={item.gist}
           target="_blank"
-          className="link hover:text-accent flex justify-center items-center gap-1">
+          className="link hover:text-accent flex justify-center items-center gap-1"
+        >
           link <ExternalLink className="h-4 w-4" />
         </a>
       )}

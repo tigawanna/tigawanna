@@ -14,13 +14,13 @@ export function MainFooter({}: footerProps) {
         @starting-style:opacity-0 @starting-style:translate-y-4
       "
     >
-      <FooterContacts/>
-      <CopyAllLinksButton 
-        showTitle 
+      <FooterContacts />
+      <CopyAllLinksButton
+        showTitle
         className="
           my-4 transition-all duration-300 
           hover:scale-105 hover:shadow-md
-        " 
+        "
         title="Copy all contact links"
       />
     </footer>

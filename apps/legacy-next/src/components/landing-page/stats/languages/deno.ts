@@ -23,19 +23,13 @@ export async function getGithubViewerLanguages() {
       { color: string; count: number }
     >;
 
-    const langsTotalCount = Object.values(langs).reduce(
-      (a, b) => a + b.count,
-      0,
-    );
+    const langsTotalCount = Object.values(langs).reduce((a, b) => a + b.count, 0);
     const standard_langs = Object.entries(langs)
       .map(([key, value]) => {
         return {
           name: key,
           color: value.color,
-          percentage: Math.max(
-            Math.floor((value.count / langsTotalCount) * 100),
-            -1,
-          ),
+          percentage: Math.max(Math.floor((value.count / langsTotalCount) * 100), -1),
         };
       })
       .sort((a, b) => b.percentage - a.percentage);

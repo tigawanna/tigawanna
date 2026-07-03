@@ -8,7 +8,7 @@ export type WebMcpToolDefinition = {
   name: string;
   description: string;
   inputSchema: WebMcpJsonSchema;
-  execute: (args: Record<string, unknown>) => Promise<unknown> | unknown;
+  execute: (args: Record<string, unknown>) => unknown;
 };
 
 export type WebMcpRegisterOptions = {

@@ -1,6 +1,5 @@
 import { envVariables } from "@/env";
 
-
 export interface ViewerPinnedRepoError {
   errors: RequestError[];
 }
@@ -59,9 +58,7 @@ export interface PinnedItemsNode {
   };
 }
 
-export type PinnedViewerReposResponse =
-  | ViewerPinnedRepo
-  | ViewerPinnedRepoError;
+export type PinnedViewerReposResponse = ViewerPinnedRepo | ViewerPinnedRepoError;
 
 export const ViewerPinnedRepoQuery = `
 query getViewerPinnedRepos {
@@ -143,13 +140,16 @@ export const ViewerLatsedPushedToRepos = `query getViewerRecentlyPushedRepos {
   }
 }`;
 
-export async function getViewerRecentlyPushedRepos():Promise<{
-    data: null;
-    errors:  RequestError[];
-} | {
-    data: ViewerPinnedRepoData;
-    errors: RequestError[];
-}> {
+export async function getViewerRecentlyPushedRepos(): Promise<
+  | {
+      data: null;
+      errors: RequestError[];
+    }
+  | {
+      data: ViewerPinnedRepoData;
+      errors: RequestError[];
+    }
+> {
   try {
     const res = await fetch("https://api.github.com/graphql", {
       method: "POST",
@@ -165,20 +165,24 @@ export async function getViewerRecentlyPushedRepos():Promise<{
     if (!res.ok) {
       return {
         data: null,
-        errors: [{
-          message: res.statusText,
-          path: [],
-          extensions: {
-            code: "INTERNAL_SERVER_ERROR",
-            typeName: "ViewerPinnedRepo",
-            fieldName: "getViewerRecentlyPushedRepos",
+        errors: [
+          {
+            message: res.statusText,
+            path: [],
+            extensions: {
+              code: "INTERNAL_SERVER_ERROR",
+              typeName: "ViewerPinnedRepo",
+              fieldName: "getViewerRecentlyPushedRepos",
+            },
+            locations: [
+              {
+                line: 1,
+                column: 1,
+              },
+            ],
           },
-          locations: [{
-            line: 1,
-            column: 1,
-          }],
-        }],
-        };
+        ],
+      };
     }
     const data = await res.json();
     return {

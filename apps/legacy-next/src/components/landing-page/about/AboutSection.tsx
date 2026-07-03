@@ -7,8 +7,6 @@ import { siteConfig } from "@/components/shared/container/site";
 import { SkillsMMarquee } from "./SkillsMMarquee";
 
 export function AboutSection() {
-
-
   // Skills for the marquee
   // const skills = [
   //   "React & Next.js",
@@ -62,16 +60,19 @@ export function AboutSection() {
                 safety, clean architecture, and creating truly reusable components.
               </p>
             </TailwindFadeIn>
-            <div className="
+            <div
+              className="
               w-full p-6 flex flex-wrap justify-center items-center gap-6
               animate-in fade-in duration-500 delay-200
               @starting-style:opacity-0
-            ">
+            "
+            >
               <a
                 href={siteConfig.links.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-secondary btn-outline">
+                className="btn btn-secondary btn-outline"
+              >
                 Checkout my code
                 <FaGithub />
               </a>
@@ -79,7 +80,8 @@ export function AboutSection() {
                 href={siteConfig.links.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-secondary btn-outline">
+                className="btn btn-secondary btn-outline"
+              >
                 Checkout my Professional summary
                 <FaLinkedin />
               </a>

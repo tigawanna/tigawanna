@@ -1,13 +1,7 @@
 import { envVariables } from "@/env";
 import { fetchGraphQL } from "@/state/gql-fetch-helper";
 
-export async function getOneRepoGQL({
-  repo,
-  owner,
-}: {
-  repo: string;
-  owner: string;
-}) {
+export async function getOneRepoGQL({ repo, owner }: { repo: string; owner: string }) {
   const operationsDoc = `
   query OneRepo($owner: String!, $repo: String!,$firstTopics:Int!,$firstColabs:Int!,$firstLangs: Int!) {
     repository(name: $repo, owner: $owner) {

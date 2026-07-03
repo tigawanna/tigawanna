@@ -4,7 +4,8 @@ import { Metadata } from "next";
 export const revalidate = 10;
 export const metadata: Metadata = {
   title: "Lessons",
-  description: "  every bug is a lesson in disguise. Here are the pearls of wisdom I've gathered along the way",
+  description:
+    "  every bug is a lesson in disguise. Here are the pearls of wisdom I've gathered along the way",
 };
 
 interface PageProps {
@@ -20,8 +21,8 @@ export default async function LessonsPage(props: PageProps) {
           You code you learn
         </h1>
         <p className="mx-auto max-w-2xl text-xl brightness-75 md:text-2xl">
-          every bug is a lesson in disguise. Here are the pearls of wisdom I&apos;ve gathered along the
-          way.
+          every bug is a lesson in disguise. Here are the pearls of wisdom I&apos;ve gathered along
+          the way.
         </p>
       </header>
       <div className="w-full h-full min-h-screen flex px-5">

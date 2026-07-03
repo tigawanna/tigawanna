@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import { useInView, useTransform, type MotionValue, type Variants } from 'framer-motion';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Lenis from '@studio-freight/lenis';
+import { useEffect, useRef, useState } from "react";
+import { useInView, useTransform, type MotionValue, type Variants } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lenis from "@studio-freight/lenis";
 
 // Register GSAP plugins
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
@@ -38,7 +38,7 @@ export const wordRevealVariants = {
 
 // Split text into words for animations
 export const splitText = (text: string) => {
-  return text.split(' ').map((word, i) => ({
+  return text.split(" ").map((word, i) => ({
     word,
     key: i,
   }));
@@ -53,24 +53,24 @@ export function useParallax(value: MotionValue<number>, distance: number) {
 export function useScrollAnimation(threshold = 0.1) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, amount: threshold });
-  
+
   return { ref, isInView };
 }
 
 // Animate on scroll hook with GSAP
 export function useGSAPAnimation(callback: (element: HTMLElement) => void) {
   const ref = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
     if (!ref.current) return;
-    
+
     callback(ref.current);
-    
+
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
   }, [callback]);
-  
+
   return ref;
 }
 
@@ -114,13 +114,13 @@ export class MorphController {
   element: HTMLElement;
   initialPath: string;
   targetPath: string;
-  
+
   constructor(element: HTMLElement, initialPath: string, targetPath: string) {
     this.element = element;
     this.initialPath = initialPath;
     this.targetPath = targetPath;
   }
-  
+
   animate(progress: number) {
     gsap.to(this.element, {
       attr: { d: progress === 1 ? this.targetPath : this.initialPath },
@@ -132,8 +132,8 @@ export class MorphController {
 
 // Smooth scroll with Lenis
 export const initSmoothScroll = () => {
-  if (typeof window === 'undefined') return null;
-  
+  if (typeof window === "undefined") return null;
+
   try {
     // Create Lenis instance with appropriate config
     const lenis = new Lenis({
@@ -143,28 +143,28 @@ export const initSmoothScroll = () => {
       wheelMultiplier: 1,
       touchMultiplier: 2,
     });
-    
+
     // Animation frame handler
     let rafId: number;
-    
+
     const raf = (time: number) => {
       lenis.raf(time);
       rafId = requestAnimationFrame(raf);
     };
-    
+
     // Start the animation loop
     rafId = requestAnimationFrame(raf);
-    
+
     // Create return object with cleanup function
     return {
       lenis,
       cleanup: () => {
         if (rafId) cancelAnimationFrame(rafId);
-        if (lenis && typeof lenis.destroy === 'function') lenis.destroy();
-      }
+        if (lenis && typeof lenis.destroy === "function") lenis.destroy();
+      },
     };
   } catch (error) {
-    console.error('Failed to initialize smooth scroll:', error);
+    console.error("Failed to initialize smooth scroll:", error);
     return null;
   }
 };

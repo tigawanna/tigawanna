@@ -42,6 +42,6 @@ export const TechIcons = [
   { name: "Firebase", icon: SiFirebase },
   { name: "Supabase", icon: SiSupabase },
   { name: "Pocketbase", icon: SiPocketbase },
-  { name: "Prisma", icon: SiPrisma},
-  { name: "Cloudflare", icon: SiCloudflare},
+  { name: "Prisma", icon: SiPrisma },
+  { name: "Cloudflare", icon: SiCloudflare },
 ];

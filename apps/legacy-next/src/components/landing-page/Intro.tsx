@@ -12,19 +12,22 @@ export default function Intro({}: introProps) {
 
       <div
         className="background-animate mt-[3%] md:mt-[5%] flex w-full flex-col items-center justify-center gap-5
-       md:flex-row lg:w-[95%]">
+       md:flex-row lg:w-[95%]"
+      >
         <div className="lg:max-w-[60%]">
           <h2
             className=" bg-linear-to-r  from-primary/70 
         via-secondary to-primary bg-clip-text text-7xl font-black text-transparent md:text-9xl
-        ">
+        "
+          >
             Dennis Kinuthia
           </h2>
 
           <div
             className="font-sarif mt-[10px] h-10 md:h-20 bg-linear-to-r from-secondary  via-secondary/80
               to-accent bg-clip-text text-4xl font-bold text-transparent md:text-6xl 
-          ">
+          "
+          >
             <TypeAnimation
               cursor={true}
               sequence={["Javascript", "Typescript ", "Fullstack Developer"]}

@@ -5,7 +5,7 @@ const EnvSchema = z.object({
   EMAIL_FROM: z.string().email(),
   EMAIL_TO: z.string().email(),
   // BREVO_KEY: z.string().min(12),
-  
+
   GH_PAT: z.string().min(12),
   MESSAGE_API_URL: z.string().url(),
   MESSAGE_API_KEY: z.string().min(12),

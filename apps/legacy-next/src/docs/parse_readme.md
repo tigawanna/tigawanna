@@ -1,78 +1,63 @@
 # Adding a github readme markdown to our website
 
+Add the dependancies
 
-Add the dependancies 
 ```sh
  npm i showdown highlight.js
 ```
+
 ```sh
 npm i -D @types/showdown
 ```
 
-setup a parser function 
+setup a parser function
 
 ```ts
-import showdown from 'showdown';
-import hljs from 'highlight.js';
-
-
-
+import showdown from "showdown";
+import hljs from "highlight.js";
 
 export function convertMarkdownToHtml(markdown: string): string {
+  showdown.extension("highlight", function () {
+    function htmlunencode(text: string): string {
+      return text.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+    }
+    return [
+      {
+        type: "output",
+        filter: function (text: string, converter: any, options: any): string {
+          var left = "<pre><code\\b[^>]*>",
+            right = "</code></pre>",
+            flags = "g";
+          var replacement = function (
+            wholeMatch: string,
+            match: string,
+            left: string,
+            right: string,
+          ): string {
+            match = htmlunencode(match);
+            var lang = (left.match(/class=\"([^ \"]+)/) || [])[1];
+            left = left.slice(0, 18) + "hljs " + left.slice(18);
+            if (lang && hljs.getLanguage(lang)) {
+              return left + hljs.highlight(match, { language: lang }).value + right;
+            } else {
+              return left + hljs.highlightAuto(match).value + right;
+            }
+          };
+          return showdown.helper.replaceRecursiveRegExp(text, replacement, left, right, flags);
+        },
+      },
+    ];
+  });
 
-    showdown.extension("highlight", function () {
-        function htmlunencode(text: string): string {
-            return text
-                .replace(/&amp;/g, "&")
-                .replace(/&lt;/g, "<")
-                .replace(/&gt;/g, ">");
-        }
-        return [
-            {
-                type: "output",
-                filter: function (text: string, converter: any, options: any): string {
-                    var left = "<pre><code\\b[^>]*>",
-                        right = "</code></pre>",
-                        flags = "g";
-                    var replacement = function (
-                        wholeMatch: string,
-                        match: string,
-                        left: string,
-                        right: string,
-                    ): string {
-                        match = htmlunencode(match);
-                        var lang = (left.match(/class=\"([^ \"]+)/) || [])[1];
-                        left = left.slice(0, 18) + "hljs " + left.slice(18);
-                        if (lang && hljs.getLanguage(lang)) {
-                            return (
-                                left + hljs.highlight(match, { language: lang }).value + right
-                            );
-                        } else {
-                            return left + hljs.highlightAuto(match).value + right;
-                        }
-                    };
-                    return showdown.helper.replaceRecursiveRegExp(
-                        text,
-                        replacement,
-                        left,
-                        right,
-                        flags,
-                    );
-                },
-            },
-        ];
-    });
+  let converter = new showdown.Converter({
+    ghCompatibleHeaderId: true,
+    simpleLineBreaks: true,
+    ghMentions: true,
+    extensions: ["highlight"],
+    tables: true,
+  });
 
-
-    let converter = new showdown.Converter({
-        ghCompatibleHeaderId: true,
-        simpleLineBreaks: true,
-        ghMentions: true,
-        extensions: ['highlight'],
-        tables: true
-    });
-
-    let preContent: string = `
+  let preContent: string = `
     <html>
       <head>
         <title></title>
@@ -86,16 +71,15 @@ export function convertMarkdownToHtml(markdown: string): string {
         <div id=''>
       `;
 
-    let postContent: string = `
+  let postContent: string = `
         </div>
       </body>
     </html>`;
 
-    let html: string = preContent + converter.makeHtml(markdown) + postContent;
+  let html: string = preContent + converter.makeHtml(markdown) + postContent;
 
-    return html;
+  return html;
 }
-
 ```
 
 add the markdwon styles (tailwind overwrite the default ones)
@@ -295,22 +279,22 @@ hue-6-2: #e6c07b
 .hljs-link {
   text-decoration: underline;
 }
-
 ```
+
 import styles ito your project (mos projects Nextjs or Vite require all stylesheets to be added at the root layout or main.tsx component
 )
 
 ```tsx
-layout.tsx
+layout.tsx;
 
 import "./globals.css";
 import "../state/md/markdown.css";
 ```
 
 Fetch the readme from github and pass the string into the parser
-   
+
 ```ts
-  import { convertMarkdownToHtml } from "@/state/md/parse";
+import { convertMarkdownToHtml } from "@/state/md/parse";
 
 interface GetRepoREADME {
   repo: string;
@@ -319,7 +303,7 @@ interface GetRepoREADME {
 export async function getGithubREADME({ repo, owner }: GetRepoREADME) {
   try {
     const response = await fetch(
-      `https://raw.githubusercontent.com/${owner}/${repo}/main/README.md`
+      `https://raw.githubusercontent.com/${owner}/${repo}/main/README.md`,
     );
     if (!response.ok) {
       throw new Error(response.statusText);
@@ -347,23 +331,26 @@ interface OneGithubRepoREADMEProps {
   owner: string;
 }
 
-export async function OneGithubRepoREADME({owner,repo}:OneGithubRepoREADMEProps){
-    const data = await getGithubREADME({owner,repo}) 
-   
-    if (!data ) {
-      return null;
-    }
+export async function OneGithubRepoREADME({ owner, repo }: OneGithubRepoREADMEProps) {
+  const data = await getGithubREADME({ owner, repo });
 
-return (
- <div id="readme" className='w-[95%] md:w-[85%]  h-full  
- bg-base-200/30 p-5 rounded-xl '>
-  <h2 className="text-2xl font-bold text-start w-full capitalize">{repo} readme</h2>
-   <div className="markdown" dangerouslySetInnerHTML={{ __html: data}} />
- </div>
-);
+  if (!data) {
+    return null;
+  }
+
+  return (
+    <div
+      id="readme"
+      className="w-[95%] md:w-[85%]  h-full  
+ bg-base-200/30 p-5 rounded-xl "
+    >
+      <h2 className="text-2xl font-bold text-start w-full capitalize">{repo} readme</h2>
+      <div className="markdown" dangerouslySetInnerHTML={{ __html: data }} />
+    </div>
+  );
 }
-
 ```
+
 this code works on browser or nodejs and even server components
 
 you can customize the styles by picking another theme from `node_modules/highlight.js/styles` and replacing the existing one in the provided css (all that start with `hljs-`)

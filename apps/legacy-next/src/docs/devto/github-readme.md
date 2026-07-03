@@ -97,7 +97,7 @@ export function convertMarkdownToHtml(markdown: string): string {
 
 ```
 
-Then we'll add some styles 
+Then we'll add some styles
 
 ```css
 .markdown {
@@ -295,15 +295,15 @@ hue-6-2: #e6c07b
   text-decoration: underline;
 }
 ```
+
 import styles into your project (most projects, Nextjs or Vite require all stylesheets to be added at the root layout or main.tsx component )
 
 ```tsx
-layout.tsx
+layout.tsx;
 
 import "./globals.css";
 import "../state/md/markdown.css";
 ```
-
 
 Fetch the readme from github and pass the string into the parser
 
@@ -317,7 +317,7 @@ interface GetRepoREADME {
 export async function getGithubREADME({ repo, owner }: GetRepoREADME) {
   try {
     const response = await fetch(
-      `https://raw.githubusercontent.com/${owner}/${repo}/main/README.md`
+      `https://raw.githubusercontent.com/${owner}/${repo}/main/README.md`,
     );
     if (!response.ok) {
       throw new Error(response.statusText);
@@ -345,22 +345,24 @@ interface OneGithubRepoREADMEProps {
   owner: string;
 }
 
-export async function OneGithubRepoREADME({owner,repo}:OneGithubRepoREADMEProps){
-    const data = await getGithubREADME({owner,repo}) 
-   
-    if (!data ) {
-      return null;
-    }
+export async function OneGithubRepoREADME({ owner, repo }: OneGithubRepoREADMEProps) {
+  const data = await getGithubREADME({ owner, repo });
 
-return (
- <div id="readme" className='w-[95%] md:w-[85%]  h-full  
- bg-base-200/30 p-5 rounded-xl '>
-  <h2 className="text-2xl font-bold text-start w-full capitalize">{repo} readme</h2>
-   <div className="markdown" dangerouslySetInnerHTML={{ __html: data}} />
- </div>
-);
+  if (!data) {
+    return null;
+  }
+
+  return (
+    <div
+      id="readme"
+      className="w-[95%] md:w-[85%]  h-full  
+ bg-base-200/30 p-5 rounded-xl "
+    >
+      <h2 className="text-2xl font-bold text-start w-full capitalize">{repo} readme</h2>
+      <div className="markdown" dangerouslySetInnerHTML={{ __html: data }} />
+    </div>
+  );
 }
-
 ```
 
 This code works on browser or Nodejs and even server components
@@ -371,20 +373,17 @@ Shout out to [KrauseFx](https://github.com/KrauseFx/markdown-to-html-github-styl
 
 One extra thing we can add is a stackblitz component to let the visitor play around with our code directly in the browser using the `@stackblitz/sdk` package
 
-
 ```tsx
-
-"use client"
+"use client";
 import sdk from "@stackblitz/sdk";
 import { useEffect } from "react";
 
 interface stackblitzEmbedProps {
-    repo: string;
-    owner: string;
-
+  repo: string;
+  owner: string;
 }
 
-export function StackblitzEmbed({owner,repo}: stackblitzEmbedProps) {
+export function StackblitzEmbed({ owner, repo }: stackblitzEmbedProps) {
   const selectedRepo = {
     github: `${owner}/${repo}`,
     openFile: "README.md",
@@ -408,21 +407,21 @@ export function StackblitzEmbed({owner,repo}: stackblitzEmbedProps) {
   }
 
   return (
-  <div id="stackblitz" className="w-full h-full relative">
-    <button className="btn btn-sm btn-outline hover:bg-secondary absolute top-[1%] right-[2%]" 
-    onClick={openProject} >
-      Open in new window
-    </button>
-    <div id="embed" className="mt-5 p-5 w-[95%] h-full flex items-center justify-center">B</div>
-
-  </div>
-  )
+    <div id="stackblitz" className="w-full h-full relative">
+      <button
+        className="btn btn-sm btn-outline hover:bg-secondary absolute top-[1%] right-[2%]"
+        onClick={openProject}
+      >
+        Open in new window
+      </button>
+      <div id="embed" className="mt-5 p-5 w-[95%] h-full flex items-center justify-center">
+        B
+      </div>
+    </div>
+  );
 }
 ```
 
 ![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/fcieeapvxrk3jhqu0w4i.png)
 
 [Javascript , I love it](https://www.youtube.com/watch?v=Uo3cL4nrGOk&t=323s)
-
-
-

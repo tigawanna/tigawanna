@@ -1,19 +1,14 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState, } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { SectionHeader } from "../../shared/SectionHeader";
 import { SubmitButton } from "./SubmitButton";
-import {
-  type ContactFormState,
-  sendEmailwithBrevoSmtpAction,
-} from "./utils/brevo-nodemailer";
+import { type ContactFormState, sendEmailwithBrevoSmtpAction } from "./utils/brevo-nodemailer";
 import { sendTelegramNotificationAction } from "@/lib/telegram/telegram-notifier-action";
-
 
 type ContactMeFormProps = {};
 
 export function ContactMeForm({}: ContactMeFormProps) {
-
   const [formState, formAction] = useActionState<ContactFormState>(
     // @ts-expect-error : it thimks the seocnd ar (formData doesn't exist)
     sendTelegramNotificationAction,
@@ -26,7 +21,7 @@ export function ContactMeForm({}: ContactMeFormProps) {
         sender_email: "",
         sender_message: "",
       },
-    }
+    },
   );
   const [status, setStatus] = useState({
     error: formState.error,
@@ -83,15 +78,14 @@ export function ContactMeForm({}: ContactMeFormProps) {
           </div>
         )}
 
-        <div className="
+        <div
+          className="
           w-full flex flex-col gap-1
           animate-in fade-in slide-in-from-bottom-2 duration-500 delay-100
           @starting-style:opacity-0 @starting-style:translate-y-2
-        ">
-          <label
-            htmlFor="sender_name"
-            className="bg-base-200 rounded-xl p-1 w-fit"
-          >
+        "
+        >
+          <label htmlFor="sender_name" className="bg-base-200 rounded-xl p-1 w-fit">
             Name
           </label>
           <input
@@ -103,15 +97,14 @@ export function ContactMeForm({}: ContactMeFormProps) {
           />
         </div>
 
-        <div className="
+        <div
+          className="
           w-full flex flex-col gap-1
           animate-in fade-in slide-in-from-bottom-2 duration-500 delay-200
           @starting-style:opacity-0 @starting-style:translate-y-2
-        ">
-          <label
-            htmlFor="sender_message"
-            className="bg-base-200 rounded-xl p-1 w-fit"
-          >
+        "
+        >
+          <label htmlFor="sender_message" className="bg-base-200 rounded-xl p-1 w-fit">
             Message
           </label>
           <textarea
@@ -124,10 +117,7 @@ export function ContactMeForm({}: ContactMeFormProps) {
         </div>
 
         <div className="w-full flex flex-col gap-1">
-          <label
-            htmlFor="sender_contact"
-            className="text-xs bg-base-200 rounded-xl p-1 w-fit"
-          >
+          <label htmlFor="sender_contact" className="text-xs bg-base-200 rounded-xl p-1 w-fit">
             How can i reach you (optional)
           </label>
           <input

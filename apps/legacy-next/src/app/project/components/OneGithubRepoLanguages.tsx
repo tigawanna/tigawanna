@@ -5,15 +5,10 @@ interface OneGithubRepoLanguagesProps {
   owner: string;
 }
 
-export async function OneGithubRepoLanguages({
-  repo,
-  owner,
-}: OneGithubRepoLanguagesProps) {
+export async function OneGithubRepoLanguages({ repo, owner }: OneGithubRepoLanguagesProps) {
   async function fetchLanguages() {
     try {
-      const response = await fetch(
-        `https://api.github.com/repos/${owner}/${repo}/languages`,
-      );
+      const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/languages`);
       if (!response.ok) {
         throw new Error(`Failed to fetch repository: ${owner}/${repo}`);
       }
