@@ -12,6 +12,7 @@
     "quality": "vp fmt && vp lint --fix"
   },
   "devDependencies": {
+    "@typescript/native-preview": "7.0.0-dev.20260706.1",
     "vite-plus": "catalog:"
   },
   "engines": {
