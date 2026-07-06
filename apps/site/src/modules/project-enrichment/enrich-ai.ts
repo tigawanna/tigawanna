@@ -1,6 +1,18 @@
 import { getServerEnv } from "@/lib/envs/server-env";
+import {
+  getRootPackageJson,
+  getWorkspacePackageChunks,
+  isMonorepoExtraction,
+  summarizePackageJson,
+  type RepoExtraction,
+} from "@/modules/github/repo-extraction";
 import { z } from "zod";
-import type { GithubRepoSnapshot, RepoAnalysis } from "./github-client";
+
+const monorepoPackageSchema = z.object({
+  path: z.string().min(1),
+  name: z.string().min(1),
+  description: z.string().min(1).max(200),
+});
 
 const enrichmentSchema = z.object({
   description: z.string().min(1).max(350),
@@ -12,28 +24,58 @@ const enrichmentSchema = z.object({
     homepage: z.number().min(0).max(1),
   }),
   reasoning: z.string().max(500),
+  monorepoPackages: z.array(monorepoPackageSchema).optional(),
 });
 
+export type MonorepoPackageDescription = z.infer<typeof monorepoPackageSchema>;
 export type EnrichmentResult = z.infer<typeof enrichmentSchema>;
 
-function buildPrompt(repo: GithubRepoSnapshot, analysis: RepoAnalysis) {
+function buildPrompt(
+  repo: {
+    nameWithOwner: string;
+    description: string | null;
+    topics: string[];
+    homepageUrl: string | null;
+  },
+  extraction: RepoExtraction,
+) {
+  const packageJson = getRootPackageJson(extraction.packageJsonChunks);
+  const workspacePackages = getWorkspacePackageChunks(extraction.packageJsonChunks);
+  const isMonorepo = isMonorepoExtraction(extraction);
+
   const dependencies =
-    analysis.packageJson && typeof analysis.packageJson.dependencies === "object"
-      ? Object.keys(analysis.packageJson.dependencies as Record<string, string>)
+    packageJson && typeof packageJson.dependencies === "object"
+      ? Object.keys(packageJson.dependencies as Record<string, string>)
       : [];
 
   const devDependencies =
-    analysis.packageJson && typeof analysis.packageJson.devDependencies === "object"
-      ? Object.keys(analysis.packageJson.devDependencies as Record<string, string>)
+    packageJson && typeof packageJson.devDependencies === "object"
+      ? Object.keys(packageJson.devDependencies as Record<string, string>)
       : [];
 
-  const packageHomepage =
-    typeof analysis.packageJson?.homepage === "string" ? analysis.packageJson.homepage : "";
+  const packageHomepage = typeof packageJson?.homepage === "string" ? packageJson.homepage : "";
 
-  const topLevelFiles = analysis.filePaths
+  const topLevelFiles = extraction.filePaths
     .filter((path) => !path.includes("/"))
     .slice(0, 40)
     .join(", ");
+
+  const workspaceSection = isMonorepo
+    ? workspacePackages.map((chunk) => summarizePackageJson(chunk.path, chunk.content)).join("\n\n")
+    : "";
+
+  const monorepoRules = isMonorepo
+    ? `
+- This is a monorepo with ${workspacePackages.length} workspace package(s). Include "monorepoPackages": an array with one entry per workspace package below.
+- Each monorepoPackages entry must use the package folder path (e.g. "apps/site"), the package name from package.json when available, and a concise one-sentence description of what that package does.
+- Do not include the root package.json in monorepoPackages.`
+    : `
+- Omit "monorepoPackages" or use an empty array — this is not a monorepo.`;
+
+  const monorepoJsonShape = isMonorepo
+    ? `,
+  "monorepoPackages": [{ "path": "apps/example", "name": "@scope/example", "description": "one sentence" }]`
+    : "";
 
   return `You enrich GitHub repository metadata. Return JSON only.
 
@@ -45,12 +87,13 @@ Package homepage field: ${packageHomepage || "(none)"}
 Top-level files: ${topLevelFiles || "(none)"}
 Dependencies: ${dependencies.slice(0, 30).join(", ") || "(none)"}
 Dev dependencies: ${devDependencies.slice(0, 20).join(", ") || "(none)"}
+${isMonorepo ? `\nWorkspace packages:\n${workspaceSection}` : ""}
 
 Rules:
-- Write a concise, accurate description (1-2 sentences).
+- Write a concise, accurate description (1-2 sentences) for the repository as a whole.
 - Suggest 3-8 lowercase GitHub topics relevant to the stack and purpose.
 - Only suggest homepage if package.json homepage exists or README/deploy config strongly implies a URL. Otherwise use empty string.
-- Do not invent deployment URLs.
+- Do not invent deployment URLs.${monorepoRules}
 
 JSON shape:
 {
@@ -58,7 +101,7 @@ JSON shape:
   "topics": ["string"],
   "homepage": "https://..." | "",
   "confidence": { "description": 0-1, "topics": 0-1, "homepage": 0-1 },
-  "reasoning": "short string"
+  "reasoning": "short string"${monorepoJsonShape}
 }`;
 }
 
@@ -72,8 +115,13 @@ function extractJsonObject(text: string) {
 }
 
 export async function enrichRepoMetadata(
-  repo: GithubRepoSnapshot,
-  analysis: RepoAnalysis,
+  repo: {
+    nameWithOwner: string;
+    description: string | null;
+    topics: string[];
+    homepageUrl: string | null;
+  },
+  extraction: RepoExtraction,
 ): Promise<EnrichmentResult> {
   const env = getServerEnv();
   const apiKey = env.OPENROUTER_API_KEY;
@@ -95,7 +143,7 @@ export async function enrichRepoMetadata(
       messages: [
         {
           role: "user",
-          content: buildPrompt(repo, analysis),
+          content: buildPrompt(repo, extraction),
         },
       ],
       temperature: 0.2,
@@ -116,5 +164,11 @@ export async function enrichRepoMetadata(
     throw new Error("OpenRouter returned empty content");
   }
 
-  return enrichmentSchema.parse(JSON.parse(extractJsonObject(content)));
+  const parsed = enrichmentSchema.parse(JSON.parse(extractJsonObject(content)));
+
+  if (!isMonorepoExtraction(extraction)) {
+    return { ...parsed, monorepoPackages: undefined };
+  }
+
+  return parsed;
 }

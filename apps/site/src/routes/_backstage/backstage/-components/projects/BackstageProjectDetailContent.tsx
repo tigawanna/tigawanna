@@ -11,6 +11,7 @@ import type {
   BackstageProjectEmbedding,
 } from "@/modules/backstage/projects.functions";
 import { EnrichmentReviewDialog } from "@/routes/_backstage/backstage/-components/projects/EnrichmentReviewDialog";
+import { MonorepoPackagesList } from "@/routes/_backstage/backstage/-components/projects/MonorepoPackagesList";
 import { attendanceLabel } from "@/routes/_backstage/backstage/-components/projects/helpers";
 import { unwrapUnknownError } from "@/utils/errors";
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
@@ -304,6 +305,11 @@ function EnrichmentSection({
               </p>
             </section>
           ) : null}
+
+          <MonorepoPackagesList
+            packages={enrichment.monorepoPackages}
+            testId="project-monorepo-packages"
+          />
 
           {showSuggestedDescription ? (
             <section className="flex flex-col gap-2">

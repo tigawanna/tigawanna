@@ -26,6 +26,27 @@ export type RepoExtraction = {
   packageJsonChunks: PackageJsonChunk[];
 };
 
+/**
+ * Returns the root `package.json` content when present in extraction chunks.
+ */
+export function getRootPackageJson(chunks: PackageJsonChunk[]) {
+  return chunks.find((chunk) => chunk.path === "package.json")?.content ?? null;
+}
+
+/**
+ * Returns nested workspace package.json chunks (excludes the repo root).
+ */
+export function getWorkspacePackageChunks(chunks: PackageJsonChunk[]) {
+  return chunks.filter((chunk) => chunk.path !== "package.json");
+}
+
+/**
+ * Heuristic: repo has at least one workspace package under apps/packages/libs/tools.
+ */
+export function isMonorepoExtraction(extraction: Pick<RepoExtraction, "packageJsonChunks">) {
+  return getWorkspacePackageChunks(extraction.packageJsonChunks).length > 0;
+}
+
 async function githubRest<T>(token: string, path: string) {
   const res = await fetch(`https://api.github.com${path}`, {
     headers: {
@@ -113,7 +134,6 @@ export async function fetchRepoExtraction(token: string, repo: GithubRepoSnapsho
     token,
     `/repos/${repo.nameWithOwner}/git/trees/${repo.defaultBranch}?recursive=1`,
   );
-
   const filePaths =
     tree?.tree.filter((entry) => entry.type === "blob").map((entry) => entry.path) ?? [];
 

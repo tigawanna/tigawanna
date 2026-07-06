@@ -47,6 +47,13 @@ function parseTopics(raw: string) {
 /** How backstage resolved enrichment for display. */
 export type BackstageEnrichmentSource = "ai_suggestion" | "ai_record" | "metadata";
 
+/** Brief description of a workspace package inside a monorepo. */
+export type MonorepoPackageDescription = {
+  path: string;
+  name: string;
+  description: string;
+};
+
 /** Enrichment suggestion surfaced on the backstage project detail page. */
 export type BackstageProjectEnrichment = {
   source: BackstageEnrichmentSource;
@@ -57,6 +64,7 @@ export type BackstageProjectEnrichment = {
   suggestedTopics: string[];
   suggestedHomepage: string | null;
   briefSummary: string | null;
+  monorepoPackages: MonorepoPackageDescription[];
   confidence: {
     description: number;
     topics: number;
@@ -102,6 +110,35 @@ function countSourceEmbeddings(raw: string | null | undefined) {
   }
 }
 /**
+ * Parses monorepo package descriptions stored on enrichment analysis metadata.
+ */
+export function parseMonorepoPackages(raw: unknown): MonorepoPackageDescription[] {
+  if (!Array.isArray(raw)) {
+    return [];
+  }
+
+  return raw.flatMap((entry) => {
+    if (!entry || typeof entry !== "object") {
+      return [];
+    }
+
+    const { path, name, description } = entry as Record<string, unknown>;
+    if (
+      typeof path !== "string" ||
+      typeof name !== "string" ||
+      typeof description !== "string" ||
+      path.trim().length === 0 ||
+      name.trim().length === 0 ||
+      description.trim().length === 0
+    ) {
+      return [];
+    }
+
+    return [{ path: path.trim(), name: name.trim(), description: description.trim() }];
+  });
+}
+
+/**
  * Parses enrichment analysis metadata stored on suggestions.
  */
 function parseAnalysisSummary(raw: string | null | undefined) {
@@ -112,6 +149,7 @@ function parseAnalysisSummary(raw: string | null | undefined) {
   try {
     const parsed = JSON.parse(raw) as {
       reasoning?: string;
+      monorepoPackages?: unknown;
       confidence?: {
         description?: number;
         topics?: number;
@@ -133,6 +171,7 @@ function parseAnalysisSummary(raw: string | null | undefined) {
 
     return {
       briefSummary: typeof parsed.reasoning === "string" ? parsed.reasoning : null,
+      monorepoPackages: parseMonorepoPackages(parsed.monorepoPackages),
       confidence,
     };
   } catch {
@@ -229,6 +268,7 @@ function resolveProjectEnrichment(
       suggestedTopics: parseTopics(suggestionRow.suggestedTopics),
       suggestedHomepage: suggestionRow.suggestedHomepage,
       briefSummary: analysis?.briefSummary ?? project.enrichedSummary,
+      monorepoPackages: analysis?.monorepoPackages ?? [],
       confidence: analysis?.confidence ?? null,
       enrichedAt: project.enrichedAt ?? suggestionRow.createdAt,
       applyError: suggestionRow.applyError,
@@ -245,6 +285,7 @@ function resolveProjectEnrichment(
       suggestedTopics: project.currentTopics,
       suggestedHomepage: project.currentHomepage,
       briefSummary: project.enrichedSummary,
+      monorepoPackages: [],
       confidence: null,
       enrichedAt: project.enrichedAt ?? project.updatedAt,
       applyError: null,
@@ -274,6 +315,7 @@ function resolveProjectEnrichment(
     suggestedTopics: project.currentTopics,
     suggestedHomepage: project.currentHomepage,
     briefSummary,
+    monorepoPackages: [],
     confidence: null,
     enrichedAt: project.enrichedAt ?? embedding?.embeddedAt ?? project.lastGithubSyncAt,
     applyError: null,

@@ -46,3 +46,4 @@ minio/
 **/*lighthouse*.trace.json*
 **/*lighthouse*.json.gz
 
+.swc/plugins/linux_x86_64_22.0.1/d55af1cbfc1e3a679af163914f891e916354a91463fc7ec73267157b21361b8c.wasmer-v7

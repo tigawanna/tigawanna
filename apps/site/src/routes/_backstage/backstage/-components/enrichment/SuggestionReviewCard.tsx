@@ -11,6 +11,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { unwrapUnknownError } from "@/utils/errors";
+import { parseMonorepoPackages } from "@/modules/backstage/projects.functions";
+import { MonorepoPackagesList } from "@/routes/_backstage/backstage/-components/projects/MonorepoPackagesList";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -43,6 +45,19 @@ export function SuggestionReviewCard({
       return "";
     }
   });
+
+  const monorepoPackages = (() => {
+    if (!suggestion.analysisSummary) {
+      return [];
+    }
+
+    try {
+      const parsed = JSON.parse(suggestion.analysisSummary) as { monorepoPackages?: unknown };
+      return parseMonorepoPackages(parsed.monorepoPackages);
+    } catch {
+      return [];
+    }
+  })();
 
   const approve = useMutation({
     mutationFn: approveProjectEnrichmentSuggestion,
@@ -107,6 +122,7 @@ export function SuggestionReviewCard({
             onChange={(event) => setSummary(event.target.value)}
             rows={3}
           />
+          <MonorepoPackagesList packages={monorepoPackages} testId="suggestion-monorepo-packages" />
           <Textarea
             data-test="suggestion-description"
             value={description}

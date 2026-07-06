@@ -1,0 +1,19 @@
+{
+  "name": "@repo/github",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "dev": "tsgo --watch",
+    "build": "tsgo",
+    "check-types": "tsgo --noEmit",
+    "test": "echo 'Add test script here'"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "typescript": "*"
+  }
+}

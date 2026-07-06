@@ -27,6 +27,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { MonorepoPackagesList } from "@/routes/_backstage/backstage/-components/projects/MonorepoPackagesList";
 
 type EnrichmentReviewDialogProps = {
   open: boolean;
@@ -169,6 +170,11 @@ export function EnrichmentReviewDialog({
                 rows={4}
               />
             </div>
+
+            <MonorepoPackagesList
+              packages={enrichment.monorepoPackages}
+              testId="enrichment-review-monorepo-packages"
+            />
 
             <div className="space-y-2">
               <Label htmlFor="enrichment-review-description">Description</Label>

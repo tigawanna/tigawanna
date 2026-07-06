@@ -7,10 +7,10 @@ import {
   projectEnrichmentSuggestions,
   projectRepos,
 } from "@repo/db";
+import { fetchRepoExtraction, getRootPackageJson } from "@/modules/github/repo-extraction";
 import { enrichRepoMetadata } from "./enrich-ai";
 import type { RepoProcessDelta, RunCounters } from "./counters";
 import {
-  fetchRepoAnalysis,
   hasCustomSocialPreview,
   isRepoMetadataComplete,
   type GithubRepoSnapshot,
@@ -117,8 +117,8 @@ export async function processRepoForRun(
     await supersedePendingSuggestions(db, repo.id);
   }
 
-  const analysis = await fetchRepoAnalysis(pat, repo);
-  const enrichment = await enrichRepoMetadata(repo, analysis);
+  const extraction = await fetchRepoExtraction(pat, repo);
+  const enrichment = await enrichRepoMetadata(repo, extraction);
   const suggestionId = crypto.randomUUID();
 
   await syncRepoSnapshot(db, repo, "pending_review");
@@ -134,8 +134,9 @@ export async function processRepoForRun(
     analysisSummary: JSON.stringify({
       confidence: enrichment.confidence,
       reasoning: enrichment.reasoning,
-      filePathCount: analysis.filePaths.length,
-      hasPackageJson: analysis.packageJson != null,
+      filePathCount: extraction.filePaths.length,
+      hasPackageJson: getRootPackageJson(extraction.packageJsonChunks) != null,
+      monorepoPackages: enrichment.monorepoPackages,
     }),
     createdAt: new Date(),
   });

@@ -9,7 +9,9 @@
     "format": "vp fmt .",
     "format:fix": "vp fmt .",
     "check-types": "turbo run check-types",
-    "quality": "vp fmt && vp lint --fix",
+    "quality": "vp fmt && vp lint --fix"
+  },
+  "devDependencies": {
     "vite-plus": "catalog:"
   },
   "engines": {
@@ -33,5 +35,8 @@
       "sharp",
       "workerd"
     ]
+  },
+  "dependencies": {
+    "turbo": "^2.10.3"
   }
 }
