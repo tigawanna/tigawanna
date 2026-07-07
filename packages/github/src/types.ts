@@ -133,3 +133,9 @@ export type RepoAnalysis = {
   filePaths: string[];
   packageJson: Record<string, unknown> | null;
 };
+
+/** Minimal git tree entry shape used by repository extraction. */
+export type GitTreeEntry = {
+  path: string;
+  type: string;
+};

@@ -22,6 +22,7 @@ export type {
   PinnedViewerReposResponse,
   RepoAnalysis,
   RepoExtraction,
+  GitTreeEntry,
   RepositoryTopic,
   ViewerPinnedRepo,
   ViewerPinnedRepoData,

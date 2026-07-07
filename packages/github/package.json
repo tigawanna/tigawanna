@@ -11,11 +11,14 @@
     "dev": "tsgo --watch",
     "build": "tsgo",
     "check-types": "tsgo --noEmit",
-    "test": "echo 'Add test script here'"
+    "test": "vp test run",
+    "test:watch": "vp test"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
-    "typescript": "*"
+    "typescript": "*",
+    "vite-plus": "catalog:",
+    "vitest": "catalog:"
   },
   "dependencies": {
     "octokit": "^5.0.5"

@@ -18,6 +18,7 @@ import type {
   FetchRecentReposResult,
   GithubGraphqlError,
   GithubRepoSnapshot,
+  GitTreeEntry,
 } from "./types.js";
 import { filterRepoNodes, mapEnrichmentRepoNode, splitRepoFullName } from "./utils/repo.js";
 
@@ -164,7 +165,12 @@ export class GitHubClient {
   /**
    * Returns a recursive git tree for a repository branch.
    */
-  async getRepoTree(owner: string, repo: string, branch: string, recursive = true) {
+  async getRepoTree(
+    owner: string,
+    repo: string,
+    branch: string,
+    recursive = true,
+  ): Promise<GitTreeEntry[] | null> {
     try {
       const response = await this.octokit.rest.git.getTree({
         owner,

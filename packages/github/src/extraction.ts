@@ -3,7 +3,7 @@ const MAX_PACKAGE_JSON_FILES = 15;
 const MAX_README_CHARS = 12_000;
 const MAX_PACKAGE_JSON_CHARS = 6_000;
 
-import type { GithubRepoSnapshot, PackageJsonChunk, RepoExtraction } from "./types.js";
+import type { GitTreeEntry, GithubRepoSnapshot, PackageJsonChunk, RepoExtraction } from "./types.js";
 import type { GitHubClient } from "./client.js";
 
 /**
@@ -114,7 +114,7 @@ export async function fetchRepoExtraction(
   const { owner, repo: repoName } = splitRepoFullNameFromSnapshot(repo);
   const tree = await client.getRepoTree(owner, repoName, repo.defaultBranch, true);
   const filePaths =
-    tree?.filter((entry: { type: string; path: string }) => entry.type === "blob").map((entry) => entry.path) ?? [];
+    tree?.filter((entry: GitTreeEntry) => entry.type === "blob").map((entry) => entry.path) ?? [];
 
   const packageJsonPaths = discoverPackageJsonPaths(filePaths);
   const packageJsonChunks: PackageJsonChunk[] = [];
@@ -164,7 +164,7 @@ export async function fetchRepoAnalysis(client: GitHubClient, repo: GithubRepoSn
   const tree = await client.getRepoTree(owner, repoName, repo.defaultBranch, true);
   const filePaths =
     tree
-      ?.filter((entry: { type: string; path: string }) => entry.type === "blob")
+      ?.filter((entry: GitTreeEntry) => entry.type === "blob")
       .map((entry) => entry.path)
       .slice(0, 500) ?? [];
 
