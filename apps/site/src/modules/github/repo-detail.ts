@@ -1,41 +1,7 @@
 import { convertMarkdownToHtmlWithShiki } from "@/lib/markdown/convert";
-import type { OneRepoGQL } from "@/types/github";
 import { getServerEnv } from "@/lib/envs/server-env";
+import { createGitHubClient } from "@repo/github";
 import { createServerFn } from "@tanstack/react-start";
-
-const REPO_QUERY = `
-query OneRepo($owner: String!, $repo: String!, $firstTopics: Int!, $firstLangs: Int!) {
-  repository(name: $repo, owner: $owner) {
-    createdAt
-    forkCount
-    id
-    homepageUrl
-    isPrivate
-    isFork
-    isEmpty
-    description
-    isTemplate
-    repositoryTopics(first: $firstTopics) {
-      edges {
-        node {
-          topic { name }
-        }
-      }
-    }
-    name
-    nameWithOwner
-    openGraphImageUrl
-    updatedAt
-    url
-    languages(first: $firstLangs) {
-      edges {
-        size
-        node { color name }
-      }
-      totalSize
-    }
-  }
-}`;
 
 export const getRepoDetail = createServerFn({ method: "GET" })
   .validator((input: { owner: string; repo: string }) => input)
@@ -45,24 +11,7 @@ export const getRepoDetail = createServerFn({ method: "GET" })
       return null;
     }
 
-    const res = await fetch("https://api.github.com/graphql", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${pat}`,
-      },
-      body: JSON.stringify({
-        query: REPO_QUERY,
-        variables: { owner, repo, firstTopics: 10, firstLangs: 10 },
-      }),
-    });
-
-    if (!res.ok) {
-      return null;
-    }
-
-    const json = (await res.json()) as OneRepoGQL;
-    return json.data?.repository ?? null;
+    return createGitHubClient(pat).getRepoDetail(owner, repo);
   });
 
 /**

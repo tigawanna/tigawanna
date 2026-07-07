@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "exports": {
+    ".": "./src/index.ts",
     "./*": "./src/*.ts"
   },
   "scripts": {
@@ -15,5 +16,8 @@
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "typescript": "*"
+  },
+  "dependencies": {
+    "octokit": "^5.0.5"
   }
 }
