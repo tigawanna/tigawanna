@@ -20,6 +20,10 @@ import type {
   GithubRepoSnapshot,
   GitTreeEntry,
 } from "./types.js";
+import {
+  isIgnorableGraphqlAggregateError,
+  parseGraphqlAggregateError,
+} from "./utils/graphql-errors.js";
 import { filterRepoNodes, mapEnrichmentRepoNode, splitRepoFullName } from "./utils/repo.js";
 
 type GraphqlResult<T> = T & {
@@ -79,22 +83,38 @@ export class GitHubClient {
       cache = "no-store",
     } = options;
 
-    const result = await this.graphql<RecentReposGraphqlResponse>(RECENT_REPOS_QUERY, {
-      cache,
-      variables: { first, isFork, orderField, orderDirection },
-    });
+    try {
+      const result = await this.graphql<RecentReposGraphqlResponse>(RECENT_REPOS_QUERY, {
+        cache,
+        variables: { first, isFork, orderField, orderDirection },
+      });
 
-    const nodes = filterRepoNodes(result.viewer.repositories.nodes);
+      const nodes = filterRepoNodes(result.viewer.repositories.nodes);
 
-    return {
-      data: {
-        viewer: {
-          pinnedItems: { nodes: [] },
-          repositories: { nodes },
+      return {
+        data: {
+          viewer: {
+            pinnedItems: { nodes: [] },
+            repositories: { nodes },
+          },
         },
-      },
-      errors: result.errors ?? [],
-    };
+        errors: result.errors ?? [],
+      };
+    } catch (error: unknown) {
+      if (isIgnorableGraphqlAggregateError(error)) {
+        return {
+          data: {
+            viewer: {
+              pinnedItems: { nodes: [] },
+              repositories: { nodes: [] },
+            },
+          },
+          errors: parseGraphqlAggregateError(error) ?? [],
+        };
+      }
+
+      throw error;
+    }
   }
 
   /**

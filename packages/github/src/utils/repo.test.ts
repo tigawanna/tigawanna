@@ -73,9 +73,7 @@ describe("buildRepoSearchText", () => {
 describe("hasCustomSocialPreview", () => {
   it("detects GitHub-hosted social preview images", () => {
     expect(
-      hasCustomSocialPreview(
-        "https://repository-images.githubusercontent.com/123/456-abc",
-      ),
+      hasCustomSocialPreview("https://repository-images.githubusercontent.com/123/456-abc"),
     ).toBe(true);
     expect(hasCustomSocialPreview("https://opengraph.githubassets.com/1/repo.png")).toBe(false);
     expect(hasCustomSocialPreview(null)).toBe(false);

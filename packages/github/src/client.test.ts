@@ -103,6 +103,44 @@ describe("GitHubClient", () => {
     });
   });
 
+  it("returns empty repos when org PAT policy blocks all repositories", async () => {
+    const orgPolicyMessage =
+      "The 'SpaceyaTech' organization forbids access via a personal access tokens (classic) if the token's lifetime is greater than 7 days.";
+
+    octokitMocks.graphql.mockRejectedValue(
+      new Error(
+        `Request failed due to following response errors:\n - ${orgPolicyMessage}\n - ${orgPolicyMessage}`,
+      ),
+    );
+
+    const client = createGitHubClient("ghp_test_token");
+    await expect(client.getRecentRepos()).resolves.toEqual({
+      data: {
+        viewer: {
+          pinnedItems: { nodes: [] },
+          repositories: { nodes: [] },
+        },
+      },
+      errors: [
+        expect.objectContaining({ message: orgPolicyMessage }),
+        expect.objectContaining({ message: orgPolicyMessage }),
+      ],
+    });
+  });
+
+  it("rethrows non-ignorable GraphQL aggregate failures", async () => {
+    octokitMocks.graphql.mockRejectedValue(
+      new Error(
+        "Request failed due to following response errors:\n - Resource not accessible by personal access token",
+      ),
+    );
+
+    const client = createGitHubClient("ghp_test_token");
+    await expect(client.getRecentRepos()).rejects.toThrow(
+      "Resource not accessible by personal access token",
+    );
+  });
+
   it("returns recent repositories in the viewer response shape", async () => {
     const recentRepo = createRepoNode({ name: "recent", nameWithOwner: "octocat/recent" });
 
@@ -321,9 +359,9 @@ describe("GitHubClient", () => {
 
     const client = createGitHubClient("ghp_test_token");
 
-    await expect(client.getRepoFileContent("octocat", "demo", "package.json", "main")).resolves.toBe(
-      '{"name":"demo"}',
-    );
+    await expect(
+      client.getRepoFileContent("octocat", "demo", "package.json", "main"),
+    ).resolves.toBe('{"name":"demo"}');
     await expect(client.getRepoFileContent("octocat", "demo", "src", "main")).resolves.toBeNull();
     await expect(
       client.getRepoFileContent("octocat", "demo", "missing.txt", "main"),

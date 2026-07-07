@@ -3,7 +3,12 @@ const MAX_PACKAGE_JSON_FILES = 15;
 const MAX_README_CHARS = 12_000;
 const MAX_PACKAGE_JSON_CHARS = 6_000;
 
-import type { GitTreeEntry, GithubRepoSnapshot, PackageJsonChunk, RepoExtraction } from "./types.js";
+import type {
+  GitTreeEntry,
+  GithubRepoSnapshot,
+  PackageJsonChunk,
+  RepoExtraction,
+} from "./types.js";
 import type { GitHubClient } from "./client.js";
 
 /**

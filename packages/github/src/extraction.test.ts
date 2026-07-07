@@ -194,6 +194,6 @@ describe("fetchRepoAnalysis", () => {
 
 describe("toGithubBase64 fixture", () => {
   it("round-trips through client decoding expectations", () => {
-    expect(toGithubBase64('{"name":"demo"}')).toBe('eyJuYW1lIjoiZGVtbyJ9');
+    expect(toGithubBase64('{"name":"demo"}')).toBe("eyJuYW1lIjoiZGVtbyJ9");
   });
 });
