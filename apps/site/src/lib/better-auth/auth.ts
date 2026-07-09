@@ -3,10 +3,12 @@ import { authAc, authRoles } from "@repo/auth";
 import { apiKey } from "@better-auth/api-key";
 import { getDb } from "@/lib/db/get-db";
 import { getServerEnv } from "@/lib/envs/server-env";
-import { APIError, createAuthMiddleware } from "better-auth/api";
+import { sendOtpViaTelegram } from "@/lib/better-auth/send-otp-telegram";
+import { rejectBackstageAuth } from "@/lib/better-auth/guard-admin-auth";
+import { createAuthMiddleware } from "better-auth/api";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { admin, bearer, deviceAuthorization } from "better-auth/plugins";
+import { admin, bearer, deviceAuthorization, emailOTP } from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 
 const env = getServerEnv();
@@ -20,8 +22,27 @@ for (const origin of env.BETTER_AUTH_TRUSTED_ORIGINS ?? []) {
   trustedOrigins.add(origin);
 }
 
+const ADMIN_AUTH_PATHS = new Set([
+  "/sign-up/email",
+  "/email-otp/send-verification-otp",
+  "/sign-in/email-otp",
+]);
+
+/**
+ * Returns the configured admin email in lowercase, or an empty string when unset.
+ */
 function configuredAdminEmail() {
   return env.ADMIN_EMAIL.trim().toLowerCase();
+}
+
+/**
+ * Reads an email field from a Better Auth request body when present.
+ */
+function emailFromBody(body: unknown) {
+  if (typeof body !== "object" || body === null || !("email" in body)) {
+    return "";
+  }
+  return String((body as { email: string }).email).toLowerCase();
 }
 
 /**
@@ -62,27 +83,18 @@ export const auth = betterAuth({
   },
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
-      if (ctx.path !== "/sign-up/email") {
+      if (!ADMIN_AUTH_PATHS.has(ctx.path)) {
         return;
       }
 
       const adminEmail = configuredAdminEmail();
       if (!adminEmail) {
-        throw new APIError("FORBIDDEN", {
-          message: "Sign up is disabled until ADMIN_EMAIL is configured",
-        });
+        rejectBackstageAuth("Admin auth is disabled until ADMIN_EMAIL is configured");
       }
 
-      const body = ctx.body;
-      const email =
-        typeof body === "object" && body && "email" in body
-          ? String((body as { email: string }).email).toLowerCase()
-          : "";
-
+      const email = emailFromBody(ctx.body);
       if (email !== adminEmail) {
-        throw new APIError("FORBIDDEN", {
-          message: "Sign up is limited to the configured admin email",
-        });
+        rejectBackstageAuth("Auth is limited to the configured admin email");
       }
     }),
   },
@@ -95,6 +107,21 @@ export const auth = betterAuth({
     }),
     bearer(),
     deviceAuthorization({ verificationUri: deviceVerificationUri, schema: {} }),
+    emailOTP({
+      otpLength: 6,
+      expiresIn: 300,
+      allowedAttempts: 5,
+      disableSignUp: false,
+      storeOTP: "hashed",
+      async sendVerificationOTP({ email, otp, type }) {
+        const adminEmail = configuredAdminEmail();
+        if (!adminEmail || email.toLowerCase() !== adminEmail) {
+          return;
+        }
+        // Do not await — Better Auth recommends this to avoid timing attacks.
+        sendOtpViaTelegram({ email, otp, type });
+      },
+    }),
     admin({
       defaultRole: "user",
       adminRoles: ["admin"],

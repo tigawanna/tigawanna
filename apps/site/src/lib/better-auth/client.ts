@@ -1,6 +1,6 @@
 import { authAc, authRoles, userRoles, type BetterAuthUserRoles } from "@repo/auth";
 import { apiKeyClient } from "@better-auth/api-key/client";
-import { adminClient } from "better-auth/client/plugins";
+import { adminClient, emailOTPClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 import { getAppUrl } from "@/lib/envs/client-env";
 
@@ -12,6 +12,7 @@ export const authClient = createAuthClient({
       roles: authRoles,
     }),
     apiKeyClient(),
+    emailOTPClient(),
   ],
 });
 

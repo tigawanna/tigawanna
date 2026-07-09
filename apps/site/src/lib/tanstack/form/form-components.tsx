@@ -8,6 +8,7 @@ interface SubmitButtonProps {
   children?: React.ReactNode;
   variant?: ComponentProps<typeof Button>["variant"];
   size?: ComponentProps<typeof Button>["size"];
+  "data-test"?: string;
 }
 
 export function SubmitButton({
@@ -16,6 +17,7 @@ export function SubmitButton({
   children,
   variant,
   size,
+  "data-test": dataTest,
 }: SubmitButtonProps) {
   const form = useFormContext();
 
@@ -34,6 +36,7 @@ export function SubmitButton({
           size={size}
           disabled={isSubmitting || !canSubmit || isPristine}
           className={className}
+          data-test={dataTest}
         >
           {children || (isSubmitting ? "Submitting..." : label)}
         </Button>
