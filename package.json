@@ -11,6 +11,9 @@
     "check-types": "turbo run check-types",
     "quality": "vp fmt && vp lint --fix"
   },
+  "dependencies": {
+    "turbo": "^2.10.3"
+  },
   "devDependencies": {
     "@typescript/native-preview": "7.0.0-dev.20260706.1",
     "vite-plus": "catalog:"
@@ -36,8 +39,5 @@
       "sharp",
       "workerd"
     ]
-  },
-  "dependencies": {
-    "turbo": "^2.10.3"
   }
 }

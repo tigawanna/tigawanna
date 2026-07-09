@@ -1,4 +1,3 @@
-import { isAdminUser } from "@/data-access-layer/auth/auth-utils";
 import { backstageProjectDetailQueryOptions } from "@/data-access-layer/backstage/projects-query-options";
 import { ClientOnly } from "@/components/wrappers/ClientOnly";
 import { BackstageProjectDetailContent } from "@/routes/_backstage/backstage/-components/projects/BackstageProjectDetailContent";
@@ -8,7 +7,7 @@ import { BackstageRepoPageFallback } from "../../../-components/shared/Backstage
 
 export const Route = createFileRoute("/_backstage/backstage/projects/$owner/$repo/")({
   beforeLoad: ({ context }) => {
-    if (!isAdminUser(context.viewer)) {
+    if (context.viewer?.role !== "admin") {
       throw redirect({ to: "/backstage" });
     }
   },

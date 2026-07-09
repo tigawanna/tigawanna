@@ -1,4 +1,4 @@
-import { requireAdminSession } from "@/modules/admin-auth/require-admin";
+import { requireBackstageSession } from "@/lib/better-auth/session";
 import { logEnrichmentEvent } from "@/lib/evlog/enrichment-log";
 import { applyRepoMetadata } from "@/modules/github/apply-repo-metadata";
 import { getDb } from "@/lib/db/get-db";
@@ -33,7 +33,7 @@ function parseTopics(raw: string) {
 
 export const listProjectEnrichmentSuggestions = createServerFn({ method: "GET" }).handler(
   async () => {
-    await requireAdminSession();
+    await requireBackstageSession();
     const db = getDb();
 
     const rows = await db
@@ -62,7 +62,7 @@ export const listProjectEnrichmentSuggestions = createServerFn({ method: "GET" }
 );
 
 export const listProjectEnrichmentRuns = createServerFn({ method: "GET" }).handler(async () => {
-  await requireAdminSession();
+  await requireBackstageSession();
   const db = getDb();
   return db
     .select()
@@ -76,7 +76,7 @@ export const getProjectEnrichmentRun = createServerFn({ method: "GET" })
     runId: z.string().uuid().parse(input.runId),
   }))
   .handler(async ({ data }) => {
-    await requireAdminSession();
+    await requireBackstageSession();
     const db = getDb();
     const [row] = await db
       .select()
@@ -102,7 +102,7 @@ export const approveProjectEnrichmentSuggestion = createServerFn({ method: "POST
     }) => input,
   )
   .handler(async ({ data }) => {
-    await requireAdminSession();
+    await requireBackstageSession();
     const env = getServerEnv();
     const pat = env.GH_PAT;
 
@@ -199,7 +199,7 @@ export const approveProjectEnrichmentSuggestion = createServerFn({ method: "POST
 export const rejectProjectEnrichmentSuggestion = createServerFn({ method: "POST" })
   .validator((input: { suggestionId: string }) => input)
   .handler(async ({ data }) => {
-    await requireAdminSession();
+    await requireBackstageSession();
     const db = getDb();
 
     const rows = await db
@@ -249,7 +249,7 @@ export const triggerProjectEnrichmentRun = createServerFn({ method: "POST" })
     triggerEnrichmentInputSchema.parse(input),
   )
   .handler(async ({ data }) => {
-    await requireAdminSession();
+    await requireBackstageSession();
 
     const trigger: EnrichmentRunParams["trigger"] = data.repos?.length ? "manual" : "scheduled";
     const runId = await createRunRecord(trigger, data.repos ?? null);

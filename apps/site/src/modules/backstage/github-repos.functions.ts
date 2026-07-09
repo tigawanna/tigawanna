@@ -1,4 +1,4 @@
-import { requireAdminSession } from "@/modules/admin-auth/require-admin";
+import { requireBackstageSession } from "@/lib/better-auth/session";
 import { extractRepoTags, fetchRecentReposFromGithub } from "@/modules/github/fetch-repos";
 import { getServerEnv } from "@/lib/envs/server-env";
 import { removeProjectRepo } from "@/modules/backstage/projects.functions";
@@ -54,7 +54,7 @@ function requirePat() {
  */
 export const listGithubReposForBackstage = createServerFn({ method: "GET" }).handler(
   async (): Promise<BackstageGithubReposResponse> => {
-    await requireAdminSession();
+    await requireBackstageSession();
     const result = await fetchRecentReposFromGithub();
     const nodes = (result.data?.viewer.repositories.nodes ?? []).filter(
       (repo): repo is GithubRepoNode => repo != null,
@@ -91,7 +91,7 @@ export const deleteGithubRepoForBackstage = createServerFn({ method: "POST" })
     deleteGithubRepoInputSchema.parse(input),
   )
   .handler(async ({ data }) => {
-    await requireAdminSession();
+    await requireBackstageSession();
     const pat = data.overridePat ?? requirePat();
 
     try {
@@ -116,7 +116,7 @@ export const setGithubRepoVisibilityForBackstage = createServerFn({ method: "POS
     visibility: z.enum(["public", "private"]).parse(input.visibility),
   }))
   .handler(async ({ data }) => {
-    await requireAdminSession();
+    await requireBackstageSession();
     const pat = requirePat();
     await setGithubRepoVisibility(pat, data.repoFullName, data.visibility);
     return { ok: true as const, visibility: data.visibility };

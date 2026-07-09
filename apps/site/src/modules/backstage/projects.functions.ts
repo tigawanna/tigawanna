@@ -1,4 +1,4 @@
-import { requireAdminSession } from "@/modules/admin-auth/require-admin";
+import { requireBackstageSession } from "@/lib/better-auth/session";
 import { logEnrichmentEvent } from "@/lib/evlog/enrichment-log";
 import { getDb } from "@/lib/db/get-db";
 import { isServerEmbeddingEnabled } from "@/lib/envs/server-embedding";
@@ -351,7 +351,7 @@ function requirePat() {
  * Requires an authenticated admin session.
  */
 export const listProjectRepos = createServerFn({ method: "GET" }).handler(async () => {
-  await requireAdminSession();
+  await requireBackstageSession();
   const db = getDb();
 
   const rows = await db.select().from(projectRepos).orderBy(desc(projectRepos.lastGithubSyncAt));
@@ -394,7 +394,7 @@ export const createProjectRepo = createServerFn({ method: "POST" })
     createProjectRepoInputSchema.parse(input),
   )
   .handler(async ({ data }) => {
-    await requireAdminSession();
+    await requireBackstageSession();
     const db = getDb();
     const now = new Date();
     const topics = data.currentTopics ?? [];
@@ -449,7 +449,7 @@ export const updateProjectRepo = createServerFn({ method: "POST" })
     updateProjectRepoInputSchema.parse(input),
   )
   .handler(async ({ data }) => {
-    await requireAdminSession();
+    await requireBackstageSession();
     const db = getDb();
     const { githubRepoId, ...fields } = data;
     const now = new Date();
@@ -578,7 +578,7 @@ export const importProjectRepo = createServerFn({ method: "POST" })
     importProjectRepoInputSchema.parse(input),
   )
   .handler(async ({ data }) => {
-    await requireAdminSession();
+    await requireBackstageSession();
     const pat = requirePat();
 
     const repos = await fetchReposByFullNames(pat, [data.repoFullName]);
@@ -603,7 +603,7 @@ export const importAllProjectRepos = createServerFn({ method: "POST" })
     importAllProjectReposInputSchema.parse(input),
   )
   .handler(async ({ data }) => {
-    await requireAdminSession();
+    await requireBackstageSession();
     const pat = requirePat();
 
     const repos = await fetchReposByFullNames(pat, data.repoFullNames);
@@ -635,7 +635,7 @@ export const removeProjectRepo = createServerFn({ method: "POST" })
     repoFullName: repoFullNameSchema.parse(input.repoFullName),
   }))
   .handler(async ({ data }) => {
-    await requireAdminSession();
+    await requireBackstageSession();
     await deleteProjectRepoByFullName(data.repoFullName);
     return { ok: true as const };
   });
@@ -648,7 +648,7 @@ export const getBackstageProjectDetail = createServerFn({ method: "GET" })
     repoFullName: repoFullNameSchema.parse(input.repoFullName),
   }))
   .handler(async ({ data }) => {
-    await requireAdminSession();
+    await requireBackstageSession();
     const db = getDb();
 
     const [row] = await db

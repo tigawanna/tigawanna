@@ -1,12 +1,12 @@
-import { requestAdminOtp, verifyAdminOtp } from "@/modules/admin-auth/admin-auth.functions";
 import { viewerqueryOptions } from "@/data-access-layer/auth/viewer";
+import { authClient } from "@/lib/better-auth/client";
 import { Button } from "@/components/ui/button";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { AppConfig } from "@/utils/system";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { toast } from "sonner";
 import { parseError } from "evlog";
 import { z } from "zod";
@@ -26,7 +26,7 @@ const searchparams = z.object({
 export const Route = createFileRoute("/backstage/sign-in")({
   validateSearch: searchparams,
   beforeLoad: ({ context, search }) => {
-    if (context.viewer?.isAdmin) {
+    if (context.viewer?.role === "admin") {
       throw redirect({ to: search.returnTo });
     }
   },
@@ -51,29 +51,20 @@ function BackstageSignInPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const Icon = AppConfig.icon;
-  const [codeSent, setCodeSent] = useState(false);
-  const [code, setCode] = useState("");
+  const [mode, setMode] = useState<"sign-in" | "sign-up">("sign-in");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
 
-  const requestOtpMutation = useMutation({
-    mutationFn: () => requestAdminOtp(),
-    onSuccess: () => {
-      setCodeSent(true);
-      toast.success("Login code sent to Telegram");
+  const signInMutation = useMutation({
+    mutationFn: async () => {
+      const { error } = await authClient.signIn.email({ email, password });
+      if (error) {
+        throw error;
+      }
     },
-    onError: (error: unknown) => {
-      toast.error("Could not send login code", {
-        description: authErrorDescription(error),
-      });
-    },
-  });
-
-  const verifyOtpMutation = useMutation({
-    mutationFn: (otpCode: string) => verifyAdminOtp({ data: { code: otpCode } }),
-    onSuccess: async (viewer) => {
-      queryClient.setQueryData(viewerqueryOptions.queryKey, {
-        data: viewer,
-        error: null,
-      });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(viewerqueryOptions);
       toast.success("Signed in");
       await navigate({ to: returnTo, replace: true });
     },
@@ -83,6 +74,31 @@ function BackstageSignInPage() {
       });
     },
   });
+
+  const signUpMutation = useMutation({
+    mutationFn: async () => {
+      const { error } = await authClient.signUp.email({
+        email,
+        password,
+        name: name.trim() || email.split("@")[0] || "Admin",
+      });
+      if (error) {
+        throw error;
+      }
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(viewerqueryOptions);
+      toast.success("Admin account created");
+      await navigate({ to: returnTo, replace: true });
+    },
+    onError: (error: unknown) => {
+      toast.error("Could not create admin account", {
+        description: authErrorDescription(error),
+      });
+    },
+  });
+
+  const isPending = signInMutation.isPending || signUpMutation.isPending;
 
   return (
     <div className="bg-base-100 flex min-h-screen flex-col">
@@ -104,74 +120,87 @@ function BackstageSignInPage() {
         >
           <h1 className="text-2xl font-semibold tracking-tight">Backstage</h1>
           <p className="text-base-content/60 mt-2 text-sm">
-            We&apos;ll send a one-time code to your Telegram channel.
+            {mode === "sign-in"
+              ? "Sign in with your Better Auth admin account."
+              : "Create the first admin account for the configured ADMIN_EMAIL."}
           </p>
 
-          {!codeSent ? (
-            <Button
-              type="button"
-              className="mt-6 w-full"
-              disabled={requestOtpMutation.isPending}
-              onClick={() => requestOtpMutation.mutate()}
-              data-test="backstage-request-otp"
-            >
-              {requestOtpMutation.isPending ? "Sending…" : "Send login code"}
-            </Button>
-          ) : (
-            <form
-              className="mt-6 space-y-4"
-              onSubmit={(event) => {
-                event.preventDefault();
-                if (code.length === 6) {
-                  verifyOtpMutation.mutate(code);
-                }
-              }}
-            >
+          <form
+            className="mt-6 space-y-4"
+            onSubmit={(event) => {
+              event.preventDefault();
+              if (mode === "sign-in") {
+                signInMutation.mutate();
+                return;
+              }
+              signUpMutation.mutate();
+            }}
+          >
+            {mode === "sign-up" ? (
               <div className="space-y-2">
-                <p id="backstage-otp-label" className="text-sm font-medium">
-                  Login code
-                </p>
-                <InputOTP
-                  maxLength={6}
-                  pattern={REGEXP_ONLY_DIGITS}
-                  value={code}
-                  onChange={setCode}
-                  autoFocus
-                  autoComplete="one-time-code"
-                  inputMode="numeric"
-                  aria-labelledby="backstage-otp-label"
-                  disabled={verifyOtpMutation.isPending}
-                  data-test="backstage-otp-input"
-                  containerClassName="justify-center"
-                  onComplete={(value) => verifyOtpMutation.mutate(value)}
-                >
-                  <InputOTPGroup>
-                    {Array.from({ length: 6 }, (_, index) => (
-                      <InputOTPSlot key={index} index={index} />
-                    ))}
-                  </InputOTPGroup>
-                </InputOTP>
+                <Label htmlFor="backstage-name">Name</Label>
+                <Input
+                  id="backstage-name"
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                  autoComplete="name"
+                  disabled={isPending}
+                  data-test="backstage-name-input"
+                />
               </div>
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={code.length !== 6 || verifyOtpMutation.isPending}
-                data-test="backstage-verify-otp"
-              >
-                {verifyOtpMutation.isPending ? "Verifying…" : "Verify and continue"}
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                className="w-full"
-                disabled={requestOtpMutation.isPending}
-                onClick={() => requestOtpMutation.mutate()}
-                data-test="backstage-resend-otp"
-              >
-                Resend code
-              </Button>
-            </form>
-          )}
+            ) : null}
+
+            <div className="space-y-2">
+              <Label htmlFor="backstage-email">Email</Label>
+              <Input
+                id="backstage-email"
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                autoComplete="email"
+                required
+                disabled={isPending}
+                data-test="backstage-email-input"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="backstage-password">Password</Label>
+              <Input
+                id="backstage-password"
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                autoComplete={mode === "sign-in" ? "current-password" : "new-password"}
+                required
+                minLength={8}
+                disabled={isPending}
+                data-test="backstage-password-input"
+              />
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isPending || email.length === 0 || password.length < 8}
+              data-test={mode === "sign-in" ? "backstage-sign-in" : "backstage-sign-up"}
+            >
+              {isPending ? "Working…" : mode === "sign-in" ? "Sign in" : "Create admin account"}
+            </Button>
+          </form>
+
+          <Button
+            type="button"
+            variant="ghost"
+            className="mt-3 w-full"
+            disabled={isPending}
+            onClick={() => setMode(mode === "sign-in" ? "sign-up" : "sign-in")}
+            data-test="backstage-auth-mode-toggle"
+          >
+            {mode === "sign-in"
+              ? "Need to create the admin account?"
+              : "Already have an account? Sign in"}
+          </Button>
         </div>
       </main>
     </div>

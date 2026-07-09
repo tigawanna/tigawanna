@@ -1,26 +1,20 @@
-import { getAdminSession, signOutAdmin } from "@/modules/admin-auth/admin-auth.functions";
-import type { AdminViewer } from "@/modules/admin-auth/admin-auth.functions";
-import { getAdminIdentity } from "@/modules/admin-auth/admin-identity";
-import { logAuthEvent } from "@/modules/admin-auth/auth-log";
-import { isAuthBypassEnabledOnServer } from "@/data-access-layer/auth/auth-utils";
-import { getServerEnv } from "@/lib/envs/server-env";
+import { getBackstageViewer } from "@/lib/better-auth/session";
+import type { BetterAuthUser } from "@/lib/better-auth/auth";
+import { authClient } from "@/lib/better-auth/client";
+import { getBackstageViewerFromHeaders } from "@/lib/better-auth/session";
 import { queryOptions, useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { redirect } from "@tanstack/react-router";
 import { createMiddleware } from "@tanstack/react-start";
-import { getCookieFromRequest } from "@/modules/admin-auth/cookies";
-import { adminSessionCookie, verifyAdminSessionToken } from "@/modules/admin-auth/session";
 
-export type TViewer = AdminViewer;
+export type TViewer = BetterAuthUser;
 
 /**
- * React Query options for the current admin viewer session.
- *
- * Loads via {@link getAdminSession}; `data` is `null` when signed out.
+ * React Query options for the current backstage viewer session.
  */
 export const viewerqueryOptions = queryOptions({
   queryKey: ["viewer"],
   queryFn: async () => {
-    const viewer = await getAdminSession();
+    const viewer = await getBackstageViewer();
     return {
       data: viewer,
       error: null,
@@ -31,98 +25,45 @@ export const viewerqueryOptions = queryOptions({
 
 /**
  * Client hook exposing the admin viewer, admin flag, and sign-out mutation.
- *
- * Sign-out clears server cookies, invalidates the viewer query, and redirects home.
  */
 export function useViewer() {
   const queryClient = useQueryClient();
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      await signOutAdmin();
+      const { error } = await authClient.signOut();
+      if (error) {
+        throw error;
+      }
       void queryClient.invalidateQueries(viewerqueryOptions);
       throw redirect({ to: "/", search: {} });
     },
   });
   const viewerQuery = useSuspenseQuery(viewerqueryOptions);
 
+  const viewer = viewerQuery.data.data ?? undefined;
+
   return {
     viewerQuery,
-    viewer: viewerQuery.data.data ?? undefined,
-    isAdmin: viewerQuery.data.data?.isAdmin === true,
+    viewer,
+    isAdmin: viewer?.role === "admin",
     logoutMutation,
   } as const;
 }
 
 /**
- * Server middleware that attaches an admin viewer to backstage route context.
- *
- * When {@link isAuthBypassEnabledOnServer} is active, injects a synthetic admin viewer.
- * Otherwise verifies the `admin_session` cookie and redirects unauthenticated requests
- * to `/backstage/sign-in` with a `returnTo` search param.
+ * Server middleware that attaches a backstage viewer to protected route context.
  */
 export const backstageViewerMiddleware = createMiddleware().server(async ({ next, request }) => {
   const pathname = new URL(request.url).pathname;
-
-  if (isAuthBypassEnabledOnServer(getServerEnv())) {
-    const { email, name } = getAdminIdentity();
-    logAuthEvent({
-      action: "backstage_route_guard",
-      outcome: "success",
-      reason: "auth_bypass",
-      email,
-      path: pathname,
-    });
-    return await next({
-      context: {
-        viewer: {
-          isAdmin: true as const,
-          name,
-          email,
-        },
-      },
-    });
-  }
-
-  const token = getCookieFromRequest(request, adminSessionCookie.name);
-  if (!token) {
+  const viewer = await getBackstageViewerFromHeaders(request.headers);
+  if (!viewer) {
     const returnTo = pathname.startsWith("/backstage/sign-in") ? "/backstage" : pathname;
-    logAuthEvent({
-      action: "backstage_route_guard",
-      outcome: "redirect",
-      reason: "missing_session",
-      path: pathname,
-    });
     throw redirect({ to: "/backstage/sign-in", search: { returnTo } });
   }
-
-  const payload = await verifyAdminSessionToken(token);
-  if (!payload) {
-    const returnTo = pathname.startsWith("/backstage/sign-in") ? "/backstage" : pathname;
-    logAuthEvent({
-      action: "backstage_route_guard",
-      outcome: "redirect",
-      reason: "invalid_session",
-      path: pathname,
-    });
-    throw redirect({ to: "/backstage/sign-in", search: { returnTo } });
-  }
-
-  logAuthEvent({
-    action: "backstage_route_guard",
-    outcome: "success",
-    email: payload.email,
-    path: pathname,
-  });
 
   return await next({
     context: {
-      viewer: {
-        isAdmin: true as const,
-        name: payload.name,
-        email: payload.email,
-      },
+      viewer,
     },
   });
 });
-
-export { isAdminUser } from "@/data-access-layer/auth/auth-utils";

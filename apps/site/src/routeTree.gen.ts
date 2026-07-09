@@ -18,6 +18,7 @@ import { Route as LessonsLessonIdRouteImport } from './routes/lessons/$lessonId'
 import { Route as BackstageSignInRouteImport } from './routes/backstage/sign-in'
 import { Route as PreviewErrorIndexRouteImport } from './routes/preview/error/index'
 import { Route as BackstageBackstageIndexRouteImport } from './routes/_backstage/backstage/index'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as BackstageBackstageReposRouteImport } from './routes/_backstage/backstage/repos'
 import { Route as BackstageBackstageMessagesRouteImport } from './routes/_backstage/backstage/messages'
 import { Route as BackstageBackstageJournalRouteImport } from './routes/_backstage/backstage/journal'
@@ -69,6 +70,11 @@ const BackstageBackstageIndexRoute = BackstageBackstageIndexRouteImport.update({
   path: '/backstage/',
   getParentRoute: () => BackstageLayoutRoute,
 } as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BackstageBackstageReposRoute = BackstageBackstageReposRouteImport.update({
   id: '/backstage/repos',
   path: '/backstage/repos',
@@ -115,6 +121,7 @@ export interface FileRoutesByFullPath {
   '/backstage/journal': typeof BackstageBackstageJournalRoute
   '/backstage/messages': typeof BackstageBackstageMessagesRoute
   '/backstage/repos': typeof BackstageBackstageReposRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/backstage/': typeof BackstageBackstageIndexRoute
   '/preview/error/': typeof PreviewErrorIndexRoute
   '/backstage/projects/': typeof BackstageBackstageProjectsIndexRoute
@@ -131,6 +138,7 @@ export interface FileRoutesByTo {
   '/backstage/journal': typeof BackstageBackstageJournalRoute
   '/backstage/messages': typeof BackstageBackstageMessagesRoute
   '/backstage/repos': typeof BackstageBackstageReposRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/backstage': typeof BackstageBackstageIndexRoute
   '/preview/error': typeof PreviewErrorIndexRoute
   '/backstage/projects': typeof BackstageBackstageProjectsIndexRoute
@@ -149,6 +157,7 @@ export interface FileRoutesById {
   '/_backstage/backstage/journal': typeof BackstageBackstageJournalRoute
   '/_backstage/backstage/messages': typeof BackstageBackstageMessagesRoute
   '/_backstage/backstage/repos': typeof BackstageBackstageReposRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/_backstage/backstage/': typeof BackstageBackstageIndexRoute
   '/preview/error/': typeof PreviewErrorIndexRoute
   '/_backstage/backstage/projects/': typeof BackstageBackstageProjectsIndexRoute
@@ -167,6 +176,7 @@ export interface FileRouteTypes {
     | '/backstage/journal'
     | '/backstage/messages'
     | '/backstage/repos'
+    | '/api/auth/$'
     | '/backstage/'
     | '/preview/error/'
     | '/backstage/projects/'
@@ -183,6 +193,7 @@ export interface FileRouteTypes {
     | '/backstage/journal'
     | '/backstage/messages'
     | '/backstage/repos'
+    | '/api/auth/$'
     | '/backstage'
     | '/preview/error'
     | '/backstage/projects'
@@ -200,6 +211,7 @@ export interface FileRouteTypes {
     | '/_backstage/backstage/journal'
     | '/_backstage/backstage/messages'
     | '/_backstage/backstage/repos'
+    | '/api/auth/$'
     | '/_backstage/backstage/'
     | '/preview/error/'
     | '/_backstage/backstage/projects/'
@@ -215,6 +227,7 @@ export interface RootRouteChildren {
   ProjectNameRoute: typeof ProjectNameRoute
   CreatureFeatureIndexRoute: typeof CreatureFeatureIndexRoute
   LessonsIndexRoute: typeof LessonsIndexRoute
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   PreviewErrorIndexRoute: typeof PreviewErrorIndexRoute
 }
 
@@ -282,6 +295,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/backstage/'
       preLoaderRoute: typeof BackstageBackstageIndexRouteImport
       parentRoute: typeof BackstageLayoutRoute
+    }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_backstage/backstage/repos': {
       id: '/_backstage/backstage/repos'
@@ -362,6 +382,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProjectNameRoute: ProjectNameRoute,
   CreatureFeatureIndexRoute: CreatureFeatureIndexRoute,
   LessonsIndexRoute: LessonsIndexRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
   PreviewErrorIndexRoute: PreviewErrorIndexRoute,
 }
 export const routeTree = rootRouteImport

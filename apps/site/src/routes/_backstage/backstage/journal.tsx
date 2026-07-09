@@ -1,4 +1,3 @@
-import { isAdminUser } from "@/data-access-layer/auth/auth-utils";
 import { journalEntriesQueryOptions } from "@/data-access-layer/backstage/journal-query-options";
 import { BackstageJournalContent } from "@/routes/_backstage/backstage/-components/journal/BackstageJournalContent";
 import { createFileRoute, redirect } from "@tanstack/react-router";
@@ -17,7 +16,7 @@ export type BackstageJournalSearch = z.infer<typeof backstageJournalSearchSchema
 export const Route = createFileRoute("/_backstage/backstage/journal")({
   validateSearch: (search) => backstageJournalSearchSchema.parse(search),
   beforeLoad: ({ context }) => {
-    if (!isAdminUser(context.viewer)) {
+    if (context.viewer?.role !== "admin") {
       throw redirect({ to: "/backstage" });
     }
   },

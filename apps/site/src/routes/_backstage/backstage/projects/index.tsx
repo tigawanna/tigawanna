@@ -1,4 +1,3 @@
-import { isAdminUser } from "@/data-access-layer/auth/auth-utils";
 import { ClientOnly } from "@/components/wrappers/ClientOnly";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { lazy, Suspense } from "react";
@@ -29,7 +28,7 @@ const BackstageProjects = lazy(() =>
 export const Route = createFileRoute("/_backstage/backstage/projects/")({
   validateSearch: (search) => backstageProjectsSearchSchema.parse(search),
   beforeLoad: ({ context }) => {
-    if (!isAdminUser(context.viewer)) {
+    if (context.viewer?.role !== "admin") {
       throw redirect({ to: "/backstage" });
     }
   },

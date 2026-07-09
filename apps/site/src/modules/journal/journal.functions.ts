@@ -1,4 +1,4 @@
-import { requireAdminSession } from "@/modules/admin-auth/require-admin";
+import { requireBackstageSession } from "@/lib/better-auth/session";
 import {
   journalEntryFormSchema,
   type JournalEntryFormValues,
@@ -53,7 +53,7 @@ export async function fetchJournalLessonById(id: string): Promise<LessonItem | n
 
 export const listJournalEntriesForBackstage = createServerFn({ method: "GET" }).handler(
   async () => {
-    await requireAdminSession();
+    await requireBackstageSession();
     const db = getDb();
     const rows = await db.select().from(journalEntries);
     return sortJournalRows(rows);
@@ -67,7 +67,7 @@ const journalEntryIdSchema = z.object({
 export const createJournalEntry = createServerFn({ method: "POST" })
   .validator((input: JournalEntryFormValues) => journalEntryFormSchema.parse(input))
   .handler(async ({ data }) => {
-    await requireAdminSession();
+    await requireBackstageSession();
     const db = getDb();
     const id = crypto.randomUUID();
     const gist = data.gist.trim() || null;
@@ -95,7 +95,7 @@ export const updateJournalEntry = createServerFn({ method: "POST" })
     journalEntryIdSchema.extend(journalEntryFormSchema.shape).parse(input),
   )
   .handler(async ({ data }) => {
-    await requireAdminSession();
+    await requireBackstageSession();
     const db = getDb();
     const gist = data.gist.trim() || null;
 
@@ -127,7 +127,7 @@ export const updateJournalEntry = createServerFn({ method: "POST" })
 export const deleteJournalEntry = createServerFn({ method: "POST" })
   .validator((input: z.infer<typeof journalEntryIdSchema>) => journalEntryIdSchema.parse(input))
   .handler(async ({ data }) => {
-    await requireAdminSession();
+    await requireBackstageSession();
     const db = getDb();
     await db.delete(journalEntries).where(eq(journalEntries.id, data.id));
     return { ok: true as const };
@@ -138,7 +138,7 @@ export const setJournalEntryPinned = createServerFn({ method: "POST" })
     journalEntryIdSchema.extend({ pinned: z.boolean() }).parse(input),
   )
   .handler(async ({ data }) => {
-    await requireAdminSession();
+    await requireBackstageSession();
     const db = getDb();
 
     if (data.pinned) {

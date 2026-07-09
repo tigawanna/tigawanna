@@ -1,4 +1,3 @@
-import { isAdminUser } from "@/data-access-layer/auth/auth-utils";
 import { backstageViewerMiddleware, viewerqueryOptions } from "@/data-access-layer/auth/viewer";
 import { RouterNotFoundSection } from "@/lib/tanstack/router/RouterNotFoundComponent";
 import { RouterPendingComponent } from "@/lib/tanstack/router/RouterPendingComponent";
@@ -17,7 +16,7 @@ export const Route = createFileRoute("/_backstage")({
   },
   beforeLoad: async ({ context, location }) => {
     const viewer = await context.queryClient.fetchQuery(viewerqueryOptions);
-    if (!viewer.data?.isAdmin) {
+    if (viewer.data?.role !== "admin") {
       throw redirect({
         to: "/backstage/sign-in",
         search: { returnTo: location.pathname },
@@ -41,7 +40,8 @@ export const Route = createFileRoute("/_backstage")({
 
 function BackstageShell() {
   const { viewer } = Route.useRouteContext();
-  const isAdmin = isAdminUser(viewer);
 
-  return <BackstageLayout routes={isAdmin ? backstage_routes : []} label="Backstage" />;
+  return (
+    <BackstageLayout routes={viewer?.role === "admin" ? backstage_routes : []} label="Backstage" />
+  );
 }

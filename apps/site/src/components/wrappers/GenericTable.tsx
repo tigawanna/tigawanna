@@ -20,8 +20,8 @@ export function GenericTable<T extends Record<string, any>>({
   updateItem,
 }: GenericTableProps<T>) {
   const modalRef = useRef<HTMLDialogElement | null>(null);
-  const { viewer } = useViewer();
-  const canEdit = viewer?.isAdmin === true;
+  const { isAdmin } = useViewer();
+  const canEdit = isAdmin;
   const [input, setInput] = useState<T | null>(null);
   const mutation = useMutation({
     mutationFn: (item: T) => {

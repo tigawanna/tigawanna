@@ -1,4 +1,3 @@
-import { isAdminUser } from "@/data-access-layer/auth/auth-utils";
 import { contactMessagesQueryOptions } from "@/data-access-layer/backstage/query-options";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -6,7 +5,7 @@ import { format } from "date-fns";
 
 export const Route = createFileRoute("/_backstage/backstage/messages")({
   beforeLoad: ({ context }) => {
-    if (!isAdminUser(context.viewer)) {
+    if (context.viewer?.role !== "admin") {
       throw redirect({ to: "/backstage" });
     }
   },

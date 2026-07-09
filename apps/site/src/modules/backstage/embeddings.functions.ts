@@ -1,4 +1,4 @@
-import { requireAdminSession } from "@/modules/admin-auth/require-admin";
+import { requireBackstageSession } from "@/lib/better-auth/session";
 import { indexRepoEmbedding } from "@/modules/backstage/index-repo-embedding";
 import {
   getGemmaEmbedding,
@@ -138,7 +138,7 @@ function parseEmbedding(raw: string) {
 }
 
 export const getProjectEmbeddingStats = createServerFn({ method: "GET" }).handler(async () => {
-  await requireAdminSession();
+  await requireBackstageSession();
   const db = getDb();
   const indexedCount = await getIndexedProjectCount(db);
   const modelId = getEmbeddingModelId();
@@ -151,7 +151,7 @@ export const getProjectEmbeddingStats = createServerFn({ method: "GET" }).handle
 });
 
 export const listProjectEmbeddings = createServerFn({ method: "GET" }).handler(async () => {
-  await requireAdminSession();
+  await requireBackstageSession();
   const db = getDb();
 
   const rows = await db
@@ -180,7 +180,7 @@ const indexBatchInputSchema = z.object({
 export const indexProjectEmbeddingsBatch = createServerFn({ method: "POST" })
   .validator((input: z.infer<typeof indexBatchInputSchema>) => indexBatchInputSchema.parse(input))
   .handler(async ({ data }) => {
-    await requireAdminSession();
+    await requireBackstageSession();
 
     if (!isServerEmbeddingEnabled()) {
       throw new Error("Server-side embedding is disabled in this environment");
@@ -303,7 +303,7 @@ const searchInputSchema = z.object({
 export const searchProjectEmbeddings = createServerFn({ method: "POST" })
   .validator((input: z.infer<typeof searchInputSchema>) => searchInputSchema.parse(input))
   .handler(async ({ data }) => {
-    await requireAdminSession();
+    await requireBackstageSession();
 
     const db = getDb();
     const rows = await db.select(projectEmbeddingSearchColumns).from(projectEmbeddings);
@@ -334,14 +334,14 @@ export const searchProjectEmbeddings = createServerFn({ method: "POST" })
   });
 
 export const clearProjectEmbeddings = createServerFn({ method: "POST" }).handler(async () => {
-  await requireAdminSession();
+  await requireBackstageSession();
   const db = getDb();
   await db.delete(projectEmbeddings);
   return { ok: true };
 });
 
 export const warmEmbeddingModel = createServerFn({ method: "POST" }).handler(async () => {
-  await requireAdminSession();
+  await requireBackstageSession();
   const embedding = await getGemmaEmbedding();
   return {
     loaded: embedding.isLoaded(),
@@ -362,7 +362,7 @@ const indexSingleInputSchema = z.object({
 export const indexProjectEmbedding = createServerFn({ method: "POST" })
   .validator((input: z.infer<typeof indexSingleInputSchema>) => indexSingleInputSchema.parse(input))
   .handler(async ({ data }) => {
-    await requireAdminSession();
+    await requireBackstageSession();
     return indexRepoEmbedding({
       repoFullName: data.repoFullName,
       skipIfComplete: data.skipIfComplete,
