@@ -6,22 +6,17 @@ import { BackstageRepoPageFallback } from "../-components/shared/BackstageRepoPa
 
 export const backstageProjectsSearchSchema = z.object({
   sq: z.string().optional(),
-  sortBy: z.enum(["nameWithOwner", "name", "pushedAt", "stargazerCount", "forkCount"]).optional(),
+  sortBy: z
+    .enum(["repoFullName", "lastGithubSyncAt", "attendance", "updatedAt", "createdAt"])
+    .optional(),
   sortDirection: z.enum(["asc", "desc"]).optional(),
-  tracked: z.enum(["all", "tracked", "untracked"]).optional(),
-  archived: z.enum(["all", "active", "archived"]).optional(),
 });
 
 export type BackstageProjectsSearch = z.infer<typeof backstageProjectsSearchSchema>;
 
-// const BackstageProjectsContent = lazy(() =>
-//   import("../-components/projects/BackstageProjectsContent").then((module) => ({
-//     default: module.BackstageProjectsContent,
-//   })),
-// );
-const BackstageProjects = lazy(() =>
-  import("../-components/projects/BackstageProjects").then((module) => ({
-    default: module.BackstageProjects,
+const BackstageProjectsContent = lazy(() =>
+  import("../-components/projects/BackstageProjectsContent").then((module) => ({
+    default: module.BackstageProjectsContent,
   })),
 );
 
@@ -39,7 +34,7 @@ function BackstageProjectsPage() {
   return (
     <ClientOnly fallback={<BackstageRepoPageFallback />}>
       <Suspense fallback={<BackstageRepoPageFallback />}>
-        <BackstageProjects />
+        <BackstageProjectsContent />
       </Suspense>
     </ClientOnly>
   );

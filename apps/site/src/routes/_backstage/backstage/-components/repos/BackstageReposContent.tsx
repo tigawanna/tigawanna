@@ -1,7 +1,6 @@
 import { SearchBox } from "@/components/search/SearchBox";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -9,22 +8,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { importBackstageProject } from "@/data-access-layer/backstage/backstage-collection-mutations";
+import {
+  bulkImportBackstageProjects,
+  importBackstageProject,
+} from "@/data-access-layer/backstage/backstage-collection-mutations";
 import { backstageGithubReposCollection } from "@/data-access-layer/backstage/backstage-github-repos-collection";
 import { backstageProjectsCollection } from "@/data-access-layer/backstage/backstage-projects-collection";
 import { backstageGithubReposQueryOptions } from "@/data-access-layer/backstage/projects-query-options";
 import { TanstackDBSortSelect } from "@/routes/_backstage/backstage/-components/shared/TanstackDBColumnfilters";
 import { createSortableColumns } from "@/routes/_backstage/backstage/-components/shared/sortable-columns";
+import { useEnrichmentRunProgress } from "@/routes/_backstage/backstage/-hooks/use-enrichment-run-progress";
+import type {
+  BulkImportProjectOptions,
+  ImportProjectOptions,
+} from "@/routes/_backstage/backstage/-utils/import-options";
 import { useTSRSearchQuery } from "@/hooks/use-tsr-search-query";
 import { unwrapUnknownError } from "@/utils/errors";
 import { and, eq, ilike, IR, isNull, not, or } from "@tanstack/db";
 import { useLiveSuspenseQuery } from "@tanstack/react-db";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Download, RefreshCcwIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { FaGithub } from "react-icons/fa";
 import { toast } from "sonner";
 import { Route, type BackstageReposSearch } from "../../repos";
 import { BackstageFilterField, BackstageFiltersDialog } from "../shared/BackstageFiltersDialog";
 import { BackstageRepoRow } from "./BackstageRepoRow";
+import { BulkImportDialog } from "./BulkImportDialog";
 
 const repoSortableColumns = createSortableColumns(backstageGithubReposCollection, [
   { value: "nameWithOwner", label: "Repository" },
@@ -34,6 +44,9 @@ const repoSortableColumns = createSortableColumns(backstageGithubReposCollection
   { value: "forkCount", label: "Forks" },
 ]);
 
+/**
+ * Combines TanStack DB where clauses with `and`.
+ */
 function combineWhereClauses(clauses: Array<IR.BasicExpression<boolean>>) {
   return clauses.slice(1).reduce((acc, clause) => and(acc, clause), clauses[0]!);
 }
@@ -57,6 +70,30 @@ export function BackstageReposContent() {
   const hasActiveFilters = Boolean(
     debouncedValue || tracked !== "all" || visibility !== "all" || archived !== "all",
   );
+
+  const [bulkImportOpen, setBulkImportOpen] = useState(false);
+  const [importingRepo, setImportingRepo] = useState<string | null>(null);
+  const [activeRunId, setActiveRunId] = useState<string | null>(null);
+  const { workingRepoFullName, isRunning } = useEnrichmentRunProgress(activeRunId);
+
+  useEffect(() => {
+    if (activeRunId && !isRunning) {
+      setActiveRunId(null);
+      void backstageProjectsCollection.utils.refetch();
+    }
+  }, [activeRunId, isRunning]);
+
+  useEffect(() => {
+    if (!activeRunId || !isRunning) {
+      return;
+    }
+
+    const intervalId = window.setInterval(() => {
+      void backstageProjectsCollection.utils.refetch();
+    }, 3000);
+
+    return () => window.clearInterval(intervalId);
+  }, [activeRunId, isRunning]);
 
   const { data: repoRows } = useLiveSuspenseQuery(
     (q) => {
@@ -125,45 +162,104 @@ export function BackstageReposContent() {
     [debouncedValue, sortBy, sortDirection, tracked, visibility, archived],
   );
 
-  const { data: githubErrors = [] } = useQuery({
+  const { data: githubErrors = [], isFetching: isRefetchingRepos } = useQuery({
     ...backstageGithubReposQueryOptions,
     select: (data) => data.errors,
   });
-  const [runEnrichmentOnImport, setRunEnrichmentOnImport] = useState(false);
-  const [importingRepo, setImportingRepo] = useState<string | null>(null);
+
+  const importMutation = useMutation({
+    mutationFn: (options: ImportProjectOptions) => importBackstageProject(options),
+    onMutate: (options) => {
+      setImportingRepo(options.repoFullName);
+    },
+    onSettled: () => {
+      setImportingRepo(null);
+    },
+    onSuccess(result, options) {
+      toast.success("Imported to projects", { description: options.repoFullName });
+      if (result.runId) {
+        setActiveRunId(result.runId);
+      }
+    },
+    onError(err: unknown) {
+      toast.error("Import failed", { description: unwrapUnknownError(err).message });
+    },
+  });
+
+  const bulkImportMutation = useMutation({
+    mutationFn: (options: BulkImportProjectOptions) => bulkImportBackstageProjects(options),
+    onSuccess(result) {
+      toast.success(`Imported ${result.importedCount} repos`, {
+        description: result.runId ? "Workflow running…" : "Import only",
+      });
+      if (result.runId) {
+        setActiveRunId(result.runId);
+      }
+    },
+    onError(err: unknown) {
+      toast.error("Bulk import failed", { description: unwrapUnknownError(err).message });
+    },
+  });
+
+  const untrackedRepoFullNames = repoRows
+    .filter((row) => !row.isTracked)
+    .map((row) => row.repo.nameWithOwner);
 
   const trackedCount = repoRows.filter((row) => row.isTracked).length;
+  const isImportBusy = importingRepo != null || bulkImportMutation.isPending || activeRunId != null;
 
-  const handleImport = async (repoFullName: string) => {
-    setImportingRepo(repoFullName);
-    try {
-      const tx = importBackstageProject({
-        repoFullName,
-        runEnrichment: runEnrichmentOnImport,
-        forceEnrichment: runEnrichmentOnImport,
-        runEmbedding: false,
-        skipEmbeddingIfComplete: true,
-        forceEmbedding: false,
-      });
-      await tx.isPersisted.promise;
-      toast.success(
-        runEnrichmentOnImport ? "Imported and enrichment started" : "Imported to projects",
-        { description: repoFullName },
-      );
-    } catch (err: unknown) {
-      toast.error("Import failed", { description: unwrapUnknownError(err).message });
-    } finally {
-      setImportingRepo(null);
-    }
-  };
+  const isRowWorking = (repoFullName: string) =>
+    importingRepo === repoFullName ||
+    workingRepoFullName === repoFullName ||
+    (bulkImportMutation.isPending && untrackedRepoFullNames.includes(repoFullName));
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6" data-test="backstage-repos">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Repos</h1>
-        <p className="text-base-content/60 mt-2 text-sm">
-          Your 100 most recently pushed repos on GitHub. Import, change visibility, or delete.
-        </p>
+      <BulkImportDialog
+        open={bulkImportOpen}
+        onOpenChange={setBulkImportOpen}
+        repoFullNames={untrackedRepoFullNames}
+        isImporting={bulkImportMutation.isPending}
+        onConfirm={(options) => bulkImportMutation.mutate(options)}
+      />
+
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2.5">
+            <FaGithub className="size-6" aria-hidden />
+            <h1 className="text-2xl font-semibold tracking-tight">GitHub</h1>
+          </div>
+          <p className="text-base-content/60 mt-2 text-sm">
+            Your 100 most recently pushed repos. Import into projects, change visibility, or delete
+            on GitHub.
+          </p>
+        </div>
+        <div className="flex items-center gap-1">
+          <Button
+            variant="outline"
+            size="icon-sm"
+            data-test="bulk-import-open"
+            title="Import all untracked"
+            aria-label="Import all untracked repos"
+            disabled={isImportBusy || untrackedRepoFullNames.length === 0}
+            onClick={() => setBulkImportOpen(true)}
+          >
+            <Download className="size-3.5" />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            data-test="repos-refetch"
+            aria-label="Refresh GitHub repos"
+            onClick={() => backstageGithubReposCollection.utils.refetch()}
+            disabled={isRefetchingRepos}
+          >
+            <RefreshCcwIcon
+              data-loading={isRefetchingRepos}
+              className="size-4 data-[loading=true]:animate-spin"
+            />
+          </Button>
+        </div>
       </div>
 
       <div className="flex items-center gap-2">
@@ -267,25 +363,15 @@ export function BackstageReposContent() {
       </div>
 
       <Card>
-        <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-4">
-          <div>
-            <CardTitle>GitHub repos</CardTitle>
-            <CardDescription>
-              {repoRows.length} {hasActiveFilters ? "matching" : ""} repos · {trackedCount} already
-              in projects
-            </CardDescription>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="run-enrichment-on-import"
-              data-test="run-enrichment-on-import"
-              checked={runEnrichmentOnImport}
-              onCheckedChange={(checked) => setRunEnrichmentOnImport(checked === true)}
-            />
-            <Label htmlFor="run-enrichment-on-import" className="text-sm font-normal">
-              Run enrichment on import
-            </Label>
-          </div>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <FaGithub className="size-4" aria-hidden />
+            Repositories
+          </CardTitle>
+          <CardDescription>
+            {repoRows.length} {hasActiveFilters ? "matching" : ""} repos · {trackedCount} already in
+            projects · {untrackedRepoFullNames.length} not imported
+          </CardDescription>
         </CardHeader>
         <CardContent className="divide-base-content/10 divide-y rounded-lg border border-base-content/10 p-0">
           {repoRows.length === 0 ? (
@@ -302,9 +388,9 @@ export function BackstageReposContent() {
                 key={row.repo.id}
                 repo={row.repo}
                 isTracked={row.isTracked}
-                isImporting={importingRepo === row.repo.nameWithOwner}
-                onImport={() => handleImport(row.repo.nameWithOwner)}
-                disabled={importingRepo != null}
+                isImporting={isRowWorking(row.repo.nameWithOwner)}
+                onImport={(options) => importMutation.mutate(options)}
+                disabled={isImportBusy}
               />
             ))
           )}

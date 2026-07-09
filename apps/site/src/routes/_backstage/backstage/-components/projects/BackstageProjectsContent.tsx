@@ -1,26 +1,27 @@
 import { SearchBox } from "@/components/search/SearchBox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { backstageGithubReposCollection } from "@/data-access-layer/backstage/backstage-github-repos-collection";
 import { backstageProjectsCollection } from "@/data-access-layer/backstage/backstage-projects-collection";
 import { TanstackDBSortSelect } from "@/routes/_backstage/backstage/-components/shared/TanstackDBColumnfilters";
 import { createSortableColumns } from "@/routes/_backstage/backstage/-components/shared/sortable-columns";
 import { useTSRSearchQuery } from "@/hooks/use-tsr-search-query";
-import { and, eq, ilike, IR, isNull, not, or } from "@tanstack/db";
+import { and, ilike, IR, or } from "@tanstack/db";
 import { useLiveSuspenseQuery } from "@tanstack/react-db";
 import { Link } from "@tanstack/react-router";
 import { Route, type BackstageProjectsSearch } from "../../projects";
 import { BackstageFilterField, BackstageFiltersDialog } from "../shared/BackstageFiltersDialog";
 import { BackstageProjectRow } from "./BackstageProjectRow";
-import { resolveGithubRepo } from "./helpers";
 
-const projectSortableColumns = createSortableColumns(backstageGithubReposCollection, [
-  { value: "nameWithOwner", label: "Repository" },
-  { value: "name", label: "Name" },
-  { value: "pushedAt", label: "Last pushed" },
-  { value: "stargazerCount", label: "Stars" },
-  { value: "forkCount", label: "Forks" },
+const projectSortableColumns = createSortableColumns(backstageProjectsCollection, [
+  { value: "repoFullName", label: "Repository" },
+  { value: "lastGithubSyncAt", label: "Last synced" },
+  { value: "attendance", label: "Attendance" },
+  { value: "updatedAt", label: "Updated" },
+  { value: "createdAt", label: "Added" },
 ]);
 
+/**
+ * Combines TanStack DB where clauses with `and`.
+ */
 function combineWhereClauses(clauses: Array<IR.BasicExpression<boolean>>) {
   return clauses.slice(1).reduce((acc, clause) => and(acc, clause), clauses[0]!);
 }
@@ -36,48 +37,42 @@ export function BackstageProjectsContent() {
       debounce_delay: 400,
     });
 
-  const sortBy = search.sortBy ?? "pushedAt";
+  const sortBy = search.sortBy ?? "lastGithubSyncAt";
   const sortDirection = search.sortDirection ?? "desc";
   const hasActiveFilters = Boolean(debouncedValue);
 
   const { data: projects } = useLiveSuspenseQuery(
     (q) => {
-      let query = q
-        .from({ projects: backstageProjectsCollection })
-        .leftJoin({ github: backstageGithubReposCollection }, ({ projects, github }) =>
-          eq(projects.repoFullName, github.nameWithOwner),
-        )
-        .where(({ projects, github }) => {
+      let query = q.from({ projects: backstageProjectsCollection });
+
+      if (debouncedValue) {
+        query = query.where(({ projects }) => {
           const clauses: Array<IR.BasicExpression<boolean>> = [
-            or(isNull(github), not(eq(github.isPrivate, true))),
+            or(
+              ilike(projects.repoFullName, `%${debouncedValue}%`),
+              ilike(projects.currentDescription, `%${debouncedValue}%`),
+            ),
           ];
-
-          if (debouncedValue) {
-            clauses.push(ilike(projects.repoFullName, `%${debouncedValue}%`));
-          }
-
           return combineWhereClauses(clauses);
         });
+      }
 
       return query
         .orderBy(({ projects }) => {
           switch (sortBy) {
-            case "name":
-              return projects.repoFullName;
-            case "pushedAt":
-              return projects.lastGithubSyncAt;
-            case "stargazerCount":
+            case "attendance":
               return projects.attendance;
-            case "forkCount":
+            case "updatedAt":
               return projects.updatedAt;
+            case "createdAt":
+              return projects.createdAt;
+            case "lastGithubSyncAt":
+              return projects.lastGithubSyncAt;
             default:
               return projects.repoFullName;
           }
         }, sortDirection)
-        .select(({ projects, github }) => ({
-          project: projects,
-          github,
-        }));
+        .select(({ projects }) => projects);
     },
     [debouncedValue, sortBy, sortDirection],
   );
@@ -90,13 +85,17 @@ export function BackstageProjectsContent() {
           <p className="text-base-content/60 mt-2 text-sm">
             Repos imported into the database. Import more from{" "}
             <Link to="/backstage/repos" className="link link-hover">
-              Repos
+              GitHub
             </Link>
             .
           </p>
         </div>
-        <Link to="/backstage/repos" className="btn btn-primary btn-sm">
-          Import repos
+        <Link
+          to="/backstage/repos"
+          className="btn btn-primary btn-sm"
+          data-test="projects-import-link"
+        >
+          Import from GitHub
         </Link>
       </div>
 
@@ -120,11 +119,11 @@ export function BackstageProjectsContent() {
           <BackstageFilterField label="Sort">
             <TanstackDBSortSelect
               layout="stacked"
-              collection={backstageGithubReposCollection}
+              collection={backstageProjectsCollection}
               sortableColumns={projectSortableColumns}
               search={search}
               navigate={navigate}
-              defaultSortBy="nameWithOwner"
+              defaultSortBy="lastGithubSyncAt"
               defaultSortDirection="desc"
             />
           </BackstageFilterField>
@@ -137,12 +136,16 @@ export function BackstageProjectsContent() {
             <CardTitle>{hasActiveFilters ? "No matching projects" : "No projects yet"}</CardTitle>
             <CardDescription>
               {hasActiveFilters
-                ? "Try a different search term or filter."
-                : "Import repos from GitHub to start tracking them here."}
+                ? "Try a different search term."
+                : "Browse your GitHub repositories and import the ones you want to track here."}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Link to="/backstage/repos" className="btn btn-primary btn-sm">
+            <Link
+              to="/backstage/repos"
+              className="btn btn-primary btn-sm"
+              data-test="projects-empty-browse-repos"
+            >
               Browse GitHub repos
             </Link>
           </CardContent>
@@ -152,16 +155,13 @@ export function BackstageProjectsContent() {
           <CardHeader>
             <CardTitle>All projects</CardTitle>
             <CardDescription>
-              {projects.length} {hasActiveFilters ? "matching" : ""} repos in the database
+              {projects.length} {hasActiveFilters ? "matching" : ""}{" "}
+              {projects.length === 1 ? "project" : "projects"} in the database
             </CardDescription>
           </CardHeader>
           <CardContent className="divide-base-content/10 divide-y rounded-lg border border-base-content/10 p-0">
-            {projects.map((row) => (
-              <BackstageProjectRow
-                key={row.project.githubRepoId}
-                github={resolveGithubRepo(row.github, row.project)}
-                project={row.project}
-              />
+            {projects.map((project) => (
+              <BackstageProjectRow key={project.githubRepoId} project={project} />
             ))}
           </CardContent>
         </Card>

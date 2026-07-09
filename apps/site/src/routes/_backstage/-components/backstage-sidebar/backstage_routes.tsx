@@ -1,9 +1,10 @@
 import { SidebarItem } from "@/components/sidebar/types";
-import { BookOpen, FolderGit2, Inbox, LayoutGrid } from "lucide-react";
+import { BookOpen, Inbox, LayoutGrid } from "lucide-react";
+import { FaGithub } from "react-icons/fa";
 
 export const backstage_routes = [
   { title: "Messages", href: "/backstage/messages", icon: Inbox },
   { title: "Journal", href: "/backstage/journal", icon: BookOpen },
   { title: "Projects", href: "/backstage/projects", icon: LayoutGrid },
-  { title: "Repos", href: "/backstage/repos", icon: FolderGit2 },
+  { title: "GitHub", href: "/backstage/repos", icon: FaGithub },
 ] satisfies SidebarItem[];

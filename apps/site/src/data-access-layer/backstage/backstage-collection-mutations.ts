@@ -4,7 +4,6 @@ import { deleteGithubRepoForBackstage } from "@/modules/backstage/github-repos.f
 import { importAllProjectRepos, importProjectRepo } from "@/modules/backstage/projects.functions";
 import { logTanstackDbCollection } from "@/lib/tanstack/db/collection-logging";
 import { unwrapUnknownError } from "@/utils/errors";
-import { createOptimisticAction } from "@tanstack/db";
 
 export type ImportBackstageProjectInput = {
   repoFullName: string;
@@ -24,16 +23,32 @@ export type BulkImportBackstageProjectsInput = {
   forceEmbedding: boolean;
 };
 
-export const importBackstageProject = createOptimisticAction<ImportBackstageProjectInput>({
-  onMutate: () => {},
-  mutationFn: async (input) => {
-    await importProjectRepo({ data: input });
+/**
+ * Imports a single GitHub repo into backstage projects and refetches collections.
+ *
+ * @param input - Repo full name and workflow flags.
+ */
+export async function importBackstageProject(input: ImportBackstageProjectInput) {
+  logTanstackDbCollection("backstage-projects", "mutation:import:start", {
+    repoFullName: input.repoFullName,
+    runEnrichment: input.runEnrichment,
+  });
+
+  try {
+    const result = await importProjectRepo({ data: input });
     await Promise.all([
       backstageProjectsCollection.utils.refetch(),
       backstageGithubReposCollection.utils.refetch(),
     ]);
-  },
-});
+    logTanstackDbCollection("backstage-projects", "mutation:import:complete", {
+      repoFullName: input.repoFullName,
+      runId: result.runId,
+    });
+    return result;
+  } catch (err: unknown) {
+    throw unwrapUnknownError(err);
+  }
+}
 
 /**
  * Bulk-imports repos and starts one shared enrichment/embedding workflow.

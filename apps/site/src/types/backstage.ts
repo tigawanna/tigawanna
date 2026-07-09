@@ -24,11 +24,6 @@ export type BackstageGithubReposResponse = {
   errors: string[];
 };
 
-export type BackstageProjectWithGithub = {
-  project: BackstageProject;
-  isPrivate: boolean | null;
-};
-
 export type BackstageGithubRepoWithTracking = {
   repo: BackstageGithubRepo;
   isTracked: boolean;

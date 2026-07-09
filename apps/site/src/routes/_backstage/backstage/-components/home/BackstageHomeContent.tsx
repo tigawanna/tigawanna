@@ -127,7 +127,7 @@ export function BackstageHomeContent() {
                 View projects
               </Link>
               <Link to="/backstage/repos" className="btn btn-ghost btn-sm">
-                Import repos
+                Import from GitHub
               </Link>
             </>
           }
