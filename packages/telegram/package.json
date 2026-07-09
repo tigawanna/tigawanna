@@ -1,0 +1,23 @@
+{
+  "name": "@repo/telegram",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "dev": "tsgo --watch",
+    "build": "tsgo",
+    "check-types": "tsgo --noEmit",
+    "test": "vp test run",
+    "test:watch": "vp test"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "typescript": "*",
+    "vite-plus": "catalog:",
+    "vitest": "catalog:"
+  }
+}

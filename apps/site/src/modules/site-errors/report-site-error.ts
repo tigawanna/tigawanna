@@ -1,4 +1,4 @@
-import { TelegramNotifier } from "@/lib/telegram/client";
+import { getTelegramClient } from "@/lib/telegram/client";
 import { AppConfig } from "@/utils/system";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
@@ -63,8 +63,7 @@ export const reportSiteError = createServerFn({ method: "POST" })
     const userAgent = headers.get("user-agent") ?? undefined;
 
     try {
-      const notifier = new TelegramNotifier();
-      const result = await notifier.send(
+      const result = await getTelegramClient().send(
         formatSiteErrorTelegramMessage(data, { ipAddress, userAgent }),
       );
 

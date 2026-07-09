@@ -24,6 +24,7 @@
     "@repo/db": "workspace:*",
     "@repo/github": "workspace:*",
     "@repo/isomorphic": "workspace:*",
+    "@repo/telegram": "workspace:*",
     "@tailwindcss/vite": "^4.1.18",
     "@tanem/react-nprogress": "^6.0.3",
     "@tanstack/db": "^0.6.10",

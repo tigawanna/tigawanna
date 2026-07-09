@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { contactFormSchema, type ContactFormValues } from "./contact-schema";
-import { TelegramNotifier } from "@/lib/telegram/client";
+import { getTelegramClient } from "@/lib/telegram/client";
 import { contactMessages } from "@repo/db";
 import { getDb } from "@/lib/db/get-db";
 
@@ -31,8 +31,7 @@ export const sendContactMessage = createServerFn({ method: "POST" })
 
     let telegramSent = false;
     try {
-      const notifier = new TelegramNotifier();
-      const result = await notifier.send(text);
+      const result = await getTelegramClient().send(text);
       telegramSent = result.success;
       if (!result.success) {
         throw new Error(result.message);
