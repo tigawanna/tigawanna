@@ -1,4 +1,4 @@
-import { requireBackstageSession } from "@/lib/better-auth/session";
+import { requireBackstageSession } from "@/lib/better-auth/session.server";
 import { contactMessages, desc } from "@repo/db";
 import { getDb } from "@/lib/db/get-db";
 import { createServerFn } from "@tanstack/react-start";

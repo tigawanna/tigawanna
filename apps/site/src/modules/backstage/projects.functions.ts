@@ -1,4 +1,4 @@
-import { requireBackstageSession } from "@/lib/better-auth/session";
+import { requireBackstageSession } from "@/lib/better-auth/session.server";
 import { logEnrichmentEvent } from "@/lib/evlog/enrichment-log";
 import { getDb } from "@/lib/db/get-db";
 import { isServerEmbeddingEnabled } from "@/lib/envs/server-embedding";

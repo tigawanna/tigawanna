@@ -1,4 +1,4 @@
-import { requireBackstageSession } from "@/lib/better-auth/session";
+import { requireBackstageSession } from "@/lib/better-auth/session.server";
 import { extractRepoTags, fetchRecentReposFromGithub } from "@/modules/github/fetch-repos";
 import { getServerEnv } from "@/lib/envs/server-env";
 import { removeProjectRepo } from "@/modules/backstage/projects.functions";

@@ -1,4 +1,5 @@
-import { backstageViewerMiddleware, viewerqueryOptions } from "@/data-access-layer/auth/viewer";
+import { viewerqueryOptions } from "@/data-access-layer/auth/viewer";
+import { backstageViewerMiddleware } from "@/data-access-layer/auth/viewer.server";
 import { RouterNotFoundSection } from "@/lib/tanstack/router/RouterNotFoundComponent";
 import { RouterPendingComponent } from "@/lib/tanstack/router/RouterPendingComponent";
 import { RouterErrorComponent } from "@/lib/tanstack/router/routerErrorComponent";

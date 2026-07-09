@@ -1,10 +1,8 @@
 import { getBackstageViewer } from "@/lib/better-auth/session";
 import type { BetterAuthUser } from "@/lib/better-auth/auth";
 import { authClient } from "@/lib/better-auth/client";
-import { getBackstageViewerFromHeaders } from "@/lib/better-auth/session";
 import { queryOptions, useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { redirect } from "@tanstack/react-router";
-import { createMiddleware } from "@tanstack/react-start";
 
 export type TViewer = BetterAuthUser;
 
@@ -49,21 +47,3 @@ export function useViewer() {
     logoutMutation,
   } as const;
 }
-
-/**
- * Server middleware that attaches a backstage viewer to protected route context.
- */
-export const backstageViewerMiddleware = createMiddleware().server(async ({ next, request }) => {
-  const pathname = new URL(request.url).pathname;
-  const viewer = await getBackstageViewerFromHeaders(request.headers);
-  if (!viewer) {
-    const returnTo = pathname.startsWith("/backstage/sign-in") ? "/backstage" : pathname;
-    throw redirect({ to: "/backstage/sign-in", search: { returnTo } });
-  }
-
-  return await next({
-    context: {
-      viewer,
-    },
-  });
-});

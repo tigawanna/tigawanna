@@ -8,15 +8,15 @@
     "./*": "./src/*.ts"
   },
   "scripts": {
-    "dev": "tsgo --watch",
-    "build": "tsgo",
-    "check-types": "tsgo --noEmit",
+    "dev": "tsc --watch",
+    "build": "tsc",
+    "check-types": "tsc --noEmit",
     "test": "vp test run",
     "test:watch": "vp test"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
-    "typescript": "*",
+    "typescript": "catalog:",
     "vite-plus": "catalog:",
     "vitest": "catalog:"
   }

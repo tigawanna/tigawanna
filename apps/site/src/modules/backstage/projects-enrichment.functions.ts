@@ -1,4 +1,4 @@
-import { requireBackstageSession } from "@/lib/better-auth/session";
+import { requireBackstageSession } from "@/lib/better-auth/session.server";
 import { logEnrichmentEvent } from "@/lib/evlog/enrichment-log";
 import { applyRepoMetadata } from "@/modules/github/apply-repo-metadata";
 import { getDb } from "@/lib/db/get-db";

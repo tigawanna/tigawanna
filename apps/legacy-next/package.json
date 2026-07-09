@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "no:dev": "next dev --turbopack",
-    "build": "next build",
+    "no:build": "next build",
     "start": "next start",
     "lint": "next lint",
     "pretty": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache"

@@ -21,6 +21,6 @@
     "@repo/typescript-config": "workspace:*",
     "dotenv": "^16.6.1",
     "drizzle-kit": "^0.31.10",
-    "typescript": "*"
+    "typescript": "catalog:"
   }
 }

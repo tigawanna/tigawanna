@@ -1,4 +1,4 @@
-import { requireBackstageSession } from "@/lib/better-auth/session";
+import { requireBackstageSession } from "@/lib/better-auth/session.server";
 import {
   journalEntryFormSchema,
   type JournalEntryFormValues,
