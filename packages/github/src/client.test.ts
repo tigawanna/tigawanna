@@ -169,6 +169,55 @@ describe("GitHubClient", () => {
     });
   });
 
+  it("excludes private repositories from pinned results", async () => {
+    const publicRepo = createRepoNode({
+      name: "public",
+      nameWithOwner: "octocat/public",
+      isPrivate: false,
+    });
+    const privateRepo = createRepoNode({
+      name: "private",
+      nameWithOwner: "octocat/private",
+      isPrivate: true,
+    });
+
+    octokitMocks.graphql.mockResolvedValue({
+      viewer: { pinnedItems: { nodes: [publicRepo, privateRepo] } },
+    });
+
+    const client = createGitHubClient("ghp_test_token");
+    await expect(client.getPinnedRepos()).resolves.toEqual([publicRepo]);
+  });
+
+  it("excludes private repositories from recent results", async () => {
+    const publicRepo = createRepoNode({
+      name: "public",
+      nameWithOwner: "octocat/public",
+      isPrivate: false,
+    });
+    const privateRepo = createRepoNode({
+      name: "private",
+      nameWithOwner: "octocat/private",
+      isPrivate: true,
+    });
+
+    octokitMocks.graphql.mockResolvedValue({
+      viewer: { repositories: { nodes: [publicRepo, privateRepo] } },
+      errors: [],
+    });
+
+    const client = createGitHubClient("ghp_test_token");
+    await expect(client.getRecentRepos()).resolves.toEqual({
+      data: {
+        viewer: {
+          pinnedItems: { nodes: [] },
+          repositories: { nodes: [publicRepo] },
+        },
+      },
+      errors: [],
+    });
+  });
+
   it("excludes private repositories from indexing results", async () => {
     const publicRepo = createRepoNode({
       name: "public",

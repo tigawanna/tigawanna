@@ -1,10 +1,12 @@
 import type { PinnedViewerReposResponse, RequestError } from "@/types/github";
 import { createServerFn } from "@tanstack/react-start";
 import { fetchPinnedReposFromGithub, fetchRecentReposFromGithub } from "./fetch-repos";
+import { setPublicGithubCacheHeaders } from "./public-cache-headers";
 
 export const getPinnedRepos = createServerFn({ method: "GET" }).handler(async () => {
   try {
     const nodes = await fetchPinnedReposFromGithub();
+    setPublicGithubCacheHeaders();
     return {
       data: {
         viewer: {
@@ -21,6 +23,7 @@ export const getPinnedRepos = createServerFn({ method: "GET" }).handler(async ()
 export const getRecentRepos = createServerFn({ method: "GET" }).handler(async () => {
   try {
     const result = await fetchRecentReposFromGithub();
+    setPublicGithubCacheHeaders();
     return {
       data: result.data,
       errors: result.errors,

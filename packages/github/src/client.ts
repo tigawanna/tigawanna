@@ -64,15 +64,15 @@ export class GitHubClient {
   }
 
   /**
-   * Fetches the viewer's pinned repositories.
+   * Fetches the viewer's pinned public repositories.
    */
   async getPinnedRepos() {
     const result = await this.graphql<PinnedReposGraphqlResponse>(PINNED_REPOS_QUERY);
-    return filterRepoNodes(result.viewer.pinnedItems.nodes);
+    return filterRepoNodes(result.viewer.pinnedItems.nodes, { excludePrivate: true });
   }
 
   /**
-   * Fetches the viewer's recent repositories with optional sort and cache controls.
+   * Fetches the viewer's recent public repositories with optional sort and cache controls.
    */
   async getRecentRepos(options: FetchRecentReposOptions = {}): Promise<FetchRecentReposResult> {
     const {
@@ -89,7 +89,7 @@ export class GitHubClient {
         variables: { first, isFork, orderField, orderDirection },
       });
 
-      const nodes = filterRepoNodes(result.viewer.repositories.nodes);
+      const nodes = filterRepoNodes(result.viewer.repositories.nodes, { excludePrivate: true });
 
       return {
         data: {

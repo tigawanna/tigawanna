@@ -2,6 +2,7 @@ import { convertMarkdownToHtmlWithShiki } from "@/lib/markdown/convert";
 import { getServerEnv } from "@/lib/envs/server-env";
 import { createGitHubClient } from "@repo/github";
 import { createServerFn } from "@tanstack/react-start";
+import { setPublicGithubCacheHeaders } from "./public-cache-headers";
 
 export const getRepoDetail = createServerFn({ method: "GET" })
   .validator((input: { owner: string; repo: string }) => input)
@@ -11,7 +12,13 @@ export const getRepoDetail = createServerFn({ method: "GET" })
       return null;
     }
 
-    return createGitHubClient(pat).getRepoDetail(owner, repo);
+    const detail = await createGitHubClient(pat).getRepoDetail(owner, repo);
+    if (!detail || detail.isPrivate) {
+      return null;
+    }
+
+    setPublicGithubCacheHeaders();
+    return detail;
   });
 
 /**
@@ -37,4 +44,10 @@ export async function fetchRepoReadmeHtml(owner: string, repo: string) {
 
 export const getRepoReadmeHtml = createServerFn({ method: "GET" })
   .validator((input: { owner: string; repo: string }) => input)
-  .handler(async ({ data: { owner, repo } }) => fetchRepoReadmeHtml(owner, repo));
+  .handler(async ({ data: { owner, repo } }) => {
+    const html = await fetchRepoReadmeHtml(owner, repo);
+    if (html) {
+      setPublicGithubCacheHeaders();
+    }
+    return html;
+  });
