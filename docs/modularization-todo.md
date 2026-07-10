@@ -93,9 +93,10 @@ Enrich **never** calls GitHub — only reads `project_repo_artifacts.payload`.
 
 ## Pipeline — `apps/embed-cli`
 
-| Step                                                    | Status | Notes                             |
-| ------------------------------------------------------- | ------ | --------------------------------- |
-| CLI-1 — Package scaffold + commander entry              | [ ]    |                                   |
+| Step                                                    | Status | Notes                                                        |
+| ------------------------------------------------------- | ------ | ------------------------------------------------------------ |
+| Gemma-0 — `@repo/gemma-embedding` (`./server`, `./web`) | [x]    | No root barrel; CLI uses `./server`, browser uses `./web`    |
+| CLI-1 — Package scaffold + commander entry              | [ ]    | Depends on `@repo/gemma-embedding/server`                    |
 | CLI-2 — `auth-guard.ts` (Better Auth session / API key) | [ ]    | Uses `@repo/auth/cli-credentials` |
 | CLI-3 — `embed-one.ts` + version skip logic             | [ ]    | Gemma local only here             |
 | CLI-4 — `embed pending` / `embed all` commands          | [ ]    |                                   |
@@ -115,6 +116,4 @@ Enrich **never** calls GitHub — only reads `project_repo_artifacts.payload`.
 
 ## Current focus
 
-**Next:** `CLI-1` — scaffold `apps/embed-cli` (commander entry + Gemma local), then auth-guard + embed commands.
-
-Site workflow is now spelunk → enrich only; embeddings must come back via the CLI.
+**Next:** `CLI-1` — scaffold `apps/embed-cli` using `@repo/gemma-embedding/server` (not `./web`).
