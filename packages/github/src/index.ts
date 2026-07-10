@@ -9,6 +9,21 @@ export {
   readmeHasTags,
   summarizePackageJson,
 } from "./extraction.js";
+export {
+  CURRENT_COLLECTOR_VERSION,
+  collectArtifacts,
+  discoverManifestCandidates,
+  findReadmePath,
+  parseManifest,
+  parsePackageJson,
+  repoArtifactLanguages,
+} from "./spelunk/index.js";
+export type {
+  ManifestCandidate,
+  RepoArtifact,
+  RepoArtifactLanguage,
+  SpelunkPayload,
+} from "./spelunk/index.js";
 export type {
   FetchRecentReposOptions,
   FetchRecentReposResult,

@@ -1,8 +1,4 @@
-import type {
-  TelegramClientConfig,
-  TelegramSendOptions,
-  TelegramSendResult,
-} from "./types.js";
+import type { TelegramClientConfig, TelegramSendOptions, TelegramSendResult } from "./types.js";
 
 const TELEGRAM_API_BASE = "https://api.telegram.org";
 
