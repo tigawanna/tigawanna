@@ -19,13 +19,14 @@ Legend: `[x]` done · `[ ]` pending · `[~]` in progress
 | Auth-7 — Rip out bespoke admin JWT / Telegram OTP                | [x]    | Email/password sign-in at `/backstage/sign-in`              |
 | Auth-8 — `lib/better-auth/client.ts`                             | [x]    | `adminClient` + `apiKeyClient`                              |
 | Auth-9 — Backstage session via Better Auth                       | [x]    | `getBackstageViewer`, `requireBackstageSession`, middleware |
-| Auth-10 — Backstage API key management UI                        | [ ]    | Create/revoke keys in backstage                             |
-| Auth-11 — `embed-cli auth login` (device flow)                   | [ ]    | Uses `deviceAuthorization` + `cli-credentials`              |
-| Auth-12 — Drop `admin_login_challenges` table + dead env vars    | [ ]    | `ADMIN_OTP_PEPPER`, `ADMIN_SESSION_SECRET` cleanup          |
+| Auth-10 — Backstage API key management UI                        | [ ]    | Deferred — create/revoke keys in backstage                  |
+| Auth-11 — `embed-cli auth login` (device flow)                   | [ ]    | Deferred — needs `apps/embed-cli`                           |
+| Auth-12 — Drop `admin_login_challenges` table + dead env vars    | [ ]    | Deferred — `ADMIN_OTP_PEPPER`, `ADMIN_SESSION_SECRET`       |
 
 ### Auth test checklist
 
-- [ ] `pnpm --filter @repo/db db:migrate` applied locally
+- [x] Core Better Auth sign-in / session / backstage gate shipped
+- [ ] `pnpm --filter @repo/db db:migrate` applied locally (incl. pipeline tables)
 - [ ] `BETTER_AUTH_SECRET` + `ADMIN_EMAIL` set in `.env`
 - [ ] First-time admin sign-up at `/backstage/sign-in` (email must match `ADMIN_EMAIL`)
 - [ ] Sign in → `/backstage` loads
@@ -35,13 +36,13 @@ Legend: `[x]` done · `[ ]` pending · `[~]` in progress
 
 ## Pipeline — `@repo/github` spelunk
 
-| Step                                                             | Status | Notes                                                      |
-| ---------------------------------------------------------------- | ------ | ---------------------------------------------------------- |
-| GitHub-1 — `spelunk/types.ts` (`RepoArtifact`, `SpelunkPayload`) | [ ]    |                                                            |
-| GitHub-2 — Per-language parsers (≤100 lines each)                | [ ]    | JS/TS, Go, Python, Rust, Kotlin/Java, C#, Ruby, PHP, Swift |
-| GitHub-3 — `manifest-paths.ts` + `collect-artifacts.ts`          | [ ]    | GitHub API only; no DB                                     |
-| GitHub-4 — Parser tests with fixtures                            | [ ]    |                                                            |
-| GitHub-5 — Remove legacy `extraction.ts` monolith                | [ ]    | After site migrates                                        |
+| Step                                                             | Status | Notes                                                                |
+| ---------------------------------------------------------------- | ------ | -------------------------------------------------------------------- |
+| GitHub-1 — `spelunk/types.ts` (`RepoArtifact`, `SpelunkPayload`) | [x]    | + `CURRENT_COLLECTOR_VERSION = "1"`                                  |
+| GitHub-2 — Per-language parsers (≤100 lines each)                | [x]    | JS/TS, Go, Python, Rust, Kotlin/Java, C#, Ruby, PHP, Swift           |
+| GitHub-3 — `manifest-paths.ts` + `collect-artifacts.ts`          | [x]    | GitHub API only; no DB                                               |
+| GitHub-4 — Parser tests with fixtures                            | [x]    | `spelunk/parsers.test.ts` (57 suite total)                           |
+| GitHub-5 — Remove legacy `extraction.ts` monolith                | [ ]    | Now thin wrapper over `collectArtifacts`; delete after site migrates |
 
 ---
 
@@ -49,10 +50,10 @@ Legend: `[x]` done · `[ ]` pending · `[~]` in progress
 
 | Step                                      | Status | Notes                                                    |
 | ----------------------------------------- | ------ | -------------------------------------------------------- |
-| DB-1 — `project_repo_artifacts` table     | [ ]    | `generation`, `collectorVersion`, `payload`, `createdAt` |
-| DB-2 — `project_enrichment_outputs` table | [ ]    | `sourceGeneration`, `payload`, `createdAt`               |
-| DB-3 — Extend `project_embeddings`        | [ ]    | `sourceGeneration`, `sourceEnrichmentAt`                 |
-| DB-4 — Drizzle migration + apply          | [ ]    |                                                          |
+| DB-1 — `project_repo_artifacts` table     | [x]    | `generation`, `collectorVersion`, `payload`, `createdAt` |
+| DB-2 — `project_enrichment_outputs` table | [x]    | `sourceGeneration`, `payload`, `createdAt`               |
+| DB-3 — Extend `project_embeddings`        | [x]    | `sourceGeneration`, `sourceEnrichmentAt`                 |
+| DB-4 — Drizzle migration + apply          | [x]    | `0009_superb_riptide.sql`                                |
 
 ### Skip rules (agreed)
 
@@ -70,10 +71,10 @@ Enrich **never** calls GitHub — only reads `project_repo_artifacts.payload`.
 
 | Step                                              | Status | Notes                                                 |
 | ------------------------------------------------- | ------ | ----------------------------------------------------- |
-| AI-1 — Package scaffold                           | [ ]    | `openrouter.ts`, `schema.ts`, `types.ts`              |
-| AI-2 — `enrich-prompt.ts` + `enrich-repo.ts`      | [ ]    | DeepSeek V4 Flash via OpenRouter                      |
-| AI-3 — `embed-chunks.ts`                          | [ ]    | Build text chunks from artifacts + enrichment payload |
-| AI-4 — Move logic out of `apps/site/enrich-ai.ts` | [ ]    | Site keeps DB orchestration only                      |
+| AI-1 — Package scaffold                           | [x]    | `openrouter.ts`, `schema.ts`, `types.ts`              |
+| AI-2 — `enrich-prompt.ts` + `enrich-repo.ts`      | [x]    | DeepSeek V4 Flash via OpenRouter                      |
+| AI-3 — `embed-chunks.ts`                          | [x]    | Build text chunks from artifacts + enrichment payload |
+| AI-4 — Move logic out of `apps/site/enrich-ai.ts` | [x]    | Site keeps thin env + legacy extraction bridge        |
 
 ---
 
@@ -84,9 +85,9 @@ Enrich **never** calls GitHub — only reads `project_repo_artifacts.payload`.
 | WF-1 — `spelunk-repo.ts` step                      | [ ]    | GitHub → `project_repo_artifacts`, bump `generation`         |
 | WF-2 — `enrich-from-artifacts.ts` step             | [ ]    | DB → `@repo/ai` → `project_enrichment_outputs` + suggestions |
 | WF-3 — Split workflow steps into thin files        | [ ]    | `steps/spelunk`, `steps/enrich`, `steps/progress`            |
-| WF-4 — Remove embedding from workflow              | [ ]    | Drop `indexEmbeddingStep`, `runEmbedding` params             |
-| WF-5 — Remove `@kessler/gemma-embedding` from site | [ ]    | Fixes Vercel 250MB function limit                            |
-| WF-6 — Update backstage import UI                  | [ ]    | Remove server-side embed option; point to CLI                |
+| WF-4 — Remove embedding from workflow              | [x]    | Dropped `indexEmbeddingStep`, `runEmbedding` params          |
+| WF-5 — Remove `@kessler/gemma-embedding` from site | [x]    | Deleted gemma service + index + embeddings server fns        |
+| WF-6 — Update backstage import UI                  | [x]    | Embed option removed; CLI hint shown                         |
 
 ---
 
@@ -106,7 +107,7 @@ Enrich **never** calls GitHub — only reads `project_repo_artifacts.payload`.
 
 | Step                                                                               | Status | Notes                                |
 | ---------------------------------------------------------------------------------- | ------ | ------------------------------------ |
-| Clean-1 — Delete `index-repo-embedding.ts`, `gemma-embedding-service.ts` from site | [ ]    | After CLI exists                     |
+| Clean-1 — Delete `index-repo-embedding.ts`, `gemma-embedding-service.ts` from site | [x]    | Also removed `embeddings.functions`  |
 | Clean-2 — Trim `@repo/isomorphic` stale org roles                                  | [ ]    | Kitchen/cuisine leftovers from dishi |
 | Clean-3 — Remove `admin_login_challenges` schema                                   | [ ]    | See Auth-12                          |
 
@@ -114,4 +115,6 @@ Enrich **never** calls GitHub — only reads `project_repo_artifacts.payload`.
 
 ## Current focus
 
-**Next recommended step:** `DB-1` through `DB-4` (artifact + enrichment output tables), then `GitHub-1` spelunk parsers — can run in parallel with **Auth-10** (API key UI) if needed.
+**Next:** WF-1 — `spelunk-repo` step that writes `project_repo_artifacts` (generation bump + skip rules), then WF-2 enrich-from-artifacts.
+
+After that: `apps/embed-cli` (CLI-1–5) to restore local Gemma indexing.

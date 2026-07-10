@@ -7,7 +7,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { isServerEmbeddingAvailableInClient } from "@/lib/envs/server-embedding";
 import {
   defaultSingleImportWorkflowOptions,
   type ImportProjectOptions,
@@ -27,7 +26,7 @@ type ImportRepoDialogProps = {
 };
 
 /**
- * Single-repo import dialog with enrichment and embedding workflow options.
+ * Single-repo import dialog with enrichment workflow options.
  */
 export function ImportRepoDialog({
   open,
@@ -37,16 +36,15 @@ export function ImportRepoDialog({
   isImporting,
   onConfirm,
 }: ImportRepoDialogProps) {
-  const serverEmbeddingAvailable = isServerEmbeddingAvailableInClient();
   const [options, setOptions] = useState<ImportWorkflowOptions>(() =>
-    defaultSingleImportWorkflowOptions(serverEmbeddingAvailable),
+    defaultSingleImportWorkflowOptions(),
   );
 
   useEffect(() => {
     if (!open) {
-      setOptions(defaultSingleImportWorkflowOptions(serverEmbeddingAvailable));
+      setOptions(defaultSingleImportWorkflowOptions());
     }
-  }, [open, serverEmbeddingAvailable]);
+  }, [open]);
 
   const handleConfirm = () => {
     onConfirm({

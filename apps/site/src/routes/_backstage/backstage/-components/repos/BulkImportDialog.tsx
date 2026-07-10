@@ -7,7 +7,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { isServerEmbeddingAvailableInClient } from "@/lib/envs/server-embedding";
 import {
   defaultBulkImportWorkflowOptions,
   type BulkImportProjectOptions,
@@ -32,16 +31,15 @@ export function BulkImportDialog({
   isImporting,
   onConfirm,
 }: BulkImportDialogProps) {
-  const serverEmbeddingAvailable = isServerEmbeddingAvailableInClient();
   const [options, setOptions] = useState<ImportWorkflowOptions>(() =>
-    defaultBulkImportWorkflowOptions(serverEmbeddingAvailable),
+    defaultBulkImportWorkflowOptions(),
   );
 
   useEffect(() => {
     if (!open) {
-      setOptions(defaultBulkImportWorkflowOptions(serverEmbeddingAvailable));
+      setOptions(defaultBulkImportWorkflowOptions());
     }
-  }, [open, serverEmbeddingAvailable]);
+  }, [open]);
 
   const handleConfirm = () => {
     onConfirm({

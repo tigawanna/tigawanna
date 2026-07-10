@@ -1,7 +1,6 @@
 import { requireBackstageSession } from "@/lib/better-auth/session.server";
 import { logEnrichmentEvent } from "@/lib/evlog/enrichment-log";
 import { getDb } from "@/lib/db/get-db";
-import { isServerEmbeddingEnabled } from "@/lib/envs/server-embedding";
 import { fetchReposByFullNames } from "@/modules/project-enrichment/github-client";
 import { createRunRecord, importRepoSnapshot } from "@/modules/project-enrichment/run-enrichment";
 import type { EnrichmentRunParams } from "@/modules/project-enrichment/types";
@@ -501,38 +500,25 @@ const importProjectRepoInputSchema = z.object({
   repoFullName: repoFullNameSchema,
   runEnrichment: z.boolean().optional(),
   forceEnrichment: z.boolean().optional(),
-  runEmbedding: z.boolean().optional(),
-  skipEmbeddingIfComplete: z.boolean().optional(),
-  forceEmbedding: z.boolean().optional(),
 });
 
 const importAllProjectReposInputSchema = z.object({
   repoFullNames: z.array(repoFullNameSchema).min(1),
   runEnrichment: z.boolean().optional(),
   forceEnrichment: z.boolean().optional(),
-  runEmbedding: z.boolean().optional(),
-  skipEmbeddingIfComplete: z.boolean().optional(),
-  forceEmbedding: z.boolean().optional(),
 });
 
 type ImportWorkflowInput = {
   runEnrichment?: boolean;
   forceEnrichment?: boolean;
-  runEmbedding?: boolean;
-  skipEmbeddingIfComplete?: boolean;
-  forceEmbedding?: boolean;
 };
 
 /**
- * Starts the enrichment/embedding workflow for one or more repos when requested.
+ * Starts the enrichment workflow for one or more repos when requested.
+ * Embeddings are CLI-only — never started from the site.
  */
 async function startImportWorkflow(repoFullNames: string[], data: ImportWorkflowInput) {
-  const wantsEnrichment = data.runEnrichment === true;
-  const wantsEmbedding = data.runEmbedding === true;
-  const embeddingEnabled = isServerEmbeddingEnabled();
-  const shouldStartWorkflow = wantsEnrichment || (wantsEmbedding && embeddingEnabled);
-
-  if (!shouldStartWorkflow) {
+  if (data.runEnrichment !== true) {
     return null;
   }
 
@@ -545,10 +531,7 @@ async function startImportWorkflow(repoFullNames: string[], data: ImportWorkflow
     limit: repoFullNames.length,
     repos: repoFullNames,
     force: forceEnrichment,
-    runEnrichment: wantsEnrichment,
-    runEmbedding: wantsEmbedding && embeddingEnabled,
-    skipEmbeddingIfComplete: data.skipEmbeddingIfComplete ?? true,
-    forceEmbedding: data.forceEmbedding ?? false,
+    runEnrichment: true,
   };
 
   logEnrichmentEvent({
@@ -568,9 +551,7 @@ async function startImportWorkflow(repoFullNames: string[], data: ImportWorkflow
 /**
  * Fetches a GitHub repository snapshot and upserts it into `project_repos`.
  *
- * Optionally starts a manual enrichment workflow when `runEnrichment` or
- * server-side `runEmbedding` is requested (embedding runs in dev/local only).
- *
+ * Optionally starts a manual enrichment workflow when `runEnrichment` is requested.
  * Requires an authenticated admin session.
  */
 export const importProjectRepo = createServerFn({ method: "POST" })

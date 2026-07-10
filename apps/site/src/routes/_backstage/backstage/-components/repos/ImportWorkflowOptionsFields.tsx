@@ -1,6 +1,5 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { isServerEmbeddingAvailableInClient } from "@/lib/envs/server-embedding";
 import type { ImportWorkflowOptions } from "@/routes/_backstage/backstage/-utils/import-options";
 
 type ImportWorkflowOptionsFieldsProps = {
@@ -11,7 +10,8 @@ type ImportWorkflowOptionsFieldsProps = {
 };
 
 /**
- * Shared enrichment and embedding checkboxes for import dialogs.
+ * Shared enrichment checkboxes for import dialogs.
+ * Embeddings run via local CLI only — not offered in the Vercel workflow.
  */
 export function ImportWorkflowOptionsFields({
   idPrefix,
@@ -19,8 +19,6 @@ export function ImportWorkflowOptionsFields({
   onChange,
   showForceEnrichment = true,
 }: ImportWorkflowOptionsFieldsProps) {
-  const serverEmbeddingAvailable = isServerEmbeddingAvailableInClient();
-
   const patch = (partial: Partial<ImportWorkflowOptions>) => {
     onChange({ ...options, ...partial });
   };
@@ -63,67 +61,9 @@ export function ImportWorkflowOptionsFields({
         </div>
       ) : null}
 
-      <div className="flex items-start gap-3">
-        <Checkbox
-          id={`${idPrefix}-run-embedding`}
-          data-test={`${idPrefix}-run-embedding`}
-          checked={options.runEmbedding}
-          disabled={!serverEmbeddingAvailable}
-          onCheckedChange={(checked) => patch({ runEmbedding: checked === true })}
-        />
-        <div className="grid gap-1">
-          <Label htmlFor={`${idPrefix}-run-embedding`}>Run Gemma embeddings</Label>
-          <p className="text-base-content/60 text-sm">
-            {serverEmbeddingAvailable
-              ? "Introspects README and nested package.json files, then indexes vectors for search. Runs locally after enrichment."
-              : "Server-side embedding is disabled in production. Run bulk imports locally in dev to index vectors."}
-          </p>
-        </div>
-      </div>
-
-      {serverEmbeddingAvailable ? (
-        <div className="border-base-content/10 ml-7 flex flex-col gap-3 border-l pl-4">
-          <div className="flex items-start gap-3">
-            <Checkbox
-              id={`${idPrefix}-skip-embedding-if-complete`}
-              data-test={`${idPrefix}-skip-embedding-if-complete`}
-              checked={options.skipEmbeddingIfComplete}
-              disabled={!options.runEmbedding || options.forceEmbedding}
-              onCheckedChange={(checked) => patch({ skipEmbeddingIfComplete: checked === true })}
-            />
-            <div className="grid gap-1">
-              <Label htmlFor={`${idPrefix}-skip-embedding-if-complete`}>
-                Skip if already complete
-              </Label>
-              <p className="text-base-content/60 text-sm">
-                Skip embedding when description and tags exist on GitHub or in the README.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3">
-            <Checkbox
-              id={`${idPrefix}-force-embedding`}
-              data-test={`${idPrefix}-force-embedding`}
-              checked={options.forceEmbedding}
-              disabled={!options.runEmbedding}
-              onCheckedChange={(checked) => {
-                const forceEmbedding = checked === true;
-                patch({
-                  forceEmbedding,
-                  skipEmbeddingIfComplete: forceEmbedding ? false : options.skipEmbeddingIfComplete,
-                });
-              }}
-            />
-            <div className="grid gap-1">
-              <Label htmlFor={`${idPrefix}-force-embedding`}>Re-embed anyway</Label>
-              <p className="text-base-content/60 text-sm">
-                Force a fresh embedding run even when tags and description are present.
-              </p>
-            </div>
-          </div>
-        </div>
-      ) : null}
+      <p className="text-base-content/50 text-sm" data-test={`${idPrefix}-embed-cli-hint`}>
+        Embeddings are indexed locally with the embed CLI after import — not on the server.
+      </p>
     </div>
   );
 }

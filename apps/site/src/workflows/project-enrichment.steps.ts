@@ -1,5 +1,4 @@
 import { logEnrichmentError, logEnrichmentEvent } from "@/lib/evlog/enrichment-log";
-import { indexRepoEmbedding } from "@/modules/backstage/index-repo-embedding";
 import { getServerEnv } from "@/lib/envs/server-env";
 import type { RunCounters } from "@/modules/project-enrichment/counters";
 import {
@@ -83,45 +82,6 @@ export async function processRepoStep(runId: string, repo: GithubRepoSnapshot, f
     return delta;
   } catch (err: unknown) {
     logEnrichmentError(runId, "processRepo", err, { repoFullName: repo.nameWithOwner });
-    throw err;
-  }
-}
-
-export async function indexEmbeddingStep(
-  runId: string,
-  repo: GithubRepoSnapshot,
-  options: { skipIfComplete?: boolean; force?: boolean },
-) {
-  "use step";
-
-  logEnrichmentEvent({
-    workflow: "project-enrichment",
-    runId,
-    step: "indexEmbedding",
-    outcome: "started",
-    repoFullName: repo.nameWithOwner,
-    force: options.force,
-  });
-
-  try {
-    const result = await indexRepoEmbedding({
-      repoFullName: repo.nameWithOwner,
-      skipIfComplete: options.skipIfComplete,
-      force: options.force,
-    });
-
-    logEnrichmentEvent({
-      workflow: "project-enrichment",
-      runId,
-      step: "indexEmbedding",
-      outcome: result.status === "skipped" || result.status === "disabled" ? "skipped" : "success",
-      repoFullName: repo.nameWithOwner,
-      error: result.status !== "processed" ? result.reason : undefined,
-    });
-
-    return result;
-  } catch (err: unknown) {
-    logEnrichmentError(runId, "indexEmbedding", err, { repoFullName: repo.nameWithOwner });
     throw err;
   }
 }

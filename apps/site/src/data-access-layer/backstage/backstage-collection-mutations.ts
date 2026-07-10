@@ -9,18 +9,12 @@ export type ImportBackstageProjectInput = {
   repoFullName: string;
   runEnrichment: boolean;
   forceEnrichment: boolean;
-  runEmbedding: boolean;
-  skipEmbeddingIfComplete: boolean;
-  forceEmbedding: boolean;
 };
 
 export type BulkImportBackstageProjectsInput = {
   repoFullNames: string[];
   runEnrichment: boolean;
   forceEnrichment: boolean;
-  runEmbedding: boolean;
-  skipEmbeddingIfComplete: boolean;
-  forceEmbedding: boolean;
 };
 
 /**
@@ -51,7 +45,7 @@ export async function importBackstageProject(input: ImportBackstageProjectInput)
 }
 
 /**
- * Bulk-imports repos and starts one shared enrichment/embedding workflow.
+ * Bulk-imports repos and starts one shared enrichment workflow.
  */
 export async function bulkImportBackstageProjects(input: BulkImportBackstageProjectsInput) {
   logTanstackDbCollection("backstage-projects", "mutation:bulk-import:start", {
