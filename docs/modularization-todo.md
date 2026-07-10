@@ -82,9 +82,9 @@ Enrich **never** calls GitHub — only reads `project_repo_artifacts.payload`.
 
 | Step                                               | Status | Notes                                                        |
 | -------------------------------------------------- | ------ | ------------------------------------------------------------ |
-| WF-1 — `spelunk-repo.ts` step                      | [ ]    | GitHub → `project_repo_artifacts`, bump `generation`         |
-| WF-2 — `enrich-from-artifacts.ts` step             | [ ]    | DB → `@repo/ai` → `project_enrichment_outputs` + suggestions |
-| WF-3 — Split workflow steps into thin files        | [ ]    | `steps/spelunk`, `steps/enrich`, `steps/progress`            |
+| WF-1 — `spelunk-repo.ts` step                      | [x]    | GitHub → `project_repo_artifacts`, bump `generation`         |
+| WF-2 — `enrich-from-artifacts.ts` step             | [x]    | DB → `@repo/ai` → `project_enrichment_outputs` + suggestions |
+| WF-3 — Split workflow steps into thin files        | [x]    | `workflows/steps/{fetch,spelunk,enrich,progress}`            |
 | WF-4 — Remove embedding from workflow              | [x]    | Dropped `indexEmbeddingStep`, `runEmbedding` params          |
 | WF-5 — Remove `@kessler/gemma-embedding` from site | [x]    | Deleted gemma service + index + embeddings server fns        |
 | WF-6 — Update backstage import UI                  | [x]    | Embed option removed; CLI hint shown                         |
@@ -115,6 +115,6 @@ Enrich **never** calls GitHub — only reads `project_repo_artifacts.payload`.
 
 ## Current focus
 
-**Next:** WF-1 — `spelunk-repo` step that writes `project_repo_artifacts` (generation bump + skip rules), then WF-2 enrich-from-artifacts.
+**Next:** `CLI-1` — scaffold `apps/embed-cli` (commander entry + Gemma local), then auth-guard + embed commands.
 
-After that: `apps/embed-cli` (CLI-1–5) to restore local Gemma indexing.
+Site workflow is now spelunk → enrich only; embeddings must come back via the CLI.
