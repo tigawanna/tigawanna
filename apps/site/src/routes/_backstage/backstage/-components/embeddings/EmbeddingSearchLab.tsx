@@ -6,17 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useLoadEmbeddingGemma } from "@/lib/embedding-gemma/use-load-embedding-gemma";
 import { unwrapUnknownError } from "@/utils/errors";
-import type { ProgressInfo } from "@repo/gemma-embedding/web";
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { Loader2, Search } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-
-type WebGemma = Awaited<
-  ReturnType<typeof import("@repo/gemma-embedding/web").createWebGemmaEmbedding>
->;
 
 /**
  * Backstage lab: embed queries in the browser, search indexed projects on the server.
@@ -24,9 +20,7 @@ type WebGemma = Awaited<
 export function EmbeddingSearchLab() {
   const { data: stats } = useSuspenseQuery(projectEmbeddingSearchStatsQueryOptions);
   const [query, setQuery] = useState("");
-  const [model, setModel] = useState<WebGemma | null>(null);
-  const [modelStatus, setModelStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
-  const [modelProgress, setModelProgress] = useState<string | null>(null);
+  const { model, modelStatus, modelProgress, loadModel } = useLoadEmbeddingGemma();
 
   const searchMutation = useMutation({
     ...searchProjectEmbeddingsByVectorMutationOptions,
@@ -34,38 +28,6 @@ export function EmbeddingSearchLab() {
       toast.error("Search failed", { description: unwrapUnknownError(err).message });
     },
   });
-
-  const loadModel = async () => {
-    setModelStatus("loading");
-    setModelProgress("Starting model download…");
-
-    try {
-      const { createWebGemmaEmbedding } = await import("@repo/gemma-embedding/web");
-      const instance = createWebGemmaEmbedding({
-        onProgress(info: ProgressInfo) {
-          if (info.status === "loading" && info.progress != null) {
-            setModelProgress(`Loading model… ${info.progress}%`);
-          }
-          if (info.status === "ready") {
-            setModelProgress("Model ready");
-          }
-          if (info.status === "error") {
-            setModelProgress(info.error ?? "Model load failed");
-          }
-        },
-      });
-
-      await instance.load();
-      setModel(instance);
-      setModelStatus("ready");
-      toast.success("Gemma model loaded in browser");
-    } catch (err: unknown) {
-      setModelStatus("error");
-      toast.error("Failed to load Gemma model", {
-        description: unwrapUnknownError(err).message,
-      });
-    }
-  };
 
   const runSearch = async () => {
     const trimmed = query.trim();
@@ -83,9 +45,11 @@ export function EmbeddingSearchLab() {
     }
 
     try {
+      console.time("embedQuery");
       const { embedQuery } = await import("@repo/gemma-embedding/web");
       const queryEmbedding = await embedQuery(model, trimmed);
       searchMutation.mutate({ queryEmbedding, query: trimmed, limit: 10 });
+      console.timeEnd("embedQuery");
     } catch (err: unknown) {
       toast.error("Failed to embed query", { description: unwrapUnknownError(err).message });
     }
