@@ -64,6 +64,13 @@
       "when": 1783507828505,
       "tag": "0008_foamy_viper",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1783598092259,
+      "tag": "0009_superb_riptide",
+      "breakpoints": true
     }
   ]
 }

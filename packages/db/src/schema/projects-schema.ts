@@ -116,6 +116,54 @@ export const projectEnrichmentSuggestions = sqliteTable(
   ],
 );
 
+/**
+ * Latest spelunk (GitHub collect) payload per repo.
+ * `generation` bumps on each successful collect; enrich/embed key off it.
+ */
+export const projectRepoArtifacts = sqliteTable(
+  "project_repo_artifacts",
+  {
+    githubRepoId: text("github_repo_id")
+      .primaryKey()
+      .references(() => projectRepos.githubRepoId, { onDelete: "cascade" }),
+    repoFullName: text("repo_full_name").notNull().unique(),
+    generation: integer("generation").notNull().default(1),
+    collectorVersion: text("collector_version").notNull(),
+    payload: text("payload").notNull(),
+    createdAt: integer("created_at", { mode: "timestamp_ms" })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .notNull(),
+  },
+  (table) => [
+    index("project_repo_artifacts_repo_full_name_idx").on(table.repoFullName),
+    index("project_repo_artifacts_collector_version_idx").on(table.collectorVersion),
+    index("project_repo_artifacts_created_at_idx").on(table.createdAt),
+  ],
+);
+
+/**
+ * Latest enrichment AI output per repo, versioned to the artifact generation it used.
+ */
+export const projectEnrichmentOutputs = sqliteTable(
+  "project_enrichment_outputs",
+  {
+    githubRepoId: text("github_repo_id")
+      .primaryKey()
+      .references(() => projectRepos.githubRepoId, { onDelete: "cascade" }),
+    sourceGeneration: integer("source_generation").notNull(),
+    payload: text("payload").notNull(),
+    createdAt: integer("created_at", { mode: "timestamp_ms" })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .notNull(),
+  },
+  (table) => [
+    index("project_enrichment_outputs_source_generation_idx").on(table.sourceGeneration),
+    index("project_enrichment_outputs_created_at_idx").on(table.createdAt),
+  ],
+);
+
 export type ProjectEnrichmentRunRow = typeof projectEnrichmentRuns.$inferSelect;
 export type ProjectRepoRow = typeof projectRepos.$inferSelect;
 export type ProjectEnrichmentSuggestionRow = typeof projectEnrichmentSuggestions.$inferSelect;
+export type ProjectRepoArtifactRow = typeof projectRepoArtifacts.$inferSelect;
+export type ProjectEnrichmentOutputRow = typeof projectEnrichmentOutputs.$inferSelect;

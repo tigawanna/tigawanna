@@ -16,6 +16,10 @@ export const projectEmbeddings = sqliteTable(
     inferredDescription: text("inferred_description"),
     inferredTopics: text("inferred_topics"),
     modelId: text("model_id").notNull().default("embeddinggemma-300m"),
+    /** Artifact generation this embedding was built from. */
+    sourceGeneration: integer("source_generation"),
+    /** `project_enrichment_outputs.createdAt` at embed time (skip fingerprint). */
+    sourceEnrichmentAt: integer("source_enrichment_at", { mode: "timestamp_ms" }),
     embeddedAt: integer("embedded_at", { mode: "timestamp_ms" })
       .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
       .notNull(),
@@ -23,6 +27,7 @@ export const projectEmbeddings = sqliteTable(
   (table) => [
     index("project_embeddings_repo_full_name_idx").on(table.repoFullName),
     index("project_embeddings_embedded_at_idx").on(table.embeddedAt),
+    index("project_embeddings_source_generation_idx").on(table.sourceGeneration),
   ],
 );
 
