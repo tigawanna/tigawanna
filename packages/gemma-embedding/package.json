@@ -4,12 +4,16 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./constants": "./src/constants.ts",
     "./server": "./src/server.ts",
     "./web": "./src/web.ts"
   },
   "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc",
     "check-types": "tsc --noEmit",
-    "test": "vp test run"
+    "test": "vp test run",
+    "test:watch": "vp test"
   },
   "dependencies": {
     "@kessler/gemma-embedding": "^1.0.0"
