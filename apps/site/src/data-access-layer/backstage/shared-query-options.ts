@@ -4,17 +4,36 @@ import { getBackstageDashboardCounts } from "@/modules/backstage/dashboard.funct
 import { listJournalEntriesForBackstage } from "@/modules/journal/journal.functions";
 import { queryOptions } from "@tanstack/react-query";
 
+/** Default page size for backstage offset list UIs. */
+export const BACKSTAGE_LIST_PER_PAGE = 20;
+
 export const backstageDashboardCountsQueryOptions = queryOptions({
   queryKey: [queryKeyPrefixes.backstage, "dashboard-counts"],
   queryFn: () => getBackstageDashboardCounts(),
 });
 
-export const contactMessagesQueryOptions = queryOptions({
-  queryKey: [queryKeyPrefixes.backstage, "contact-messages"],
-  queryFn: () => listContactMessages(),
-});
+/**
+ * Contact messages for a given page.
+ *
+ * @param page - 1-based page index (default 1).
+ * @param perPage - Page size (default {@link BACKSTAGE_LIST_PER_PAGE}).
+ */
+export function contactMessagesQueryOptions(page = 1, perPage = BACKSTAGE_LIST_PER_PAGE) {
+  return queryOptions({
+    queryKey: [queryKeyPrefixes.backstage, "contact-messages", page, perPage],
+    queryFn: () => listContactMessages({ data: { page, perPage } }),
+  });
+}
 
-export const journalEntriesQueryOptions = queryOptions({
-  queryKey: [queryKeyPrefixes.backstage, "journal-entries"],
-  queryFn: () => listJournalEntriesForBackstage(),
-});
+/**
+ * Journal entries for a given page.
+ *
+ * @param page - 1-based page index (default 1).
+ * @param perPage - Page size (default {@link BACKSTAGE_LIST_PER_PAGE}).
+ */
+export function journalEntriesQueryOptions(page = 1, perPage = BACKSTAGE_LIST_PER_PAGE) {
+  return queryOptions({
+    queryKey: [queryKeyPrefixes.backstage, "journal-entries", page, perPage],
+    queryFn: () => listJournalEntriesForBackstage({ data: { page, perPage } }),
+  });
+}

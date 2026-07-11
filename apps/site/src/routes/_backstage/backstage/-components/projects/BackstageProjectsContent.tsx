@@ -1,12 +1,16 @@
+import { ListPagination } from "@/components/pagination/ReactresponsivePagination";
 import { SearchBox } from "@/components/search/SearchBox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { backstageProjectsCollection } from "@/data-access-layer/backstage/projects/backstage-projects-collection";
+import { BACKSTAGE_LIST_PER_PAGE } from "@/data-access-layer/backstage/shared-query-options";
 import { useTSRSearchQuery } from "@/hooks/use-tsr-search-query";
 import { TanstackDBSortSelect } from "@/routes/_backstage/backstage/-components/shared/TanstackDBColumnfilters";
 import { createSortableColumns } from "@/routes/_backstage/backstage/-components/shared/sortable-columns";
+import { paginateItems } from "@/utils/paginate-items";
 import { and, ilike, IR, or } from "@tanstack/db";
 import { useLiveSuspenseQuery } from "@tanstack/react-db";
 import { Link } from "@tanstack/react-router";
+import { useTransition } from "react";
 import { Route, type BackstageProjectsSearch } from "../../projects";
 import { BackstageFilterField, BackstageFiltersDialog } from "../shared/BackstageFiltersDialog";
 import { BackstageProjectRow } from "./BackstageProjectRow";
@@ -29,6 +33,7 @@ function combineWhereClauses(clauses: Array<IR.BasicExpression<boolean>>) {
 export function BackstageProjectsContent() {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
+  const [, startTransition] = useTransition();
   const { debouncedValue, isDebouncing, keyword, setKeyword } =
     useTSRSearchQuery<BackstageProjectsSearch>({
       search,
@@ -39,6 +44,7 @@ export function BackstageProjectsContent() {
 
   const sortBy = search.sortBy ?? "lastGithubSyncAt";
   const sortDirection = search.sortDirection ?? "desc";
+  const page = search.page ?? 1;
   const hasActiveFilters = Boolean(debouncedValue);
 
   const { data: projects } = useLiveSuspenseQuery(
@@ -76,6 +82,25 @@ export function BackstageProjectsContent() {
     },
     [debouncedValue, sortBy, sortDirection],
   );
+
+  const { items: pageProjects, pagination } = paginateItems(
+    projects,
+    page,
+    BACKSTAGE_LIST_PER_PAGE,
+  );
+
+  const setPage = (nextPage: number) => {
+    startTransition(() => {
+      void navigate({
+        search: (prev) => ({
+          ...prev,
+          page: nextPage <= 1 ? undefined : nextPage,
+        }),
+        replace: true,
+        viewTransition: false,
+      });
+    });
+  };
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6" data-test="backstage-projects">
@@ -155,17 +180,25 @@ export function BackstageProjectsContent() {
           <CardHeader>
             <CardTitle>All projects</CardTitle>
             <CardDescription>
-              {projects.length} {hasActiveFilters ? "matching" : ""}{" "}
-              {projects.length === 1 ? "project" : "projects"} in the database
+              Showing {pageProjects.length} of {pagination.totalItems}{" "}
+              {hasActiveFilters ? "matching " : ""}
+              {pagination.totalItems === 1 ? "project" : "projects"}
             </CardDescription>
           </CardHeader>
           <CardContent className="divide-base-content/10 divide-y rounded-lg border border-base-content/10 p-0">
-            {projects.map((project) => (
+            {pageProjects.map((project) => (
               <BackstageProjectRow key={project.githubRepoId} project={project} />
             ))}
           </CardContent>
         </Card>
       )}
+
+      <ListPagination
+        page={pagination.page}
+        totalPages={pagination.totalPages}
+        onPageChange={setPage}
+        data-test="backstage-projects-pagination"
+      />
 
       <Card>
         <CardHeader>

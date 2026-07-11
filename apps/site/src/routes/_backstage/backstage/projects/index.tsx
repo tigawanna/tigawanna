@@ -5,6 +5,7 @@ import { z } from "zod";
 import { BackstageRepoPageFallback } from "../-components/shared/BackstageRepoPageFallback";
 
 export const backstageProjectsSearchSchema = z.object({
+  page: z.coerce.number().int().min(1).optional(),
   sq: z.string().optional(),
   sortBy: z
     .enum(["repoFullName", "lastGithubSyncAt", "attendance", "updatedAt", "createdAt"])

@@ -5,6 +5,7 @@ import { z } from "zod";
 import { BackstageRepoPageFallback } from "./-components/shared/BackstageRepoPageFallback";
 
 export const backstageReposSearchSchema = z.object({
+  page: z.coerce.number().int().min(1).optional(),
   sq: z.string().optional(),
   sortBy: z.enum(["nameWithOwner", "name", "pushedAt", "stargazerCount", "forkCount"]).optional(),
   sortDirection: z.enum(["asc", "desc"]).optional(),

@@ -1,3 +1,4 @@
+import { ListPagination } from "@/components/pagination/ReactresponsivePagination";
 import { SearchBox } from "@/components/search/SearchBox";
 import { deleteJournalEntry, setJournalEntryPinned } from "@/modules/journal/journal.functions";
 import { filterAndSortJournalEntries } from "@/modules/journal/filter-sort-journal-entries";
@@ -50,8 +51,10 @@ export function BackstageJournalContent() {
   const navigate = Route.useNavigate();
   const [, startTransition] = useTransition();
   const queryClient = useQueryClient();
-  const { data } = useSuspenseQuery(journalEntriesQueryOptions);
+  const page = search.page ?? 1;
+  const { data } = useSuspenseQuery(journalEntriesQueryOptions(page));
   const entries = data.items;
+  const { pagination } = data;
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingEntry, setEditingEntry] = useState<JournalEntryRow | null>(null);
 
@@ -83,7 +86,20 @@ export function BackstageJournalContent() {
   const setSortParams = (patch: Partial<BackstageJournalSearch>) => {
     startTransition(() => {
       void navigate({
-        search: (prev) => ({ ...prev, ...patch }),
+        search: (prev) => ({ ...prev, page: undefined, ...patch }),
+        replace: true,
+        viewTransition: false,
+      });
+    });
+  };
+
+  const setPage = (nextPage: number) => {
+    startTransition(() => {
+      void navigate({
+        search: (prev) => ({
+          ...prev,
+          page: nextPage <= 1 ? undefined : nextPage,
+        }),
         replace: true,
         viewTransition: false,
       });
@@ -91,7 +107,9 @@ export function BackstageJournalContent() {
   };
 
   const invalidate = () => {
-    void queryClient.invalidateQueries({ queryKey: journalEntriesQueryOptions.queryKey });
+    void queryClient.invalidateQueries({
+      queryKey: [queryKeyPrefixes.backstage, "journal-entries"],
+    });
     void queryClient.invalidateQueries({
       queryKey: [queryKeyPrefixes.backstage, "dashboard-counts"],
     });
@@ -177,6 +195,7 @@ export function BackstageJournalContent() {
               setSearchParams({
                 type: undefined,
                 pinned: undefined,
+                page: undefined,
               })
             }
           >
@@ -186,6 +205,7 @@ export function BackstageJournalContent() {
                 onValueChange={(value) =>
                   setSearchParams({
                     type: value === "all" ? undefined : (value as BackstageJournalSearch["type"]),
+                    page: undefined,
                   })
                 }
               >
@@ -209,6 +229,7 @@ export function BackstageJournalContent() {
                   setSearchParams({
                     pinned:
                       value === "all" ? undefined : (value as BackstageJournalSearch["pinned"]),
+                    page: undefined,
                   })
                 }
               >
@@ -297,8 +318,9 @@ export function BackstageJournalContent() {
       ) : (
         <div className="flex flex-col gap-4">
           <p className="text-base-content/50 text-sm" data-test="backstage-journal-results-count">
-            {visibleEntries.length} {hasActiveFilters ? "matching" : ""}{" "}
-            {visibleEntries.length === 1 ? "entry" : "entries"}
+            {hasActiveFilters
+              ? `${visibleEntries.length} matching on this page`
+              : `Showing ${visibleEntries.length} of ${pagination.totalItems} ${pagination.totalItems === 1 ? "entry" : "entries"}`}
           </p>
           {visibleEntries.map((entry) => (
             <article
@@ -381,6 +403,13 @@ export function BackstageJournalContent() {
           ))}
         </div>
       )}
+
+      <ListPagination
+        page={pagination.page}
+        totalPages={pagination.totalPages}
+        onPageChange={setPage}
+        data-test="backstage-journal-pagination"
+      />
 
       <JournalEntryFormDialog
         key={editingEntry?.id ?? "new"}

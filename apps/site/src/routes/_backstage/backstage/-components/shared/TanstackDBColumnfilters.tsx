@@ -257,18 +257,19 @@ export function TanstackDBColumnFilters<
   );
 
   // Called when user selects a different column from the dropdown
-  // Resets offset to 0 to start from the first page with new sort order
+  // Resets page/offset to start from the first page with new sort order
   const handleSortByChange = (value: string) => {
-    setSearch({ sortBy: value, offset: 0 });
+    setSearch({ sortBy: value, offset: 0, page: undefined });
   };
 
   // Called when user clicks the direction toggle button
   // Flips between ascending and descending order
-  // Also resets offset to 0 to start from the first page
+  // Also resets page/offset to start from the first page
   const handleSortDirectionToggle = () => {
     setSearch({
       sortDirection: currentSortDirection === "asc" ? "desc" : "asc",
-      offset: 0, // Reset pagination when sort changes
+      offset: 0,
+      page: undefined,
     });
   };
 
@@ -400,7 +401,7 @@ export function TanstackDBSortSelect<
     >
       <Select
         value={currentSortBy}
-        onValueChange={(value) => setSearch({ sortBy: value, offset: 0 })}
+        onValueChange={(value) => setSearch({ sortBy: value, offset: 0, page: undefined })}
       >
         <SelectTrigger className={layout === "stacked" ? "h-9 w-full" : "h-9 w-35"}>
           <SelectValue placeholder="Sort by" />
@@ -422,6 +423,7 @@ export function TanstackDBSortSelect<
           setSearch({
             sortDirection: currentSortDirection === "asc" ? "desc" : "asc",
             offset: 0,
+            page: undefined,
           })
         }
         title={`Sort ${currentSortDirection === "asc" ? "descending" : "ascending"}`}

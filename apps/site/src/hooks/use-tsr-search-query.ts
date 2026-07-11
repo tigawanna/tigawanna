@@ -46,6 +46,7 @@ export function useTSRSearchQuery<TSearch extends Record<string, unknown>>(
         search: (prev) => ({
           ...prev,
           [queryParam]: value || undefined,
+          ...("page" in prev ? { page: undefined } : {}),
         }),
         replace: true,
       });

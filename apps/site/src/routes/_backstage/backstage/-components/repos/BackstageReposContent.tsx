@@ -1,3 +1,4 @@
+import { ListPagination } from "@/components/pagination/ReactresponsivePagination";
 import { SearchBox } from "@/components/search/SearchBox";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,6 +16,7 @@ import {
 } from "@/data-access-layer/backstage/projects/backstage-collection-mutations";
 import { backstageProjectsCollection } from "@/data-access-layer/backstage/projects/backstage-projects-collection";
 import { backstageGithubReposQueryOptions } from "@/data-access-layer/backstage/projects/projects-query-options";
+import { BACKSTAGE_LIST_PER_PAGE } from "@/data-access-layer/backstage/shared-query-options";
 import { useTSRSearchQuery } from "@/hooks/use-tsr-search-query";
 import { TanstackDBSortSelect } from "@/routes/_backstage/backstage/-components/shared/TanstackDBColumnfilters";
 import { createSortableColumns } from "@/routes/_backstage/backstage/-components/shared/sortable-columns";
@@ -24,11 +26,12 @@ import type {
   ImportProjectOptions,
 } from "@/routes/_backstage/backstage/-utils/import-options";
 import { unwrapUnknownError } from "@/utils/errors";
+import { paginateItems } from "@/utils/paginate-items";
 import { and, eq, ilike, IR, isNull, not, or } from "@tanstack/db";
 import { useLiveSuspenseQuery } from "@tanstack/react-db";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Download, RefreshCcwIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { FaGithub } from "react-icons/fa";
 import { toast } from "sonner";
 import { Route, type BackstageReposSearch } from "../../repos";
@@ -54,6 +57,7 @@ function combineWhereClauses(clauses: Array<IR.BasicExpression<boolean>>) {
 export function BackstageReposContent() {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
+  const [, startTransition] = useTransition();
   const { debouncedValue, isDebouncing, keyword, setKeyword, setSearchParams } =
     useTSRSearchQuery<BackstageReposSearch>({
       search,
@@ -67,6 +71,7 @@ export function BackstageReposContent() {
   const tracked = search.tracked ?? "all";
   const visibility = search.visibility ?? "all";
   const archived = search.archived ?? "all";
+  const page = search.page ?? 1;
   const hasActiveFilters = Boolean(
     debouncedValue || tracked !== "all" || visibility !== "all" || archived !== "all",
   );
@@ -208,6 +213,25 @@ export function BackstageReposContent() {
   const trackedCount = repoRows.filter((row) => row.isTracked).length;
   const isImportBusy = importingRepo != null || bulkImportMutation.isPending || activeRunId != null;
 
+  const { items: pageRepoRows, pagination } = paginateItems(
+    repoRows,
+    page,
+    BACKSTAGE_LIST_PER_PAGE,
+  );
+
+  const setPage = (nextPage: number) => {
+    startTransition(() => {
+      void navigate({
+        search: (prev) => ({
+          ...prev,
+          page: nextPage <= 1 ? undefined : nextPage,
+        }),
+        replace: true,
+        viewTransition: false,
+      });
+    });
+  };
+
   const isRowWorking = (repoFullName: string) =>
     importingRepo === repoFullName ||
     workingRepoFullName === repoFullName ||
@@ -286,6 +310,7 @@ export function BackstageReposContent() {
               tracked: undefined,
               visibility: undefined,
               archived: undefined,
+              page: undefined,
             })
           }
         >
@@ -295,6 +320,7 @@ export function BackstageReposContent() {
               onValueChange={(value) =>
                 setSearchParams({
                   tracked: value === "all" ? undefined : (value as BackstageReposSearch["tracked"]),
+                  page: undefined,
                 })
               }
             >
@@ -315,6 +341,7 @@ export function BackstageReposContent() {
                 setSearchParams({
                   visibility:
                     value === "all" ? undefined : (value as BackstageReposSearch["visibility"]),
+                  page: undefined,
                 })
               }
             >
@@ -335,6 +362,7 @@ export function BackstageReposContent() {
                 setSearchParams({
                   archived:
                     value === "all" ? undefined : (value as BackstageReposSearch["archived"]),
+                  page: undefined,
                 })
               }
             >
@@ -369,8 +397,10 @@ export function BackstageReposContent() {
             Repositories
           </CardTitle>
           <CardDescription>
-            {repoRows.length} {hasActiveFilters ? "matching" : ""} repos · {trackedCount} already in
-            projects · {untrackedRepoFullNames.length} not imported
+            Showing {pageRepoRows.length} of {pagination.totalItems}{" "}
+            {hasActiveFilters ? "matching " : ""}
+            repos · {trackedCount} already in projects · {untrackedRepoFullNames.length} not
+            imported
           </CardDescription>
         </CardHeader>
         <CardContent className="divide-base-content/10 divide-y rounded-lg border border-base-content/10 p-0">
@@ -383,7 +413,7 @@ export function BackstageReposContent() {
                   : "No repos found."}
             </p>
           ) : (
-            repoRows.map((row) => (
+            pageRepoRows.map((row) => (
               <BackstageRepoRow
                 key={row.repo.id}
                 repo={row.repo}
@@ -396,6 +426,13 @@ export function BackstageReposContent() {
           )}
         </CardContent>
       </Card>
+
+      <ListPagination
+        page={pagination.page}
+        totalPages={pagination.totalPages}
+        onPageChange={setPage}
+        data-test="backstage-repos-pagination"
+      />
     </div>
   );
 }
