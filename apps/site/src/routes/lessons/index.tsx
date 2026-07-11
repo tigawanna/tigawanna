@@ -1,4 +1,4 @@
-import { lessonsListQueryOptions } from "@/data-access-layer/portfolio/query-options";
+import { lessonsListQueryOptions } from "@/data-access-layer/portfolio/landng-page-query-options";
 import { LessonCard } from "@/routes/-components/landing/cards/LessonCard";
 import { PortfolioGridSkeleton } from "@/routes/-components/landing/cards/PortfolioGridSkeleton";
 import { LandingFooter } from "@/routes/-components/landing/layout/LandingFooter";

@@ -1,4 +1,4 @@
-import { refetchBackstageProjectCollections } from "@/data-access-layer/backstage/backstage-collection-mutations";
+import { refetchBackstageProjectCollections } from "@/data-access-layer/backstage/projects/backstage-collection-mutations";
 import { queryKeyPrefixes } from "@/data-access-layer/query-keys";
 
 type QueryKeyPrefix = (typeof queryKeyPrefixes)[keyof typeof queryKeyPrefixes];

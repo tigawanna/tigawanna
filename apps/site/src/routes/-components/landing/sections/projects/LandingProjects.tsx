@@ -1,17 +1,21 @@
+// import {
+//   pinnedReposQueryOptions,
+//   recentReposQueryOptions,
+// } from "@/data-access-layer/projects/query-options";
 import { STATIC_PINNED_PROJECTS, STATIC_RECENT_PROJECTS } from "@/data/portfolio/static";
-import {
-  pinnedReposQueryOptions,
-  recentReposQueryOptions,
-} from "@/data-access-layer/github/query-options";
+import { orderReposByRelevance } from "@/modules/portfolio/find-relevant-projects";
 import type { GithubRepoNode } from "@/types/github";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { renderProjectCard } from "../../cards/ProjectCard";
 import { LandingSection, OrganicDivider, SectionEyebrow } from "../../primitives";
 import { filterReposByTopic, matchesProjectSearch } from "./-utils/project-search";
-import { orderReposByRelevance } from "@/modules/portfolio/find-relevant-projects";
 import { ProjectsSearch } from "./ProjectsSearch";
 import { ProjectsTopicFilter, type ProjectView } from "./ProjectsTopicFilter";
+import {
+  pinnedReposQueryOptions,
+  recentReposQueryOptions,
+} from "@/data-access-layer/portfolio/landng-page-query-options";
 
 const MAX_LANDING_PROJECTS = 6;
 

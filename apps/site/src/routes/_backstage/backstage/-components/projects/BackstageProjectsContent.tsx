@@ -1,9 +1,9 @@
 import { SearchBox } from "@/components/search/SearchBox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { backstageProjectsCollection } from "@/data-access-layer/backstage/backstage-projects-collection";
+import { backstageProjectsCollection } from "@/data-access-layer/backstage/projects/backstage-projects-collection";
+import { useTSRSearchQuery } from "@/hooks/use-tsr-search-query";
 import { TanstackDBSortSelect } from "@/routes/_backstage/backstage/-components/shared/TanstackDBColumnfilters";
 import { createSortableColumns } from "@/routes/_backstage/backstage/-components/shared/sortable-columns";
-import { useTSRSearchQuery } from "@/hooks/use-tsr-search-query";
 import { and, ilike, IR, or } from "@tanstack/db";
 import { useLiveSuspenseQuery } from "@tanstack/react-db";
 import { Link } from "@tanstack/react-router";

@@ -1,12 +1,12 @@
-import {
-  projectEmbeddingSearchStatsQueryOptions,
-  searchProjectEmbeddingsByVectorQueryOptions,
-  type SearchProjectEmbeddingsRequest,
-} from "@/data-access-layer/backstage/embedding-search-query-options";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  projectEmbeddingSearchStatsQueryOptions,
+  searchProjectEmbeddingsByVectorQueryOptions,
+  type SearchProjectEmbeddingsRequest,
+} from "@/data-access-layer/backstage/enrich/embedding-search-query-options";
 import { useLoadEmbeddingGemma } from "@/lib/embedding-gemma/use-load-embedding-gemma";
 import { unwrapUnknownError } from "@/utils/errors";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";

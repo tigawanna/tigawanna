@@ -1,14 +1,14 @@
-import { landingLessonPreviewsQueryOptions } from "@/data-access-layer/portfolio/query-options";
+import { landingLessonPreviewsQueryOptions } from "@/data-access-layer/portfolio/landng-page-query-options";
 import { createFileRoute } from "@tanstack/react-router";
 import { LandingWebMcpTools } from "./-components/landing/WebMcpLandingTools";
 import { LandingFooter } from "./-components/landing/layout/LandingFooter";
 import { LandingNavbar } from "./-components/landing/layout/LandingNavbar";
 import { LandingHowIWork } from "./-components/landing/sections/about/LandingHowIWork";
 import { LandingArticles } from "./-components/landing/sections/articles/LandingArticles";
-import { LandingInfodiet } from "./-components/landing/sections/infodiet/LandingInfodiet";
 import { LandingCTA } from "./-components/landing/sections/contact/LandingCTA";
 import { LandingFeaturesDeferred } from "./-components/landing/sections/features/LandingFeaturesDeferred";
 import { LandingHero } from "./-components/landing/sections/hero/LandingHero";
+import { LandingInfodiet } from "./-components/landing/sections/infodiet/LandingInfodiet";
 import { LandingLessonsDeferred } from "./-components/landing/sections/lessons/LandingLessonsDeferred";
 import { LandingProjectsDeferred } from "./-components/landing/sections/projects/LandingProjectsDeferred";
 import { StackCubeDeferred } from "./-components/landing/sections/stack-cube/StackCubeDeferred";

@@ -18,14 +18,14 @@
   "dependencies": {
     "@kessler/gemma-embedding": "^1.0.0"
   },
-  "optionalDependencies": {
-    "onnxruntime-node": "^1.27.0"
-  },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "@types/node": "^25.2.0",
     "typescript": "catalog:",
     "vite-plus": "catalog:",
     "vitest": "catalog:"
+  },
+  "optionalDependencies": {
+    "onnxruntime-node": "^1.27.0"
   }
 }

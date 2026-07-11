@@ -1,4 +1,4 @@
-import { journalEntriesQueryOptions } from "@/data-access-layer/backstage/journal-query-options";
+import { journalEntriesQueryOptions } from "@/data-access-layer/backstage/shared-query-options";
 import { BackstageJournalContent } from "@/routes/_backstage/backstage/-components/journal/BackstageJournalContent";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { z } from "zod";

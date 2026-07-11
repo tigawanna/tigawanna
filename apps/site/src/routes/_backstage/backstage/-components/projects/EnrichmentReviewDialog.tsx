@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   afterBackstageEnrichmentMutation,
   backstageEnrichmentMutationInvalidatesForRepo,
-} from "@/data-access-layer/backstage/enrichment-mutation-side-effects";
+} from "@/data-access-layer/backstage/enrich/enrichment-mutation-side-effects";
 import {
   approveProjectEnrichmentSuggestion,
   rejectProjectEnrichmentSuggestion,
@@ -22,12 +22,12 @@ import type {
   BackstageProject,
   BackstageProjectEnrichment,
 } from "@/modules/backstage/projects.functions";
+import { MonorepoPackagesList } from "@/routes/_backstage/backstage/-components/projects/MonorepoPackagesList";
 import { unwrapUnknownError } from "@/utils/errors";
 import { useMutation } from "@tanstack/react-query";
 import { Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { MonorepoPackagesList } from "@/routes/_backstage/backstage/-components/projects/MonorepoPackagesList";
 
 type EnrichmentReviewDialogProps = {
   open: boolean;

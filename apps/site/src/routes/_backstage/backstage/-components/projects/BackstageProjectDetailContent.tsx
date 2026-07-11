@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { backstageProjectDetailQueryOptions } from "@/data-access-layer/backstage/projects-query-options";
+import { backstageProjectDetailQueryOptions } from "@/data-access-layer/backstage/projects/projects-query-options";
 import { queryKeyPrefixes } from "@/data-access-layer/query-keys";
 import { cn } from "@/lib/utils";
 import { triggerProjectEnrichmentRun } from "@/modules/backstage/projects-enrichment.functions";

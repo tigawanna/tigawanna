@@ -3,10 +3,10 @@ import { Button } from "@/components/ui/button";
 import {
   deleteBackstageGithubRepo,
   setBackstageRepoVisibility,
-} from "@/data-access-layer/backstage/backstage-collection-mutations";
+} from "@/data-access-layer/backstage/projects/backstage-collection-mutations";
 import { cn } from "@/lib/utils";
-import type { ImportProjectOptions } from "@/routes/_backstage/backstage/-utils/import-options";
 import { isGithubRepoDeletePermissionError } from "@/routes/_backstage/backstage/-utils/github-repo-delete-errors";
+import type { ImportProjectOptions } from "@/routes/_backstage/backstage/-utils/import-options";
 import type { BackstageGithubRepo } from "@/types/backstage";
 import { unwrapUnknownError } from "@/utils/errors";
 import { formatDistanceToNow } from "date-fns";

@@ -1,5 +1,5 @@
 import { getDb } from "@/lib/db/get-db";
-import { eq, projectEnrichmentRuns, type ProjectEnrichmentRunTrigger } from "@repo/db";
+import { eq, projectEnrichmentRuns } from "@repo/db";
 import type { RunCounters } from "./counters";
 import type { EnrichmentRunParams } from "./types";
 

@@ -1,5 +1,5 @@
-import { backstageProjectDetailQueryOptions } from "@/data-access-layer/backstage/projects-query-options";
 import { ClientOnly } from "@/components/wrappers/ClientOnly";
+import { backstageProjectDetailQueryOptions } from "@/data-access-layer/backstage/projects/projects-query-options";
 import { BackstageProjectDetailContent } from "@/routes/_backstage/backstage/-components/projects/BackstageProjectDetailContent";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { Suspense } from "react";

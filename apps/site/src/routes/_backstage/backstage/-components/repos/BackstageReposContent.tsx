@@ -8,13 +8,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { backstageGithubReposCollection } from "@/data-access-layer/backstage/github/backstage-github-repos-collection";
 import {
   bulkImportBackstageProjects,
   importBackstageProject,
-} from "@/data-access-layer/backstage/backstage-collection-mutations";
-import { backstageGithubReposCollection } from "@/data-access-layer/backstage/backstage-github-repos-collection";
-import { backstageProjectsCollection } from "@/data-access-layer/backstage/backstage-projects-collection";
-import { backstageGithubReposQueryOptions } from "@/data-access-layer/backstage/projects-query-options";
+} from "@/data-access-layer/backstage/projects/backstage-collection-mutations";
+import { backstageProjectsCollection } from "@/data-access-layer/backstage/projects/backstage-projects-collection";
+import { backstageGithubReposQueryOptions } from "@/data-access-layer/backstage/projects/projects-query-options";
+import { useTSRSearchQuery } from "@/hooks/use-tsr-search-query";
 import { TanstackDBSortSelect } from "@/routes/_backstage/backstage/-components/shared/TanstackDBColumnfilters";
 import { createSortableColumns } from "@/routes/_backstage/backstage/-components/shared/sortable-columns";
 import { useEnrichmentRunProgress } from "@/routes/_backstage/backstage/-hooks/use-enrichment-run-progress";
@@ -22,7 +23,6 @@ import type {
   BulkImportProjectOptions,
   ImportProjectOptions,
 } from "@/routes/_backstage/backstage/-utils/import-options";
-import { useTSRSearchQuery } from "@/hooks/use-tsr-search-query";
 import { unwrapUnknownError } from "@/utils/errors";
 import { and, eq, ilike, IR, isNull, not, or } from "@tanstack/db";
 import { useLiveSuspenseQuery } from "@tanstack/react-db";

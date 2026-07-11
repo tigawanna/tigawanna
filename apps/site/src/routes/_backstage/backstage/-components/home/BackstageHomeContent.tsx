@@ -1,10 +1,13 @@
-import { contactMessagesQueryOptions } from "@/data-access-layer/backstage/query-options";
-import { journalEntriesQueryOptions } from "@/data-access-layer/backstage/journal-query-options";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
 import {
   backstageGithubReposQueryOptions,
   backstageProjectsQueryOptions,
-} from "@/data-access-layer/backstage/projects-query-options";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+} from "@/data-access-layer/backstage/projects/projects-query-options";
+import {
+  contactMessagesQueryOptions,
+  journalEntriesQueryOptions,
+} from "@/data-access-layer/backstage/shared-query-options";
 import { cn } from "@/lib/utils";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";

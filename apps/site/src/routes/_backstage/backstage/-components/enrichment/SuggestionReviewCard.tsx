@@ -1,18 +1,18 @@
-import {
-  afterBackstageEnrichmentMutation,
-  backstageEnrichmentMutationInvalidates,
-} from "@/data-access-layer/backstage/enrichment-mutation-side-effects";
-import {
-  approveProjectEnrichmentSuggestion,
-  rejectProjectEnrichmentSuggestion,
-} from "@/modules/backstage/projects-enrichment.functions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { unwrapUnknownError } from "@/utils/errors";
+import {
+  afterBackstageEnrichmentMutation,
+  backstageEnrichmentMutationInvalidates,
+} from "@/data-access-layer/backstage/enrich/enrichment-mutation-side-effects";
+import {
+  approveProjectEnrichmentSuggestion,
+  rejectProjectEnrichmentSuggestion,
+} from "@/modules/backstage/projects-enrichment.functions";
 import { parseMonorepoPackages } from "@/modules/backstage/projects.functions";
 import { MonorepoPackagesList } from "@/routes/_backstage/backstage/-components/projects/MonorepoPackagesList";
+import { unwrapUnknownError } from "@/utils/errors";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";

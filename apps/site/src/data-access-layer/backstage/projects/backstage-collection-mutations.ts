@@ -1,8 +1,8 @@
-import { backstageGithubReposCollection } from "@/data-access-layer/backstage/backstage-github-repos-collection";
-import { backstageProjectsCollection } from "@/data-access-layer/backstage/backstage-projects-collection";
+import { backstageGithubReposCollection } from "@/data-access-layer/backstage/github/backstage-github-repos-collection";
+import { backstageProjectsCollection } from "@/data-access-layer/backstage/projects/backstage-projects-collection";
+import { logTanstackDbCollection } from "@/lib/tanstack/db/collection-logging";
 import { deleteGithubRepoForBackstage } from "@/modules/backstage/github-repos.functions";
 import { importAllProjectRepos, importProjectRepo } from "@/modules/backstage/projects.functions";
-import { logTanstackDbCollection } from "@/lib/tanstack/db/collection-logging";
 import { unwrapUnknownError } from "@/utils/errors";
 
 export type ImportBackstageProjectInput = {

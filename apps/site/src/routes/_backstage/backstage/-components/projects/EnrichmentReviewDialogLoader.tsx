@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { backstageProjectDetailQueryOptions } from "@/data-access-layer/backstage/projects-query-options";
+import { backstageProjectDetailQueryOptions } from "@/data-access-layer/backstage/projects/projects-query-options";
 import type { BackstageProject } from "@/types/backstage";
 import { useQuery } from "@tanstack/react-query";
 import { Loader } from "lucide-react";

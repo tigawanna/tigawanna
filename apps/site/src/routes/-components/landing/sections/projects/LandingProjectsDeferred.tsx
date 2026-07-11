@@ -1,13 +1,13 @@
+import { useQueryClient } from "@tanstack/react-query";
+import { Hydrate } from "@tanstack/react-start";
+import { belowFoldHydration } from "../../-utils/below-fold-hydration";
+import { PortfolioGridSkeleton } from "../../cards/PortfolioGridSkeleton";
+import { LandingSection, OrganicDivider, SectionEyebrow } from "../../primitives";
+import { LandingProjects } from "./LandingProjects";
 import {
   pinnedReposQueryOptions,
   recentReposQueryOptions,
-} from "@/data-access-layer/github/query-options";
-import { Hydrate } from "@tanstack/react-start";
-import { useQueryClient } from "@tanstack/react-query";
-import { PortfolioGridSkeleton } from "../../cards/PortfolioGridSkeleton";
-import { LandingSection, OrganicDivider, SectionEyebrow } from "../../primitives";
-import { belowFoldHydration } from "../../-utils/below-fold-hydration";
-import { LandingProjects } from "./LandingProjects";
+} from "@/data-access-layer/portfolio/landng-page-query-options";
 
 const MAX_LANDING_PROJECTS = 6;
 

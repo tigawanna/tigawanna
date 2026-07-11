@@ -1,5 +1,5 @@
+import { recentReposQueryOptions } from "@/data-access-layer/portfolio/landng-page-query-options";
 import { STATIC_RECENT_PROJECTS } from "@/data/portfolio/static";
-import { recentReposQueryOptions } from "@/data-access-layer/github/query-options";
 import { useWebMcpLandingTools } from "@/hooks/use-webmcp-landing-tools";
 import type { GithubRepoNode } from "@/types/github";
 import { useQuery } from "@tanstack/react-query";

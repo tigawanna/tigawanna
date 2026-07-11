@@ -1,6 +1,6 @@
-import { contactMessagesQueryOptions } from "@/data-access-layer/backstage/query-options";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { contactMessagesQueryOptions } from "@/data-access-layer/backstage/shared-query-options";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { format } from "date-fns";
 
 export const Route = createFileRoute("/_backstage/backstage/messages")({

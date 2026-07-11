@@ -1,4 +1,3 @@
-import { journalEntriesQueryOptions } from "@/data-access-layer/backstage/journal-query-options";
 import { SearchBox } from "@/components/search/SearchBox";
 import { deleteJournalEntry, setJournalEntryPinned } from "@/modules/journal/journal.functions";
 import { filterAndSortJournalEntries } from "@/modules/journal/filter-sort-journal-entries";
@@ -35,6 +34,7 @@ import {
 } from "lucide-react";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
+import { journalEntriesQueryOptions } from "@/data-access-layer/backstage/shared-query-options";
 
 const journalSortOptions = [
   { value: "siteOrder", label: "Site order (pinned first)" },

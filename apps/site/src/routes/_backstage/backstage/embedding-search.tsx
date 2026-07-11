@@ -1,4 +1,4 @@
-import { projectEmbeddingSearchStatsQueryOptions } from "@/data-access-layer/backstage/embedding-search-query-options";
+import { projectEmbeddingSearchStatsQueryOptions } from "@/data-access-layer/backstage/enrich/embedding-search-query-options";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { lazy, Suspense } from "react";
 

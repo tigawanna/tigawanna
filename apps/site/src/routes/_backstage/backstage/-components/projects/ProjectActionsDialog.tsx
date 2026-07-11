@@ -7,11 +7,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { removeBackstageProject } from "@/data-access-layer/backstage/backstage-collection-mutations";
+import { removeBackstageProject } from "@/data-access-layer/backstage/projects/backstage-collection-mutations";
+import { projectNeedsEnrichmentReview } from "@/routes/_backstage/backstage/-components/projects/helpers";
 import type { BackstageProject } from "@/types/backstage";
 import { unwrapUnknownError } from "@/utils/errors";
 import { useMutation } from "@tanstack/react-query";
-import { projectNeedsEnrichmentReview } from "@/routes/_backstage/backstage/-components/projects/helpers";
 import { Pencil, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
