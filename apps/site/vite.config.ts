@@ -55,6 +55,10 @@ const config = defineConfig({
       router: {
         routeToken: "layout",
       },
+      sitemap: {
+        enabled: true,
+        host: "https://www.tigawanna.vip",
+      },
     }),
     nitro(),
     tailwindcss(),
