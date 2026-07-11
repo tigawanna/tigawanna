@@ -5,6 +5,7 @@ import {
 import { LandingFooter } from "@/routes/-components/landing/layout/LandingFooter";
 import { LandingNavbar } from "@/routes/-components/landing/layout/LandingNavbar";
 import { LessonAdminEditButton } from "@/routes/lessons/-components/LessonAdminEditButton";
+import { buildLessonDetailSeoHead } from "@/utils/lesson-seo";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, redirect } from "@tanstack/react-router";
 import { CalendarRange, ExternalLink } from "lucide-react";
@@ -13,15 +14,19 @@ import { Suspense } from "react";
 export const Route = createFileRoute("/lessons/$lessonId")({
   loader: async ({ context, params }) => {
     try {
-      await context.queryClient.ensureQueryData(lessonQueryOptions(params.lessonId));
+      const lesson = await context.queryClient.ensureQueryData(lessonQueryOptions(params.lessonId));
       await context.queryClient.ensureQueryData(lessonHtmlQueryOptions(params.lessonId));
+      return { lesson };
     } catch {
       throw redirect({ to: "/lessons", search: {} });
     }
   },
-  head: () => ({
-    meta: [{ title: "Lesson | Today I Learned" }],
-  }),
+  head: ({ loaderData }) => {
+    if (!loaderData?.lesson) {
+      return { meta: [{ title: "Lesson | Today I Learned" }] };
+    }
+    return buildLessonDetailSeoHead(loaderData.lesson);
+  },
   component: LessonDetailPage,
 });
 

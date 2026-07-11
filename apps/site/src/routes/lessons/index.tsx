@@ -3,6 +3,7 @@ import { LessonCard } from "@/routes/-components/landing/cards/LessonCard";
 import { PortfolioGridSkeleton } from "@/routes/-components/landing/cards/PortfolioGridSkeleton";
 import { LandingFooter } from "@/routes/-components/landing/layout/LandingFooter";
 import { LandingNavbar } from "@/routes/-components/landing/layout/LandingNavbar";
+import { buildLessonsIndexSeoHead } from "@/utils/lesson-seo";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { Suspense } from "react";
@@ -17,16 +18,7 @@ export const Route = createFileRoute("/lessons/")({
   loaderDeps: ({ search }) => ({ page: search.page ?? 1 }),
   loader: ({ context, deps: { page } }) =>
     context.queryClient.ensureQueryData(lessonsListQueryOptions(page, 24)),
-  head: () => ({
-    meta: [
-      { title: "Lessons | Today I Learned" },
-      {
-        name: "description",
-        content:
-          "Every bug is a lesson in disguise. Here are the pearls of wisdom gathered along the way.",
-      },
-    ],
-  }),
+  head: () => buildLessonsIndexSeoHead(),
   component: LessonsPage,
 });
 

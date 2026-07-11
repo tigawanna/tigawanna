@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OgRouteImport } from './routes/og'
 import { Route as BackstageLayoutRouteImport } from './routes/_backstage/layout'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LessonsIndexRouteImport } from './routes/lessons/index'
@@ -27,6 +28,11 @@ import { Route as BackstageBackstageProjectsIndexRouteImport } from './routes/_b
 import { Route as BackstageBackstageProjectsOwnerIndexRouteImport } from './routes/_backstage/backstage/projects/$owner/index'
 import { Route as BackstageBackstageProjectsOwnerRepoIndexRouteImport } from './routes/_backstage/backstage/projects/$owner/$repo/index'
 
+const OgRoute = OgRouteImport.update({
+  id: '/og',
+  path: '/og',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BackstageLayoutRoute = BackstageLayoutRouteImport.update({
   id: '/_backstage',
   getParentRoute: () => rootRouteImport,
@@ -120,6 +126,7 @@ const BackstageBackstageProjectsOwnerRepoIndexRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/og': typeof OgRoute
   '/backstage/sign-in': typeof BackstageSignInRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/project/$name': typeof ProjectNameRoute
@@ -138,6 +145,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/og': typeof OgRoute
   '/backstage/sign-in': typeof BackstageSignInRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/project/$name': typeof ProjectNameRoute
@@ -158,6 +166,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_backstage': typeof BackstageLayoutRouteWithChildren
+  '/og': typeof OgRoute
   '/backstage/sign-in': typeof BackstageSignInRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/project/$name': typeof ProjectNameRoute
@@ -178,6 +187,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/og'
     | '/backstage/sign-in'
     | '/lessons/$lessonId'
     | '/project/$name'
@@ -196,6 +206,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/og'
     | '/backstage/sign-in'
     | '/lessons/$lessonId'
     | '/project/$name'
@@ -215,6 +226,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_backstage'
+    | '/og'
     | '/backstage/sign-in'
     | '/lessons/$lessonId'
     | '/project/$name'
@@ -235,6 +247,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BackstageLayoutRoute: typeof BackstageLayoutRouteWithChildren
+  OgRoute: typeof OgRoute
   BackstageSignInRoute: typeof BackstageSignInRoute
   LessonsLessonIdRoute: typeof LessonsLessonIdRoute
   ProjectNameRoute: typeof ProjectNameRoute
@@ -246,6 +259,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/og': {
+      id: '/og'
+      path: '/og'
+      fullPath: '/og'
+      preLoaderRoute: typeof OgRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_backstage': {
       id: '/_backstage'
       path: ''
@@ -400,6 +420,7 @@ const BackstageLayoutRouteWithChildren = BackstageLayoutRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BackstageLayoutRoute: BackstageLayoutRouteWithChildren,
+  OgRoute: OgRoute,
   BackstageSignInRoute: BackstageSignInRoute,
   LessonsLessonIdRoute: LessonsLessonIdRoute,
   ProjectNameRoute: ProjectNameRoute,
