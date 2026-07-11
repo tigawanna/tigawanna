@@ -187,6 +187,9 @@ function summarizeQueryResult(data: unknown) {
 
   if (data && typeof data === "object") {
     const record = data as Record<string, unknown>;
+    if (Array.isArray(record.items)) {
+      return { kind: "items" as const, count: record.items.length };
+    }
     if (Array.isArray(record.repos)) {
       return { kind: "repos" as const, count: record.repos.length };
     }

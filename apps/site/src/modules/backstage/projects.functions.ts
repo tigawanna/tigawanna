@@ -9,12 +9,17 @@ import { fetchRepoReadmeHtml } from "@/modules/github/repo-detail";
 import { enrichProjectsWorkflow } from "@/workflows/project-enrichment";
 import {
   and,
+  buildOrderBy,
+  buildPaginatedResponse,
+  count,
   desc,
   eq,
+  normalizePaginationParams,
   projectAttendanceValues,
   projectEmbeddings,
   projectEnrichmentSuggestions,
   projectRepos,
+  type PaginatedResponse,
   type ProjectAttendance,
   type ProjectEnrichmentSuggestionStatus,
   type ProjectRepoRow,
@@ -344,30 +349,71 @@ function requirePat() {
   return pat;
 }
 
+const listProjectReposInputSchema = z
+  .object({
+    page: z.number().int().positive().optional(),
+    perPage: z.number().int().positive().max(500).optional(),
+    sortBy: z
+      .enum(["lastGithubSyncAt", "repoFullName", "attendance", "updatedAt", "createdAt"])
+      .optional(),
+    sortOrder: z.enum(["asc", "desc"]).optional(),
+  })
+  .optional();
+
 /**
- * Lists all rows from `project_repos` for backstage project management.
+ * Lists `project_repos` rows for backstage project management, paginated.
  *
- * Requires an authenticated admin session.
+ * Requires an authenticated admin session. Topics JSON is parsed into `string[]`;
+ * `needsEnrichmentReview` is derived from pending enrichment suggestions.
  */
-export const listProjectRepos = createServerFn({ method: "GET" }).handler(async () => {
-  await requireBackstageSession();
-  const db = getDb();
+export const listProjectRepos = createServerFn({ method: "GET" })
+  .validator((input?: z.infer<typeof listProjectReposInputSchema>) =>
+    listProjectReposInputSchema.parse(input),
+  )
+  .handler(async ({ data }): Promise<PaginatedResponse<BackstageProject>> => {
+    await requireBackstageSession();
+    const db = getDb();
+    const { page, perPage, offset } = normalizePaginationParams(data ?? {});
+    const sortBy = data?.sortBy;
+    const sortOrder = data?.sortOrder ?? "desc";
 
-  const rows = await db.select().from(projectRepos).orderBy(desc(projectRepos.lastGithubSyncAt));
+    const [{ count: totalItems }] = await db.select({ count: count() }).from(projectRepos);
 
-  const pendingRows = await db
-    .select({ githubRepoId: projectEnrichmentSuggestions.githubRepoId })
-    .from(projectEnrichmentSuggestions)
-    .where(eq(projectEnrichmentSuggestions.status, "pending_review"));
+    const rows = await db
+      .select()
+      .from(projectRepos)
+      .orderBy(
+        buildOrderBy({
+          sortBy,
+          sortOrder,
+          columnMap: {
+            lastGithubSyncAt: projectRepos.lastGithubSyncAt,
+            repoFullName: projectRepos.repoFullName,
+            attendance: projectRepos.attendance,
+            updatedAt: projectRepos.updatedAt,
+            createdAt: projectRepos.createdAt,
+          },
+          defaultColumn: projectRepos.lastGithubSyncAt,
+        }),
+      )
+      .limit(perPage)
+      .offset(offset);
 
-  const pendingReviewRepoIds = new Set(pendingRows.map((pendingRow) => pendingRow.githubRepoId));
+    const pendingRows = await db
+      .select({ githubRepoId: projectEnrichmentSuggestions.githubRepoId })
+      .from(projectEnrichmentSuggestions)
+      .where(eq(projectEnrichmentSuggestions.status, "pending_review"));
 
-  return rows.map((row) =>
-    mapProjectRepoRow(row, {
-      needsEnrichmentReview: pendingReviewRepoIds.has(row.githubRepoId),
-    }),
-  );
-});
+    const pendingReviewRepoIds = new Set(pendingRows.map((pendingRow) => pendingRow.githubRepoId));
+
+    const items = rows.map((row) =>
+      mapProjectRepoRow(row, {
+        needsEnrichmentReview: pendingReviewRepoIds.has(row.githubRepoId),
+      }),
+    );
+
+    return buildPaginatedResponse({ items, page, perPage, totalItems });
+  });
 
 const createProjectRepoInputSchema = z.object({
   githubRepoId: z.string().min(1),

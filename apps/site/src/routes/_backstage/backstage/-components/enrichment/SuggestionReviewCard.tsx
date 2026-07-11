@@ -21,7 +21,7 @@ type Suggestion = Awaited<
   ReturnType<
     typeof import("@/modules/backstage/projects-enrichment.functions").listProjectEnrichmentSuggestions
   >
->[number];
+>["items"][number];
 
 export function SuggestionReviewCard({
   suggestion,

@@ -35,6 +35,7 @@ import {
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { journalEntriesQueryOptions } from "@/data-access-layer/backstage/shared-query-options";
+import { queryKeyPrefixes } from "@/data-access-layer/query-keys";
 
 const journalSortOptions = [
   { value: "siteOrder", label: "Site order (pinned first)" },
@@ -49,7 +50,8 @@ export function BackstageJournalContent() {
   const navigate = Route.useNavigate();
   const [, startTransition] = useTransition();
   const queryClient = useQueryClient();
-  const { data: entries } = useSuspenseQuery(journalEntriesQueryOptions);
+  const { data } = useSuspenseQuery(journalEntriesQueryOptions);
+  const entries = data.items;
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingEntry, setEditingEntry] = useState<JournalEntryRow | null>(null);
 
@@ -90,6 +92,9 @@ export function BackstageJournalContent() {
 
   const invalidate = () => {
     void queryClient.invalidateQueries({ queryKey: journalEntriesQueryOptions.queryKey });
+    void queryClient.invalidateQueries({
+      queryKey: [queryKeyPrefixes.backstage, "dashboard-counts"],
+    });
     void queryClient.invalidateQueries({ queryKey: ["lessons"] });
   };
 

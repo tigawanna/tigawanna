@@ -9,6 +9,7 @@ export const backstageEnrichmentMutationInvalidates: BackstageEnrichmentInvalida
   [queryKeyPrefixes.backstage, "github-repos"],
   [queryKeyPrefixes.backstage, "projects"],
   [queryKeyPrefixes.backstage, "project-enrichment"],
+  [queryKeyPrefixes.backstage, "dashboard-counts"],
 ];
 
 /**

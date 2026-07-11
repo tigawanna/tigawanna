@@ -12,16 +12,17 @@ export const backstageRepoMutationInvalidates: BackstageInvalidateKey[] = [
   [queryKeyPrefixes.backstage, "github-repos"],
   [queryKeyPrefixes.backstage, "projects"],
   [queryKeyPrefixes.backstage, "project-enrichment"],
+  [queryKeyPrefixes.backstage, "dashboard-counts"],
 ];
 
 export const backstageProjectsQueryOptions = queryOptions({
   queryKey: [queryKeyPrefixes.backstage, "projects"],
-  queryFn: () => listProjectRepos(),
+  queryFn: () => listProjectRepos({ data: { page: 1, perPage: 500 } }),
 });
 
 export const backstageGithubReposQueryOptions = queryOptions({
   queryKey: [queryKeyPrefixes.backstage, "github-repos"],
-  queryFn: () => listGithubReposForBackstage(),
+  queryFn: () => listGithubReposForBackstage({ data: { page: 1, perPage: 500 } }),
 });
 
 export function backstageProjectDetailQueryOptions(repoFullName: string) {

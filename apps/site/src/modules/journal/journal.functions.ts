@@ -3,19 +3,23 @@ import {
   journalEntryFormSchema,
   type JournalEntryFormValues,
 } from "@/modules/journal/journal-form-schema";
-import {
-  compareJournalEntriesForDisplay,
-  journalRowToLessonItem,
-} from "@/modules/journal/map-journal-row";
+import { journalRowToLessonItem } from "@/modules/journal/map-journal-row";
 import { getDb } from "@/lib/db/get-db";
 import type { LessonItem } from "@/types/lessons";
-import { eq, journalEntries, sql, type JournalEntryRow } from "@repo/db";
+import {
+  asc,
+  buildPaginatedResponse,
+  count,
+  desc,
+  eq,
+  journalEntries,
+  normalizePaginationParams,
+  sql,
+  type JournalEntryRow,
+  type PaginatedResponse,
+} from "@repo/db";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-
-function sortJournalRows(rows: JournalEntryRow[]) {
-  return [...rows].sort(compareJournalEntriesForDisplay);
-}
 
 async function nextPinOrder() {
   const db = getDb();
@@ -29,19 +33,41 @@ async function nextPinOrder() {
 
 export async function fetchJournalLessonPage(page: number, perPage: number) {
   const db = getDb();
-  const rows = await db.select().from(journalEntries);
-  const sorted = sortJournalRows(rows);
-  const totalItems = sorted.length;
-  const totalPages = Math.max(1, Math.ceil(totalItems / perPage));
-  const safePage = Math.min(Math.max(page, 1), totalPages);
-  const start = (safePage - 1) * perPage;
+  const {
+    page: safePage,
+    perPage: safePerPage,
+    offset,
+  } = normalizePaginationParams({
+    page,
+    perPage,
+  });
+
+  const [{ count: totalItems }] = await db.select({ count: count() }).from(journalEntries);
+
+  const rows = await db
+    .select()
+    .from(journalEntries)
+    .orderBy(
+      desc(journalEntries.pinned),
+      asc(journalEntries.pinOrder),
+      desc(journalEntries.createdAt),
+    )
+    .limit(safePerPage)
+    .offset(offset);
+
+  const paginated = buildPaginatedResponse({
+    items: rows.map(journalRowToLessonItem),
+    page: safePage,
+    perPage: safePerPage,
+    totalItems,
+  });
 
   return {
-    page: safePage,
-    perPage,
-    totalPages,
-    totalItems,
-    items: sorted.slice(start, start + perPage).map(journalRowToLessonItem),
+    page: paginated.pagination.page,
+    perPage: paginated.pagination.perPage,
+    totalPages: Math.max(1, paginated.pagination.totalPages),
+    totalItems: paginated.pagination.totalItems,
+    items: paginated.items,
   };
 }
 
@@ -51,14 +77,43 @@ export async function fetchJournalLessonById(id: string): Promise<LessonItem | n
   return row ? journalRowToLessonItem(row) : null;
 }
 
-export const listJournalEntriesForBackstage = createServerFn({ method: "GET" }).handler(
-  async () => {
+const listJournalEntriesInputSchema = z
+  .object({
+    page: z.number().int().positive().optional(),
+    perPage: z.number().int().positive().max(500).optional(),
+  })
+  .optional();
+
+/**
+ * Lists journal entries for backstage, paginated.
+ *
+ * Rows are returned as-is from Drizzle, ordered for site display
+ * (pinned first, then pin order, then newest).
+ */
+export const listJournalEntriesForBackstage = createServerFn({ method: "GET" })
+  .validator((input?: z.infer<typeof listJournalEntriesInputSchema>) =>
+    listJournalEntriesInputSchema.parse(input),
+  )
+  .handler(async ({ data }): Promise<PaginatedResponse<JournalEntryRow>> => {
     await requireBackstageSession();
     const db = getDb();
-    const rows = await db.select().from(journalEntries);
-    return sortJournalRows(rows);
-  },
-);
+    const { page, perPage, offset } = normalizePaginationParams(data ?? {});
+
+    const [{ count: totalItems }] = await db.select({ count: count() }).from(journalEntries);
+
+    const items = await db
+      .select()
+      .from(journalEntries)
+      .orderBy(
+        desc(journalEntries.pinned),
+        asc(journalEntries.pinOrder),
+        desc(journalEntries.createdAt),
+      )
+      .limit(perPage)
+      .offset(offset);
+
+    return buildPaginatedResponse({ items, page, perPage, totalItems });
+  });
 
 const journalEntryIdSchema = z.object({
   id: z.string().min(1),

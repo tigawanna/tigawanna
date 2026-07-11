@@ -20,7 +20,14 @@ export type BackstageGithubRepo = {
 };
 
 export type BackstageGithubReposResponse = {
-  repos: BackstageGithubRepo[];
+  items: BackstageGithubRepo[];
+  pagination: {
+    page: number;
+    perPage: number;
+    totalItems: number;
+    totalPages: number;
+    hasMore: boolean;
+  };
   errors: string[];
 };
 

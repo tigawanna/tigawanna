@@ -1,13 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-
-import {
-  backstageGithubReposQueryOptions,
-  backstageProjectsQueryOptions,
-} from "@/data-access-layer/backstage/projects/projects-query-options";
-import {
-  contactMessagesQueryOptions,
-  journalEntriesQueryOptions,
-} from "@/data-access-layer/backstage/shared-query-options";
+import { backstageDashboardCountsQueryOptions } from "@/data-access-layer/backstage/shared-query-options";
 import { cn } from "@/lib/utils";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
@@ -70,26 +62,14 @@ function BackstageStatCard({
 }
 
 export function BackstageHomeContent() {
-  const { data: messages } = useSuspenseQuery(contactMessagesQueryOptions);
-  const { data: journalEntries } = useSuspenseQuery(journalEntriesQueryOptions);
-  const { data: projects } = useSuspenseQuery(backstageProjectsQueryOptions);
-  const { data: githubRepos } = useSuspenseQuery(backstageGithubReposQueryOptions);
-
-  const importedRepoNames = new Set(projects.map((project) => project.repoFullName));
-  const importableRepoCount = githubRepos.repos.filter(
-    (repo) => !importedRepoNames.has(repo.nameWithOwner),
-  ).length;
-  const pinnedJournalCount = journalEntries.filter((entry) => entry.pinned).length;
-  const completeProjectCount = projects.filter(
-    (project) => project.attendance === "complete",
-  ).length;
+  const { data: counts } = useSuspenseQuery(backstageDashboardCountsQueryOptions);
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-6" data-test="backstage-admin-home">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Backstage</h1>
         <p className="text-base-content/60 mt-2 text-sm">
-          {messages.length} messages · {projects.length} projects · {journalEntries.length} journal
+          {counts.messages} messages · {counts.projects} projects · {counts.journalEntries} journal
           entries
         </p>
       </div>
@@ -99,7 +79,7 @@ export function BackstageHomeContent() {
           title="Messages"
           description="Contact form submissions saved to D1."
           icon={Inbox}
-          value={messages.length}
+          value={counts.messages}
           valueLabel="total"
           data-test="backstage-home-messages"
           actions={
@@ -113,16 +93,13 @@ export function BackstageHomeContent() {
           title="Projects"
           description="Repos imported into the database."
           icon={LayoutGrid}
-          value={projects.length}
+          value={counts.projects}
           valueLabel="imported"
-          highlights={[
-            ...(importableRepoCount > 0
-              ? [{ label: "on GitHub to import", value: importableRepoCount }]
-              : []),
-            ...(completeProjectCount > 0
-              ? [{ label: "complete on GitHub", value: completeProjectCount }]
-              : []),
-          ]}
+          highlights={
+            counts.projectsComplete > 0
+              ? [{ label: "complete", value: counts.projectsComplete }]
+              : []
+          }
           data-test="backstage-home-projects"
           actions={
             <>
@@ -140,10 +117,10 @@ export function BackstageHomeContent() {
           title="Journal"
           description="Today-I-learned entries for the landing page and /lessons."
           icon={BookOpen}
-          value={journalEntries.length}
+          value={counts.journalEntries}
           valueLabel="entries"
           highlights={
-            pinnedJournalCount > 0 ? [{ label: "pinned", value: pinnedJournalCount }] : []
+            counts.journalPinned > 0 ? [{ label: "pinned", value: counts.journalPinned }] : []
           }
           data-test="backstage-home-journal"
           actions={

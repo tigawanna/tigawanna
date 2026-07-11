@@ -13,7 +13,7 @@ export const projectEnrichmentSuggestionsQueryOptions = queryOptions({
 
 export const projectReposQueryOptions = queryOptions({
   queryKey: [queryKeyPrefixes.backstage, "project-enrichment", "repos"],
-  queryFn: () => listProjectRepos(),
+  queryFn: () => listProjectRepos({ data: { page: 1, perPage: 500 } }),
 });
 
 export const projectEnrichmentRunsQueryOptions = queryOptions({

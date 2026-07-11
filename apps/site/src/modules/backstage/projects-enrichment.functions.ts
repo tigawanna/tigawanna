@@ -9,11 +9,16 @@ import { unwrapUnknownError } from "@/utils/errors";
 import { enrichProjectsWorkflow } from "@/workflows/project-enrichment";
 import {
   and,
+  buildPaginatedResponse,
+  count,
   desc,
   eq,
+  normalizePaginationParams,
   projectEnrichmentRuns,
   projectEnrichmentSuggestions,
   projectRepos,
+  type PaginatedResponse,
+  type ProjectEnrichmentRunRow,
 } from "@repo/db";
 import { createServerFn } from "@tanstack/react-start";
 import { start } from "workflow/api";
@@ -31,15 +36,76 @@ function parseTopics(raw: string) {
   }
 }
 
-export const listProjectEnrichmentSuggestions = createServerFn({ method: "GET" }).handler(
-  async () => {
+const listPaginationInputSchema = z
+  .object({
+    page: z.number().int().positive().optional(),
+    perPage: z.number().int().positive().max(500).optional(),
+  })
+  .optional();
+
+/** Pending enrichment suggestion joined with current repo fields. */
+export type ProjectEnrichmentSuggestionListItem = {
+  id: string;
+  runId: string;
+  githubRepoId: string;
+  status: (typeof projectEnrichmentSuggestions.$inferSelect)["status"];
+  suggestedDescription: string | null;
+  suggestedTopics: string[];
+  suggestedHomepage: string | null;
+  analysisSummary: string | null;
+  applyError: string | null;
+  createdAt: Date;
+  reviewedAt: Date | null;
+  appliedAt: Date | null;
+  repoFullName: string;
+  currentDescription: string | null;
+  currentTopics: string[];
+  currentHomepage: string | null;
+  currentOgImageUrl: string | null;
+};
+
+/**
+ * Lists pending enrichment suggestions for backstage review, paginated.
+ *
+ * Topic JSON columns are parsed into `string[]`; other fields come from the select shape.
+ */
+export const listProjectEnrichmentSuggestions = createServerFn({ method: "GET" })
+  .validator((input?: z.infer<typeof listPaginationInputSchema>) =>
+    listPaginationInputSchema.parse(input),
+  )
+  .handler(async ({ data }): Promise<PaginatedResponse<ProjectEnrichmentSuggestionListItem>> => {
     await requireBackstageSession();
     const db = getDb();
+    const { page, perPage, offset } = normalizePaginationParams(data ?? {});
+
+    const [{ count: totalItems }] = await db
+      .select({ count: count() })
+      .from(projectEnrichmentSuggestions)
+      .innerJoin(
+        projectRepos,
+        eq(projectEnrichmentSuggestions.githubRepoId, projectRepos.githubRepoId),
+      )
+      .where(eq(projectEnrichmentSuggestions.status, "pending_review"));
 
     const rows = await db
       .select({
-        suggestion: projectEnrichmentSuggestions,
-        repo: projectRepos,
+        id: projectEnrichmentSuggestions.id,
+        runId: projectEnrichmentSuggestions.runId,
+        githubRepoId: projectEnrichmentSuggestions.githubRepoId,
+        status: projectEnrichmentSuggestions.status,
+        suggestedDescription: projectEnrichmentSuggestions.suggestedDescription,
+        suggestedTopics: projectEnrichmentSuggestions.suggestedTopics,
+        suggestedHomepage: projectEnrichmentSuggestions.suggestedHomepage,
+        analysisSummary: projectEnrichmentSuggestions.analysisSummary,
+        applyError: projectEnrichmentSuggestions.applyError,
+        createdAt: projectEnrichmentSuggestions.createdAt,
+        reviewedAt: projectEnrichmentSuggestions.reviewedAt,
+        appliedAt: projectEnrichmentSuggestions.appliedAt,
+        repoFullName: projectRepos.repoFullName,
+        currentDescription: projectRepos.currentDescription,
+        currentTopics: projectRepos.currentTopics,
+        currentHomepage: projectRepos.currentHomepage,
+        currentOgImageUrl: projectRepos.currentOgImageUrl,
       })
       .from(projectEnrichmentSuggestions)
       .innerJoin(
@@ -47,29 +113,44 @@ export const listProjectEnrichmentSuggestions = createServerFn({ method: "GET" }
         eq(projectEnrichmentSuggestions.githubRepoId, projectRepos.githubRepoId),
       )
       .where(eq(projectEnrichmentSuggestions.status, "pending_review"))
-      .orderBy(desc(projectEnrichmentSuggestions.createdAt));
+      .orderBy(desc(projectEnrichmentSuggestions.createdAt))
+      .limit(perPage)
+      .offset(offset);
 
-    return rows.map((row) => ({
-      ...row.suggestion,
-      suggestedTopics: parseTopics(row.suggestion.suggestedTopics),
-      currentTopics: parseTopics(row.repo.currentTopics),
-      repoFullName: row.repo.repoFullName,
-      currentDescription: row.repo.currentDescription,
-      currentHomepage: row.repo.currentHomepage,
-      currentOgImageUrl: row.repo.currentOgImageUrl,
+    const items = rows.map((row) => ({
+      ...row,
+      suggestedTopics: parseTopics(row.suggestedTopics),
+      currentTopics: parseTopics(row.currentTopics),
     }));
-  },
-);
 
-export const listProjectEnrichmentRuns = createServerFn({ method: "GET" }).handler(async () => {
-  await requireBackstageSession();
-  const db = getDb();
-  return db
-    .select()
-    .from(projectEnrichmentRuns)
-    .orderBy(desc(projectEnrichmentRuns.startedAt))
-    .limit(20);
-});
+    return buildPaginatedResponse({ items, page, perPage, totalItems });
+  });
+
+/**
+ * Lists recent enrichment runs for backstage, paginated.
+ *
+ * Rows are returned as-is from Drizzle.
+ */
+export const listProjectEnrichmentRuns = createServerFn({ method: "GET" })
+  .validator((input?: z.infer<typeof listPaginationInputSchema>) =>
+    listPaginationInputSchema.parse(input),
+  )
+  .handler(async ({ data }): Promise<PaginatedResponse<ProjectEnrichmentRunRow>> => {
+    await requireBackstageSession();
+    const db = getDb();
+    const { page, perPage, offset } = normalizePaginationParams(data ?? {}, { perPage: 20 });
+
+    const [{ count: totalItems }] = await db.select({ count: count() }).from(projectEnrichmentRuns);
+
+    const items = await db
+      .select()
+      .from(projectEnrichmentRuns)
+      .orderBy(desc(projectEnrichmentRuns.startedAt))
+      .limit(perPage)
+      .offset(offset);
+
+    return buildPaginatedResponse({ items, page, perPage, totalItems });
+  });
 
 export const getProjectEnrichmentRun = createServerFn({ method: "GET" })
   .validator((input: { runId: string }) => ({

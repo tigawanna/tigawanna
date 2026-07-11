@@ -18,7 +18,10 @@ export const backstageProjectsCollection = createCollection(
   queryCollectionOptions({
     id: COLLECTION_ID,
     queryKey: [queryKeyPrefixes.backstage, "projects"],
-    queryFn: withCollectionQueryLogging(COLLECTION_ID, () => listProjectRepos()),
+    queryFn: withCollectionQueryLogging(COLLECTION_ID, () =>
+      listProjectRepos({ data: { page: 1, perPage: 500 } }),
+    ),
+    select: (data) => data.items,
     queryClient,
     defaultIndexType: BasicIndex,
     getKey: (item: BackstageProject) => item.githubRepoId,

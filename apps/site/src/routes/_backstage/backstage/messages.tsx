@@ -14,7 +14,8 @@ export const Route = createFileRoute("/_backstage/backstage/messages")({
 });
 
 function BackstageMessagesPage() {
-  const { data: messages } = useSuspenseQuery(contactMessagesQueryOptions);
+  const { data } = useSuspenseQuery(contactMessagesQueryOptions);
+  const messages = data.items;
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-6" data-test="backstage-messages">
@@ -22,6 +23,9 @@ function BackstageMessagesPage() {
         <h1 className="text-2xl font-semibold tracking-tight">Messages</h1>
         <p className="text-base-content/60 mt-2 text-sm">
           Contact submissions sent to Telegram and stored in D1.
+          {data.pagination.totalItems > 0
+            ? ` Showing ${messages.length} of ${data.pagination.totalItems}.`
+            : null}
         </p>
       </div>
 

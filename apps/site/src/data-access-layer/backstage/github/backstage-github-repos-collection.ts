@@ -24,8 +24,10 @@ export const backstageGithubReposCollection = createCollection(
   queryCollectionOptions({
     id: COLLECTION_ID,
     queryKey: [queryKeyPrefixes.backstage, "github-repos"],
-    queryFn: withCollectionQueryLogging(COLLECTION_ID, () => listGithubReposForBackstage()),
-    select: (data) => data.repos,
+    queryFn: withCollectionQueryLogging(COLLECTION_ID, () =>
+      listGithubReposForBackstage({ data: { page: 1, perPage: 500 } }),
+    ),
+    select: (data) => data.items,
     queryClient,
     defaultIndexType: BasicIndex,
     getKey: (item: BackstageGithubRepo) => item.nameWithOwner,
