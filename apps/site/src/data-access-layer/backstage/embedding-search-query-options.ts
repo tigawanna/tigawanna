@@ -1,9 +1,10 @@
 import {
   getProjectEmbeddingSearchStats,
   searchProjectEmbeddingsByVector,
+  type EmbeddingVectorSearchResponse,
 } from "@/modules/backstage/embedding-search.functions";
 import { queryKeyPrefixes } from "@/data-access-layer/query-keys";
-import { mutationOptions, queryOptions } from "@tanstack/react-query";
+import { queryOptions } from "@tanstack/react-query";
 
 export const projectEmbeddingSearchStatsQueryOptions = queryOptions({
   queryKey: [queryKeyPrefixes.backstage, "embedding-search", "stats"],
@@ -16,17 +17,29 @@ export type SearchProjectEmbeddingsByVectorInput = {
   limit?: number;
 };
 
-export const searchProjectEmbeddingsByVectorMutationOptions = mutationOptions<
-  Awaited<ReturnType<typeof searchProjectEmbeddingsByVector>>,
-  unknown,
-  SearchProjectEmbeddingsByVectorInput
->({
-  mutationFn: (input: SearchProjectEmbeddingsByVectorInput) =>
-    searchProjectEmbeddingsByVector({
-      data: {
-        queryEmbedding: input.queryEmbedding,
-        query: input.query,
-        limit: input.limit ?? 10,
-      },
-    }),
-});
+export type SearchProjectEmbeddingsRequest = {
+  input: SearchProjectEmbeddingsByVectorInput;
+  requestId: number;
+};
+
+export function searchProjectEmbeddingsByVectorQueryOptions(
+  request: SearchProjectEmbeddingsRequest | null,
+) {
+  return queryOptions<EmbeddingVectorSearchResponse>({
+    queryKey: [
+      queryKeyPrefixes.backstage,
+      "embedding-search",
+      "vector",
+      request?.requestId ?? null,
+    ],
+    queryFn: () =>
+      searchProjectEmbeddingsByVector({
+        data: {
+          queryEmbedding: request!.input.queryEmbedding,
+          query: request!.input.query,
+          limit: request!.input.limit ?? 10,
+        },
+      }),
+    // enabled: request != null,
+  });
+}
