@@ -1,6 +1,7 @@
 import { TSRListPagination } from "@/components/pagination/TSRListPagination";
 import { SearchBox } from "@/components/search/SearchBox";
 import { usePageSearchQuery } from "@/components/search/use-page-search-query";
+import { Button } from "@/components/ui/button";
 import {
   Empty,
   EmptyContent,
@@ -15,7 +16,7 @@ import {
 } from "@/data-access-layer/backstage/shared-query-options";
 import { queryKeyPrefixes } from "@/data-access-layer/query-keys";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { BookOpen } from "lucide-react";
+import { BookOpen, SearchX } from "lucide-react";
 import { Route } from "../../journal";
 import { BackstagePending } from "../shared/BackstagePending";
 import { BackstageJournalListItem } from "./BackstageJournalListItem";
@@ -27,10 +28,11 @@ export function BackstageJournalList() {
   const page = search.page ?? 1;
   const queryClient = useQueryClient();
   const { data, isPending, isLoading } = useQuery(
-    journalEntriesQueryOptions({ page, perPage: BACKSTAGE_LIST_PER_PAGE }),
+    journalEntriesQueryOptions({ page, perPage: BACKSTAGE_LIST_PER_PAGE, q }),
   );
 
   const journalEntries = data?.items ?? [];
+  const hasSearch = q.trim().length > 0;
 
   if (isPending || isLoading) {
     return (
@@ -42,22 +44,26 @@ export function BackstageJournalList() {
 
   if (journalEntries.length === 0) {
     return (
-      <BackstageJournalListScaffold>
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <BookOpen />
-            </EmptyMedia>
-            <EmptyTitle>No Journal Entries Yet</EmptyTitle>
-            <EmptyDescription>
-              You haven&apos;t created any journals yet. Get started by creating your first journal
-              entry.
-            </EmptyDescription>
-          </EmptyHeader>
-          <EmptyContent className="flex-row justify-center gap-2">
-            <JournalEntryFormDialog onSuccess={() => invalidateJournalList(queryClient)} />
-          </EmptyContent>
-        </Empty>
+      <BackstageJournalListScaffold totalPages={data?.pagination.totalPages ?? 0}>
+        {hasSearch ? (
+          <JournalSearchEmpty query={q.trim()} />
+        ) : (
+          <Empty>
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <BookOpen />
+              </EmptyMedia>
+              <EmptyTitle>No Journal Entries Yet</EmptyTitle>
+              <EmptyDescription>
+                You haven&apos;t created any journals yet. Get started by creating your first
+                journal entry.
+              </EmptyDescription>
+            </EmptyHeader>
+            <EmptyContent className="flex-row justify-center gap-2">
+              <JournalEntryFormDialog onSuccess={() => invalidateJournalList(queryClient)} />
+            </EmptyContent>
+          </Empty>
+        )}
       </BackstageJournalListScaffold>
     );
   }
@@ -65,7 +71,7 @@ export function BackstageJournalList() {
   return (
     <BackstageJournalListScaffold totalPages={data?.pagination.totalPages ?? 0}>
       <ul
-        className="flex flex-col gap-3 h-[70vh] overflow-y-auto"
+        className="flex h-[70vh] flex-col gap-3 overflow-y-auto"
         data-test="backstage-journal-list"
       >
         {journalEntries.map((entry) => (
@@ -73,6 +79,35 @@ export function BackstageJournalList() {
         ))}
       </ul>
     </BackstageJournalListScaffold>
+  );
+}
+
+function JournalSearchEmpty({ query }: { query: string }) {
+  const { clearSearch } = usePageSearchQuery("/_backstage/backstage/journal");
+
+  return (
+    <Empty data-test="backstage-journal-search-empty">
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <SearchX />
+        </EmptyMedia>
+        <EmptyTitle>No entries match “{query}”</EmptyTitle>
+        <EmptyDescription>
+          Try clearing the search input or changing your keywords to find matching titles and
+          descriptions.
+        </EmptyDescription>
+      </EmptyHeader>
+      <EmptyContent>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={clearSearch}
+          data-test="backstage-journal-clear-search"
+        >
+          Clear search
+        </Button>
+      </EmptyContent>
+    </Empty>
   );
 }
 

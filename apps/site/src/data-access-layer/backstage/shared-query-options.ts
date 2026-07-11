@@ -28,15 +28,21 @@ export function contactMessagesQueryOptions(page = 1, perPage = BACKSTAGE_LIST_P
 /**
  * Journal entries for a given page.
  *
- * @param {number} page - 1-based page index (default 1).
- * @param {number} perPage - Page size (default {@link BACKSTAGE_LIST_PER_PAGE}).
+ * @param page - 1-based page index (default 1).
+ * @param perPage - Page size (default {@link BACKSTAGE_LIST_PER_PAGE}).
+ * @param q - Optional search against title and description.
  */
 export function journalEntriesQueryOptions({
   page = 1,
   perPage = BACKSTAGE_LIST_PER_PAGE,
-}: { page?: number; perPage?: number } = {}) {
+  q = "",
+}: { page?: number; perPage?: number; q?: string } = {}) {
+  const query = q.trim();
   return queryOptions({
-    queryKey: [queryKeyPrefixes.backstage, "journal-entries", page, perPage],
-    queryFn: () => listJournalEntriesForBackstage({ data: { page, perPage } }),
+    queryKey: [queryKeyPrefixes.backstage, "journal-entries", page, perPage, query],
+    queryFn: () =>
+      listJournalEntriesForBackstage({
+        data: { page, perPage, q: query || undefined },
+      }),
   });
 }

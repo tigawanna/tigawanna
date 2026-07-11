@@ -22,9 +22,9 @@ export const Route = createFileRoute("/_backstage/backstage/journal")({
       throw redirect({ to: "/backstage" });
     }
   },
-  loaderDeps: ({ search }) => ({ page: search.page ?? 1 }),
-  loader: ({ context, deps: { page } }) =>
-    context.queryClient.ensureQueryData(journalEntriesQueryOptions({ page })),
+  loaderDeps: ({ search }) => ({ page: search.page ?? 1, q: search.q ?? "" }),
+  loader: ({ context, deps: { page, q } }) =>
+    context.queryClient.ensureQueryData(journalEntriesQueryOptions({ page, q })),
   component: BackstageJournalPage,
   pendingComponent: BackstagePending,
 });

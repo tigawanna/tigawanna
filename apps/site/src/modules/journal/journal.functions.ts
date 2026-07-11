@@ -14,6 +14,7 @@ import {
   eq,
   journalEntries,
   normalizePaginationParams,
+  or,
   sql,
   type JournalEntryRow,
   type PaginatedResponse,
@@ -81,14 +82,26 @@ const listJournalEntriesInputSchema = z
   .object({
     page: z.number().int().positive().optional(),
     perPage: z.number().int().positive().max(500).optional(),
+    /** Case-insensitive search against title and description. */
+    q: z.string().optional(),
   })
   .optional();
+
+/**
+ * Escapes `%`, `_`, and `\` so user search text is treated literally in LIKE.
+ *
+ * @param value - Raw search fragment from the client.
+ */
+function escapeLikePattern(value: string) {
+  return value.replace(/[\\%_]/g, "\\$&");
+}
 
 /**
  * Lists journal entries for backstage, paginated.
  *
  * Rows are returned as-is from Drizzle, ordered for site display
- * (pinned first, then pin order, then newest).
+ * (pinned first, then pin order, then newest). Optional `q` filters
+ * title and description with a case-insensitive LIKE.
  */
 export const listJournalEntriesForBackstage = createServerFn({ method: "GET" })
   .validator((input?: z.infer<typeof listJournalEntriesInputSchema>) =>
@@ -98,12 +111,24 @@ export const listJournalEntriesForBackstage = createServerFn({ method: "GET" })
     await requireBackstageSession();
     const db = getDb();
     const { page, perPage, offset } = normalizePaginationParams(data ?? {});
+    const q = data?.q?.trim() ?? "";
+    const searchPattern = q ? `%${escapeLikePattern(q.toLowerCase())}%` : null;
+    const searchWhere = searchPattern
+      ? or(
+          sql`lower(${journalEntries.title}) like ${searchPattern} escape '\\'`,
+          sql`lower(${journalEntries.description}) like ${searchPattern} escape '\\'`,
+        )
+      : undefined;
 
-    const [{ count: totalItems }] = await db.select({ count: count() }).from(journalEntries);
+    const [{ count: totalItems }] = await db
+      .select({ count: count() })
+      .from(journalEntries)
+      .where(searchWhere);
 
     const items = await db
       .select()
       .from(journalEntries)
+      .where(searchWhere)
       .orderBy(
         desc(journalEntries.pinned),
         asc(journalEntries.pinOrder),
