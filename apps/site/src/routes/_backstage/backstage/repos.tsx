@@ -2,11 +2,11 @@ import { ClientOnly } from "@/components/wrappers/ClientOnly";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { lazy, Suspense } from "react";
 import { z } from "zod";
-import { BackstageRepoPageFallback } from "./-components/shared/BackstageRepoPageFallback";
+import { BackstegReposPending } from "./-components/repos/BackstageReposContent";
 
 export const backstageReposSearchSchema = z.object({
   page: z.coerce.number().int().min(1).optional(),
-  sq: z.string().optional(),
+  q: z.string().optional(),
   sortBy: z.enum(["nameWithOwner", "name", "pushedAt", "stargazerCount", "forkCount"]).optional(),
   sortDirection: z.enum(["asc", "desc"]).optional(),
   tracked: z.enum(["all", "tracked", "untracked"]).optional(),
@@ -34,8 +34,8 @@ export const Route = createFileRoute("/_backstage/backstage/repos")({
 
 function BackstageReposPage() {
   return (
-    <ClientOnly fallback={<BackstageRepoPageFallback />}>
-      <Suspense fallback={<BackstageRepoPageFallback />}>
+    <ClientOnly fallback={<BackstegReposPending />}>
+      <Suspense fallback={<BackstegReposPending />}>
         <BackstageReposContent />
       </Suspense>
     </ClientOnly>

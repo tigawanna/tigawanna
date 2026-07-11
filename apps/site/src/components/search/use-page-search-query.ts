@@ -3,11 +3,20 @@ import { useDebouncedCallback } from "@tanstack/react-pacer";
 import { getRouteApi } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
+const SEARCH_DEBOUNCE_MS = 400;
+
+/**
+ * Debounced URL `q` search for a TanStack Router route id.
+ *
+ * Keeps a local input value in sync with the committed `q` search param and
+ * resets `page` whenever the query commits or clears.
+ *
+ * @param routeID - File route id (e.g. `"/_backstage/backstage/journal"`).
+ */
 export function usePageSearchQuery(routeID: TRouteID) {
-  const SEARCH_DEBOUNCE_MS = 3000;
-  const journalRouteApi = getRouteApi(routeID);
-  const routeSearch = journalRouteApi.useSearch();
-  const navigate = journalRouteApi.useNavigate();
+  const routeApi = getRouteApi(routeID);
+  const routeSearch = routeApi.useSearch();
+  const navigate = routeApi.useNavigate();
   const searchQuery = "q" in routeSearch ? (routeSearch.q ?? "") : "";
   const [inputValue, setInputValue] = useState(searchQuery);
 

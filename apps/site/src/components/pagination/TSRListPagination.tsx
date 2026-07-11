@@ -5,29 +5,43 @@ import { ListPagination } from "./ReactresponsivePagination";
 interface TSRListPaginationProps {
   routeID: TRouteID;
   totalPages: number;
+  "data-test"?: string;
 }
 
-export function TSRListPagination({ routeID, totalPages }: TSRListPaginationProps) {
+/**
+ * Route-aware list pagination. Reads `page` from the route search and navigates
+ * while preserving other search params (`q`, sort, filters).
+ */
+export function TSRListPagination({
+  routeID,
+  totalPages,
+  "data-test": dataTest = "backstage-list-pagination",
+}: TSRListPaginationProps) {
   const routeApi = getRouteApi(routeID);
   const search = routeApi.useSearch();
   const navigate = routeApi.useNavigate();
 
   const currentPage = "page" in search ? (search.page ?? 1) : 1;
-  const setPage = async (page: number) => {
+
+  function setPage(page: number) {
     void navigate({
-      search: {
-        page: page,
-      },
+      search: (prev) => ({
+        ...prev,
+        page: page <= 1 ? undefined : page,
+      }),
+      replace: true,
     });
-  };
+  }
+
   if (totalPages <= 1) return null;
+
   return (
-    <div className="w-full flex items-center justify-center">
+    <div className="flex w-full items-center justify-center">
       <ListPagination
         page={currentPage}
         totalPages={totalPages}
         onPageChange={setPage}
-        data-test="backstage-journal-pagination"
+        data-test={dataTest}
       />
     </div>
   );

@@ -20,11 +20,20 @@ export const backstageDashboardCountsQueryOptions = queryOptions({
  *
  * @param page - 1-based page index (default 1).
  * @param perPage - Page size (default {@link BACKSTAGE_LIST_PER_PAGE}).
+ * @param q - Optional search against name, contact, and message.
  */
-export function contactMessagesQueryOptions(page = 1, perPage = BACKSTAGE_LIST_PER_PAGE) {
+export function contactMessagesQueryOptions({
+  page = 1,
+  perPage = BACKSTAGE_LIST_PER_PAGE,
+  q = "",
+}: { page?: number; perPage?: number; q?: string } = {}) {
+  const query = q.trim();
   return queryOptions({
-    queryKey: [queryKeyPrefixes.backstage, "contact-messages", page, perPage],
-    queryFn: () => listContactMessages({ data: { page, perPage } }),
+    queryKey: [queryKeyPrefixes.backstage, "contact-messages", page, perPage, query],
+    queryFn: () =>
+      listContactMessages({
+        data: { page, perPage, q: query || undefined },
+      }),
   });
 }
 

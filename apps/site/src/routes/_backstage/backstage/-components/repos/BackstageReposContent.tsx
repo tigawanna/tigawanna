@@ -1,7 +1,15 @@
-import { ListPagination } from "@/components/pagination/ReactresponsivePagination";
+import { TSRListPagination } from "@/components/pagination/TSRListPagination";
 import { SearchBox } from "@/components/search/SearchBox";
+import { usePageSearchQuery } from "@/components/search/use-page-search-query";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 import {
   Select,
   SelectContent,
@@ -17,7 +25,6 @@ import {
 import { backstageProjectsCollection } from "@/data-access-layer/backstage/projects/backstage-projects-collection";
 import { backstageGithubReposQueryOptions } from "@/data-access-layer/backstage/projects/projects-query-options";
 import { BACKSTAGE_LIST_PER_PAGE } from "@/data-access-layer/backstage/shared-query-options";
-import { useTSRSearchQuery } from "@/hooks/use-tsr-search-query";
 import { TanstackDBSortSelect } from "@/routes/_backstage/backstage/-components/shared/TanstackDBColumnfilters";
 import { createSortableColumns } from "@/routes/_backstage/backstage/-components/shared/sortable-columns";
 import { useEnrichmentRunProgress } from "@/routes/_backstage/backstage/-hooks/use-enrichment-run-progress";
@@ -30,14 +37,17 @@ import { paginateItems } from "@/utils/paginate-items";
 import { and, eq, ilike, IR, isNull, not, or } from "@tanstack/db";
 import { useLiveSuspenseQuery } from "@tanstack/react-db";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Download, RefreshCcwIcon } from "lucide-react";
-import { useEffect, useState, useTransition } from "react";
+import { Download, RefreshCcwIcon, SearchX } from "lucide-react";
+import { useEffect, useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { toast } from "sonner";
 import { Route, type BackstageReposSearch } from "../../repos";
 import { BackstageFilterField, BackstageFiltersDialog } from "../shared/BackstageFiltersDialog";
+import { BackstagePending } from "../shared/BackstagePending";
 import { BackstageRepoRow } from "./BackstageRepoRow";
 import { BulkImportDialog } from "./BulkImportDialog";
+
+const ROUTE_ID = "/_backstage/backstage/repos";
 
 const repoSortableColumns = createSortableColumns(backstageGithubReposCollection, [
   { value: "nameWithOwner", label: "Repository" },
@@ -54,42 +64,21 @@ function combineWhereClauses(clauses: Array<IR.BasicExpression<boolean>>) {
   return clauses.slice(1).reduce((acc, clause) => and(acc, clause), clauses[0]!);
 }
 
-export function BackstageReposContent() {
-  const search = Route.useSearch();
-  const navigate = Route.useNavigate();
-  const [, startTransition] = useTransition();
-  const { debouncedValue, isDebouncing, keyword, setKeyword, setSearchParams } =
-    useTSRSearchQuery<BackstageReposSearch>({
-      search,
-      navigate,
-      query_param: "sq",
-      debounce_delay: 400,
-    });
-
-  const sortBy = search.sortBy ?? "pushedAt";
-  const sortDirection = search.sortDirection ?? "desc";
-  const tracked = search.tracked ?? "all";
-  const visibility = search.visibility ?? "all";
-  const archived = search.archived ?? "all";
-  const page = search.page ?? 1;
-  const hasActiveFilters = Boolean(
-    debouncedValue || tracked !== "all" || visibility !== "all" || archived !== "all",
-  );
-
-  const [bulkImportOpen, setBulkImportOpen] = useState(false);
-  const [importingRepo, setImportingRepo] = useState<string | null>(null);
-  const [activeRunId, setActiveRunId] = useState<string | null>(null);
-  const { workingRepoFullName, isRunning } = useEnrichmentRunProgress(activeRunId);
+/**
+ * While an enrichment run is active, periodically refetch projects; clear the run id when done.
+ */
+function useEnrichmentProjectsSync(
+  activeRunId: string | null,
+  setActiveRunId: (runId: string | null) => void,
+) {
+  const { workingRepoFullName, run } = useEnrichmentRunProgress(activeRunId);
 
   useEffect(() => {
-    if (activeRunId && !isRunning) {
+    if (!activeRunId || !run) return;
+
+    if (run.status !== "running") {
       setActiveRunId(null);
       void backstageProjectsCollection.utils.refetch();
-    }
-  }, [activeRunId, isRunning]);
-
-  useEffect(() => {
-    if (!activeRunId || !isRunning) {
       return;
     }
 
@@ -98,26 +87,47 @@ export function BackstageReposContent() {
     }, 3000);
 
     return () => window.clearInterval(intervalId);
-  }, [activeRunId, isRunning]);
+  }, [activeRunId, run, setActiveRunId]);
+
+  return { workingRepoFullName };
+}
+
+export function BackstageReposContent() {
+  const search = Route.useSearch();
+  const q = search.q ?? "";
+  const sortBy = search.sortBy ?? "pushedAt";
+  const sortDirection = search.sortDirection ?? "desc";
+  const tracked = search.tracked ?? "all";
+  const visibility = search.visibility ?? "all";
+  const archived = search.archived ?? "all";
+  const page = search.page ?? 1;
+  const hasActiveFilters = Boolean(
+    q || tracked !== "all" || visibility !== "all" || archived !== "all",
+  );
+
+  const [bulkImportOpen, setBulkImportOpen] = useState(false);
+  const [importingRepo, setImportingRepo] = useState<string | null>(null);
+  const [activeRunId, setActiveRunId] = useState<string | null>(null);
+  const { workingRepoFullName } = useEnrichmentProjectsSync(activeRunId, setActiveRunId);
 
   const { data: repoRows } = useLiveSuspenseQuery(
-    (q) => {
-      let query = q
+    (queryBuilder) => {
+      let query = queryBuilder
         .from({ github: backstageGithubReposCollection })
         .leftJoin({ projects: backstageProjectsCollection }, ({ github, projects }) =>
           eq(github.nameWithOwner, projects.repoFullName),
         );
 
-      if (debouncedValue || tracked !== "all" || visibility !== "all" || archived !== "all") {
+      if (q || tracked !== "all" || visibility !== "all" || archived !== "all") {
         query = query.where(({ github, projects }) => {
           const clauses: Array<IR.BasicExpression<boolean>> = [];
 
-          if (debouncedValue) {
+          if (q) {
             clauses.push(
               or(
-                ilike(github.nameWithOwner, `%${debouncedValue}%`),
-                ilike(github.name, `%${debouncedValue}%`),
-                ilike(github.description, `%${debouncedValue}%`),
+                ilike(github.nameWithOwner, `%${q}%`),
+                ilike(github.name, `%${q}%`),
+                ilike(github.description, `%${q}%`),
               ),
             );
           }
@@ -164,7 +174,7 @@ export function BackstageReposContent() {
           isTracked: projects != null,
         }));
     },
-    [debouncedValue, sortBy, sortDirection, tracked, visibility, archived],
+    [q, sortBy, sortDirection, tracked, visibility, archived],
   );
 
   const { data: githubErrors = [], isFetching: isRefetchingRepos } = useQuery({
@@ -219,41 +229,199 @@ export function BackstageReposContent() {
     BACKSTAGE_LIST_PER_PAGE,
   );
 
-  const setPage = (nextPage: number) => {
-    startTransition(() => {
-      void navigate({
-        search: (prev) => ({
-          ...prev,
-          page: nextPage <= 1 ? undefined : nextPage,
-        }),
-        replace: true,
-        viewTransition: false,
-      });
-    });
-  };
-
   const isRowWorking = (repoFullName: string) =>
     importingRepo === repoFullName ||
     workingRepoFullName === repoFullName ||
     (bulkImportMutation.isPending && untrackedRepoFullNames.includes(repoFullName));
 
+  if (repoRows.length === 0) {
+    return (
+      <BackstageReposListScaffold
+        totalPages={0}
+        bulkImportOpen={bulkImportOpen}
+        onBulkImportOpenChange={setBulkImportOpen}
+        untrackedRepoFullNames={untrackedRepoFullNames}
+        isBulkImporting={bulkImportMutation.isPending}
+        onBulkImportConfirm={(options) => bulkImportMutation.mutate(options)}
+        isImportBusy={isImportBusy}
+        isRefetchingRepos={isRefetchingRepos}
+      >
+        <ReposEmpty
+          hasActiveFilters={hasActiveFilters}
+          hasGithubErrors={githubErrors.length > 0}
+          query={q.trim()}
+        />
+      </BackstageReposListScaffold>
+    );
+  }
+
+  return (
+    <BackstageReposListScaffold
+      totalPages={pagination.totalPages}
+      bulkImportOpen={bulkImportOpen}
+      onBulkImportOpenChange={setBulkImportOpen}
+      untrackedRepoFullNames={untrackedRepoFullNames}
+      isBulkImporting={bulkImportMutation.isPending}
+      onBulkImportConfirm={(options) => bulkImportMutation.mutate(options)}
+      isImportBusy={isImportBusy}
+      isRefetchingRepos={isRefetchingRepos}
+    >
+      <p className="text-muted-foreground text-sm">
+        Showing {pageRepoRows.length} of {pagination.totalItems}{" "}
+        {hasActiveFilters ? "matching " : ""}
+        repos · {trackedCount} already in projects · {untrackedRepoFullNames.length} not imported
+      </p>
+
+      <div
+        className="divide-base-content/10 divide-y rounded-lg border border-base-content/10"
+        data-test="backstage-repos-list"
+      >
+        {pageRepoRows.map((row) => (
+          <BackstageRepoRow
+            key={row.repo.id}
+            repo={row.repo}
+            isTracked={row.isTracked}
+            isImporting={isRowWorking(row.repo.nameWithOwner)}
+            onImport={(options) => importMutation.mutate(options)}
+            disabled={isImportBusy}
+          />
+        ))}
+      </div>
+    </BackstageReposListScaffold>
+  );
+}
+
+function ReposEmpty({
+  hasActiveFilters,
+  hasGithubErrors,
+  query,
+}: {
+  hasActiveFilters: boolean;
+  hasGithubErrors: boolean;
+  query: string;
+}) {
+  const { clearSearch } = usePageSearchQuery(ROUTE_ID);
+
+  if (hasActiveFilters) {
+    return (
+      <Empty data-test="backstage-repos-search-empty">
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <SearchX />
+          </EmptyMedia>
+          <EmptyTitle>
+            {query ? `No repos match “${query}”` : "No repos match your filters"}
+          </EmptyTitle>
+          <EmptyDescription>
+            Try clearing search or filters to see more repositories.
+          </EmptyDescription>
+        </EmptyHeader>
+        {query ? (
+          <EmptyContent>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={clearSearch}
+              data-test="backstage-repos-clear-search"
+            >
+              Clear search
+            </Button>
+          </EmptyContent>
+        ) : null}
+      </Empty>
+    );
+  }
+
+  if (hasGithubErrors) {
+    return (
+      <Empty data-test="backstage-repos-empty">
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <FaGithub />
+          </EmptyMedia>
+          <EmptyTitle>No accessible repos</EmptyTitle>
+          <EmptyDescription>
+            Org-restricted repos are skipped when your PAT exceeds the org token lifetime policy.
+          </EmptyDescription>
+        </EmptyHeader>
+      </Empty>
+    );
+  }
+
+  return (
+    <Empty data-test="backstage-repos-empty">
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <FaGithub />
+        </EmptyMedia>
+        <EmptyTitle>No repos found</EmptyTitle>
+        <EmptyDescription>Refresh to pull your most recently pushed repositories.</EmptyDescription>
+      </EmptyHeader>
+    </Empty>
+  );
+}
+
+interface BackstageReposListScaffoldProps {
+  children: React.ReactNode;
+  totalPages?: number;
+  bulkImportOpen: boolean;
+  onBulkImportOpenChange: (open: boolean) => void;
+  untrackedRepoFullNames: string[];
+  isBulkImporting: boolean;
+  onBulkImportConfirm: (options: BulkImportProjectOptions) => void;
+  isImportBusy: boolean;
+  isRefetchingRepos: boolean;
+}
+
+function BackstageReposListScaffold({
+  children,
+  totalPages = 0,
+  bulkImportOpen,
+  onBulkImportOpenChange,
+  untrackedRepoFullNames,
+  isBulkImporting,
+  onBulkImportConfirm,
+  isImportBusy,
+  isRefetchingRepos,
+}: BackstageReposListScaffoldProps) {
+  const search = Route.useSearch();
+  const navigate = Route.useNavigate();
+  const { inputValue, onSearchChange, isDebouncing } = usePageSearchQuery(ROUTE_ID);
+
+  const tracked = search.tracked ?? "all";
+  const visibility = search.visibility ?? "all";
+  const archived = search.archived ?? "all";
+  const activeFilterCount =
+    (tracked !== "all" ? 1 : 0) + (visibility !== "all" ? 1 : 0) + (archived !== "all" ? 1 : 0);
+
+  function patchSearch(patch: Partial<BackstageReposSearch>) {
+    void navigate({
+      search: (prev) => ({
+        ...prev,
+        ...patch,
+        page: undefined,
+      }),
+      replace: true,
+    });
+  }
+
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6" data-test="backstage-repos">
       <BulkImportDialog
         open={bulkImportOpen}
-        onOpenChange={setBulkImportOpen}
+        onOpenChange={onBulkImportOpenChange}
         repoFullNames={untrackedRepoFullNames}
-        isImporting={bulkImportMutation.isPending}
-        onConfirm={(options) => bulkImportMutation.mutate(options)}
+        isImporting={isBulkImporting}
+        onConfirm={onBulkImportConfirm}
       />
 
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
+        <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2.5">
             <FaGithub className="size-6" aria-hidden />
-            <h1 className="text-2xl font-semibold tracking-tight">GitHub</h1>
+            <h1 className="text-2xl font-bold tracking-tight">GitHub</h1>
           </div>
-          <p className="text-base-content/60 mt-2 text-sm">
+          <p className="text-muted-foreground text-sm">
             Your 100 most recently pushed repos. Import into projects, change visibility, or delete
             on GitHub.
           </p>
@@ -266,7 +434,7 @@ export function BackstageReposContent() {
             title="Import all untracked"
             aria-label="Import all untracked repos"
             disabled={isImportBusy || untrackedRepoFullNames.length === 0}
-            onClick={() => setBulkImportOpen(true)}
+            onClick={() => onBulkImportOpenChange(true)}
           >
             <Download className="size-3.5" />
           </Button>
@@ -289,9 +457,8 @@ export function BackstageReposContent() {
       <div className="flex items-center gap-2">
         <div className="min-w-0 flex-1" data-test="backstage-repos-search">
           <SearchBox
-            keyword={keyword}
-            setKeyword={setKeyword}
-            debouncedValue={debouncedValue}
+            keyword={inputValue}
+            setKeyword={(value) => onSearchChange(value)}
             isDebouncing={isDebouncing}
             inputProps={{
               placeholder: "Search repos…",
@@ -300,17 +467,12 @@ export function BackstageReposContent() {
         </div>
         <BackstageFiltersDialog
           data-test="backstage-repos-filters"
-          activeFilterCount={
-            (tracked !== "all" ? 1 : 0) +
-            (visibility !== "all" ? 1 : 0) +
-            (archived !== "all" ? 1 : 0)
-          }
+          activeFilterCount={activeFilterCount}
           onClear={() =>
-            setSearchParams({
+            patchSearch({
               tracked: undefined,
               visibility: undefined,
               archived: undefined,
-              page: undefined,
             })
           }
         >
@@ -318,9 +480,8 @@ export function BackstageReposContent() {
             <Select
               value={tracked}
               onValueChange={(value) =>
-                setSearchParams({
+                patchSearch({
                   tracked: value === "all" ? undefined : (value as BackstageReposSearch["tracked"]),
-                  page: undefined,
                 })
               }
             >
@@ -338,10 +499,9 @@ export function BackstageReposContent() {
             <Select
               value={visibility}
               onValueChange={(value) =>
-                setSearchParams({
+                patchSearch({
                   visibility:
                     value === "all" ? undefined : (value as BackstageReposSearch["visibility"]),
-                  page: undefined,
                 })
               }
             >
@@ -359,10 +519,9 @@ export function BackstageReposContent() {
             <Select
               value={archived}
               onValueChange={(value) =>
-                setSearchParams({
+                patchSearch({
                   archived:
                     value === "all" ? undefined : (value as BackstageReposSearch["archived"]),
-                  page: undefined,
                 })
               }
             >
@@ -390,49 +549,26 @@ export function BackstageReposContent() {
         </BackstageFiltersDialog>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FaGithub className="size-4" aria-hidden />
-            Repositories
-          </CardTitle>
-          <CardDescription>
-            Showing {pageRepoRows.length} of {pagination.totalItems}{" "}
-            {hasActiveFilters ? "matching " : ""}
-            repos · {trackedCount} already in projects · {untrackedRepoFullNames.length} not
-            imported
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="divide-base-content/10 divide-y rounded-lg border border-base-content/10 p-0">
-          {repoRows.length === 0 ? (
-            <p className="text-base-content/50 px-4 py-6 text-sm">
-              {hasActiveFilters
-                ? "No repos match your search or filters."
-                : githubErrors.length > 0
-                  ? "No accessible repos returned. Org-restricted repos are skipped when your PAT exceeds the org token lifetime policy."
-                  : "No repos found."}
-            </p>
-          ) : (
-            pageRepoRows.map((row) => (
-              <BackstageRepoRow
-                key={row.repo.id}
-                repo={row.repo}
-                isTracked={row.isTracked}
-                isImporting={isRowWorking(row.repo.nameWithOwner)}
-                onImport={(options) => importMutation.mutate(options)}
-                disabled={isImportBusy}
-              />
-            ))
-          )}
-        </CardContent>
-      </Card>
+      {children}
 
-      <ListPagination
-        page={pagination.page}
-        totalPages={pagination.totalPages}
-        onPageChange={setPage}
-        data-test="backstage-repos-pagination"
-      />
+      <TSRListPagination routeID={ROUTE_ID} totalPages={totalPages} />
     </div>
+  );
+}
+
+export function BackstegReposPending() {
+  return (
+    <BackstageReposListScaffold
+      totalPages={0}
+      bulkImportOpen={false}
+      onBulkImportOpenChange={() => {}}
+      untrackedRepoFullNames={[]}
+      isBulkImporting={false}
+      onBulkImportConfirm={() => {}}
+      isImportBusy={false}
+      isRefetchingRepos={false}
+    >
+      <BackstagePending />
+    </BackstageReposListScaffold>
   );
 }
