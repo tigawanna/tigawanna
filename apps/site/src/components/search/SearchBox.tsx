@@ -3,11 +3,10 @@ import { Loader, X } from "lucide-react";
 import { useRef } from "react";
 
 interface SearchBoxProps {
-  debouncedValue: string;
-  setKeyword: React.Dispatch<React.SetStateAction<string>>;
+  keyword: string;
+  setKeyword: (value: string) => void;
   isDebouncing: boolean;
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
-  keyword: string;
 }
 
 export function SearchBox({ isDebouncing, setKeyword, keyword, inputProps }: SearchBoxProps) {

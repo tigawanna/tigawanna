@@ -4,7 +4,11 @@ import {
   journalEntryFormSchema,
   type JournalEntryFormValues,
 } from "@/modules/journal/journal-form-schema";
-import { createJournalEntry, updateJournalEntry } from "@/modules/journal/journal.functions";
+import {
+  createJournalEntry,
+  deleteJournalEntry,
+  updateJournalEntry,
+} from "@/modules/journal/journal.functions";
 import { journalEntryTypeValues, type JournalEntryRow } from "@repo/db";
 import { formOptions } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
@@ -17,9 +21,23 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
+import { useState } from "react";
+import { Pencil, Plus, Trash2 } from "lucide-react";
 
 const formOpts = formOptions({
   defaultValues: journalEntryFormDefaults,
@@ -37,19 +55,27 @@ function rowToFormValues(row: JournalEntryRow): JournalEntryFormValues {
 }
 
 interface JournalEntryFormDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  entry: JournalEntryRow | null;
-  onSuccess: () => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  entry?: JournalEntryRow | null;
+  onSuccess?: () => void;
+  trigger?: React.ReactNode;
 }
 
 export function JournalEntryFormDialog({
-  open,
-  onOpenChange,
+  open: openProp = false,
+  onOpenChange: onOpenChangeProp = () => {},
   entry,
   onSuccess,
+  trigger,
 }: JournalEntryFormDialogProps) {
   const isEditing = entry != null;
+  const [open, setOpen] = useState(openProp);
+
+  function handleOpenChange(nextOpen: boolean) {
+    setOpen(nextOpen);
+    onOpenChangeProp?.(nextOpen);
+  }
 
   const mutation = useMutation({
     mutationFn: async (value: JournalEntryFormValues) => {
@@ -60,11 +86,25 @@ export function JournalEntryFormDialog({
     },
     onSuccess() {
       toast.success(isEditing ? "Journal entry updated" : "Journal entry created");
-      onSuccess();
-      onOpenChange(false);
+      onSuccess?.();
+      handleOpenChange(false);
     },
     onError(err: unknown) {
       toast.error(isEditing ? "Failed to update entry" : "Failed to create entry", {
+        description: unwrapUnknownError(err).message,
+      });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteJournalEntry({ data: { id } }),
+    onSuccess() {
+      toast.success("Journal entry deleted");
+      onSuccess?.();
+      handleOpenChange(false);
+    },
+    onError(err: unknown) {
+      toast.error("Failed to delete entry", {
         description: unwrapUnknownError(err).message,
       });
     },
@@ -82,7 +122,14 @@ export function JournalEntryFormDialog({
   });
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      {trigger === null ? null : trigger ? (
+        <DialogTrigger asChild>{trigger}</DialogTrigger>
+      ) : (
+        <DialogTrigger asChild>
+          <Button variant="outline">{isEditing ? <Pencil /> : <Plus />}</Button>
+        </DialogTrigger>
+      )}
       <DialogContent
         className="max-h-[90vh] overflow-y-auto sm:max-w-2xl"
         data-test="journal-entry-dialog"
@@ -159,16 +206,55 @@ export function JournalEntryFormDialog({
             )}
           </form.AppField>
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
-            </Button>
-            <form.AppForm>
-              <form.SubmitButton
-                label={isEditing ? "Save changes" : "Create entry"}
-                className="btn btn-primary"
-              />
-            </form.AppForm>
+          <DialogFooter className="gap-2 sm:justify-between">
+            {isEditing ? (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="text-error mr-auto"
+                    disabled={deleteMutation.isPending}
+                    data-test="journal-entry-delete-button"
+                  >
+                    <Trash2 className="size-4" />
+                    Delete
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent data-test="journal-entry-delete-dialog">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete “{entry.title}”?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This permanently removes the journal entry. This cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      variant="destructive"
+                      disabled={deleteMutation.isPending}
+                      onClick={() => deleteMutation.mutate(entry.id)}
+                    >
+                      {deleteMutation.isPending ? "Deleting…" : "Delete entry"}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            ) : (
+              <span />
+            )}
+
+            <div className="flex gap-2">
+              <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
+                Cancel
+              </Button>
+              <form.AppForm>
+                <form.SubmitButton
+                  label={isEditing ? "Save changes" : "Create entry"}
+                  className="btn btn-primary"
+                />
+              </form.AppForm>
+            </div>
           </DialogFooter>
         </form>
       </DialogContent>

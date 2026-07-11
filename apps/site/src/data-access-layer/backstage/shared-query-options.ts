@@ -28,10 +28,13 @@ export function contactMessagesQueryOptions(page = 1, perPage = BACKSTAGE_LIST_P
 /**
  * Journal entries for a given page.
  *
- * @param page - 1-based page index (default 1).
- * @param perPage - Page size (default {@link BACKSTAGE_LIST_PER_PAGE}).
+ * @param {number} page - 1-based page index (default 1).
+ * @param {number} perPage - Page size (default {@link BACKSTAGE_LIST_PER_PAGE}).
  */
-export function journalEntriesQueryOptions(page = 1, perPage = BACKSTAGE_LIST_PER_PAGE) {
+export function journalEntriesQueryOptions({
+  page = 1,
+  perPage = BACKSTAGE_LIST_PER_PAGE,
+}: { page?: number; perPage?: number } = {}) {
   return queryOptions({
     queryKey: [queryKeyPrefixes.backstage, "journal-entries", page, perPage],
     queryFn: () => listJournalEntriesForBackstage({ data: { page, perPage } }),
