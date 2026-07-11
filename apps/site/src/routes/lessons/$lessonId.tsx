@@ -1,29 +1,14 @@
-import { getLesson, getLessonMarkdownHtml } from "@/modules/lessons/lessons";
-import { LessonAdminEditButton } from "@/routes/lessons/-components/LessonAdminEditButton";
+import {
+  lessonHtmlQueryOptions,
+  lessonQueryOptions,
+} from "@/data-access-layer/portfolio/landng-page-query-options";
 import { LandingFooter } from "@/routes/-components/landing/layout/LandingFooter";
 import { LandingNavbar } from "@/routes/-components/landing/layout/LandingNavbar";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { LessonAdminEditButton } from "@/routes/lessons/-components/LessonAdminEditButton";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, redirect } from "@tanstack/react-router";
 import { CalendarRange, ExternalLink } from "lucide-react";
 import { Suspense } from "react";
-
-const lessonQueryOptions = (id: string) =>
-  queryOptions({
-    queryKey: ["lessons", "detail", id],
-    queryFn: async () => {
-      const lesson = await getLesson({ data: { id } });
-      if (!lesson) {
-        throw new Error("Lesson not found");
-      }
-      return lesson;
-    },
-  });
-
-const lessonHtmlQueryOptions = (id: string) =>
-  queryOptions({
-    queryKey: ["lessons", "html", id],
-    queryFn: () => getLessonMarkdownHtml({ data: { id } }),
-  });
 
 export const Route = createFileRoute("/lessons/$lessonId")({
   loader: async ({ context, params }) => {
@@ -51,7 +36,7 @@ function LessonDetailContent({ lessonId }: { lessonId: string }) {
   });
 
   return (
-    <article className="mx-auto max-w-4xl" data-test="lesson-detail">
+    <article className="mx-auto max-w-4xl h-ful min-h-screen" data-test="lesson-detail">
       <div className="mb-8 flex items-center justify-between gap-3">
         <Link
           to="/lessons"

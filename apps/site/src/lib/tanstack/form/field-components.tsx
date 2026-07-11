@@ -25,7 +25,7 @@ import { useFieldContext } from "./form-context";
 
 type Orientation = "vertical" | "horizontal" | "responsive";
 
-interface BaseFieldProps {
+export interface BaseFieldProps {
   label?: string;
   description?: string;
   placeholder?: string;

@@ -131,7 +131,7 @@ export function JournalEntryFormDialog({
         </DialogTrigger>
       )}
       <DialogContent
-        className="max-h-[90vh] overflow-y-auto sm:max-w-2xl"
+        className="max-h-[90vh] overflow-y-auto w-fit sm:max-w-[95%]"
         data-test="journal-entry-dialog"
       >
         <DialogHeader>
@@ -189,10 +189,10 @@ export function JournalEntryFormDialog({
 
           <form.AppField name="markdown">
             {(field) => (
-              <field.TextAreaField
+              <field.MarkdownEditorField
                 label="Markdown"
                 placeholder="Full lesson content in markdown"
-                className="min-h-48 font-mono text-sm"
+                height={420}
               />
             )}
           </form.AppField>
