@@ -3,7 +3,7 @@ import { backstageProjectDetailQueryOptions } from "@/data-access-layer/backstag
 import { BackstageProjectDetailContent } from "@/routes/_backstage/backstage/-components/projects/BackstageProjectDetailContent";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { Suspense } from "react";
-import { BackstageRepoPageFallback } from "../../../-components/shared/BackstageRepoPageFallback";
+import { BackstagePending } from "../../../-components/shared/BackstagePending";
 
 export const Route = createFileRoute("/_backstage/backstage/projects/$owner/$repo/")({
   beforeLoad: ({ context }) => {
@@ -28,8 +28,8 @@ function BackstageProjectDetailPage() {
   const repoFullName = `${owner}/${repo}`;
 
   return (
-    <ClientOnly fallback={<BackstageRepoPageFallback />}>
-      <Suspense fallback={<BackstageRepoPageFallback />}>
+    <ClientOnly fallback={<BackstagePending />}>
+      <Suspense fallback={<BackstagePending />}>
         <BackstageProjectDetailContent repoFullName={repoFullName} />
       </Suspense>
     </ClientOnly>

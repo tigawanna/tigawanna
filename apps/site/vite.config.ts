@@ -28,7 +28,24 @@ const config = defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
+      // Ghost dep of @huggingface/transformers — pin to the site install so
+      // Rolldown can resolve it from transformers.web.js under pnpm isolation.
+      "onnxruntime-common": fileURLToPath(
+        new URL("./node_modules/onnxruntime-common", import.meta.url),
+      ),
     },
+  },
+  ssr: {
+    // Browser WASM stack — never pull into the SSR graph.
+    external: [
+      "@huggingface/transformers",
+      "onnxruntime-common",
+      "onnxruntime-node",
+      "onnxruntime-web",
+    ],
+  },
+  optimizeDeps: {
+    exclude: ["@huggingface/transformers", "onnxruntime-web"],
   },
   plugins: [
     workflow(),

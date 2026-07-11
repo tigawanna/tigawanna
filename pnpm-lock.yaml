@@ -23,6 +23,8 @@ overrides:
   '@types/react': ^19.2.14
   '@types/react-dom': ^19.2.3
 
+packageExtensionsChecksum: sha256-gs4ZVivsk6prh5f5WhLhQmXYWUVQv/s9TL8oSzx68js=
+
 importers:
 
   .:
@@ -197,6 +199,12 @@ importers:
       '@repo/telegram':
         specifier: workspace:*
         version: link:../../packages/telegram
+      '@shikijs/langs':
+        specifier: ^3.23.0
+        version: 3.23.0
+      '@shikijs/themes':
+        specifier: ^3.23.0
+        version: 3.23.0
       '@tailwindcss/vite':
         specifier: ^4.1.18
         version: 4.3.1(@voidzero-dev/vite-plus-core@0.2.4(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@7.0.2)(yaml@2.9.0))
@@ -271,7 +279,7 @@ importers:
         version: 8.6.0(react@19.2.7)
       evlog:
         specifier: ^2.19.2
-        version: 2.19.2(@nestjs/common@11.1.27(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nuxt/kit@4.4.7)(@tanstack/start-client-core@1.170.12)(@voidzero-dev/vite-plus-core@0.2.4(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@7.0.2)(yaml@2.9.0))(express@5.2.1)(hono@4.12.27)(nitro-nightly@3.0.1-20260711-203339-94083e5b(@libsql/client@0.17.4)(@vercel/functions@3.7.3(@aws-sdk/credential-provider-web-identity@3.972.49)(ws@8.21.0))(@voidzero-dev/vite-plus-core@0.2.4(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@7.0.2)(yaml@2.9.0))(chokidar@5.0.0)(dotenv@16.6.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.17.4)(@types/pg@8.20.0)(kysely@0.29.2))(giget@3.3.0)(jiti@2.7.0)(lru-cache@11.5.1)(miniflare@4.20260625.0)(wrangler@4.105.0(@cloudflare/workers-types@4.20260626.1)))(ofetch@2.0.0-alpha.3)(react@19.2.7)
+        version: 2.19.2(@nestjs/common@11.1.27(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nuxt/kit@4.4.7)(@tanstack/start-client-core@1.170.12)(@voidzero-dev/vite-plus-core@0.2.4(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@7.0.2)(yaml@2.9.0))(express@5.2.1)(h3@2.0.1-rc.25(crossws@0.4.9(srvx@0.11.22)))(hono@4.12.27)(nitro-nightly@3.0.1-20260711-223101-ff018c15(@libsql/client@0.17.4)(@vercel/functions@3.7.3(@aws-sdk/credential-provider-web-identity@3.972.49)(ws@8.21.0))(@voidzero-dev/vite-plus-core@0.2.4(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@7.0.2)(yaml@2.9.0))(chokidar@5.0.0)(dotenv@16.6.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.17.4)(@types/pg@8.20.0)(kysely@0.29.2))(giget@3.3.0)(jiti@2.7.0)(lru-cache@11.5.1)(miniflare@4.20260625.0)(wrangler@4.105.0(@cloudflare/workers-types@4.20260626.1)))(ofetch@2.0.0-alpha.3)(react@19.2.7)
       input-otp:
         specifier: ^1.4.2
         version: 1.4.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -286,7 +294,7 @@ importers:
         version: 0.4.6(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       nitro:
         specifier: npm:nitro-nightly@latest
-        version: nitro-nightly@3.0.1-20260711-203339-94083e5b(@libsql/client@0.17.4)(@vercel/functions@3.7.3(@aws-sdk/credential-provider-web-identity@3.972.49)(ws@8.21.0))(@voidzero-dev/vite-plus-core@0.2.4(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@7.0.2)(yaml@2.9.0))(chokidar@5.0.0)(dotenv@16.6.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.17.4)(@types/pg@8.20.0)(kysely@0.29.2))(giget@3.3.0)(jiti@2.7.0)(lru-cache@11.5.1)(miniflare@4.20260625.0)(wrangler@4.105.0(@cloudflare/workers-types@4.20260626.1))
+        version: nitro-nightly@3.0.1-20260711-223101-ff018c15(@libsql/client@0.17.4)(@vercel/functions@3.7.3(@aws-sdk/credential-provider-web-identity@3.972.49)(ws@8.21.0))(@voidzero-dev/vite-plus-core@0.2.4(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@7.0.2)(yaml@2.9.0))(chokidar@5.0.0)(dotenv@16.6.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.17.4)(@types/pg@8.20.0)(kysely@0.29.2))(giget@3.3.0)(jiti@2.7.0)(lru-cache@11.5.1)(miniflare@4.20260625.0)(wrangler@4.105.0(@cloudflare/workers-types@4.20260626.1))
       onnxruntime-common:
         specifier: ^1.27.0
         version: 1.27.0
@@ -6821,6 +6829,15 @@ packages:
   guid-typescript@1.0.9:
     resolution: {integrity: sha512-Y8T4vYhEfwJOTbouREvG+3XDsjr8E3kIr7uf+JZ0BYloFsttiHU0WfvANVsR7TxNUJa/WpCnw/Ino/p+DeBhBQ==}
 
+  h3-rules@0.1.0:
+    resolution: {integrity: sha512-MrUUH1E/yoM7hvpKVbLs/CFeindwiTn7Fcfo+zXDpfuRYbcpJDPkYGGttCSiHNJmjUQNYQ5yn9veUIqFonYXuw==}
+    peerDependencies:
+      h3: ^2.0.1-rc.25
+      ocache: '>=0.2.0'
+    peerDependenciesMeta:
+      ocache:
+        optional: true
+
   h3@2.0.1-rc.20:
     resolution: {integrity: sha512-28ljodXuUp0fZovdiSRq4G9OgrxCztrJe5VdYzXAB7ueRvI7pIUqLU14Xi3XqdYJ/khXjfpUOOD2EQa6CmBgsg==}
     engines: {node: '>=20.11.1'}
@@ -7805,8 +7822,8 @@ packages:
   nf3@0.3.22:
     resolution: {integrity: sha512-NOcqlHu22X1rUakd0SrqllP8kb3LWFmSAi1svTxaKxz+yB604xlaOmUfI3oO+RkODvaocKDDy8bgthnZL8hrkw==}
 
-  nitro-nightly@3.0.1-20260711-203339-94083e5b:
-    resolution: {integrity: sha512-28V8yfl1iyGIV4HSGoUsMOEMe0uVgxbOmSmpzwGo13RPKqH7wM2F3NfLEa3Ko9K7KHywDclN/gpQi0l/ZfF7tg==}
+  nitro-nightly@3.0.1-20260711-223101-ff018c15:
+    resolution: {integrity: sha512-wiEGu7C2Z3rvQ3Xqj1b6jVt28rvgDtVeFCrfYd0MSWa0l0D5U/AqMwV2AUKF4cqtVcp8w/dbsjRadYvHJzyOUQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
@@ -10672,6 +10689,7 @@ snapshots:
     dependencies:
       '@huggingface/jinja': 0.5.9
       '@huggingface/tokenizers': 0.1.3
+      onnxruntime-common: 1.27.0
       onnxruntime-node: 1.24.3
       onnxruntime-web: 1.26.0-dev.20260416-b7804b056c
       sharp: 0.34.5
@@ -15678,14 +15696,15 @@ snapshots:
     transitivePeerDependencies:
       - bare-abort-controller
 
-  evlog@2.19.2(@nestjs/common@11.1.27(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nuxt/kit@4.4.7)(@tanstack/start-client-core@1.170.12)(@voidzero-dev/vite-plus-core@0.2.4(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@7.0.2)(yaml@2.9.0))(express@5.2.1)(hono@4.12.27)(nitro-nightly@3.0.1-20260711-203339-94083e5b(@libsql/client@0.17.4)(@vercel/functions@3.7.3(@aws-sdk/credential-provider-web-identity@3.972.49)(ws@8.21.0))(@voidzero-dev/vite-plus-core@0.2.4(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@7.0.2)(yaml@2.9.0))(chokidar@5.0.0)(dotenv@16.6.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.17.4)(@types/pg@8.20.0)(kysely@0.29.2))(giget@3.3.0)(jiti@2.7.0)(lru-cache@11.5.1)(miniflare@4.20260625.0)(wrangler@4.105.0(@cloudflare/workers-types@4.20260626.1)))(ofetch@2.0.0-alpha.3)(react@19.2.7):
+  evlog@2.19.2(@nestjs/common@11.1.27(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nuxt/kit@4.4.7)(@tanstack/start-client-core@1.170.12)(@voidzero-dev/vite-plus-core@0.2.4(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@7.0.2)(yaml@2.9.0))(express@5.2.1)(h3@2.0.1-rc.25(crossws@0.4.9(srvx@0.11.22)))(hono@4.12.27)(nitro-nightly@3.0.1-20260711-223101-ff018c15(@libsql/client@0.17.4)(@vercel/functions@3.7.3(@aws-sdk/credential-provider-web-identity@3.972.49)(ws@8.21.0))(@voidzero-dev/vite-plus-core@0.2.4(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@7.0.2)(yaml@2.9.0))(chokidar@5.0.0)(dotenv@16.6.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.17.4)(@types/pg@8.20.0)(kysely@0.29.2))(giget@3.3.0)(jiti@2.7.0)(lru-cache@11.5.1)(miniflare@4.20260625.0)(wrangler@4.105.0(@cloudflare/workers-types@4.20260626.1)))(ofetch@2.0.0-alpha.3)(react@19.2.7):
     optionalDependencies:
       '@nestjs/common': 11.1.27(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nuxt/kit': 4.4.7
       '@tanstack/start-client-core': 1.170.12
       express: 5.2.1
+      h3: 2.0.1-rc.25(crossws@0.4.9(srvx@0.11.22))
       hono: 4.12.27
-      nitro: nitro-nightly@3.0.1-20260711-203339-94083e5b(@libsql/client@0.17.4)(@vercel/functions@3.7.3(@aws-sdk/credential-provider-web-identity@3.972.49)(ws@8.21.0))(@voidzero-dev/vite-plus-core@0.2.4(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@7.0.2)(yaml@2.9.0))(chokidar@5.0.0)(dotenv@16.6.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.17.4)(@types/pg@8.20.0)(kysely@0.29.2))(giget@3.3.0)(jiti@2.7.0)(lru-cache@11.5.1)(miniflare@4.20260625.0)(wrangler@4.105.0(@cloudflare/workers-types@4.20260626.1))
+      nitro: nitro-nightly@3.0.1-20260711-223101-ff018c15(@libsql/client@0.17.4)(@vercel/functions@3.7.3(@aws-sdk/credential-provider-web-identity@3.972.49)(ws@8.21.0))(@voidzero-dev/vite-plus-core@0.2.4(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@7.0.2)(yaml@2.9.0))(chokidar@5.0.0)(dotenv@16.6.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.17.4)(@types/pg@8.20.0)(kysely@0.29.2))(giget@3.3.0)(jiti@2.7.0)(lru-cache@11.5.1)(miniflare@4.20260625.0)(wrangler@4.105.0(@cloudflare/workers-types@4.20260626.1))
       ofetch: 2.0.0-alpha.3
       react: 19.2.7
       vite: '@voidzero-dev/vite-plus-core@0.2.4(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@7.0.2)(yaml@2.9.0)'
@@ -16061,6 +16080,14 @@ snapshots:
   gsap@3.15.0: {}
 
   guid-typescript@1.0.9: {}
+
+  h3-rules@0.1.0(h3@2.0.1-rc.25(crossws@0.4.9(srvx@0.11.22)))(ocache@0.2.0):
+    dependencies:
+      h3: 2.0.1-rc.25(crossws@0.4.9(srvx@0.11.22))
+      rou3: 0.9.1
+      ufo: 1.6.4
+    optionalDependencies:
+      ocache: 0.2.0
 
   h3@2.0.1-rc.20(crossws@0.4.9(srvx@0.11.22)):
     dependencies:
@@ -17288,13 +17315,14 @@ snapshots:
 
   nf3@0.3.22: {}
 
-  nitro-nightly@3.0.1-20260711-203339-94083e5b(@libsql/client@0.17.4)(@vercel/functions@3.7.3(@aws-sdk/credential-provider-web-identity@3.972.49)(ws@8.21.0))(@voidzero-dev/vite-plus-core@0.2.4(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@7.0.2)(yaml@2.9.0))(chokidar@5.0.0)(dotenv@16.6.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.17.4)(@types/pg@8.20.0)(kysely@0.29.2))(giget@3.3.0)(jiti@2.7.0)(lru-cache@11.5.1)(miniflare@4.20260625.0)(wrangler@4.105.0(@cloudflare/workers-types@4.20260626.1)):
+  nitro-nightly@3.0.1-20260711-223101-ff018c15(@libsql/client@0.17.4)(@vercel/functions@3.7.3(@aws-sdk/credential-provider-web-identity@3.972.49)(ws@8.21.0))(@voidzero-dev/vite-plus-core@0.2.4(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(typescript@7.0.2)(yaml@2.9.0))(chokidar@5.0.0)(dotenv@16.6.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.17.4)(@types/pg@8.20.0)(kysely@0.29.2))(giget@3.3.0)(jiti@2.7.0)(lru-cache@11.5.1)(miniflare@4.20260625.0)(wrangler@4.105.0(@cloudflare/workers-types@4.20260626.1)):
     dependencies:
       consola: 3.4.2
       crossws: 0.4.9(srvx@0.11.22)
       db0: 0.3.4(@libsql/client@0.17.4)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260626.1)(@libsql/client@0.17.4)(@types/pg@8.20.0)(kysely@0.29.2))
       env-runner: 0.1.16(miniflare@4.20260625.0)(wrangler@4.105.0(@cloudflare/workers-types@4.20260626.1))
       h3: 2.0.1-rc.25(crossws@0.4.9(srvx@0.11.22))
+      h3-rules: 0.1.0(h3@2.0.1-rc.25(crossws@0.4.9(srvx@0.11.22)))(ocache@0.2.0)
       hookable: 6.1.1
       nf3: 0.3.22
       ocache: 0.2.0
