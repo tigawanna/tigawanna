@@ -1,7 +1,10 @@
 import { queryKeyPrefixes } from "@/data-access-layer/query-keys";
 import { listContactMessages } from "@/modules/backstage/contact-messages.functions";
 import { getBackstageDashboardCounts } from "@/modules/backstage/dashboard.functions";
-import { listJournalEntriesForBackstage } from "@/modules/journal/journal.functions";
+import {
+  listJournalEntriesForBackstage,
+  getJournalEntryForBackstage,
+} from "@/modules/journal/journal.functions";
 import { queryOptions } from "@tanstack/react-query";
 
 /** Default page size for backstage offset list UIs. */
@@ -44,5 +47,17 @@ export function journalEntriesQueryOptions({
       listJournalEntriesForBackstage({
         data: { page, perPage, q: query || undefined },
       }),
+  });
+}
+
+/**
+ * Single journal entry for backstage edit flows.
+ *
+ * @param id - Journal entry id.
+ */
+export function journalEntryByIdQueryOptions(id: string) {
+  return queryOptions({
+    queryKey: [queryKeyPrefixes.backstage, "journal-entry", id],
+    queryFn: () => getJournalEntryForBackstage({ data: { id } }),
   });
 }

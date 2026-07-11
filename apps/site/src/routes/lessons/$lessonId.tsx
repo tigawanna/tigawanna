@@ -1,4 +1,5 @@
 import { getLesson, getLessonMarkdownHtml } from "@/modules/lessons/lessons";
+import { LessonAdminEditButton } from "@/routes/lessons/-components/LessonAdminEditButton";
 import { LandingFooter } from "@/routes/-components/landing/layout/LandingFooter";
 import { LandingNavbar } from "@/routes/-components/landing/layout/LandingNavbar";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
@@ -51,13 +52,16 @@ function LessonDetailContent({ lessonId }: { lessonId: string }) {
 
   return (
     <article className="mx-auto max-w-4xl" data-test="lesson-detail">
-      <Link
-        to="/lessons"
-        search={{}}
-        className="mb-8 inline-flex text-sm text-primary hover:underline"
-      >
-        Back to lessons
-      </Link>
+      <div className="mb-8 flex items-center justify-between gap-3">
+        <Link
+          to="/lessons"
+          search={{}}
+          className="inline-flex text-sm text-primary hover:underline"
+        >
+          Back to lessons
+        </Link>
+        <LessonAdminEditButton lessonId={lessonId} />
+      </div>
 
       <h1 className="text-balance text-center font-serif text-5xl font-semibold tracking-[-0.04em] md:text-6xl">
         {lesson.title}

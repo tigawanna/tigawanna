@@ -144,6 +144,24 @@ const journalEntryIdSchema = z.object({
   id: z.string().min(1),
 });
 
+/**
+ * Fetches a single journal entry for backstage editing.
+ *
+ * @returns The row, or `null` if it does not exist (e.g. static lesson fallback).
+ */
+export const getJournalEntryForBackstage = createServerFn({ method: "GET" })
+  .validator((input: z.infer<typeof journalEntryIdSchema>) => journalEntryIdSchema.parse(input))
+  .handler(async ({ data }): Promise<JournalEntryRow | null> => {
+    await requireBackstageSession();
+    const db = getDb();
+    const [row] = await db
+      .select()
+      .from(journalEntries)
+      .where(eq(journalEntries.id, data.id))
+      .limit(1);
+    return row ?? null;
+  });
+
 export const createJournalEntry = createServerFn({ method: "POST" })
   .validator((input: JournalEntryFormValues) => journalEntryFormSchema.parse(input))
   .handler(async ({ data }) => {
