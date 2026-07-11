@@ -17,7 +17,6 @@ import { Route as CreatureFeatureIndexRouteImport } from './routes/creature-feat
 import { Route as ProjectNameRouteImport } from './routes/project/$name'
 import { Route as LessonsLessonIdRouteImport } from './routes/lessons/$lessonId'
 import { Route as BackstageSignInRouteImport } from './routes/backstage/sign-in'
-import { Route as PreviewErrorIndexRouteImport } from './routes/preview/error/index'
 import { Route as BackstageBackstageIndexRouteImport } from './routes/_backstage/backstage/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as BackstageBackstageReposRouteImport } from './routes/_backstage/backstage/repos'
@@ -65,11 +64,6 @@ const LessonsLessonIdRoute = LessonsLessonIdRouteImport.update({
 const BackstageSignInRoute = BackstageSignInRouteImport.update({
   id: '/backstage/sign-in',
   path: '/backstage/sign-in',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PreviewErrorIndexRoute = PreviewErrorIndexRouteImport.update({
-  id: '/preview/error/',
-  path: '/preview/error/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BackstageBackstageIndexRoute = BackstageBackstageIndexRouteImport.update({
@@ -138,7 +132,6 @@ export interface FileRoutesByFullPath {
   '/backstage/repos': typeof BackstageBackstageReposRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/backstage/': typeof BackstageBackstageIndexRoute
-  '/preview/error/': typeof PreviewErrorIndexRoute
   '/backstage/projects/': typeof BackstageBackstageProjectsIndexRoute
   '/backstage/projects/$owner/': typeof BackstageBackstageProjectsOwnerIndexRoute
   '/backstage/projects/$owner/$repo/': typeof BackstageBackstageProjectsOwnerRepoIndexRoute
@@ -157,7 +150,6 @@ export interface FileRoutesByTo {
   '/backstage/repos': typeof BackstageBackstageReposRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/backstage': typeof BackstageBackstageIndexRoute
-  '/preview/error': typeof PreviewErrorIndexRoute
   '/backstage/projects': typeof BackstageBackstageProjectsIndexRoute
   '/backstage/projects/$owner': typeof BackstageBackstageProjectsOwnerIndexRoute
   '/backstage/projects/$owner/$repo': typeof BackstageBackstageProjectsOwnerRepoIndexRoute
@@ -178,7 +170,6 @@ export interface FileRoutesById {
   '/_backstage/backstage/repos': typeof BackstageBackstageReposRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_backstage/backstage/': typeof BackstageBackstageIndexRoute
-  '/preview/error/': typeof PreviewErrorIndexRoute
   '/_backstage/backstage/projects/': typeof BackstageBackstageProjectsIndexRoute
   '/_backstage/backstage/projects/$owner/': typeof BackstageBackstageProjectsOwnerIndexRoute
   '/_backstage/backstage/projects/$owner/$repo/': typeof BackstageBackstageProjectsOwnerRepoIndexRoute
@@ -199,7 +190,6 @@ export interface FileRouteTypes {
     | '/backstage/repos'
     | '/api/auth/$'
     | '/backstage/'
-    | '/preview/error/'
     | '/backstage/projects/'
     | '/backstage/projects/$owner/'
     | '/backstage/projects/$owner/$repo/'
@@ -218,7 +208,6 @@ export interface FileRouteTypes {
     | '/backstage/repos'
     | '/api/auth/$'
     | '/backstage'
-    | '/preview/error'
     | '/backstage/projects'
     | '/backstage/projects/$owner'
     | '/backstage/projects/$owner/$repo'
@@ -238,7 +227,6 @@ export interface FileRouteTypes {
     | '/_backstage/backstage/repos'
     | '/api/auth/$'
     | '/_backstage/backstage/'
-    | '/preview/error/'
     | '/_backstage/backstage/projects/'
     | '/_backstage/backstage/projects/$owner/'
     | '/_backstage/backstage/projects/$owner/$repo/'
@@ -254,7 +242,6 @@ export interface RootRouteChildren {
   CreatureFeatureIndexRoute: typeof CreatureFeatureIndexRoute
   LessonsIndexRoute: typeof LessonsIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
-  PreviewErrorIndexRoute: typeof PreviewErrorIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -313,13 +300,6 @@ declare module '@tanstack/react-router' {
       path: '/backstage/sign-in'
       fullPath: '/backstage/sign-in'
       preLoaderRoute: typeof BackstageSignInRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/preview/error/': {
-      id: '/preview/error/'
-      path: '/preview/error'
-      fullPath: '/preview/error/'
-      preLoaderRoute: typeof PreviewErrorIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_backstage/backstage/': {
@@ -427,7 +407,6 @@ const rootRouteChildren: RootRouteChildren = {
   CreatureFeatureIndexRoute: CreatureFeatureIndexRoute,
   LessonsIndexRoute: LessonsIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
-  PreviewErrorIndexRoute: PreviewErrorIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
