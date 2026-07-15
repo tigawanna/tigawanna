@@ -5,9 +5,11 @@ export default defineConfig({
   experimental: {
     asyncContext: true,
   },
+  plugins: ["./server/plugins/evlog-fs-drain.ts"],
   modules: [
     evlog({
       env: { service: "tigawanna-site" },
+      // enabled: !process.env.EVLOG_DISABLED,
     }),
   ],
 });

@@ -5,6 +5,7 @@ import {
   type FetchRecentReposOptions,
   type GithubRepoNode,
 } from "@repo/github";
+import { fetchRecentReposGraphql } from "@/modules/github/gql-queries";
 import { getServerEnv } from "@/lib/envs/server-env";
 
 export type {
@@ -37,9 +38,12 @@ export async function fetchPinnedReposFromGithub() {
 
 /**
  * Fetches the viewer's recent GitHub repositories via GraphQL.
+ *
+ * Uses raw `fetch` so org-scoped GraphQL errors surface as `errors` instead of
+ * failing the whole request (Octokit throws on partial GraphQL error responses).
  */
 export async function fetchRecentReposFromGithub(options: FetchRecentReposOptions = {}) {
-  return requirePat().getRecentRepos(options);
+  return fetchRecentReposGraphql(options);
 }
 
 export { buildRepoSearchText, extractRepoTags };

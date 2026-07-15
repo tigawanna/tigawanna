@@ -472,3 +472,15 @@ DON'T
 
 - documnent all util functions with jsdoc
 - run vp check after every big changes
+
+## Investigating logs (`apps/site`)
+
+Wide events are written locally as NDJSON in `apps/site/.evlog/logs/` (one file per day). After reproducing an issue:
+
+```bash
+tail -f apps/site/.evlog/logs/$(date +%Y-%m-%d).jsonl
+grep '"level":"error"' apps/site/.evlog/logs/*.jsonl
+grep '<requestId>' apps/site/.evlog/logs/*.jsonl
+```
+
+Filter with `jq` when needed, e.g. `jq 'select(.path == "/api/...")' apps/site/.evlog/logs/*.jsonl`.
