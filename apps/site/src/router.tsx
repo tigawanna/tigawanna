@@ -2,6 +2,7 @@ import { createRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 
 // Import the generated route tree
+import { getScrollRestorationKey } from "./lib/scroll/scroll-restoration-key";
 import { getTanstackQueryContext } from "./lib/tanstack/query/query-provider";
 import { RouterNotFoundComponent } from "./lib/tanstack/router/RouterNotFoundComponent";
 import { RouterPendingComponent } from "./lib/tanstack/router/RouterPendingComponent";
@@ -21,6 +22,9 @@ export const getRouter = async () => {
     },
     defaultPreload: "intent",
     defaultViewTransition: true,
+    scrollRestoration: true,
+    scrollRestorationBehavior: "instant",
+    getScrollRestorationKey,
   });
 
   setupRouterSsrQueryIntegration({ router, queryClient: tanstackQueryContext.queryClient });

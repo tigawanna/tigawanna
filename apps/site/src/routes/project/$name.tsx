@@ -58,7 +58,7 @@ function ProjectDetailContent({ owner, repo }: { owner: string; repo: string }) 
 
   return (
     <article className="mx-auto max-w-5xl space-y-8" data-test="project-detail">
-      <Link to="/" hash="projects" className="inline-flex text-sm text-primary hover:underline">
+      <Link to="/" className="inline-flex text-sm text-primary hover:underline">
         Back to projects
       </Link>
 

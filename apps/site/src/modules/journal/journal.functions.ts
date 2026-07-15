@@ -1,4 +1,4 @@
-import { requireBackstageSession } from "@/lib/better-auth/session.server";
+import { createBackstageServerFn } from "@/lib/tanstack/create-backstage-server-fn";
 import {
   journalEntryFormSchema,
   type JournalEntryFormValues,
@@ -19,7 +19,6 @@ import {
   type JournalEntryRow,
   type PaginatedResponse,
 } from "@repo/db";
-import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 async function nextPinOrder() {
@@ -103,12 +102,11 @@ function escapeLikePattern(value: string) {
  * (pinned first, then pin order, then newest). Optional `q` filters
  * title and description with a case-insensitive LIKE.
  */
-export const listJournalEntriesForBackstage = createServerFn({ method: "GET" })
+export const listJournalEntriesForBackstage = createBackstageServerFn({ method: "GET" })
   .validator((input?: z.infer<typeof listJournalEntriesInputSchema>) =>
     listJournalEntriesInputSchema.parse(input),
   )
   .handler(async ({ data }): Promise<PaginatedResponse<JournalEntryRow>> => {
-    await requireBackstageSession();
     const db = getDb();
     const { page, perPage, offset } = normalizePaginationParams(data ?? {});
     const q = data?.q?.trim() ?? "";
@@ -149,10 +147,9 @@ const journalEntryIdSchema = z.object({
  *
  * @returns The row, or `null` if it does not exist (e.g. static lesson fallback).
  */
-export const getJournalEntryForBackstage = createServerFn({ method: "GET" })
+export const getJournalEntryForBackstage = createBackstageServerFn({ method: "GET" })
   .validator((input: z.infer<typeof journalEntryIdSchema>) => journalEntryIdSchema.parse(input))
   .handler(async ({ data }): Promise<JournalEntryRow | null> => {
-    await requireBackstageSession();
     const db = getDb();
     const [row] = await db
       .select()
@@ -162,10 +159,9 @@ export const getJournalEntryForBackstage = createServerFn({ method: "GET" })
     return row ?? null;
   });
 
-export const createJournalEntry = createServerFn({ method: "POST" })
+export const createJournalEntry = createBackstageServerFn({ method: "POST" })
   .validator((input: JournalEntryFormValues) => journalEntryFormSchema.parse(input))
   .handler(async ({ data }) => {
-    await requireBackstageSession();
     const db = getDb();
     const id = crypto.randomUUID();
     const gist = data.gist.trim() || null;
@@ -188,12 +184,11 @@ export const createJournalEntry = createServerFn({ method: "POST" })
     return row;
   });
 
-export const updateJournalEntry = createServerFn({ method: "POST" })
+export const updateJournalEntry = createBackstageServerFn({ method: "POST" })
   .validator((input: JournalEntryFormValues & { id: string }) =>
     journalEntryIdSchema.extend(journalEntryFormSchema.shape).parse(input),
   )
   .handler(async ({ data }) => {
-    await requireBackstageSession();
     const db = getDb();
     const gist = data.gist.trim() || null;
 
@@ -222,21 +217,19 @@ export const updateJournalEntry = createServerFn({ method: "POST" })
     return row;
   });
 
-export const deleteJournalEntry = createServerFn({ method: "POST" })
+export const deleteJournalEntry = createBackstageServerFn({ method: "POST" })
   .validator((input: z.infer<typeof journalEntryIdSchema>) => journalEntryIdSchema.parse(input))
   .handler(async ({ data }) => {
-    await requireBackstageSession();
     const db = getDb();
     await db.delete(journalEntries).where(eq(journalEntries.id, data.id));
     return { ok: true as const };
   });
 
-export const setJournalEntryPinned = createServerFn({ method: "POST" })
+export const setJournalEntryPinned = createBackstageServerFn({ method: "POST" })
   .validator((input: { id: string; pinned: boolean }) =>
     journalEntryIdSchema.extend({ pinned: z.boolean() }).parse(input),
   )
   .handler(async ({ data }) => {
-    await requireBackstageSession();
     const db = getDb();
 
     if (data.pinned) {

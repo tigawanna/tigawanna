@@ -1,4 +1,4 @@
-import { requireBackstageSession } from "@/lib/better-auth/session.server";
+import { createBackstageServerFn } from "@/lib/tanstack/create-backstage-server-fn";
 import { logEnrichmentEvent } from "@/lib/evlog/enrichment-log";
 import { applyRepoMetadata } from "@/modules/github/apply-repo-metadata";
 import { getDb } from "@/lib/db/get-db";
@@ -20,7 +20,6 @@ import {
   type PaginatedResponse,
   type ProjectEnrichmentRunRow,
 } from "@repo/db";
-import { createServerFn } from "@tanstack/react-start";
 import { start } from "workflow/api";
 import { z } from "zod";
 
@@ -69,12 +68,11 @@ export type ProjectEnrichmentSuggestionListItem = {
  *
  * Topic JSON columns are parsed into `string[]`; other fields come from the select shape.
  */
-export const listProjectEnrichmentSuggestions = createServerFn({ method: "GET" })
+export const listProjectEnrichmentSuggestions = createBackstageServerFn({ method: "GET" })
   .validator((input?: z.infer<typeof listPaginationInputSchema>) =>
     listPaginationInputSchema.parse(input),
   )
   .handler(async ({ data }): Promise<PaginatedResponse<ProjectEnrichmentSuggestionListItem>> => {
-    await requireBackstageSession();
     const db = getDb();
     const { page, perPage, offset } = normalizePaginationParams(data ?? {});
 
@@ -131,12 +129,11 @@ export const listProjectEnrichmentSuggestions = createServerFn({ method: "GET" }
  *
  * Rows are returned as-is from Drizzle.
  */
-export const listProjectEnrichmentRuns = createServerFn({ method: "GET" })
+export const listProjectEnrichmentRuns = createBackstageServerFn({ method: "GET" })
   .validator((input?: z.infer<typeof listPaginationInputSchema>) =>
     listPaginationInputSchema.parse(input),
   )
   .handler(async ({ data }): Promise<PaginatedResponse<ProjectEnrichmentRunRow>> => {
-    await requireBackstageSession();
     const db = getDb();
     const { page, perPage, offset } = normalizePaginationParams(data ?? {}, { perPage: 20 });
 
@@ -152,12 +149,11 @@ export const listProjectEnrichmentRuns = createServerFn({ method: "GET" })
     return buildPaginatedResponse({ items, page, perPage, totalItems });
   });
 
-export const getProjectEnrichmentRun = createServerFn({ method: "GET" })
+export const getProjectEnrichmentRun = createBackstageServerFn({ method: "GET" })
   .validator((input: { runId: string }) => ({
     runId: z.string().uuid().parse(input.runId),
   }))
   .handler(async ({ data }) => {
-    await requireBackstageSession();
     const db = getDb();
     const [row] = await db
       .select()
@@ -172,7 +168,7 @@ export const getProjectEnrichmentRun = createServerFn({ method: "GET" })
     return row;
   });
 
-export const approveProjectEnrichmentSuggestion = createServerFn({ method: "POST" })
+export const approveProjectEnrichmentSuggestion = createBackstageServerFn({ method: "POST" })
   .validator(
     (input: {
       suggestionId: string;
@@ -183,7 +179,6 @@ export const approveProjectEnrichmentSuggestion = createServerFn({ method: "POST
     }) => input,
   )
   .handler(async ({ data }) => {
-    await requireBackstageSession();
     const env = getServerEnv();
     const pat = env.GH_PAT;
 
@@ -277,10 +272,9 @@ export const approveProjectEnrichmentSuggestion = createServerFn({ method: "POST
     return { ok: true };
   });
 
-export const rejectProjectEnrichmentSuggestion = createServerFn({ method: "POST" })
+export const rejectProjectEnrichmentSuggestion = createBackstageServerFn({ method: "POST" })
   .validator((input: { suggestionId: string }) => input)
   .handler(async ({ data }) => {
-    await requireBackstageSession();
     const db = getDb();
 
     const rows = await db
@@ -325,13 +319,11 @@ const triggerEnrichmentInputSchema = z.object({
   force: z.boolean().optional(),
 });
 
-export const triggerProjectEnrichmentRun = createServerFn({ method: "POST" })
+export const triggerProjectEnrichmentRun = createBackstageServerFn({ method: "POST" })
   .validator((input: z.infer<typeof triggerEnrichmentInputSchema>) =>
     triggerEnrichmentInputSchema.parse(input),
   )
   .handler(async ({ data }) => {
-    await requireBackstageSession();
-
     const trigger: EnrichmentRunParams["trigger"] = data.repos?.length ? "manual" : "scheduled";
     const runId = await createRunRecord(trigger, data.repos ?? null);
 

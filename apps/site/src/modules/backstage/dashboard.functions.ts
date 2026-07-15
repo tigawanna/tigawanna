@@ -1,7 +1,6 @@
-import { requireBackstageSession } from "@/lib/better-auth/session.server";
 import { getDb } from "@/lib/db/get-db";
+import { createBackstageServerFn } from "@/lib/tanstack/create-backstage-server-fn";
 import { contactMessages, count, eq, journalEntries, projectRepos } from "@repo/db";
-import { createServerFn } from "@tanstack/react-start";
 
 /** Aggregate counts for the backstage home dashboard. */
 export type BackstageDashboardCounts = {
@@ -17,9 +16,8 @@ export type BackstageDashboardCounts = {
  *
  * Prefer this over loading full list queries just to call `.length` / `.filter`.
  */
-export const getBackstageDashboardCounts = createServerFn({ method: "GET" }).handler(
+export const getBackstageDashboardCounts = createBackstageServerFn({ method: "GET" }).handler(
   async (): Promise<BackstageDashboardCounts> => {
-    await requireBackstageSession();
     const db = getDb();
 
     const [

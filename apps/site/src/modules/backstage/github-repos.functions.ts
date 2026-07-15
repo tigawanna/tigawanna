@@ -1,4 +1,4 @@
-import { requireBackstageSession } from "@/lib/better-auth/session.server";
+import { createBackstageServerFn } from "@/lib/tanstack/create-backstage-server-fn";
 import {
   logGithubReposListEvent,
   nextListGithubReposCallCount,
@@ -9,7 +9,6 @@ import { removeProjectRepo } from "@/modules/backstage/projects.functions";
 import { deleteGithubRepo, setGithubRepoVisibility } from "@/modules/github/repo-admin";
 import type { GithubRepoNode } from "@/types/github";
 import type { BackstageGithubRepo } from "@/types/backstage";
-import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 const repoFullNameSchema = z.string().regex(/^[^/]+\/[^/]+$/);
@@ -66,9 +65,8 @@ const GITHUB_RECENT_REPOS_LIMIT = 100;
  *
  * Requires an authenticated admin session.
  */
-export const listGithubReposForBackstage = createServerFn({ method: "GET" }).handler(
+export const listGithubReposForBackstage = createBackstageServerFn({ method: "GET" }).handler(
   async (): Promise<BackstageGithubReposList> => {
-    await requireBackstageSession();
     const startedAt = performance.now();
     const callCount = nextListGithubReposCallCount();
     const result = await fetchRecentReposFromGithub({ first: GITHUB_RECENT_REPOS_LIMIT });
@@ -113,12 +111,11 @@ const deleteGithubRepoInputSchema = z.object({
  *
  * Requires an authenticated admin session.
  */
-export const deleteGithubRepoForBackstage = createServerFn({ method: "POST" })
+export const deleteGithubRepoForBackstage = createBackstageServerFn({ method: "POST" })
   .validator((input: z.infer<typeof deleteGithubRepoInputSchema>) =>
     deleteGithubRepoInputSchema.parse(input),
   )
   .handler(async ({ data }) => {
-    await requireBackstageSession();
     const pat = data.overridePat ?? requirePat();
 
     try {
@@ -137,13 +134,12 @@ export const deleteGithubRepoForBackstage = createServerFn({ method: "POST" })
  *
  * Requires an authenticated admin session.
  */
-export const setGithubRepoVisibilityForBackstage = createServerFn({ method: "POST" })
+export const setGithubRepoVisibilityForBackstage = createBackstageServerFn({ method: "POST" })
   .validator((input: { repoFullName: string; visibility: "public" | "private" }) => ({
     repoFullName: repoFullNameSchema.parse(input.repoFullName),
     visibility: z.enum(["public", "private"]).parse(input.visibility),
   }))
   .handler(async ({ data }) => {
-    await requireBackstageSession();
     const pat = requirePat();
     await setGithubRepoVisibility(pat, data.repoFullName, data.visibility);
     return { ok: true as const, visibility: data.visibility };

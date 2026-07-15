@@ -1,4 +1,4 @@
-import { requireBackstageSession } from "@/lib/better-auth/session.server";
+import { createBackstageServerFn } from "@/lib/tanstack/create-backstage-server-fn";
 import { getDb } from "@/lib/db/get-db";
 import {
   buildOrderBy,
@@ -12,7 +12,6 @@ import {
   type ContactMessageRow,
   type PaginatedResponse,
 } from "@repo/db";
-import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 const listContactMessagesInputSchema = z
@@ -40,12 +39,11 @@ function escapeLikePattern(value: string) {
  * Requires an authenticated admin session. Optional `q` filters name, contact,
  * and message with a case-insensitive LIKE.
  */
-export const listContactMessages = createServerFn({ method: "GET" })
+export const listContactMessages = createBackstageServerFn({ method: "GET" })
   .validator((input?: z.infer<typeof listContactMessagesInputSchema>) =>
     listContactMessagesInputSchema.parse(input),
   )
   .handler(async ({ data }): Promise<PaginatedResponse<ContactMessageRow>> => {
-    await requireBackstageSession();
     const db = getDb();
     const { page, perPage, offset } = normalizePaginationParams(data ?? {});
     const sortBy = data?.sortBy;
@@ -92,10 +90,9 @@ const contactMessageIdSchema = z.object({
  *
  * Requires an authenticated admin session.
  */
-export const deleteContactMessage = createServerFn({ method: "POST" })
+export const deleteContactMessage = createBackstageServerFn({ method: "POST" })
   .validator((input: z.infer<typeof contactMessageIdSchema>) => contactMessageIdSchema.parse(input))
   .handler(async ({ data }) => {
-    await requireBackstageSession();
     const db = getDb();
     await db.delete(contactMessages).where(eq(contactMessages.id, data.id));
     return { ok: true as const };

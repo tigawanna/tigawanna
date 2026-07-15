@@ -1,4 +1,4 @@
-import { requireBackstageSession } from "@/lib/better-auth/session.server";
+import { createBackstageServerFn } from "@/lib/tanstack/create-backstage-server-fn";
 import { logEnrichmentEvent } from "@/lib/evlog/enrichment-log";
 import { getDb } from "@/lib/db/get-db";
 import { fetchReposByFullNames } from "@/modules/project-enrichment/github-client";
@@ -24,7 +24,6 @@ import {
   type ProjectEnrichmentSuggestionStatus,
   type ProjectRepoRow,
 } from "@repo/db";
-import { createServerFn } from "@tanstack/react-start";
 import { start } from "workflow/api";
 import { z } from "zod";
 
@@ -366,12 +365,11 @@ const listProjectReposInputSchema = z
  * Requires an authenticated admin session. Topics JSON is parsed into `string[]`;
  * `needsEnrichmentReview` is derived from pending enrichment suggestions.
  */
-export const listProjectRepos = createServerFn({ method: "GET" })
+export const listProjectRepos = createBackstageServerFn({ method: "GET" })
   .validator((input?: z.infer<typeof listProjectReposInputSchema>) =>
     listProjectReposInputSchema.parse(input),
   )
   .handler(async ({ data }): Promise<PaginatedResponse<BackstageProject>> => {
-    await requireBackstageSession();
     const db = getDb();
     const { page, perPage, offset } = normalizePaginationParams(data ?? {});
     const sortBy = data?.sortBy;
@@ -434,12 +432,11 @@ const createProjectRepoInputSchema = z.object({
  *
  * Requires an authenticated admin session.
  */
-export const createProjectRepo = createServerFn({ method: "POST" })
+export const createProjectRepo = createBackstageServerFn({ method: "POST" })
   .validator((input: z.infer<typeof createProjectRepoInputSchema>) =>
     createProjectRepoInputSchema.parse(input),
   )
   .handler(async ({ data }) => {
-    await requireBackstageSession();
     const db = getDb();
     const now = new Date();
     const topics = data.currentTopics ?? [];
@@ -489,12 +486,11 @@ const updateProjectRepoInputSchema = z.object({
  *
  * Requires an authenticated admin session.
  */
-export const updateProjectRepo = createServerFn({ method: "POST" })
+export const updateProjectRepo = createBackstageServerFn({ method: "POST" })
   .validator((input: z.infer<typeof updateProjectRepoInputSchema>) =>
     updateProjectRepoInputSchema.parse(input),
   )
   .handler(async ({ data }) => {
-    await requireBackstageSession();
     const db = getDb();
     const { githubRepoId, ...fields } = data;
     const now = new Date();
@@ -600,12 +596,11 @@ async function startImportWorkflow(repoFullNames: string[], data: ImportWorkflow
  * Optionally starts a manual enrichment workflow when `runEnrichment` is requested.
  * Requires an authenticated admin session.
  */
-export const importProjectRepo = createServerFn({ method: "POST" })
+export const importProjectRepo = createBackstageServerFn({ method: "POST" })
   .validator((input: z.infer<typeof importProjectRepoInputSchema>) =>
     importProjectRepoInputSchema.parse(input),
   )
   .handler(async ({ data }) => {
-    await requireBackstageSession();
     const pat = requirePat();
 
     const repos = await fetchReposByFullNames(pat, [data.repoFullName]);
@@ -625,12 +620,11 @@ export const importProjectRepo = createServerFn({ method: "POST" })
  *
  * Requires an authenticated admin session.
  */
-export const importAllProjectRepos = createServerFn({ method: "POST" })
+export const importAllProjectRepos = createBackstageServerFn({ method: "POST" })
   .validator((input: z.infer<typeof importAllProjectReposInputSchema>) =>
     importAllProjectReposInputSchema.parse(input),
   )
   .handler(async ({ data }) => {
-    await requireBackstageSession();
     const pat = requirePat();
 
     const repos = await fetchReposByFullNames(pat, data.repoFullNames);
@@ -657,12 +651,11 @@ export const importAllProjectRepos = createServerFn({ method: "POST" })
  *
  * Requires an authenticated admin session.
  */
-export const removeProjectRepo = createServerFn({ method: "POST" })
+export const removeProjectRepo = createBackstageServerFn({ method: "POST" })
   .validator((input: { repoFullName: string }) => ({
     repoFullName: repoFullNameSchema.parse(input.repoFullName),
   }))
   .handler(async ({ data }) => {
-    await requireBackstageSession();
     await deleteProjectRepoByFullName(data.repoFullName);
     return { ok: true as const };
   });
@@ -670,12 +663,11 @@ export const removeProjectRepo = createServerFn({ method: "POST" })
 /**
  * Loads a backstage project with GitHub metadata, enrichment output, and README HTML.
  */
-export const getBackstageProjectDetail = createServerFn({ method: "GET" })
+export const getBackstageProjectDetail = createBackstageServerFn({ method: "GET" })
   .validator((input: { repoFullName: string }) => ({
     repoFullName: repoFullNameSchema.parse(input.repoFullName),
   }))
   .handler(async ({ data }) => {
-    await requireBackstageSession();
     const db = getDb();
 
     const [row] = await db
