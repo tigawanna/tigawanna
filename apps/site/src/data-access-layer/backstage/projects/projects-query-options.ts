@@ -22,7 +22,7 @@ export const backstageProjectsQueryOptions = queryOptions({
 
 export const backstageGithubReposQueryOptions = queryOptions({
   queryKey: [queryKeyPrefixes.backstage, "github-repos"],
-  queryFn: () => listGithubReposForBackstage({ data: { page: 1, perPage: 500 } }),
+  queryFn: () => listGithubReposForBackstage(),
 });
 
 export function backstageProjectDetailQueryOptions(repoFullName: string) {

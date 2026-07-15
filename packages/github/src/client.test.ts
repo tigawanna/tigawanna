@@ -125,6 +125,7 @@ describe("GitHubClient", () => {
         expect.objectContaining({ message: orgPolicyMessage }),
         expect.objectContaining({ message: orgPolicyMessage }),
       ],
+      rateLimit: null,
     });
   });
 
@@ -147,6 +148,13 @@ describe("GitHubClient", () => {
     octokitMocks.graphql.mockResolvedValue({
       viewer: { repositories: { nodes: [recentRepo] } },
       errors: [{ message: "partial failure" }],
+      rateLimit: {
+        cost: 1,
+        limit: 5000,
+        remaining: 4999,
+        used: 1,
+        resetAt: "2026-01-01T01:00:00Z",
+      },
     });
 
     const client = createGitHubClient("ghp_test_token");
@@ -158,6 +166,13 @@ describe("GitHubClient", () => {
         },
       },
       errors: [{ message: "partial failure" }],
+      rateLimit: {
+        cost: 1,
+        limit: 5000,
+        remaining: 4999,
+        used: 1,
+        resetAt: "2026-01-01T01:00:00Z",
+      },
     });
 
     expect(octokitMocks.graphql).toHaveBeenCalledWith(RECENT_REPOS_QUERY, {
@@ -215,6 +230,7 @@ describe("GitHubClient", () => {
         },
       },
       errors: [],
+      rateLimit: null,
     });
   });
 

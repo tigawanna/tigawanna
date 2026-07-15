@@ -28,6 +28,7 @@ export type {
   FetchRecentReposOptions,
   FetchRecentReposResult,
   GithubGraphqlError,
+  GithubGraphqlRateLimit,
   GithubRepoDetail,
   GithubRepoNode,
   GithubRepoSnapshot,

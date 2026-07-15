@@ -99,6 +99,7 @@ export class GitHubClient {
           },
         },
         errors: result.errors ?? [],
+        rateLimit: result.rateLimit ?? null,
       };
     } catch (error: unknown) {
       if (isIgnorableGraphqlAggregateError(error)) {
@@ -110,6 +111,7 @@ export class GitHubClient {
             },
           },
           errors: parseGraphqlAggregateError(error) ?? [],
+          rateLimit: null,
         };
       }
 

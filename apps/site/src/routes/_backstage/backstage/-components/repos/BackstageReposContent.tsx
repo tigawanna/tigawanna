@@ -1,6 +1,8 @@
-import { buildGithubReposLiveQuery } from "@/data-access-layer/backstage/github/backstage-github-repos-query";
+import {
+  buildGithubReposFilteredLiveQuery,
+  buildGithubReposLiveQuery,
+} from "@/data-access-layer/backstage/github/backstage-github-repos-query";
 import { BACKSTAGE_LIST_PER_PAGE } from "@/data-access-layer/backstage/shared-query-options";
-import { paginateItems } from "@/utils/paginate-items";
 import { useLiveSuspenseQuery } from "@tanstack/react-db";
 import { Route } from "../../repos";
 import { BackstagePending } from "../shared/BackstagePending";
@@ -18,14 +20,34 @@ export function BackstageReposContent() {
   const page = search.page ?? 1;
   const hasActiveFilters = Boolean(q || visibility !== "all" || archived !== "all");
 
-  const { data: repos } = useLiveSuspenseQuery(
-    buildGithubReposLiveQuery({ q, sortBy, sortDirection, visibility, archived }),
-    [q, sortBy, sortDirection, visibility, archived],
+  const queryParams = {
+    q,
+    sortBy,
+    sortDirection,
+    visibility,
+    archived,
+    page,
+    perPage: BACKSTAGE_LIST_PER_PAGE,
+  };
+
+  const { data: repos } = useLiveSuspenseQuery(buildGithubReposLiveQuery(queryParams), [
+    q,
+    sortBy,
+    sortDirection,
+    visibility,
+    archived,
+    page,
+  ]);
+
+  const { data: matchingRepos } = useLiveSuspenseQuery(
+    buildGithubReposFilteredLiveQuery({ q, visibility, archived }),
+    [q, visibility, archived],
   );
 
-  const { items: pageRepos, pagination } = paginateItems(repos, page, BACKSTAGE_LIST_PER_PAGE);
+  const totalItems = matchingRepos.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / BACKSTAGE_LIST_PER_PAGE));
 
-  if (repos.length === 0) {
+  if (totalItems === 0) {
     return (
       <BackstageReposListScaffold totalPages={0}>
         <BackstageReposEmpty hasActiveFilters={hasActiveFilters} query={q.trim()} />
@@ -34,9 +56,9 @@ export function BackstageReposContent() {
   }
 
   return (
-    <BackstageReposListScaffold totalPages={pagination.totalPages}>
+    <BackstageReposListScaffold totalPages={totalPages}>
       <p className="text-muted-foreground text-sm">
-        Showing {pageRepos.length} of {pagination.totalItems}
+        Showing {repos.length} of {totalItems}
         {hasActiveFilters ? " matching" : ""} repos
       </p>
       <div

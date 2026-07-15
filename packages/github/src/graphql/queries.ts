@@ -34,6 +34,13 @@ export const RECENT_REPOS_QUERY = `query getViewerRecentlyPushedRepos(
       }
     }
   }
+  rateLimit {
+    cost
+    limit
+    remaining
+    used
+    resetAt
+  }
 }`;
 
 export const PINNED_REPOS_QUERY = `query getViewerPinnedRepos {

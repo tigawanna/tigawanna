@@ -4,6 +4,15 @@ export type RepositoryTopic = {
   };
 };
 
+/** GitHub GraphQL `rateLimit` object returned alongside query data. */
+export type GithubGraphqlRateLimit = {
+  cost: number;
+  limit: number;
+  remaining: number;
+  used: number;
+  resetAt: string;
+};
+
 export type GithubGraphqlError = {
   path: string[];
   extensions: {
@@ -103,6 +112,7 @@ export type FetchRecentReposOptions = {
 export type FetchRecentReposResult = {
   data: ViewerPinnedRepoData | null;
   errors: GithubGraphqlError[];
+  rateLimit: GithubGraphqlRateLimit | null;
 };
 
 /** Compact repository snapshot used by enrichment and embedding pipelines. */

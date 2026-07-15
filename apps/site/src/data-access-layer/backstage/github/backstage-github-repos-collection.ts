@@ -24,9 +24,7 @@ export const backstageGithubReposCollection = createCollection(
   queryCollectionOptions({
     id: COLLECTION_ID,
     queryKey: [queryKeyPrefixes.backstage, "github-repos"],
-    queryFn: withCollectionQueryLogging(COLLECTION_ID, () =>
-      listGithubReposForBackstage({ data: { page: 1, perPage: 500 } }),
-    ),
+    queryFn: withCollectionQueryLogging(COLLECTION_ID, () => listGithubReposForBackstage()),
     select: (data) => data.items,
     queryClient,
     defaultIndexType: BasicIndex,
@@ -61,4 +59,8 @@ export const backstageGithubReposCollection = createCollection(
 );
 
 backstageGithubReposCollection.createIndex((row) => row.nameWithOwner);
+backstageGithubReposCollection.createIndex((row) => row.name);
+backstageGithubReposCollection.createIndex((row) => row.pushedAt);
+backstageGithubReposCollection.createIndex((row) => row.stargazerCount);
+backstageGithubReposCollection.createIndex((row) => row.forkCount);
 attachTanstackDbCollectionLogging(backstageGithubReposCollection, COLLECTION_ID);

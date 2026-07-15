@@ -1,15 +1,14 @@
 import { requireBackstageSession } from "@/lib/better-auth/session.server";
+import {
+  logGithubReposListEvent,
+  nextListGithubReposCallCount,
+} from "@/lib/evlog/github-repos-log";
 import { extractRepoTags, fetchRecentReposFromGithub } from "@/modules/github/fetch-repos";
 import { getServerEnv } from "@/lib/envs/server-env";
 import { removeProjectRepo } from "@/modules/backstage/projects.functions";
 import { deleteGithubRepo, setGithubRepoVisibility } from "@/modules/github/repo-admin";
 import type { GithubRepoNode } from "@/types/github";
 import type { BackstageGithubRepo } from "@/types/backstage";
-import {
-  buildPaginatedResponse,
-  normalizePaginationParams,
-  type PaginatedResponse,
-} from "@repo/db";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
@@ -52,47 +51,48 @@ function requirePat() {
   return pat;
 }
 
-const listGithubReposInputSchema = z
-  .object({
-    page: z.number().int().positive().optional(),
-    perPage: z.number().int().positive().max(500).optional(),
-  })
-  .optional();
-
-/** Paginated GitHub repos plus any GraphQL error messages. */
-export type BackstageGithubReposPage = PaginatedResponse<BackstageGithubRepo> & {
+/** GitHub repos loaded for the backstage collection plus any GraphQL error messages. */
+export type BackstageGithubReposList = {
+  items: BackstageGithubRepo[];
   errors: string[];
 };
 
+const GITHUB_RECENT_REPOS_LIMIT = 100;
+
 /**
- * Lists recent GitHub repositories for backstage import and management, paginated.
+ * Lists recent GitHub repositories for backstage import and management.
+ *
+ * Returns the full recent-repo window (up to 100). Pagination is handled by TanStack DB live queries.
  *
  * Requires an authenticated admin session.
  */
-export const listGithubReposForBackstage = createServerFn({ method: "GET" })
-  .validator((input?: z.infer<typeof listGithubReposInputSchema>) =>
-    listGithubReposInputSchema.parse(input),
-  )
-  .handler(async ({ data }): Promise<BackstageGithubReposPage> => {
+export const listGithubReposForBackstage = createServerFn({ method: "GET" }).handler(
+  async (): Promise<BackstageGithubReposList> => {
     await requireBackstageSession();
-    const { page, perPage, offset } = normalizePaginationParams(data ?? {});
-    const result = await fetchRecentReposFromGithub({ first: Math.min(100, offset + perPage) });
+    const startedAt = performance.now();
+    const callCount = nextListGithubReposCallCount();
+    const result = await fetchRecentReposFromGithub({ first: GITHUB_RECENT_REPOS_LIMIT });
     const nodes = (result.data?.viewer.repositories.nodes ?? []).filter(
       (repo): repo is GithubRepoNode => repo != null,
     );
-    const allRepos = nodes.map(mapRepoNode);
-    const paginated = buildPaginatedResponse({
-      items: allRepos.slice(offset, offset + perPage),
-      page,
-      perPage,
-      totalItems: allRepos.length,
+    const items = nodes.map(mapRepoNode);
+
+    logGithubReposListEvent({
+      operation: "list-github-repos",
+      callCount,
+      first: GITHUB_RECENT_REPOS_LIMIT,
+      repoCount: items.length,
+      errorCount: result.errors.length,
+      durationMs: Math.round(performance.now() - startedAt),
+      rateLimit: result.rateLimit,
     });
 
     return {
-      ...paginated,
+      items,
       errors: result.errors.map((error) => error.message),
     };
-  });
+  },
+);
 
 /**
  * Deletes a repository on GitHub and removes its matching `project_repos` row.

@@ -1,9 +1,10 @@
-import type { GithubRepoDetail, GithubRepoNode } from "../types.js";
+import type { GithubGraphqlRateLimit, GithubRepoDetail, GithubRepoNode } from "../types.js";
 
 export type RecentReposGraphqlResponse = {
   viewer: {
     repositories: { nodes: (GithubRepoNode | null)[] };
   };
+  rateLimit: GithubGraphqlRateLimit;
 };
 
 export type PinnedReposGraphqlResponse = {
