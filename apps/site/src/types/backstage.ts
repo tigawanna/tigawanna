@@ -31,7 +31,10 @@ export type BackstageGithubReposResponse = {
   errors: string[];
 };
 
-export type BackstageGithubRepoWithTracking = {
+export type BackstageGithubRepoListItem = {
   repo: BackstageGithubRepo;
-  isTracked: boolean;
+  isImported: boolean;
 };
+
+/** @deprecated Use {@link BackstageGithubRepoListItem} */
+export type BackstageGithubRepoWithTracking = BackstageGithubRepoListItem;

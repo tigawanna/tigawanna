@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   deleteBackstageGithubRepoMutationOptions,
   importBackstageProjectMutationOptions,
@@ -10,7 +11,7 @@ import type { ImportProjectOptions } from "@/routes/_backstage/backstage/-utils/
 import type { BackstageGithubRepo } from "@/types/backstage";
 import { useMutation } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
-import { ExternalLink, Eye, GitFork, Lock, Star } from "lucide-react";
+import { ExternalLink, Eye, GitFork, Lock, RefreshCcw, Star } from "lucide-react";
 import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { RepoDeleteButton } from "../shared/RepoDeleteButton";
@@ -20,9 +21,10 @@ import { ImportRepoDialog } from "./ImportRepoDialog";
 
 type BackstageRepoRowProps = {
   repo: BackstageGithubRepo;
+  isImported: boolean;
 };
 
-export function BackstageRepoRow({ repo }: BackstageRepoRowProps) {
+export function BackstageRepoRow({ repo, isImported }: BackstageRepoRowProps) {
   const [importOpen, setImportOpen] = useState(false);
   const [adminPatOpen, setAdminPatOpen] = useState(false);
 
@@ -114,6 +116,11 @@ export function BackstageRepoRow({ repo }: BackstageRepoRowProps) {
             </Badge>
             {repo.isArchived ? <Badge variant="outline">archived</Badge> : null}
             {repo.isFork ? <Badge variant="outline">fork</Badge> : null}
+            {isImported ? (
+              <Badge variant="secondary" data-test="repo-imported-badge">
+                Imported
+              </Badge>
+            ) : null}
           </div>
 
           <p className="text-base-content/60 mt-1 text-sm">
@@ -149,14 +156,33 @@ export function BackstageRepoRow({ repo }: BackstageRepoRowProps) {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <Button
-            data-test="import-repo"
-            size="sm"
-            disabled={actionsDisabled}
-            onClick={() => setImportOpen(true)}
-          >
-            {importMutation.isPending ? "Importing…" : "Import"}
-          </Button>
+          {isImported ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  data-test="reimport-repo"
+                  variant="outline"
+                  size="icon"
+                  className="size-8"
+                  disabled={actionsDisabled}
+                  onClick={() => setImportOpen(true)}
+                  aria-label="Reimport to projects"
+                >
+                  <RefreshCcw className="size-3.5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Reimport to projects</TooltipContent>
+            </Tooltip>
+          ) : (
+            <Button
+              data-test="import-repo"
+              size="sm"
+              disabled={actionsDisabled}
+              onClick={() => setImportOpen(true)}
+            >
+              {importMutation.isPending ? "Importing…" : "Import"}
+            </Button>
+          )}
 
           <RepoVisibilityButton
             repoFullName={repo.nameWithOwner}

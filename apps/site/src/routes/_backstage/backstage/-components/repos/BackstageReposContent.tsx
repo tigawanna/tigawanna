@@ -1,6 +1,6 @@
 import {
-  buildGithubReposFilteredLiveQuery,
-  buildGithubReposLiveQuery,
+  buildGithubReposCountLiveQuery,
+  buildGithubReposPageLiveQuery,
 } from "@/data-access-layer/backstage/github/backstage-github-repos-query";
 import { BACKSTAGE_LIST_PER_PAGE } from "@/data-access-layer/backstage/shared-query-options";
 import { useLiveSuspenseQuery } from "@tanstack/react-db";
@@ -20,29 +20,24 @@ export function BackstageReposContent() {
   const page = search.page ?? 1;
   const hasActiveFilters = Boolean(q || visibility !== "all" || archived !== "all");
 
-  const queryParams = {
-    q,
-    sortBy,
-    sortDirection,
-    visibility,
-    archived,
-    page,
-    perPage: BACKSTAGE_LIST_PER_PAGE,
-  };
+  const filters = { q, visibility, archived };
 
-  const { data: repos } = useLiveSuspenseQuery(buildGithubReposLiveQuery(queryParams), [
-    q,
-    sortBy,
-    sortDirection,
-    visibility,
-    archived,
-    page,
-  ]);
-
-  const { data: matchingRepos } = useLiveSuspenseQuery(
-    buildGithubReposFilteredLiveQuery({ q, visibility, archived }),
-    [q, visibility, archived],
+  const { data: repos } = useLiveSuspenseQuery(
+    buildGithubReposPageLiveQuery({
+      ...filters,
+      sortBy,
+      sortDirection,
+      page,
+      perPage: BACKSTAGE_LIST_PER_PAGE,
+    }),
+    [q, sortBy, sortDirection, visibility, archived, page],
   );
+
+  const { data: matchingRepos } = useLiveSuspenseQuery(buildGithubReposCountLiveQuery(filters), [
+    q,
+    visibility,
+    archived,
+  ]);
 
   const totalItems = matchingRepos.length;
   const totalPages = Math.max(1, Math.ceil(totalItems / BACKSTAGE_LIST_PER_PAGE));
@@ -65,8 +60,8 @@ export function BackstageReposContent() {
         className="divide-base-content/10 divide-y rounded-lg border border-base-content/10"
         data-test="backstage-repos-list"
       >
-        {repos.map((repo) => (
-          <BackstageRepoRow key={repo.id} repo={repo} />
+        {repos.map((item) => (
+          <BackstageRepoRow key={item.repo.id} repo={item.repo} isImported={item.isImported} />
         ))}
       </div>
     </BackstageReposListScaffold>

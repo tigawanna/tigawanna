@@ -1,13 +1,20 @@
 import { backstageGithubReposCollection } from "@/data-access-layer/backstage/github/backstage-github-repos-collection";
+import { backstageProjectsCollection } from "@/data-access-layer/backstage/projects/backstage-projects-collection";
 import { BACKSTAGE_LIST_PER_PAGE } from "@/data-access-layer/backstage/shared-query-options";
-import { and, eq, ilike, IR, or, type InitialQueryBuilder } from "@tanstack/db";
+import type { BackstageGithubRepoListItem } from "@/types/backstage";
+import { and, eq, ilike, IR, isNull, not, or, type InitialQueryBuilder } from "@tanstack/db";
 
-export type GithubReposLiveQueryParams = {
+export type { BackstageGithubRepoListItem };
+
+export type GithubReposFilters = {
   q: string;
-  sortBy: "nameWithOwner" | "name" | "pushedAt" | "stargazerCount" | "forkCount";
-  sortDirection: "asc" | "desc";
   visibility: "all" | "public" | "private";
   archived: "all" | "active" | "archived";
+};
+
+export type GithubReposLiveQueryParams = GithubReposFilters & {
+  sortBy: "nameWithOwner" | "name" | "pushedAt" | "stargazerCount" | "forkCount";
+  sortDirection: "asc" | "desc";
   page?: number;
   perPage?: number;
 };
@@ -20,118 +27,101 @@ function combineWhereClauses(clauses: Array<IR.BasicExpression<boolean>>) {
 }
 
 /**
- * Builds a TanStack DB live query for backstage GitHub repos with native limit/offset pagination.
+ * Shared subquery: github repos left-joined to projects, filtered, with import status.
+ *
+ * Count and paginated list queries both `from({ item: ... })` this subquery so filters
+ * live in one place (TanStack DB subquery pattern).
  */
-export function buildGithubReposLiveQuery({
+function buildFilteredGithubReposSubquery(q: InitialQueryBuilder, filters: GithubReposFilters) {
+  const { q: search, visibility, archived } = filters;
+
+  let query = q
+    .from({ github: backstageGithubReposCollection })
+    .leftJoin({ projects: backstageProjectsCollection }, ({ github, projects }) =>
+      eq(github.nameWithOwner, projects.repoFullName),
+    );
+
+  if (search || visibility !== "all" || archived !== "all") {
+    query = query.where(({ github }) => {
+      const clauses: Array<IR.BasicExpression<boolean>> = [];
+
+      if (search) {
+        clauses.push(
+          or(
+            ilike(github.nameWithOwner, `%${search}%`),
+            ilike(github.name, `%${search}%`),
+            ilike(github.description, `%${search}%`),
+          ),
+        );
+      }
+
+      if (visibility === "public") {
+        clauses.push(eq(github.isPrivate, false));
+      } else if (visibility === "private") {
+        clauses.push(eq(github.isPrivate, true));
+      }
+
+      if (archived === "active") {
+        clauses.push(eq(github.isArchived, false));
+      } else if (archived === "archived") {
+        clauses.push(eq(github.isArchived, true));
+      }
+
+      return combineWhereClauses(clauses);
+    });
+  }
+
+  return query.select(({ github, projects }) => ({
+    repo: github,
+    isImported: not(isNull(projects.repoFullName)),
+  }));
+}
+
+/**
+ * Live query for the filtered repo count (one row per matching repo).
+ */
+export function buildGithubReposCountLiveQuery(filters: GithubReposFilters) {
+  return (q: InitialQueryBuilder) =>
+    q
+      .from({ item: buildFilteredGithubReposSubquery(q, filters) })
+      .select(({ item }) => ({ id: item.repo.nameWithOwner }));
+}
+
+/**
+ * Live query for one page of filtered repos, sorted and joined to import status.
+ */
+export function buildGithubReposPageLiveQuery({
   q,
-  sortBy,
-  sortDirection,
   visibility,
   archived,
+  sortBy,
+  sortDirection,
   page = 1,
   perPage = BACKSTAGE_LIST_PER_PAGE,
 }: GithubReposLiveQueryParams) {
   const safePage = Math.max(1, page);
   const safePerPage = Math.max(1, perPage);
   const offset = (safePage - 1) * safePerPage;
+  const filters = { q, visibility, archived };
 
-  return (queryBuilder: InitialQueryBuilder) => {
-    let query = queryBuilder.from({ github: backstageGithubReposCollection });
-
-    if (q || visibility !== "all" || archived !== "all") {
-      query = query.where(({ github }) => {
-        const clauses: Array<IR.BasicExpression<boolean>> = [];
-
-        if (q) {
-          clauses.push(
-            or(
-              ilike(github.nameWithOwner, `%${q}%`),
-              ilike(github.name, `%${q}%`),
-              ilike(github.description, `%${q}%`),
-            ),
-          );
-        }
-
-        if (visibility === "public") {
-          clauses.push(eq(github.isPrivate, false));
-        } else if (visibility === "private") {
-          clauses.push(eq(github.isPrivate, true));
-        }
-
-        if (archived === "active") {
-          clauses.push(eq(github.isArchived, false));
-        } else if (archived === "archived") {
-          clauses.push(eq(github.isArchived, true));
-        }
-
-        return combineWhereClauses(clauses);
-      });
-    }
-
-    return query
-      .orderBy(({ github }) => {
+  return (queryBuilder: InitialQueryBuilder) =>
+    queryBuilder
+      .from({ item: buildFilteredGithubReposSubquery(queryBuilder, filters) })
+      .orderBy(({ item }) => {
         switch (sortBy) {
           case "name":
-            return github.name;
+            return item.repo.name;
           case "pushedAt":
-            return github.pushedAt;
+            return item.repo.pushedAt;
           case "stargazerCount":
-            return github.stargazerCount;
+            return item.repo.stargazerCount;
           case "forkCount":
-            return github.forkCount;
+            return item.repo.forkCount;
           default:
-            return github.nameWithOwner;
+            return item.repo.nameWithOwner;
         }
       }, sortDirection)
       .offset(offset)
       .limit(safePerPage)
-      .select(({ github }) => github);
-  };
-}
-
-/**
- * Builds a TanStack DB live query that returns all rows matching backstage repo filters.
- *
- * Used for total counts before applying limit/offset pagination.
- */
-export function buildGithubReposFilteredLiveQuery({
-  q,
-  visibility,
-  archived,
-}: Pick<GithubReposLiveQueryParams, "q" | "visibility" | "archived">) {
-  return (queryBuilder: InitialQueryBuilder) => {
-    let query = queryBuilder.from({ github: backstageGithubReposCollection });
-
-    if (q || visibility !== "all" || archived !== "all") {
-      query = query.where(({ github }) => {
-        const clauses: Array<IR.BasicExpression<boolean>> = [];
-
-        if (q) {
-          clauses.push(
-            or(
-              ilike(github.nameWithOwner, `%${q}%`),
-              ilike(github.name, `%${q}%`),
-              ilike(github.description, `%${q}%`),
-            ),
-          );
-        }
-
-        if (visibility === "public") {
-          clauses.push(eq(github.isPrivate, false));
-        } else if (visibility === "private") {
-          clauses.push(eq(github.isPrivate, true));
-        }
-
-        if (archived === "active") {
-          clauses.push(eq(github.isArchived, false));
-        } else if (archived === "archived") {
-          clauses.push(eq(github.isArchived, true));
-        }
-
-        return combineWhereClauses(clauses);
-      });
-    }
-
-    return query.select(({ github }) => ({ nameWithOwner: github.nameWithOwner }));
-  };
+      .select(({ item }) => item);
 }
