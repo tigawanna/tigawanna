@@ -154,6 +154,8 @@ export class GitHubClient {
       { variables: { first: limit } },
     );
 
+    console.log("== result.viewer.repositories.nodes == ", result.viewer.repositories.nodes);
+
     return filterRepoNodes(result.viewer.repositories.nodes, { excludePrivate: true }).map(
       mapEnrichmentRepoNode,
     );

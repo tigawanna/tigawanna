@@ -1,11 +1,5 @@
 import { backstageProjectsCollection } from "@/data-access-layer/backstage/projects/backstage-projects-collection";
 import { queryKeyPrefixes } from "@/data-access-layer/query-keys";
-import {
-  attachTanstackDbCollectionLogging,
-  withCollectionDeleteLogging,
-  withCollectionQueryLogging,
-  withCollectionUpdateLogging,
-} from "@/lib/tanstack/db/collection-logging";
 import { getTanstackQueryContext } from "@/lib/tanstack/query/query-provider";
 import {
   deleteGithubRepoForBackstage,
@@ -24,12 +18,12 @@ export const backstageGithubReposCollection = createCollection(
   queryCollectionOptions({
     id: COLLECTION_ID,
     queryKey: [queryKeyPrefixes.backstage, "github-repos"],
-    queryFn: withCollectionQueryLogging(COLLECTION_ID, () => listGithubReposForBackstage()),
+    queryFn: () => listGithubReposForBackstage(),
     select: (data) => data.items,
     queryClient,
     defaultIndexType: BasicIndex,
     getKey: (item: BackstageGithubRepo) => item.nameWithOwner,
-    onUpdate: withCollectionUpdateLogging(COLLECTION_ID, async ({ transaction }) => {
+    onUpdate: async ({ transaction }) => {
       await Promise.all(
         transaction.mutations.map((mutation) => {
           const visibility = mutation.modified.isPrivate ? "private" : "public";
@@ -39,8 +33,8 @@ export const backstageGithubReposCollection = createCollection(
         }),
       );
       await backstageGithubReposCollection.utils.refetch();
-    }),
-    onDelete: withCollectionDeleteLogging(COLLECTION_ID, async ({ transaction }) => {
+    },
+    onDelete: async ({ transaction }) => {
       try {
         await Promise.all(
           transaction.mutations.map((mutation) =>
@@ -54,7 +48,7 @@ export const backstageGithubReposCollection = createCollection(
       } catch (err: unknown) {
         throw unwrapUnknownError(err);
       }
-    }),
+    },
   }),
 );
 
@@ -63,4 +57,3 @@ backstageGithubReposCollection.createIndex((row) => row.name);
 backstageGithubReposCollection.createIndex((row) => row.pushedAt);
 backstageGithubReposCollection.createIndex((row) => row.stargazerCount);
 backstageGithubReposCollection.createIndex((row) => row.forkCount);
-attachTanstackDbCollectionLogging(backstageGithubReposCollection, COLLECTION_ID);
