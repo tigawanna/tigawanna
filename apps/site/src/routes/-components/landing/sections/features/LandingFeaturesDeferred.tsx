@@ -1,8 +1,7 @@
 import { techChoices } from "@/config/info";
-import { Hydrate } from "@tanstack/react-start";
+import { ClientOnly } from "@/components/wrappers/ClientOnly";
 import { LandingSection, OrganicDivider, SectionEyebrow } from "../../primitives";
 import { LandingFeatures } from "./LandingFeatures";
-import { belowFoldHydration } from "../../-utils/below-fold-hydration";
 
 function LandingFeaturesFallback() {
   const firstChoice = techChoices[0];
@@ -38,8 +37,8 @@ function LandingFeaturesFallback() {
 
 export function LandingFeaturesDeferred() {
   return (
-    <Hydrate {...belowFoldHydration} fallback={<LandingFeaturesFallback />}>
+    <ClientOnly fallback={<LandingFeaturesFallback />}>
       <LandingFeatures />
-    </Hydrate>
+    </ClientOnly>
   );
 }

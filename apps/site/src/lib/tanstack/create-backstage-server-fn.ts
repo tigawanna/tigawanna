@@ -1,5 +1,23 @@
-import { backstageAdminServerFnMiddleware } from "@/middleware/backstage-admin.server";
-import { createServerFn, type Method } from "@tanstack/react-start";
+import type { BetterAuthUser } from "@/lib/better-auth/auth";
+import { createMiddleware, createServerFn, type Method } from "@tanstack/react-start";
+
+const backstageAdminServerFnMiddleware = createMiddleware({ type: "function" }).server(
+  async ({ next }) => {
+    const { requireBackstageSession } = await import("@/lib/better-auth/session.server");
+    const viewer = await requireBackstageSession();
+
+    return next({
+      context: {
+        viewer,
+      },
+    });
+  },
+);
+
+/** Backstage admin user attached by {@link backstageAdminServerFnMiddleware}. */
+export type BackstageServerFnContext = {
+  viewer: BetterAuthUser;
+};
 
 /**
  * Creates a server function with backstage admin auth enforced by middleware.

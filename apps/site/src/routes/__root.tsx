@@ -1,11 +1,7 @@
 import type { TViewer } from "@/data-access-layer/auth/viewer";
 import { viewerqueryOptions } from "@/data-access-layer/auth/viewer";
-import { auth } from "@/lib/better-auth/auth";
-import { getRequestLog } from "@/lib/evlog/get-request-log";
+import { rootServerMiddleware } from "@/middleware/root.server";
 import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
-import { createMiddleware } from "@tanstack/react-start";
-import { createAuthMiddleware } from "evlog/better-auth";
-import { evlogErrorHandler } from "evlog/nitro/v3";
 
 import appCss from "../styles.css?url";
 
@@ -28,19 +24,9 @@ const searchparams = z.object({
   globalSearch: z.string().optional(),
 });
 
-const identifyAuthUser = createAuthMiddleware(auth, {
-  exclude: ["/api/auth/**"],
-  extend: (session) => ({ role: session.user.role }),
-});
-
-const identifyAuthMiddleware = createMiddleware().server(async ({ next, request }) => {
-  await identifyAuthUser(getRequestLog(), request.headers, new URL(request.url).pathname);
-  return next();
-});
-
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   server: {
-    middleware: [createMiddleware().server(evlogErrorHandler), identifyAuthMiddleware],
+    middleware: [...rootServerMiddleware],
   },
   beforeLoad: async ({ context }) => {
     const viewer = await context.queryClient.fetchQuery(viewerqueryOptions);

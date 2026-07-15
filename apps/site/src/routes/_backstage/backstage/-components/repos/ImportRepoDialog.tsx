@@ -8,9 +8,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
-  defaultSingleImportWorkflowOptions,
+  defaultSingleImportEnrichmentOptions,
   type ImportProjectOptions,
-  type ImportWorkflowOptions,
+  type ImportEnrichmentOptions,
 } from "@/routes/_backstage/backstage/-utils/import-options";
 import { Download, Loader } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -25,7 +25,7 @@ type ImportRepoDialogProps = {
 };
 
 /**
- * Single-repo import dialog with enrichment workflow options.
+ * Single-repo import dialog with optional metadata enrichment.
  */
 export function ImportRepoDialog({
   open,
@@ -34,13 +34,13 @@ export function ImportRepoDialog({
   isImporting,
   onConfirm,
 }: ImportRepoDialogProps) {
-  const [options, setOptions] = useState<ImportWorkflowOptions>(() =>
-    defaultSingleImportWorkflowOptions(),
+  const [options, setOptions] = useState<ImportEnrichmentOptions>(() =>
+    defaultSingleImportEnrichmentOptions(),
   );
 
   useEffect(() => {
     if (!open) {
-      setOptions(defaultSingleImportWorkflowOptions());
+      setOptions(defaultSingleImportEnrichmentOptions());
     }
   }, [open]);
 

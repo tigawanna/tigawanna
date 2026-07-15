@@ -19,7 +19,7 @@ export type BulkImportBackstageProjectsInput = {
 /**
  * Imports a single GitHub repo into backstage projects and refetches collections.
  *
- * @param input - Repo full name and workflow flags.
+ * @param input - Repo full name and enrichment flags.
  */
 export async function importBackstageProject(input: ImportBackstageProjectInput) {
   try {
@@ -35,7 +35,7 @@ export async function importBackstageProject(input: ImportBackstageProjectInput)
 }
 
 /**
- * Bulk-imports repos and starts one shared enrichment workflow.
+ * Bulk-imports repos and optionally runs one shared enrichment pass.
  */
 export async function bulkImportBackstageProjects(input: BulkImportBackstageProjectsInput) {
   try {

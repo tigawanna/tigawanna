@@ -6,7 +6,7 @@ import { createRunRecord, importRepoSnapshot } from "@/modules/project-enrichmen
 import type { EnrichmentRunParams } from "@/modules/project-enrichment/types";
 import { getServerEnv } from "@/lib/envs/server-env";
 import { fetchRepoReadmeHtml } from "@/modules/github/repo-detail";
-import { enrichProjectsWorkflow } from "@/workflows/project-enrichment";
+import { runProjectEnrichment } from "@/modules/project-enrichment/run-project-enrichment";
 import {
   and,
   buildOrderBy,
@@ -24,7 +24,6 @@ import {
   type ProjectEnrichmentSuggestionStatus,
   type ProjectRepoRow,
 } from "@repo/db";
-import { start } from "workflow/api";
 import { z } from "zod";
 
 const repoFullNameSchema = z.string().regex(/^[^/]+\/[^/]+$/);
@@ -556,10 +555,10 @@ type ImportWorkflowInput = {
 };
 
 /**
- * Starts the enrichment workflow for one or more repos when requested.
+ * Runs metadata enrichment for imported repos when requested.
  * Embeddings are CLI-only — never started from the site.
  */
-async function startImportWorkflow(repoFullNames: string[], data: ImportWorkflowInput) {
+async function runImportEnrichment(repoFullNames: string[], data: ImportWorkflowInput) {
   if (data.runEnrichment !== true) {
     return null;
   }
@@ -579,21 +578,21 @@ async function startImportWorkflow(repoFullNames: string[], data: ImportWorkflow
   logEnrichmentEvent({
     workflow: "project-enrichment",
     runId,
-    step: "startWorkflow",
+    step: "startEnrichment",
     outcome: "started",
     trigger: "manual",
     repoCount: repoFullNames.length,
     force: forceEnrichment,
   });
 
-  await start(enrichProjectsWorkflow, [params]);
+  await runProjectEnrichment(params);
   return runId;
 }
 
 /**
  * Fetches a GitHub repository snapshot and upserts it into `project_repos`.
  *
- * Optionally starts a manual enrichment workflow when `runEnrichment` is requested.
+ * Optionally runs metadata enrichment when `runEnrichment` is requested.
  * Requires an authenticated admin session.
  */
 export const importProjectRepo = createBackstageServerFn({ method: "POST" })
@@ -611,12 +610,12 @@ export const importProjectRepo = createBackstageServerFn({ method: "POST" })
 
     await importRepoSnapshot(repo);
 
-    const runId = await startImportWorkflow([data.repoFullName], data);
+    const runId = await runImportEnrichment([data.repoFullName], data);
     return { imported: true as const, runId };
   });
 
 /**
- * Imports multiple GitHub repositories and optionally starts one shared workflow.
+ * Imports multiple GitHub repositories and optionally runs one shared enrichment pass.
  *
  * Requires an authenticated admin session.
  */
@@ -637,7 +636,7 @@ export const importAllProjectRepos = createBackstageServerFn({ method: "POST" })
     }
 
     const importedNames = repos.map((repo) => repo.nameWithOwner);
-    const runId = await startImportWorkflow(importedNames, data);
+    const runId = await runImportEnrichment(importedNames, data);
 
     return {
       imported: true as const,

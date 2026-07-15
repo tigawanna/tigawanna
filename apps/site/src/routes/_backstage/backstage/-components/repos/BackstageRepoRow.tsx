@@ -53,6 +53,8 @@ export function BackstageRepoRow({ repo, isImported }: BackstageRepoRowProps) {
   const actionsDisabled =
     importMutation.isPending || visibilityMutation.isPending || deleteMutation.isPending;
 
+  const showImported = isImported || importMutation.isPending;
+
   const handleImport = (options: ImportProjectOptions) => {
     importMutation.mutate(options);
   };
@@ -116,7 +118,7 @@ export function BackstageRepoRow({ repo, isImported }: BackstageRepoRowProps) {
             </Badge>
             {repo.isArchived ? <Badge variant="outline">archived</Badge> : null}
             {repo.isFork ? <Badge variant="outline">fork</Badge> : null}
-            {isImported ? (
+            {showImported ? (
               <Badge variant="secondary" data-test="repo-imported-badge">
                 Imported
               </Badge>
@@ -156,7 +158,7 @@ export function BackstageRepoRow({ repo, isImported }: BackstageRepoRowProps) {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          {isImported ? (
+          {showImported ? (
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button

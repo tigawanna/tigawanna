@@ -6,7 +6,7 @@ import { createMiddleware } from "@tanstack/react-start";
  * Request middleware for backstage routes — redirects unauthenticated visitors
  * to sign-in before the route handler or SSR runs.
  *
- * For server functions, use {@link backstageAdminServerFnMiddleware} instead:
+ * For server functions, use {@link createBackstageServerFn} instead:
  * route middleware does not wrap `createServerFn` RPC calls.
  */
 export const backstageViewerMiddleware = createMiddleware().server(async ({ next, request }) => {

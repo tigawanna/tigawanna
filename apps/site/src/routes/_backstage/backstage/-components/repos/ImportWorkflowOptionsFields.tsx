@@ -1,17 +1,17 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import type { ImportWorkflowOptions } from "@/routes/_backstage/backstage/-utils/import-options";
+import type { ImportEnrichmentOptions } from "@/routes/_backstage/backstage/-utils/import-options";
 
 type ImportWorkflowOptionsFieldsProps = {
   idPrefix: string;
-  options: ImportWorkflowOptions;
-  onChange: (next: ImportWorkflowOptions) => void;
+  options: ImportEnrichmentOptions;
+  onChange: (next: ImportEnrichmentOptions) => void;
   showForceEnrichment?: boolean;
 };
 
 /**
  * Shared enrichment checkboxes for import dialogs.
- * Embeddings run via local CLI only — not offered in the Vercel workflow.
+ * Embeddings run via local CLI only — not on the server.
  */
 export function ImportWorkflowOptionsFields({
   idPrefix,
@@ -19,7 +19,7 @@ export function ImportWorkflowOptionsFields({
   onChange,
   showForceEnrichment = true,
 }: ImportWorkflowOptionsFieldsProps) {
-  const patch = (partial: Partial<ImportWorkflowOptions>) => {
+  const patch = (partial: Partial<ImportEnrichmentOptions>) => {
     onChange({ ...options, ...partial });
   };
 
@@ -35,7 +35,7 @@ export function ImportWorkflowOptionsFields({
         <div className="grid gap-1">
           <Label htmlFor={`${idPrefix}-run-enrichment`}>Run metadata enrichment</Label>
           <p className="text-base-content/60 text-sm">
-            Starts the enrichment workflow to infer missing description and tags.
+            Runs metadata enrichment after import to infer missing description and tags.
           </p>
         </div>
       </div>

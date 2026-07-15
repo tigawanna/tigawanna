@@ -1,8 +1,7 @@
 import type { LessonPreviewItem } from "@/types/lessons";
-import { Hydrate } from "@tanstack/react-start";
+import { ClientOnly } from "@/components/wrappers/ClientOnly";
 import { LessonCard } from "../../cards/LessonCard";
 import { LandingSection, OrganicDivider, SectionEyebrow } from "../../primitives";
-import { belowFoldHydration } from "../../-utils/below-fold-hydration";
 import { LandingLessons } from "./LandingLessons";
 
 interface LandingLessonsDeferredProps {
@@ -42,8 +41,8 @@ function LandingLessonsFallback({ items }: LandingLessonsDeferredProps) {
 
 export function LandingLessonsDeferred({ items }: LandingLessonsDeferredProps) {
   return (
-    <Hydrate {...belowFoldHydration} fallback={<LandingLessonsFallback items={items} />}>
+    <ClientOnly fallback={<LandingLessonsFallback items={items} />}>
       <LandingLessons items={items} />
-    </Hydrate>
+    </ClientOnly>
   );
 }

@@ -33,14 +33,14 @@ export function StartEnrichmentDialog({ trackedRepos, onRunStarted }: StartEnric
   const triggerRun = useMutation({
     mutationFn: (input: { limit?: number; repos?: string[]; force?: boolean }) =>
       triggerProjectEnrichmentRun({ data: input }),
-    onSuccess(result) {
-      toast.success("Enrichment run started", { description: `Run ${result.runId}` });
+    onSuccess() {
+      toast.success("Enrichment finished");
       onRunStarted();
       setOpen(false);
       setManualRepo("");
     },
     onError(err: unknown) {
-      toast.error("Failed to start run", { description: unwrapUnknownError(err).message });
+      toast.error("Enrichment failed", { description: unwrapUnknownError(err).message });
     },
   });
 

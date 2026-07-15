@@ -1,13 +1,9 @@
-// import {
-//   pinnedReposQueryOptions,
-//   recentReposQueryOptions,
-// } from "@/data-access-layer/projects/query-options";
-import { STATIC_PINNED_PROJECTS, STATIC_RECENT_PROJECTS } from "@/data/portfolio/static";
 import { orderReposByRelevance } from "@/modules/portfolio/find-relevant-projects";
 import type { GithubRepoNode } from "@/types/github";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { renderProjectCard } from "../../cards/ProjectCard";
+import { PortfolioGridSkeleton } from "../../cards/PortfolioGridSkeleton";
 import { LandingSection, OrganicDivider, SectionEyebrow } from "../../primitives";
 import { filterReposByTopic, matchesProjectSearch } from "./-utils/project-search";
 import { ProjectsSearch } from "./ProjectsSearch";
@@ -35,54 +31,44 @@ function collectTopics(repos: GithubRepoNode[]) {
   return Array.from(topics).sort();
 }
 
-function resolvePinnedRepos(nodes: GithubRepoNode[]) {
-  return nodes.length > 0 ? nodes : STATIC_PINNED_PROJECTS;
+export function LandingProjectsShell({ children }: { children: ReactNode }) {
+  return (
+    <LandingSection
+      id="projects"
+      tone="darkMid"
+      className="text-landing-cream"
+      dataTest="landing-projects"
+    >
+      <OrganicDivider tone="darkMid" />
+      <OrganicDivider tone="darkMid" flip />
+
+      <div className="container relative z-10">
+        <div className="mx-auto mb-14 max-w-3xl text-center">
+          <SectionEyebrow>Projects</SectionEyebrow>
+          <h2 className="landing-section-heading">Open source projects</h2>
+          <p className="landing-section-lead">
+            Pinned highlights, recently pushed repos, and topic filters — pulled live from GitHub.
+          </p>
+        </div>
+
+        {children}
+      </div>
+    </LandingSection>
+  );
 }
 
-function resolveRecentRepos(nodes: GithubRepoNode[]) {
-  return nodes.length > 0 ? nodes : STATIC_RECENT_PROJECTS;
-}
-
-function ProjectsContent() {
+function ProjectsContent({
+  pinnedRepos,
+  recentRepos,
+}: {
+  pinnedRepos: GithubRepoNode[];
+  recentRepos: GithubRepoNode[];
+}) {
   const [activeView, setActiveView] = useState<ProjectView>("featured");
   const [activeTopic, setActiveTopic] = useState("all");
   const [searchDraft, setSearchDraft] = useState("");
   const [appliedSearch, setAppliedSearch] = useState("");
 
-  const clientOnly = !import.meta.env.SSR;
-
-  const pinnedQuery = useQuery({
-    ...pinnedReposQueryOptions,
-    enabled: clientOnly,
-    placeholderData: () => ({
-      data: {
-        viewer: {
-          pinnedItems: { nodes: STATIC_PINNED_PROJECTS },
-          repositories: { nodes: [] },
-        },
-      },
-    }),
-  });
-  const recentQuery = useQuery({
-    ...recentReposQueryOptions,
-    enabled: clientOnly,
-    placeholderData: () => ({
-      data: {
-        viewer: {
-          pinnedItems: { nodes: [] },
-          repositories: { nodes: STATIC_RECENT_PROJECTS },
-        },
-      },
-      errors: [],
-    }),
-  });
-
-  const pinnedRepos = resolvePinnedRepos(
-    filterValidRepos(pinnedQuery.data?.data?.viewer.pinnedItems.nodes ?? []),
-  );
-  const recentRepos = resolveRecentRepos(
-    filterValidRepos(recentQuery.data?.data?.viewer.repositories.nodes ?? []),
-  );
   const topics = collectTopics(recentRepos);
 
   const isSearching = appliedSearch.length > 0;
@@ -141,27 +127,29 @@ function ProjectsContent() {
 }
 
 export function LandingProjects() {
+  const pinnedQuery = useQuery(pinnedReposQueryOptions);
+  const recentQuery = useQuery(recentReposQueryOptions);
+
+  const pinnedRepos = filterValidRepos(pinnedQuery.data?.data?.viewer.pinnedItems.nodes ?? []);
+  const recentRepos = filterValidRepos(recentQuery.data?.data?.viewer.repositories.nodes ?? []);
+  const isLoading = pinnedQuery.isLoading || recentQuery.isLoading;
+  const hasRepos = pinnedRepos.length > 0 || recentRepos.length > 0;
+
+  if (isLoading) {
+    return (
+      <LandingProjectsShell>
+        <PortfolioGridSkeleton count={MAX_LANDING_PROJECTS} />
+      </LandingProjectsShell>
+    );
+  }
+
+  if (!hasRepos) {
+    return null;
+  }
+
   return (
-    <LandingSection
-      id="projects"
-      tone="darkMid"
-      className="text-landing-cream"
-      dataTest="landing-projects"
-    >
-      <OrganicDivider tone="darkMid" />
-      <OrganicDivider tone="darkMid" flip />
-
-      <div className="container relative z-10">
-        <div className="mx-auto mb-14 max-w-3xl text-center">
-          <SectionEyebrow>Projects</SectionEyebrow>
-          <h2 className="landing-section-heading">Open source projects</h2>
-          <p className="landing-section-lead">
-            Pinned highlights, recently pushed repos, and topic filters — pulled live from GitHub.
-          </p>
-        </div>
-
-        <ProjectsContent />
-      </div>
-    </LandingSection>
+    <LandingProjectsShell>
+      <ProjectsContent pinnedRepos={pinnedRepos} recentRepos={recentRepos} />
+    </LandingProjectsShell>
   );
 }

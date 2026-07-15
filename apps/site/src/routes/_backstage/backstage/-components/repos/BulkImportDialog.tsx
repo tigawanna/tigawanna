@@ -8,9 +8,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
-  defaultBulkImportWorkflowOptions,
+  defaultBulkImportEnrichmentOptions,
   type BulkImportProjectOptions,
-  type ImportWorkflowOptions,
+  type ImportEnrichmentOptions,
 } from "@/routes/_backstage/backstage/-utils/import-options";
 import { Download, Loader } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -31,13 +31,13 @@ export function BulkImportDialog({
   isImporting,
   onConfirm,
 }: BulkImportDialogProps) {
-  const [options, setOptions] = useState<ImportWorkflowOptions>(() =>
-    defaultBulkImportWorkflowOptions(),
+  const [options, setOptions] = useState<ImportEnrichmentOptions>(() =>
+    defaultBulkImportEnrichmentOptions(),
   );
 
   useEffect(() => {
     if (!open) {
-      setOptions(defaultBulkImportWorkflowOptions());
+      setOptions(defaultBulkImportEnrichmentOptions());
     }
   }, [open]);
 
@@ -59,7 +59,7 @@ export function BulkImportDialog({
           <DialogDescription>
             {repoCount === 0
               ? "No untracked repos in the current view."
-              : `Import ${repoCount} untracked ${repoCount === 1 ? "repo" : "repos"} from the current filters and start one workflow.`}
+              : `Import ${repoCount} untracked ${repoCount === 1 ? "repo" : "repos"} from the current filters and optionally run enrichment.`}
           </DialogDescription>
         </DialogHeader>
 

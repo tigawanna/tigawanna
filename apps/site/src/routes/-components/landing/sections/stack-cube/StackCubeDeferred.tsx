@@ -1,8 +1,7 @@
 import { stackCubeFaces } from "@/config/info";
-import { Hydrate } from "@tanstack/react-start";
+import { ClientOnly } from "@/components/wrappers/ClientOnly";
 import { CubeVisual } from "./CubeVisual";
 import { StackCube } from "./StackCube";
-import { belowFoldHydration } from "../../-utils/below-fold-hydration";
 
 function StackCubeFallback() {
   const firstFace = stackCubeFaces[0];
@@ -37,8 +36,8 @@ function StackCubeFallback() {
 
 export function StackCubeDeferred() {
   return (
-    <Hydrate {...belowFoldHydration} fallback={<StackCubeFallback />}>
+    <ClientOnly fallback={<StackCubeFallback />}>
       <StackCube />
-    </Hydrate>
+    </ClientOnly>
   );
 }

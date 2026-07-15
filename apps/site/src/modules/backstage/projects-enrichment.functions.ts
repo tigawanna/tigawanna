@@ -6,7 +6,7 @@ import { createRunRecord } from "@/modules/project-enrichment/run-enrichment";
 import type { EnrichmentRunParams } from "@/modules/project-enrichment/types";
 import { getServerEnv } from "@/lib/envs/server-env";
 import { unwrapUnknownError } from "@/utils/errors";
-import { enrichProjectsWorkflow } from "@/workflows/project-enrichment";
+import { runProjectEnrichment } from "@/modules/project-enrichment/run-project-enrichment";
 import {
   and,
   buildPaginatedResponse,
@@ -20,7 +20,6 @@ import {
   type PaginatedResponse,
   type ProjectEnrichmentRunRow,
 } from "@repo/db";
-import { start } from "workflow/api";
 import { z } from "zod";
 
 function parseTopics(raw: string) {
@@ -338,14 +337,14 @@ export const triggerProjectEnrichmentRun = createBackstageServerFn({ method: "PO
     logEnrichmentEvent({
       workflow: "project-enrichment",
       runId,
-      step: "startWorkflow",
+      step: "startEnrichment",
       outcome: "started",
       trigger,
       repoCount: data.repos?.length,
       force: data.force ?? false,
     });
 
-    await start(enrichProjectsWorkflow, [params]);
+    await runProjectEnrichment(params);
 
-    return { runId, status: "started" as const };
+    return { runId, status: "completed" as const };
   });

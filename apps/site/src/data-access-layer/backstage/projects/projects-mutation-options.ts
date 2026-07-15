@@ -22,8 +22,11 @@ export type DeleteBackstageGithubRepoInput = {
 
 export const importBackstageProjectMutationOptions = mutationOptions({
   mutationFn: (input: ImportBackstageProjectInput) => importBackstageProject(input),
-  onSuccess(_result, variables) {
-    toast.success("Imported to projects", { description: variables.repoFullName });
+  onSuccess(result, variables) {
+    const enrichmentNote = result.runId != null ? " Enrichment finished." : "";
+    toast.success("Imported to projects", {
+      description: `${variables.repoFullName}${enrichmentNote}`,
+    });
   },
   onError(err: unknown) {
     toast.error("Import failed", { description: unwrapUnknownError(err).message });
@@ -33,8 +36,9 @@ export const importBackstageProjectMutationOptions = mutationOptions({
 export const bulkImportBackstageProjectsMutationOptions = mutationOptions({
   mutationFn: (input: BulkImportBackstageProjectsInput) => bulkImportBackstageProjects(input),
   onSuccess(result) {
+    const enrichmentNote = result.runId != null ? " Enrichment finished." : "";
     toast.success(`Imported ${result.importedCount} repos`, {
-      description: result.runId ? "Workflow running…" : "Import only",
+      description: enrichmentNote || "Import only",
     });
   },
   onError(err: unknown) {

@@ -166,7 +166,7 @@ function EnrichmentSection({
         data: { repos: [repoFullName], force: true },
       }),
     onSuccess() {
-      toast.success("Enrichment workflow started", { description: repoFullName });
+      toast.success("Enrichment finished", { description: repoFullName });
       void queryClient.invalidateQueries({
         queryKey: [queryKeyPrefixes.backstage, "projects", "detail", repoFullName],
       });
