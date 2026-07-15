@@ -9,7 +9,7 @@ export default defineConfig({
   modules: [
     evlog({
       env: { service: "tigawanna-site" },
-      // enabled: !process.env.EVLOG_DISABLED,
+      enabled: process.env.NODE_ENV !== "production",
     }),
   ],
 });
