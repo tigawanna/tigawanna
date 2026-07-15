@@ -9,6 +9,7 @@ import { evlogErrorHandler } from "evlog/nitro/v3";
 
 import appCss from "../styles.css?url";
 
+import { PostHogRoot } from "@/components/posthog/PostHogRoot";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { TanstackDevtools } from "@/lib/tanstack/devtools/devtools";
@@ -105,11 +106,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <TooltipProvider>
-          {children}
-          <TanstackDevtools />
-          <Toaster />
-        </TooltipProvider>
+        <PostHogRoot>
+          <TooltipProvider>
+            {children}
+            <TanstackDevtools />
+            <Toaster />
+          </TooltipProvider>
+        </PostHogRoot>
         <Scripts />
       </body>
     </html>

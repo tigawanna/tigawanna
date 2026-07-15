@@ -17,6 +17,8 @@ export type ServerEnv = {
   DATABASE_URL: string;
   DATABASE_AUTH_TOKEN?: string;
   VITE_APP_URL?: string;
+  POSTHOG_API_KEY?: string;
+  POSTHOG_HOST?: string;
 };
 
 function parseTrustedOrigins(raw: string | undefined) {
@@ -47,5 +49,7 @@ export function getServerEnv(): ServerEnv {
     DATABASE_URL: process.env.DATABASE_URL ?? DEFAULT_DATABASE_URL,
     DATABASE_AUTH_TOKEN: process.env.DATABASE_AUTH_TOKEN,
     VITE_APP_URL: process.env.VITE_APP_URL,
+    POSTHOG_API_KEY: process.env.POSTHOG_API_KEY,
+    POSTHOG_HOST: process.env.POSTHOG_HOST,
   };
 }
