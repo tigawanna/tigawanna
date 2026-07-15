@@ -22,7 +22,6 @@ import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as BackstageBackstageReposRouteImport } from './routes/_backstage/backstage/repos'
 import { Route as BackstageBackstageMessagesRouteImport } from './routes/_backstage/backstage/messages'
 import { Route as BackstageBackstageJournalRouteImport } from './routes/_backstage/backstage/journal'
-import { Route as BackstageBackstageEmbeddingSearchRouteImport } from './routes/_backstage/backstage/embedding-search'
 import { Route as BackstageBackstageProjectsIndexRouteImport } from './routes/_backstage/backstage/projects/index'
 import { Route as BackstageBackstageProjectsOwnerIndexRouteImport } from './routes/_backstage/backstage/projects/$owner/index'
 import { Route as BackstageBackstageProjectsOwnerRepoIndexRouteImport } from './routes/_backstage/backstage/projects/$owner/$repo/index'
@@ -93,12 +92,6 @@ const BackstageBackstageJournalRoute =
     path: '/backstage/journal',
     getParentRoute: () => BackstageLayoutRoute,
   } as any)
-const BackstageBackstageEmbeddingSearchRoute =
-  BackstageBackstageEmbeddingSearchRouteImport.update({
-    id: '/backstage/embedding-search',
-    path: '/backstage/embedding-search',
-    getParentRoute: () => BackstageLayoutRoute,
-  } as any)
 const BackstageBackstageProjectsIndexRoute =
   BackstageBackstageProjectsIndexRouteImport.update({
     id: '/backstage/projects/',
@@ -126,7 +119,6 @@ export interface FileRoutesByFullPath {
   '/project/$name': typeof ProjectNameRoute
   '/creature-feature/': typeof CreatureFeatureIndexRoute
   '/lessons/': typeof LessonsIndexRoute
-  '/backstage/embedding-search': typeof BackstageBackstageEmbeddingSearchRoute
   '/backstage/journal': typeof BackstageBackstageJournalRoute
   '/backstage/messages': typeof BackstageBackstageMessagesRoute
   '/backstage/repos': typeof BackstageBackstageReposRoute
@@ -144,7 +136,6 @@ export interface FileRoutesByTo {
   '/project/$name': typeof ProjectNameRoute
   '/creature-feature': typeof CreatureFeatureIndexRoute
   '/lessons': typeof LessonsIndexRoute
-  '/backstage/embedding-search': typeof BackstageBackstageEmbeddingSearchRoute
   '/backstage/journal': typeof BackstageBackstageJournalRoute
   '/backstage/messages': typeof BackstageBackstageMessagesRoute
   '/backstage/repos': typeof BackstageBackstageReposRoute
@@ -164,7 +155,6 @@ export interface FileRoutesById {
   '/project/$name': typeof ProjectNameRoute
   '/creature-feature/': typeof CreatureFeatureIndexRoute
   '/lessons/': typeof LessonsIndexRoute
-  '/_backstage/backstage/embedding-search': typeof BackstageBackstageEmbeddingSearchRoute
   '/_backstage/backstage/journal': typeof BackstageBackstageJournalRoute
   '/_backstage/backstage/messages': typeof BackstageBackstageMessagesRoute
   '/_backstage/backstage/repos': typeof BackstageBackstageReposRoute
@@ -184,7 +174,6 @@ export interface FileRouteTypes {
     | '/project/$name'
     | '/creature-feature/'
     | '/lessons/'
-    | '/backstage/embedding-search'
     | '/backstage/journal'
     | '/backstage/messages'
     | '/backstage/repos'
@@ -202,7 +191,6 @@ export interface FileRouteTypes {
     | '/project/$name'
     | '/creature-feature'
     | '/lessons'
-    | '/backstage/embedding-search'
     | '/backstage/journal'
     | '/backstage/messages'
     | '/backstage/repos'
@@ -221,7 +209,6 @@ export interface FileRouteTypes {
     | '/project/$name'
     | '/creature-feature/'
     | '/lessons/'
-    | '/_backstage/backstage/embedding-search'
     | '/_backstage/backstage/journal'
     | '/_backstage/backstage/messages'
     | '/_backstage/backstage/repos'
@@ -337,13 +324,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BackstageBackstageJournalRouteImport
       parentRoute: typeof BackstageLayoutRoute
     }
-    '/_backstage/backstage/embedding-search': {
-      id: '/_backstage/backstage/embedding-search'
-      path: '/backstage/embedding-search'
-      fullPath: '/backstage/embedding-search'
-      preLoaderRoute: typeof BackstageBackstageEmbeddingSearchRouteImport
-      parentRoute: typeof BackstageLayoutRoute
-    }
     '/_backstage/backstage/projects/': {
       id: '/_backstage/backstage/projects/'
       path: '/backstage/projects'
@@ -369,7 +349,6 @@ declare module '@tanstack/react-router' {
 }
 
 interface BackstageLayoutRouteChildren {
-  BackstageBackstageEmbeddingSearchRoute: typeof BackstageBackstageEmbeddingSearchRoute
   BackstageBackstageJournalRoute: typeof BackstageBackstageJournalRoute
   BackstageBackstageMessagesRoute: typeof BackstageBackstageMessagesRoute
   BackstageBackstageReposRoute: typeof BackstageBackstageReposRoute
@@ -380,8 +359,6 @@ interface BackstageLayoutRouteChildren {
 }
 
 const BackstageLayoutRouteChildren: BackstageLayoutRouteChildren = {
-  BackstageBackstageEmbeddingSearchRoute:
-    BackstageBackstageEmbeddingSearchRoute,
   BackstageBackstageJournalRoute: BackstageBackstageJournalRoute,
   BackstageBackstageMessagesRoute: BackstageBackstageMessagesRoute,
   BackstageBackstageReposRoute: BackstageBackstageReposRoute,

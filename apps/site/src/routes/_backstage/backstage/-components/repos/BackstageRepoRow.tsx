@@ -1,19 +1,18 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  deleteBackstageGithubRepo,
-  setBackstageRepoVisibility,
-} from "@/data-access-layer/backstage/projects/backstage-collection-mutations";
-import { cn } from "@/lib/utils";
+  deleteBackstageGithubRepoMutationOptions,
+  importBackstageProjectMutationOptions,
+  setBackstageRepoVisibilityMutationOptions,
+} from "@/data-access-layer/backstage/projects/projects-mutation-options";
 import { isGithubRepoDeletePermissionError } from "@/routes/_backstage/backstage/-utils/github-repo-delete-errors";
 import type { ImportProjectOptions } from "@/routes/_backstage/backstage/-utils/import-options";
 import type { BackstageGithubRepo } from "@/types/backstage";
-import { unwrapUnknownError } from "@/utils/errors";
+import { useMutation } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
-import { ExternalLink, Eye, GitFork, Loader, Lock, Star } from "lucide-react";
+import { ExternalLink, Eye, GitFork, Lock, Star } from "lucide-react";
 import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
-import { toast } from "sonner";
 import { RepoDeleteButton } from "../shared/RepoDeleteButton";
 import { RepoVisibilityButton } from "../shared/RepoVisibilityButton";
 import { AdminPatDialog } from "./AdminPatDialog";
@@ -21,57 +20,39 @@ import { ImportRepoDialog } from "./ImportRepoDialog";
 
 type BackstageRepoRowProps = {
   repo: BackstageGithubRepo;
-  isTracked: boolean;
-  isImporting: boolean;
-  onImport: (options: ImportProjectOptions) => void;
-  disabled?: boolean;
 };
 
-export function BackstageRepoRow({
-  repo,
-  isTracked,
-  isImporting,
-  onImport,
-  disabled,
-}: BackstageRepoRowProps) {
+export function BackstageRepoRow({ repo }: BackstageRepoRowProps) {
   const [importOpen, setImportOpen] = useState(false);
   const [adminPatOpen, setAdminPatOpen] = useState(false);
-  const [pendingAction, setPendingAction] = useState<"visibility" | "delete" | null>(null);
 
-  const actionsDisabled = disabled || pendingAction != null || isImporting;
-
-  const handleVisibility = async (visibility: "public" | "private") => {
-    setPendingAction("visibility");
-    try {
-      await setBackstageRepoVisibility(repo.nameWithOwner, visibility);
-      toast.success(visibility === "private" ? "Repo is now private" : "Repo is now public", {
-        description: repo.nameWithOwner,
-      });
-    } catch (err: unknown) {
-      toast.error("Visibility update failed", { description: unwrapUnknownError(err).message });
-    } finally {
-      setPendingAction(null);
-    }
-  };
-
-  const handleDelete = async (overridePat?: string) => {
-    setPendingAction("delete");
-    try {
-      await deleteBackstageGithubRepo(
-        repo.nameWithOwner,
-        overridePat ? { overridePat } : undefined,
+  const importMutation = useMutation(importBackstageProjectMutationOptions);
+  const visibilityMutation = useMutation(setBackstageRepoVisibilityMutationOptions);
+  const deleteMutation = useMutation({
+    ...deleteBackstageGithubRepoMutationOptions,
+    onSuccess(data, variables, onMutateResult, context) {
+      deleteBackstageGithubRepoMutationOptions.onSuccess?.(
+        data,
+        variables,
+        onMutateResult,
+        context,
       );
-      toast.success("Repository deleted", { description: repo.nameWithOwner });
       setAdminPatOpen(false);
-    } catch (err: unknown) {
+    },
+    onError(err: unknown, variables, onMutateResult, context) {
       if (isGithubRepoDeletePermissionError(err)) {
         setAdminPatOpen(true);
         return;
       }
-      toast.error("Delete failed", { description: unwrapUnknownError(err).message });
-    } finally {
-      setPendingAction(null);
-    }
+      deleteBackstageGithubRepoMutationOptions.onError?.(err, variables, onMutateResult, context);
+    },
+  });
+
+  const actionsDisabled =
+    importMutation.isPending || visibilityMutation.isPending || deleteMutation.isPending;
+
+  const handleImport = (options: ImportProjectOptions) => {
+    importMutation.mutate(options);
   };
 
   return (
@@ -80,27 +61,21 @@ export function BackstageRepoRow({
         open={importOpen}
         onOpenChange={setImportOpen}
         repoFullName={repo.nameWithOwner}
-        isTracked={isTracked}
-        isImporting={isImporting}
-        onConfirm={onImport}
+        isImporting={importMutation.isPending}
+        onConfirm={handleImport}
       />
 
       <AdminPatDialog
         open={adminPatOpen}
         onOpenChange={setAdminPatOpen}
         repoFullName={repo.nameWithOwner}
-        isRetrying={pendingAction === "delete"}
-        onRetry={(pat) => void handleDelete(pat)}
+        isRetrying={deleteMutation.isPending}
+        onRetry={(pat) =>
+          deleteMutation.mutate({ nameWithOwner: repo.nameWithOwner, overridePat: pat })
+        }
       />
 
-      <div
-        className={cn(
-          "flex flex-wrap items-start gap-4 px-4 py-4",
-          isImporting && "bg-primary/5 border-primary/20 border-y",
-        )}
-        data-test="github-repo-row"
-        data-working={isImporting ? "true" : undefined}
-      >
+      <div className="flex flex-wrap items-start gap-4 px-4 py-4" data-test="github-repo-row">
         {repo.openGraphImageUrl ? (
           <img
             src={repo.openGraphImageUrl}
@@ -124,29 +99,6 @@ export function BackstageRepoRow({
             >
               {repo.nameWithOwner}
             </a>
-            {isImporting ? (
-              <Badge
-                variant="outline"
-                className="border-primary/30 bg-primary/10 text-primary gap-1"
-                data-test="repo-working-badge"
-              >
-                <Loader className="size-3 animate-spin" />
-                Working…
-              </Badge>
-            ) : null}
-            {isTracked ? (
-              <Badge variant="secondary" data-test="repo-tracked-badge">
-                In projects
-              </Badge>
-            ) : (
-              <Badge
-                variant="outline"
-                className="border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300"
-                data-test="repo-untracked-badge"
-              >
-                Not imported
-              </Badge>
-            )}
             <Badge variant="outline" className="gap-1" data-test="repo-visibility-badge">
               {repo.isPrivate ? (
                 <>
@@ -199,27 +151,28 @@ export function BackstageRepoRow({
         <div className="flex flex-wrap items-center gap-2">
           <Button
             data-test="import-repo"
-            variant={isTracked ? "outline" : "default"}
             size="sm"
             disabled={actionsDisabled}
             onClick={() => setImportOpen(true)}
           >
-            {isImporting ? "Importing…" : isTracked ? "Re-import" : "Import"}
+            {importMutation.isPending ? "Importing…" : "Import"}
           </Button>
 
           <RepoVisibilityButton
             repoFullName={repo.nameWithOwner}
             isPrivate={repo.isPrivate}
             disabled={actionsDisabled}
-            isPending={pendingAction === "visibility"}
-            onConfirm={handleVisibility}
+            isPending={visibilityMutation.isPending}
+            onConfirm={(visibility) =>
+              visibilityMutation.mutate({ nameWithOwner: repo.nameWithOwner, visibility })
+            }
           />
 
           <RepoDeleteButton
             repoFullName={repo.nameWithOwner}
             disabled={actionsDisabled}
-            isPending={pendingAction === "delete"}
-            onConfirm={() => void handleDelete()}
+            isPending={deleteMutation.isPending}
+            onConfirm={() => deleteMutation.mutate({ nameWithOwner: repo.nameWithOwner })}
           />
         </div>
       </div>

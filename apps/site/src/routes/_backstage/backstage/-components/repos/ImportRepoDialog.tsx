@@ -20,7 +20,6 @@ type ImportRepoDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   repoFullName: string;
-  isTracked: boolean;
   isImporting?: boolean;
   onConfirm: (options: ImportProjectOptions) => void;
 };
@@ -32,7 +31,6 @@ export function ImportRepoDialog({
   open,
   onOpenChange,
   repoFullName,
-  isTracked,
   isImporting,
   onConfirm,
 }: ImportRepoDialogProps) {
@@ -58,13 +56,9 @@ export function ImportRepoDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] overflow-y-auto" data-test="import-repo-dialog">
         <DialogHeader>
-          <DialogTitle>
-            {isTracked ? "Re-import" : "Import"} {repoFullName}
-          </DialogTitle>
+          <DialogTitle>Import {repoFullName}</DialogTitle>
           <DialogDescription>
-            {isTracked
-              ? "Refresh the project record from GitHub and optionally re-run enrichment."
-              : "Add this repo to projects and optionally run enrichment or embeddings."}
+            Add this repo to projects and optionally run enrichment.
           </DialogDescription>
         </DialogHeader>
 
@@ -92,7 +86,7 @@ export function ImportRepoDialog({
             ) : (
               <>
                 <Download className="size-3.5" />
-                {isTracked ? "Re-import" : "Import"}
+                Import
               </>
             )}
           </Button>

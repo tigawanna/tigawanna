@@ -9,7 +9,6 @@ export const backstageReposSearchSchema = z.object({
   q: z.string().optional(),
   sortBy: z.enum(["nameWithOwner", "name", "pushedAt", "stargazerCount", "forkCount"]).optional(),
   sortDirection: z.enum(["asc", "desc"]).optional(),
-  tracked: z.enum(["all", "tracked", "untracked"]).optional(),
   visibility: z.enum(["all", "public", "private"]).optional(),
   archived: z.enum(["all", "active", "archived"]).optional(),
 });
