@@ -1,6 +1,6 @@
 import { usePostHog } from "@posthog/react";
 import { getRouteApi } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 const rootRoute = getRouteApi("__root__");
 
@@ -10,11 +10,20 @@ const rootRoute = getRouteApi("__root__");
 export function PostHogUserIdentity() {
   const posthog = usePostHog();
   const { viewer } = rootRoute.useRouteContext();
+  const lastIdentifiedRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!posthog) {
       return;
     }
+
+    const viewerId = viewer?.id ?? null;
+
+    if (viewerId === lastIdentifiedRef.current) {
+      return;
+    }
+
+    lastIdentifiedRef.current = viewerId;
 
     if (viewer) {
       posthog.identify(viewer.id, {
