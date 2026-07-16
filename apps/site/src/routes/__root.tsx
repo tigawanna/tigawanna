@@ -28,12 +28,12 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
   server: {
     middleware: [...rootServerMiddleware],
   },
-  beforeLoad: async ({ context }) => {
-    const viewer = await context.queryClient.fetchQuery(viewerqueryOptions);
-    return {
-      viewer: viewer.data ?? undefined,
-    };
-  },
+  // beforeLoad: async ({ context }) => {
+  //   const viewer = await context.queryClient.fetchQuery(viewerqueryOptions);
+  //   return {
+  //     viewer: viewer.data ?? undefined,
+  //   };
+  // },
   head: () => ({
     meta: [
       { charSet: "utf-8" },
