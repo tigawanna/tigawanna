@@ -1,259 +1,82 @@
-import { createBackstageServerFn } from "@/lib/tanstack/create-backstage-server-fn";
+import { requireBackstageSession } from "@/lib/better-auth/session.server";
 import {
   journalEntryFormSchema,
   type JournalEntryFormValues,
 } from "@/modules/journal/journal-form-schema";
-import { journalRowToLessonItem } from "@/modules/journal/map-journal-row";
-import { getDb } from "@/lib/db/get-db.server";
-import type { LessonItem } from "@/types/lessons";
-import {
-  asc,
-  buildPaginatedResponse,
-  count,
-  desc,
-  eq,
-  journalEntries,
-  normalizePaginationParams,
-  or,
-  sql,
-  type JournalEntryRow,
-  type PaginatedResponse,
-} from "@repo/db";
+import type { JournalEntryRow, PaginatedResponse } from "@repo/db";
+import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-
-async function nextPinOrder() {
-  const db = getDb();
-  const [row] = await db
-    .select({ maxOrder: sql<number>`coalesce(max(${journalEntries.pinOrder}), -1)` })
-    .from(journalEntries)
-    .where(eq(journalEntries.pinned, true));
-
-  return (row?.maxOrder ?? -1) + 1;
-}
-
-export async function fetchJournalLessonPage(page: number, perPage: number) {
-  const db = getDb();
-  const {
-    page: safePage,
-    perPage: safePerPage,
-    offset,
-  } = normalizePaginationParams({
-    page,
-    perPage,
-  });
-
-  const [{ count: totalItems }] = await db.select({ count: count() }).from(journalEntries);
-
-  const rows = await db
-    .select()
-    .from(journalEntries)
-    .orderBy(
-      desc(journalEntries.pinned),
-      asc(journalEntries.pinOrder),
-      desc(journalEntries.createdAt),
-    )
-    .limit(safePerPage)
-    .offset(offset);
-
-  const paginated = buildPaginatedResponse({
-    items: rows.map(journalRowToLessonItem),
-    page: safePage,
-    perPage: safePerPage,
-    totalItems,
-  });
-
-  return {
-    page: paginated.pagination.page,
-    perPage: paginated.pagination.perPage,
-    totalPages: Math.max(1, paginated.pagination.totalPages),
-    totalItems: paginated.pagination.totalItems,
-    items: paginated.items,
-  };
-}
-
-export async function fetchJournalLessonById(id: string): Promise<LessonItem | null> {
-  const db = getDb();
-  const [row] = await db.select().from(journalEntries).where(eq(journalEntries.id, id)).limit(1);
-  return row ? journalRowToLessonItem(row) : null;
-}
+import {
+  createJournalEntry as createJournalEntryImpl,
+  deleteJournalEntry as deleteJournalEntryImpl,
+  getJournalEntryForBackstage as getJournalEntryForBackstageImpl,
+  listJournalEntriesForBackstage as listJournalEntriesForBackstageImpl,
+  setJournalEntryPinned as setJournalEntryPinnedImpl,
+  updateJournalEntry as updateJournalEntryImpl,
+} from "@/modules/journal/journal.server";
 
 const listJournalEntriesInputSchema = z
   .object({
     page: z.number().int().positive().optional(),
     perPage: z.number().int().positive().max(500).optional(),
-    /** Case-insensitive search against title and description. */
     q: z.string().optional(),
   })
   .optional();
 
-/**
- * Escapes `%`, `_`, and `\` so user search text is treated literally in LIKE.
- *
- * @param value - Raw search fragment from the client.
- */
-function escapeLikePattern(value: string) {
-  return value.replace(/[\\%_]/g, "\\$&");
-}
-
-/**
- * Lists journal entries for backstage, paginated.
- *
- * Rows are returned as-is from Drizzle, ordered for site display
- * (pinned first, then pin order, then newest). Optional `q` filters
- * title and description with a case-insensitive LIKE.
- */
-export const listJournalEntriesForBackstage = createBackstageServerFn({ method: "GET" })
+export const listJournalEntriesForBackstage = createServerFn({ method: "GET" })
   .validator((input?: z.infer<typeof listJournalEntriesInputSchema>) =>
     listJournalEntriesInputSchema.parse(input),
   )
   .handler(async ({ data }): Promise<PaginatedResponse<JournalEntryRow>> => {
-    const db = getDb();
-    const { page, perPage, offset } = normalizePaginationParams(data ?? {});
-    const q = data?.q?.trim() ?? "";
-    const searchPattern = q ? `%${escapeLikePattern(q.toLowerCase())}%` : null;
-    const searchWhere = searchPattern
-      ? or(
-          sql`lower(${journalEntries.title}) like ${searchPattern} escape '\\'`,
-          sql`lower(${journalEntries.description}) like ${searchPattern} escape '\\'`,
-        )
-      : undefined;
-
-    const [{ count: totalItems }] = await db
-      .select({ count: count() })
-      .from(journalEntries)
-      .where(searchWhere);
-
-    const items = await db
-      .select()
-      .from(journalEntries)
-      .where(searchWhere)
-      .orderBy(
-        desc(journalEntries.pinned),
-        asc(journalEntries.pinOrder),
-        desc(journalEntries.createdAt),
-      )
-      .limit(perPage)
-      .offset(offset);
-
-    return buildPaginatedResponse({ items, page, perPage, totalItems });
+    await requireBackstageSession();
+    return listJournalEntriesForBackstageImpl(data);
   });
 
 const journalEntryIdSchema = z.object({
   id: z.string().min(1),
 });
 
-/**
- * Fetches a single journal entry for backstage editing.
- *
- * @returns The row, or `null` if it does not exist (e.g. static lesson fallback).
- */
-export const getJournalEntryForBackstage = createBackstageServerFn({ method: "GET" })
+export const getJournalEntryForBackstage = createServerFn({ method: "GET" })
   .validator((input: z.infer<typeof journalEntryIdSchema>) => journalEntryIdSchema.parse(input))
   .handler(async ({ data }): Promise<JournalEntryRow | null> => {
-    const db = getDb();
-    const [row] = await db
-      .select()
-      .from(journalEntries)
-      .where(eq(journalEntries.id, data.id))
-      .limit(1);
-    return row ?? null;
+    await requireBackstageSession();
+    return getJournalEntryForBackstageImpl(data.id);
   });
 
-export const createJournalEntry = createBackstageServerFn({ method: "POST" })
+export const createJournalEntry = createServerFn({ method: "POST" })
   .validator((input: JournalEntryFormValues) => journalEntryFormSchema.parse(input))
   .handler(async ({ data }) => {
-    const db = getDb();
-    const id = crypto.randomUUID();
-    const gist = data.gist.trim() || null;
-
-    await db.insert(journalEntries).values({
-      id,
-      title: data.title.trim(),
-      description: data.description.trim(),
-      markdown: data.markdown,
-      richtext: data.richtext,
-      gist,
-      type: data.type,
+    await requireBackstageSession();
+    return createJournalEntryImpl({
+      ...data,
+      gist: data.gist.trim() || null,
     });
-
-    const [row] = await db.select().from(journalEntries).where(eq(journalEntries.id, id)).limit(1);
-    if (!row) {
-      throw new Error("Failed to create journal entry");
-    }
-
-    return row;
   });
 
-export const updateJournalEntry = createBackstageServerFn({ method: "POST" })
+export const updateJournalEntry = createServerFn({ method: "POST" })
   .validator((input: JournalEntryFormValues & { id: string }) =>
     journalEntryIdSchema.extend(journalEntryFormSchema.shape).parse(input),
   )
   .handler(async ({ data }) => {
-    const db = getDb();
-    const gist = data.gist.trim() || null;
-
-    await db
-      .update(journalEntries)
-      .set({
-        title: data.title.trim(),
-        description: data.description.trim(),
-        markdown: data.markdown,
-        richtext: data.richtext,
-        gist,
-        type: data.type,
-      })
-      .where(eq(journalEntries.id, data.id));
-
-    const [row] = await db
-      .select()
-      .from(journalEntries)
-      .where(eq(journalEntries.id, data.id))
-      .limit(1);
-
-    if (!row) {
-      throw new Error("Journal entry not found");
-    }
-
-    return row;
+    await requireBackstageSession();
+    return updateJournalEntryImpl({
+      ...data,
+      gist: data.gist.trim() || null,
+    });
   });
 
-export const deleteJournalEntry = createBackstageServerFn({ method: "POST" })
+export const deleteJournalEntry = createServerFn({ method: "POST" })
   .validator((input: z.infer<typeof journalEntryIdSchema>) => journalEntryIdSchema.parse(input))
   .handler(async ({ data }) => {
-    const db = getDb();
-    await db.delete(journalEntries).where(eq(journalEntries.id, data.id));
-    return { ok: true as const };
+    await requireBackstageSession();
+    return deleteJournalEntryImpl(data.id);
   });
 
-export const setJournalEntryPinned = createBackstageServerFn({ method: "POST" })
+export const setJournalEntryPinned = createServerFn({ method: "POST" })
   .validator((input: { id: string; pinned: boolean }) =>
     journalEntryIdSchema.extend({ pinned: z.boolean() }).parse(input),
   )
   .handler(async ({ data }) => {
-    const db = getDb();
-
-    if (data.pinned) {
-      const pinOrder = await nextPinOrder();
-      await db
-        .update(journalEntries)
-        .set({ pinned: true, pinOrder })
-        .where(eq(journalEntries.id, data.id));
-    } else {
-      await db
-        .update(journalEntries)
-        .set({ pinned: false, pinOrder: 0 })
-        .where(eq(journalEntries.id, data.id));
-    }
-
-    const [row] = await db
-      .select()
-      .from(journalEntries)
-      .where(eq(journalEntries.id, data.id))
-      .limit(1);
-
-    if (!row) {
-      throw new Error("Journal entry not found");
-    }
-
-    return row;
+    await requireBackstageSession();
+    return setJournalEntryPinnedImpl(data.id, data.pinned);
   });

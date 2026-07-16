@@ -1,14 +1,15 @@
-import { createBackstageServerFn } from "@/lib/tanstack/create-backstage-server-fn";
+import { requireBackstageSession } from "@/lib/better-auth/session.server";
 import {
   logGithubReposListEvent,
   nextListGithubReposCallCount,
 } from "@/lib/evlog/github-repos-log";
-import { extractRepoTags, fetchRecentReposFromGithub } from "@/modules/github/fetch-repos";
 import { getServerEnv } from "@/lib/envs/server-env";
+import { extractRepoTags, fetchRecentReposFromGithub } from "@/modules/github/fetch-repos";
 import { removeProjectRepo } from "@/modules/backstage/projects.functions";
 import { deleteGithubRepo, setGithubRepoVisibility } from "@/modules/github/repo-admin";
 import type { GithubRepoNode } from "@/types/github";
 import type { BackstageGithubRepo } from "@/types/backstage";
+import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 const repoFullNameSchema = z.string().regex(/^[^/]+\/[^/]+$/);
@@ -37,19 +38,6 @@ function mapRepoNode(repo: GithubRepoNode): BackstageGithubRepo {
   };
 }
 
-/**
- * Returns the configured GitHub personal access token.
- *
- * @throws When `GH_PAT` is missing from the server environment.
- */
-function requirePat() {
-  const pat = getServerEnv().GH_PAT;
-  if (!pat) {
-    throw new Error("GH_PAT is not configured");
-  }
-  return pat;
-}
-
 /** GitHub repos loaded for the backstage collection plus any GraphQL error messages. */
 export type BackstageGithubReposList = {
   items: BackstageGithubRepo[];
@@ -65,8 +53,10 @@ const GITHUB_RECENT_REPOS_LIMIT = 100;
  *
  * Requires an authenticated admin session.
  */
-export const listGithubReposForBackstage = createBackstageServerFn({ method: "GET" }).handler(
+export const listGithubReposForBackstage = createServerFn({ method: "GET" }).handler(
   async (): Promise<BackstageGithubReposList> => {
+    await requireBackstageSession();
+
     const startedAt = performance.now();
     const callCount = nextListGithubReposCallCount();
     const result = await fetchRecentReposFromGithub({ first: GITHUB_RECENT_REPOS_LIMIT });
@@ -111,12 +101,17 @@ const deleteGithubRepoInputSchema = z.object({
  *
  * Requires an authenticated admin session.
  */
-export const deleteGithubRepoForBackstage = createBackstageServerFn({ method: "POST" })
+export const deleteGithubRepoForBackstage = createServerFn({ method: "POST" })
   .validator((input: z.infer<typeof deleteGithubRepoInputSchema>) =>
     deleteGithubRepoInputSchema.parse(input),
   )
   .handler(async ({ data }) => {
-    const pat = data.overridePat ?? requirePat();
+    await requireBackstageSession();
+
+    const pat = data.overridePat ?? getServerEnv().GH_PAT;
+    if (!pat) {
+      throw new Error("GH_PAT is not configured");
+    }
 
     try {
       await deleteGithubRepo(pat, data.repoFullName);
@@ -134,13 +129,19 @@ export const deleteGithubRepoForBackstage = createBackstageServerFn({ method: "P
  *
  * Requires an authenticated admin session.
  */
-export const setGithubRepoVisibilityForBackstage = createBackstageServerFn({ method: "POST" })
+export const setGithubRepoVisibilityForBackstage = createServerFn({ method: "POST" })
   .validator((input: { repoFullName: string; visibility: "public" | "private" }) => ({
     repoFullName: repoFullNameSchema.parse(input.repoFullName),
     visibility: z.enum(["public", "private"]).parse(input.visibility),
   }))
   .handler(async ({ data }) => {
-    const pat = requirePat();
+    await requireBackstageSession();
+
+    const pat = getServerEnv().GH_PAT;
+    if (!pat) {
+      throw new Error("GH_PAT is not configured");
+    }
+
     await setGithubRepoVisibility(pat, data.repoFullName, data.visibility);
     return { ok: true as const, visibility: data.visibility };
   });

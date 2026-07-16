@@ -15,20 +15,31 @@ The package is split so **server-only code never leaks into the browser bundle**
 
 ### Why two clients?
 
-- **`@repo/db/client`** uses the HTTP transport. It has no `node:fs`, `node:path`, or native libsql bindings, so Vite can resolve it without pulling server code into the client.
-- **`@repo/db/local-client`** uses the native libsql driver for local `file:./local.db` development. Import it only from server-only files.
+- **`@repo/db/client`** uses the HTTP transport. It has no `node:fs`, `node:path`, or native libsql bindings.
+- **`@repo/db/local-client`** uses the native libsql driver for local `file:./local.db` development.
 
 Never combine both transports in one module. Branch at the app layer instead.
 
 ## App integration (TanStack Start)
 
-Each app that talks to the database should expose a single server-only entry point:
+TanStack Start uses [import protection](https://tanstack.com/start/latest/docs/framework/react/guide/import-protection): `**/*.server.*` files are denied in the client bundle. The compiler strips server-only imports from `createServerFn` handlers — but only when those imports are not referenced outside a handler.
+
+Follow the [documented file layout](https://tanstack.com/start/latest/docs/framework/react/guide/server-functions#file-organization):
 
 ```
-apps/site/src/lib/db/get-db.server.ts
+src/lib/db/
+  get-db.server.ts          # sync DB factory (HTTP vs native)
+
+src/modules/journal/
+  journal.server.ts         # server-only DB queries
+  journal.functions.ts      # createServerFn wrappers (safe to import anywhere)
+
+src/modules/lessons/
+  lessons.server.ts         # server-only lesson fetching
+  lessons.ts                # createServerFn wrappers
 ```
 
-The `.server.ts` suffix tells TanStack Start / Vite to exclude the file (and its transitive deps) from the client bundle.
+### `get-db.server.ts`
 
 ```ts
 import { createDb } from "@repo/db/client";
@@ -50,71 +61,87 @@ export function getDb() {
 }
 ```
 
+### `*.functions.ts` — static imports, no dynamic `import()`
+
+```ts
+import { createBackstageServerFn } from "@/lib/tanstack/create-backstage-server-fn";
+import { listJournalEntriesForBackstage as listJournalEntriesImpl } from "@/modules/journal/journal.server";
+
+export const listJournalEntriesForBackstage = createBackstageServerFn({ method: "GET" })
+  .validator(/* ... */)
+  .handler(async ({ data }) => listJournalEntriesImpl(data));
+```
+
+`journal.functions.ts` is imported by client query options. That is fine: the build replaces handler bodies with RPC stubs and removes the `journal.server` import from the client bundle.
+
 ### Import rules
 
 ```ts
-// ✅ Server functions, route handlers, auth setup, workflows
-import { getDb } from "@/lib/db/get-db.server";
+// ✅ Server function wrappers — import anywhere (client gets RPC stubs)
+import { listJournalEntriesForBackstage } from "@/modules/journal/journal.functions";
 
-// ✅ Shared types/schema in any file
+// ✅ Static import of .server.ts in .functions.ts — only used inside handlers
+import { findUserById } from "./users.server";
+
+// ✅ Schema/types from @repo/db in any file
 import { journalEntries, eq } from "@repo/db";
 
-// ❌ Never import getDb or local-client from files the client bundle can reach
+// ❌ Import .server.ts from client components, query-option files, or shared barrels
 import { getDb } from "@/lib/db/get-db.server"; // in a .tsx route component
-import { createLocalDb } from "@repo/db/local-client"; // in a shared module imported by client code
+
+// ❌ Export helpers from .functions.ts that call DB outside createServerFn handlers
+export async function fetchJournalLessonPage() {
+  const db = getDb(); // "leaky helper" — keeps server imports alive in client build
+}
+
+// ❌ Dynamic import() for server functions or .server modules
+const { getDb } = await import("@/lib/db/get-db.server");
 ```
 
-Server functions (`createServerFn`) are fine importing `get-db.server` — handlers run on the server. The problem is **static top-level imports** in modules that the client bundle also loads (e.g. route components, `data-access-layer` hooks, shared barrels).
+### Leaky helpers
 
-If a module is imported by client code, keep only `@repo/db` schema/types there. Lazy-import server modules inside handlers when needed:
+If a module imported by the client exports a plain async function that touches the DB, import protection fails even when you also export `createServerFn` wrappers. Move DB logic to `*.server.ts` and call it only from inside handlers:
 
 ```ts
-export const getViewer = createServerFn({ method: "GET" }).handler(async () => {
-  const { loadViewer } = await import("@/lib/auth/session.server");
-  return loadViewer();
-});
+// journal.server.ts
+export async function fetchJournalLessonPage(page: number, perPage: number) { /* ... */ }
+
+// lessons.ts — static import, only referenced inside handlers
+import { fetchLessonsPage } from "./lessons.server";
+
+export const getLessons = createServerFn({ method: "GET" })
+  .handler(async ({ data }) => fetchLessonsPage(data.page, data.perPage));
 ```
 
 ## Environment variables
 
-Set these in the consuming app (e.g. `apps/site/.env`):
-
 ```env
-# Local dev (default)
 DATABASE_URL=file:./local.db
-
-# Turso production
 DATABASE_URL=libsql://your-db-name.turso.io
 DATABASE_AUTH_TOKEN=your-token
 ```
 
-`isTursoRemote(url)` returns true for `libsql://` URLs that are not localhost.
-
 ## Drizzle Kit
 
-Schema and migrations live in this package. Run from the app or the package:
-
 ```bash
-pnpm --filter site db:generate   # new migration from schema changes
-pnpm --filter site db:migrate    # apply migrations
-pnpm --filter site db:studio     # Drizzle Studio
+pnpm --filter site db:generate
+pnpm --filter site db:migrate
+pnpm --filter site db:studio
 ```
-
-`drizzle.config.ts` reads `DATABASE_URL` from `packages/db/.env`, `apps/site/.env`, or falls back to `apps/site/local.db`.
 
 ## Adding a new app
 
-1. Add `"@repo/db": "workspace:*"` to the app's `dependencies`.
-2. Create `src/lib/db/get-db.server.ts` using the pattern above.
-3. Import `getDb` only from `.server.ts` files and server function handlers.
-4. Re-export `db:*` scripts from the app's `package.json` if desired (see `apps/site`).
-5. For local dev, add the platform's libsql optional dependency if needed (see `apps/site/package.json`).
+1. Add `"@repo/db": "workspace:*"` to dependencies.
+2. Create `src/lib/db/get-db.server.ts`.
+3. For each domain: `domain.server.ts` (DB logic) + `domain.functions.ts` (RPC wrappers).
+4. Never import `get-db.server` or `local-client` from client-reachable code except via `.server.ts` helpers used only in handlers.
 
 ## Common mistakes
 
 | Mistake | Symptom | Fix |
 | --- | --- | --- |
-| Importing `get-db.server` from client-reachable code | `node:fs` / `node:path` in browser bundle | Move import behind `.server.ts` or dynamic `import()` in handler |
-| Putting native libsql in `@repo/db/client` | Same browser bundle errors | Keep HTTP client in `client.ts`; native in `local-client.ts` |
-| Using `createDb` for `file:` URLs | Runtime errors or wrong transport | Branch with `isTursoRemote` and call `createLocalDb` locally |
-| Importing schema from `@repo/db/client` | Unnecessary HTTP client in graph | Import tables from `@repo/db` |
+| Leaky helper in `.functions.ts` | `[import-protection] Import denied` | Move DB logic to `.server.ts`; call only from handlers |
+| Dynamic `import()` of `.server.*` | Same error | Use static imports per TanStack docs |
+| `get-db.server` in client-reachable file | Import denied | Route through `domain.server.ts` |
+| Mixed barrel re-exporting `.server` modules | Transitive leak | Split safe and server-only entry points |
+| Putting native libsql in `@repo/db/client` | `node:fs` in browser | Keep HTTP in `client.ts`, native in `local-client.ts` |

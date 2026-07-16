@@ -2,8 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { contactFormSchema, type ContactFormValues } from "./contact-schema";
 import { getTelegramClient } from "@/lib/telegram/client";
-import { contactMessages } from "@repo/db";
-import { getDb } from "@/lib/db/get-db.server";
+import { persistContactMessage } from "./contact.server";
 
 function createMessageId() {
   return crypto.randomUUID();
@@ -37,12 +36,9 @@ export const sendContactMessage = createServerFn({ method: "POST" })
         throw new Error(result.message);
       }
     } catch (error: unknown) {
-      const db = getDb();
-      await db.insert(contactMessages).values({
-        id: messageId,
-        name: data.name,
-        contact: hasContact ? data.contact : null,
-        message: data.message,
+      await persistContactMessage(data, {
+        messageId,
+        hasContact,
         ipAddress,
         userAgent,
         telegramSent: false,
@@ -50,12 +46,9 @@ export const sendContactMessage = createServerFn({ method: "POST" })
       throw error;
     }
 
-    const db = getDb();
-    await db.insert(contactMessages).values({
-      id: messageId,
-      name: data.name,
-      contact: hasContact ? data.contact : null,
-      message: data.message,
+    await persistContactMessage(data, {
+      messageId,
+      hasContact,
       ipAddress,
       userAgent,
       telegramSent,

@@ -1,5 +1,5 @@
 import { buildLessonPreviews } from "@/modules/lessons/build-lesson-previews";
-import { fetchJournalLessonPage } from "@/modules/journal/journal.functions";
+import { fetchJournalLessonPage } from "@/modules/journal/journal.server";
 import { STATIC_LESSONS } from "@/data/portfolio/static";
 import { createServerFn } from "@tanstack/react-start";
 import type { LessonPreviewItem } from "@/types/lessons";
