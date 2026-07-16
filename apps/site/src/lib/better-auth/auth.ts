@@ -10,9 +10,10 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { admin, bearer, deviceAuthorization, emailOTP } from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
+import { getBaseUrl } from "@/config/url";
 
 const env = getServerEnv();
-const baseURL = env.BETTER_AUTH_URL ?? env.VITE_APP_URL ?? "http://localhost:3044";
+const baseURL = getBaseUrl();
 const deviceVerificationUri = new URL("/device", baseURL).toString();
 const trustedOrigins = new Set<string>([baseURL]);
 if (env.VITE_APP_URL) {
