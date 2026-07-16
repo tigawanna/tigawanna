@@ -19,10 +19,10 @@ export async function sendEmailwithBrevoSmtpAction(
   formData: FormData,
 ) {
   const tg = new TelegramNotifier();
-  // console.log({prevState, formData});
+
   const mail_from = envVariables.EMAIL_FROM;
   const mail_to = envVariables.EMAIL_FROM;
-  // const brevo_key = envVariables.BREVO_KEY;
+
   if (!mail_from || !mail_to) {
     return {
       message: "Ooops something went wrong on our side, please try again later",
@@ -37,14 +37,7 @@ export async function sendEmailwithBrevoSmtpAction(
     sender_message: formData.get("sender_message"),
   };
 
-  // const transporter = createTransport({
-  //   host: "smtp-relay.brevo.com",
-  //   port: 587,
-  //   auth: {
-  //     user: mail_to,
-  //     pass: brevo_key,
-  //   },
-  // });
+
 
   const mailOptions = {
     from: mail_from,
@@ -84,33 +77,4 @@ export async function sendEmailwithBrevoSmtpAction(
       };
     });
 
-  // async function asyncsendMail() {
-  //   return new Promise<ContactFormState>((resolve, reject) => {
-  // transporter.sendMail(mailOptions, (error: any, info: any) => {
-  //   if (error) {
-  //     // no("error sending email   =============== ", error);
-  //     resolve({
-  //       message: "Something went wrong",
-  //       error: true,
-  //       success: false,
-  //       fieldValues: prevState.fieldValues,
-  //     });
-  //   } else {
-  //     // no("Email sent: " + info.response);
-  //     resolve({
-  //       message: "Successfully sent, Thank you!",
-  //       error: false,
-  //       success: true,
-  //       fieldValues: {
-  //         sender_name: "",
-  //         sender_email: "",
-  //         sender_message: "",
-  //       },
-  //     });
-  //   }
-  // });
-  // });
-  // }
-
-  // return await asyncsendMail();
 }

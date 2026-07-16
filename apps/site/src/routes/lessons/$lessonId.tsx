@@ -94,7 +94,7 @@ function LessonDetailPage() {
   return (
     <div data-test="lesson-detail-page" className="min-h-screen bg-base-100 text-base-content">
       <LandingNavbar />
-      <main className="container py-24">
+      <main className="min-h-screen py-24">
         <Suspense
           fallback={
             <div className="mx-auto max-w-4xl animate-pulse space-y-4">

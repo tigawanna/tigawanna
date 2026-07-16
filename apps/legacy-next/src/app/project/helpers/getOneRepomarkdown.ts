@@ -13,7 +13,6 @@ export async function getGithubREADME({ repo, owner }: GetRepoREADME) {
       throw new Error(response.statusText);
     }
     const text = await response.text();
-    // console.log(" === readme markdown  === ", text);
     if (!text) {
       throw new Error("no parsable readme");
     }

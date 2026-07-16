@@ -82,15 +82,15 @@ export class GitHubClient {
       orderDirection = "DESC",
       cache = "no-store",
     } = options;
-    console.log("\n\n\n == options == ", options, "\n\n\n");
+
     const result = await this.graphql<RecentReposGraphqlResponse>(RECENT_REPOS_QUERY, {
       cache,
       variables: { first, isFork, orderField, orderDirection },
     });
-    console.log("\n\n\n == result == ", result, "\n\n\n");
+
     try {
       const nodes = filterRepoNodes(result.viewer.repositories.nodes, { excludePrivate: true });
-      console.log("\n\n\n == nodes == ", nodes, "\n\n\n");
+
       return {
         data: {
           viewer: {
@@ -102,7 +102,7 @@ export class GitHubClient {
         rateLimit: result.rateLimit ?? null,
       };
     } catch (error: unknown) {
-      console.log("\n\n\n == error == ", error, "\n\n\n");
+  
       if (isIgnorableGraphqlAggregateError(error)) {
         return {
           data: {
@@ -155,7 +155,7 @@ export class GitHubClient {
       { variables: { first: limit } },
     );
 
-    console.log("== result.viewer.repositories.nodes == ", result.viewer.repositories.nodes);
+
 
     return filterRepoNodes(result.viewer.repositories.nodes, { excludePrivate: true }).map(
       mapEnrichmentRepoNode,

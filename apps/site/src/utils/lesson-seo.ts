@@ -81,7 +81,6 @@ export function buildLessonsIndexSeoHead() {
  * Builds Open Graph, Twitter, Article, and SEO meta for a single lesson/journal page.
  */
 export function buildLessonDetailSeoHead(lesson: LessonItem) {
-  console.log("lesson", { lesson });
   const typeLabel = formatLessonTypeLabel(lesson.type);
   const title = `${lesson.title} | ${typeLabel}`;
   const description = truncateSeoText(

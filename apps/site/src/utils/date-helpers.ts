@@ -72,8 +72,5 @@ export function getRelativeTimeString(date: Date | number, lang = navigator.lang
 export function isdateGreater(date1: Date | string, date2: Date | string) {
   if (typeof date1 === "string") date1 = new Date(date1);
   if (typeof date2 === "string") date2 = new Date(date2);
-  // const date1Time = date1.getTime();
-  // const date2Time = date2.getTime();
-  // console.log({date1Time, date2Time});
   return date1.getTime() - date2.getTime() > 0;
 }
