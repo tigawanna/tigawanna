@@ -1,68 +1,45 @@
-import { lessonsListQueryOptions } from "@/data-access-layer/portfolio/landng-page-query-options";
-import { LessonCard } from "@/routes/-components/landing/cards/LessonCard";
-import { PortfolioGridSkeleton } from "@/routes/-components/landing/cards/PortfolioGridSkeleton";
+import {
+  LESSONS_LIST_PER_PAGE,
+  lessonsListQueryOptions,
+} from "@/data-access-layer/portfolio/landng-page-query-options";
 import { LandingFooter } from "@/routes/-components/landing/layout/LandingFooter";
 import { LandingNavbar } from "@/routes/-components/landing/layout/LandingNavbar";
 import { buildLessonsIndexSeoHead } from "@/utils/lesson-seo";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link, createFileRoute } from "@tanstack/react-router";
-import { Suspense } from "react";
+import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
+import { LessonsList } from "./-components/LessonsList";
 
 const lessonsSearchSchema = z.object({
   page: z.coerce.number().int().min(1).optional(),
+  q: z.string().optional(),
+  sortBy: z.enum(["latest", "oldest"]).optional(),
+  /** URL uses "true" only when checked — omit means time-only sort. */
+  pinnedFirst: z.literal("true").optional(),
 });
 
 export const Route = createFileRoute("/lessons/")({
   validateSearch: (search) => lessonsSearchSchema.parse(search),
-  loaderDeps: ({ search }) => ({ page: search.page ?? 1 }),
-  loader: ({ context, deps: { page } }) =>
-    context.queryClient.ensureQueryData(lessonsListQueryOptions(page, 24)),
+  loaderDeps: ({ search }) => ({
+    page: search.page ?? 1,
+    q: search.q ?? "",
+    sortBy: search.sortBy ?? "latest",
+    pinnedFirst: search.pinnedFirst === "true",
+  }),
+  loader: ({ context, deps: { page, q, sortBy, pinnedFirst } }) =>
+    context.queryClient.ensureQueryData(
+      lessonsListQueryOptions({
+        page,
+        perPage: LESSONS_LIST_PER_PAGE,
+        q,
+        sortBy,
+        pinnedFirst,
+      }),
+    ),
   head: () => buildLessonsIndexSeoHead(),
   component: LessonsPage,
 });
 
-function LessonsGrid({ page }: { page: number }) {
-  const { data: lessons } = useSuspenseQuery(lessonsListQueryOptions(page, 24));
-
-  return (
-    <>
-      <ul className="grid w-full gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {lessons.items.map((item, index) => (
-          <li key={item.id}>
-            <LessonCard item={item} tone={(index % 3) as 0 | 1 | 2} />
-          </li>
-        ))}
-      </ul>
-
-      {lessons.totalPages > 1 ? (
-        <nav
-          className="mt-10 flex flex-wrap items-center justify-center gap-3"
-          data-test="lessons-pagination"
-        >
-          {page > 1 ? (
-            <Link to="/lessons" search={{ page: page - 1 }} className="btn btn-sm btn-outline">
-              Previous
-            </Link>
-          ) : null}
-          <span className="text-sm text-base-content/70">
-            Page {page} of {lessons.totalPages}
-          </span>
-          {page < lessons.totalPages ? (
-            <Link to="/lessons" search={{ page: page + 1 }} className="btn btn-sm btn-outline">
-              Next
-            </Link>
-          ) : null}
-        </nav>
-      ) : null}
-    </>
-  );
-}
-
 function LessonsPage() {
-  const search = Route.useSearch();
-  const page = search.page ?? 1;
-
   return (
     <div data-test="lessons-page" className="min-h-screen bg-base-100 text-base-content">
       <LandingNavbar />
@@ -76,9 +53,7 @@ function LessonsPage() {
           </p>
         </header>
 
-        <Suspense fallback={<PortfolioGridSkeleton count={6} />}>
-          <LessonsGrid page={page} />
-        </Suspense>
+        <LessonsList />
       </main>
       <LandingFooter />
     </div>

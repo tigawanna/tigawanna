@@ -19,10 +19,35 @@ export const recentReposQueryOptions = queryOptions({
   staleTime: GITHUB_REPOS_STALE_TIME_MS,
 });
 
-export function lessonsListQueryOptions(page: number, perPage: number) {
+/** Default page size for the public lessons index. */
+export const LESSONS_LIST_PER_PAGE = 24;
+
+export function lessonsListQueryOptions({
+  page,
+  perPage = LESSONS_LIST_PER_PAGE,
+  q = "",
+  sortBy = "latest",
+  pinnedFirst = false,
+}: {
+  page: number;
+  perPage?: number;
+  q?: string;
+  sortBy?: "latest" | "oldest";
+  pinnedFirst?: boolean;
+}) {
+  const query = q.trim();
   return queryOptions({
-    queryKey: [queryKeyPrefixes.lessons, "list", page, perPage],
-    queryFn: async () => getLessonsPreview({ data: { page, perPage } }),
+    queryKey: [queryKeyPrefixes.lessons, "list", page, perPage, query, sortBy, pinnedFirst],
+    queryFn: async () =>
+      getLessonsPreview({
+        data: {
+          page,
+          perPage,
+          q: query || undefined,
+          sortBy,
+          pinnedFirst,
+        },
+      }),
   });
 }
 

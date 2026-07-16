@@ -8,7 +8,9 @@ export const LESSON_PREVIEW_COUNT = 6;
 
 export const getLandingLessonPreviews = createServerFn({ method: "GET" }).handler(
   async (): Promise<LessonPreviewItem[]> => {
-    const dbPage = await fetchJournalLessonPage(1, LESSON_PREVIEW_COUNT);
+    const dbPage = await fetchJournalLessonPage(1, LESSON_PREVIEW_COUNT, {
+      pinnedFirst: true,
+    });
     if (dbPage.items.length > 0) {
       return buildLessonPreviews(dbPage.items);
     }

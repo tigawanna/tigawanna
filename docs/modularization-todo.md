@@ -109,7 +109,7 @@ Enrich **never** calls GitHub — only reads `project_repo_artifacts.payload`.
 | Step                                                                               | Status | Notes                                |
 | ---------------------------------------------------------------------------------- | ------ | ------------------------------------ |
 | Clean-1 — Delete `index-repo-embedding.ts`, `gemma-embedding-service.ts` from site | [x]    | Also removed `embeddings.functions`  |
-| Clean-2 — Trim `@repo/isomorphic` stale org roles                                  | [ ]    | Kitchen/cuisine leftovers from dishi |
+| Clean-2 — Delete `@repo/isomorphic`                                                | [x]    | Unused; auth roles live in `@repo/auth` |
 | Clean-3 — Remove `admin_login_challenges` schema                                   | [ ]    | See Auth-12                          |
 
 ---

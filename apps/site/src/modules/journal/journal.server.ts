@@ -32,7 +32,43 @@ async function nextPinOrder() {
   return (row?.maxOrder ?? -1) + 1;
 }
 
-export async function fetchJournalLessonPage(page: number, perPage: number) {
+export type LessonSortBy = "latest" | "oldest";
+
+export interface FetchJournalLessonPageOptions {
+  q?: string;
+  sortBy?: LessonSortBy;
+  /** When true, pinned entries float above time order. */
+  pinnedFirst?: boolean;
+}
+
+/**
+ * Builds a LIKE pattern for case-insensitive journal title/description search.
+ */
+function journalSearchWhere(q: string) {
+  const normalized = q.trim().toLowerCase();
+  if (!normalized) {
+    return undefined;
+  }
+
+  const searchPattern = `%${escapeLikePattern(normalized)}%`;
+  return or(
+    sql`lower(${journalEntries.title}) like ${searchPattern} escape '\\'`,
+    sql`lower(${journalEntries.description}) like ${searchPattern} escape '\\'`,
+  );
+}
+
+/**
+ * Fetches a page of journal lessons for the public lessons index.
+ *
+ * @param page - 1-based page index.
+ * @param perPage - Page size.
+ * @param options - Optional search (`q`) and sort (`latest` | `oldest`).
+ */
+export async function fetchJournalLessonPage(
+  page: number,
+  perPage: number,
+  options: FetchJournalLessonPageOptions = {},
+) {
   const db = getDb();
   const {
     page: safePage,
@@ -43,16 +79,27 @@ export async function fetchJournalLessonPage(page: number, perPage: number) {
     perPage,
   });
 
-  const [{ count: totalItems }] = await db.select({ count: count() }).from(journalEntries);
+  const searchWhere = journalSearchWhere(options.q ?? "");
+  let orderByCreated = desc(journalEntries.createdAt);
+  if (options.sortBy === "oldest") {
+    orderByCreated = asc(journalEntries.createdAt);
+  }
+
+  const [{ count: totalItems }] = await db
+    .select({ count: count() })
+    .from(journalEntries)
+    .where(searchWhere);
+
+  const orderBy =
+    options.pinnedFirst === true
+      ? ([desc(journalEntries.pinned), asc(journalEntries.pinOrder), orderByCreated] as const)
+      : ([orderByCreated] as const);
 
   const rows = await db
     .select()
     .from(journalEntries)
-    .orderBy(
-      desc(journalEntries.pinned),
-      asc(journalEntries.pinOrder),
-      desc(journalEntries.createdAt),
-    )
+    .where(searchWhere)
+    .orderBy(...orderBy)
     .limit(safePerPage)
     .offset(offset);
 
@@ -72,6 +119,15 @@ export async function fetchJournalLessonPage(page: number, perPage: number) {
   };
 }
 
+/**
+ * Returns the total number of journal entries in D1 (no filters).
+ */
+export async function countJournalEntries() {
+  const db = getDb();
+  const [{ count: totalItems }] = await db.select({ count: count() }).from(journalEntries);
+  return totalItems;
+}
+
 export async function fetchJournalLessonById(id: string): Promise<LessonItem | null> {
   const db = getDb();
   const [row] = await db.select().from(journalEntries).where(eq(journalEntries.id, id)).limit(1);
@@ -85,14 +141,7 @@ export async function listJournalEntriesForBackstage(data?: {
 }): Promise<PaginatedResponse<JournalEntryRow>> {
   const db = getDb();
   const { page, perPage, offset } = normalizePaginationParams(data ?? {});
-  const q = data?.q?.trim() ?? "";
-  const searchPattern = q ? `%${escapeLikePattern(q.toLowerCase())}%` : null;
-  const searchWhere = searchPattern
-    ? or(
-        sql`lower(${journalEntries.title}) like ${searchPattern} escape '\\'`,
-        sql`lower(${journalEntries.description}) like ${searchPattern} escape '\\'`,
-      )
-    : undefined;
+  const searchWhere = journalSearchWhere(data?.q ?? "");
 
   const [{ count: totalItems }] = await db
     .select({ count: count() })

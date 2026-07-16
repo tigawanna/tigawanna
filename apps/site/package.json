@@ -24,7 +24,6 @@
     "@repo/auth": "workspace:*",
     "@repo/db": "workspace:*",
     "@repo/github": "workspace:*",
-    "@repo/isomorphic": "workspace:*",
     "@repo/telegram": "workspace:*",
     "@shikijs/langs": "^3.23.0",
     "@shikijs/themes": "^3.23.0",

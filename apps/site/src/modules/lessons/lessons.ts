@@ -1,17 +1,30 @@
 import { buildLessonPreviews } from "@/modules/lessons/build-lesson-previews";
-import { fetchLesson, fetchLessonsPage } from "@/modules/lessons/lessons.server";
+import { fetchLesson, fetchLessonsPage, type LessonSortBy } from "@/modules/lessons/lessons.server";
 import { convertMarkdownToHtmlWithShiki } from "@/lib/markdown/convert";
 import type { LessonsPreviewPage } from "@/types/lessons";
 import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
+
+const lessonsListInputSchema = z.object({
+  page: z.number().int().positive().optional(),
+  perPage: z.number().int().positive().max(100).optional(),
+  q: z.string().optional(),
+  sortBy: z.enum(["latest", "oldest"]).optional(),
+  pinnedFirst: z.boolean().optional(),
+});
+
+type LessonsListInput = z.infer<typeof lessonsListInputSchema>;
 
 export const getLessons = createServerFn({ method: "GET" })
-  .validator((input: { page?: number; perPage?: number }) => input)
-  .handler(async ({ data: { page = 1, perPage = 6 } }) => fetchLessonsPage(page, perPage));
+  .validator((input: LessonsListInput) => lessonsListInputSchema.parse(input))
+  .handler(async ({ data: { page = 1, perPage = 6, q, sortBy, pinnedFirst } }) =>
+    fetchLessonsPage(page, perPage, { q, sortBy, pinnedFirst }),
+  );
 
 export const getLessonsPreview = createServerFn({ method: "GET" })
-  .validator((input: { page?: number; perPage?: number }) => input)
-  .handler(async ({ data: { page = 1, perPage = 6 } }) => {
-    const result = await fetchLessonsPage(page, perPage);
+  .validator((input: LessonsListInput) => lessonsListInputSchema.parse(input))
+  .handler(async ({ data: { page = 1, perPage = 6, q, sortBy, pinnedFirst } }) => {
+    const result = await fetchLessonsPage(page, perPage, { q, sortBy, pinnedFirst });
     if (!result.items.length) {
       return { ...result, items: [] } satisfies LessonsPreviewPage;
     }
@@ -34,3 +47,5 @@ export const getLessonMarkdownHtml = createServerFn({ method: "GET" })
 
     return convertMarkdownToHtmlWithShiki(lesson.markdown);
   });
+
+export type { LessonSortBy };
