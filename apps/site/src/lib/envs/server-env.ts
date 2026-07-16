@@ -1,50 +1,42 @@
 import { DEFAULT_DATABASE_URL } from "@repo/db";
+import { z } from "zod";
 
-export type ServerEnv = {
-  ADMIN_EMAIL: string;
-  BETTER_AUTH_SECRET: string;
-  BETTER_AUTH_URL?: string;
-  BETTER_AUTH_TRUSTED_ORIGINS?: string[];
-  TELEGRAM_BOT_TOKEN: string;
-  TELEGRAM_CHANNEL_ID: string;
-  GH_PAT?: string;
-  OPENROUTER_API_KEY?: string;
-  OPENROUTER_MODEL?: string;
-  DEV_TO_KEY?: string;
-  PB_URL?: string;
-  DATABASE_URL: string;
-  DATABASE_AUTH_TOKEN?: string;
-  VITE_APP_URL?: string;
-  POSTHOG_API_KEY?: string;
-  POSTHOG_HOST?: string;
-};
-
+/**
+ * Parses a comma-separated list of trusted origins into a trimmed string array.
+ */
 function parseTrustedOrigins(raw: string | undefined) {
   if (!raw?.trim()) {
     return undefined;
   }
+
   return raw
     .split(",")
     .map((origin) => origin.trim())
     .filter((origin) => origin.length > 0);
 }
 
-export function getServerEnv(): ServerEnv {
-  return {
-    ADMIN_EMAIL: process.env.ADMIN_EMAIL ?? "",
-    BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET ?? "",
-    BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
-    BETTER_AUTH_TRUSTED_ORIGINS: parseTrustedOrigins(process.env.BETTER_AUTH_TRUSTED_ORIGINS),
-    TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN ?? "",
-    TELEGRAM_CHANNEL_ID: process.env.TELEGRAM_CHANNEL_ID ?? "",
-    GH_PAT: process.env.GH_PAT,
-    OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
-    OPENROUTER_MODEL: process.env.OPENROUTER_MODEL,
-    DEV_TO_KEY: process.env.DEV_TO_KEY,
-    DATABASE_URL: process.env.DATABASE_URL ?? DEFAULT_DATABASE_URL,
-    DATABASE_AUTH_TOKEN: process.env.DATABASE_AUTH_TOKEN,
-    VITE_APP_URL: process.env.VITE_APP_URL,
-    POSTHOG_API_KEY: process.env.POSTHOG_API_KEY,
-    POSTHOG_HOST: process.env.POSTHOG_HOST,
-  };
+const serverEnvSchema = z.object({
+  ADMIN_EMAIL: z.string().default(""),
+  BETTER_AUTH_SECRET: z.string().default(""),
+  BETTER_AUTH_URL: z.string().optional(),
+  BETTER_AUTH_TRUSTED_ORIGINS: z
+    .string()
+    .optional()
+    .transform((raw) => parseTrustedOrigins(raw)),
+  TELEGRAM_BOT_TOKEN: z.string().default(""),
+  TELEGRAM_CHANNEL_ID: z.string().default(""),
+  GH_PAT: z.string().optional(),
+  OPENROUTER_API_KEY: z.string().optional(),
+  OPENROUTER_MODEL: z.string().optional(),
+  DEV_TO_KEY: z.string().optional(),
+  PB_URL: z.string().optional(),
+  DATABASE_URL: z.string().default(DEFAULT_DATABASE_URL),
+  DATABASE_AUTH_TOKEN: z.string().optional(),
+  VITE_APP_URL: z.string().optional(),
+  POSTHOG_API_KEY: z.string().optional(),
+  POSTHOG_HOST: z.string().optional(),
+});
+
+export function getServerEnv() {
+  return serverEnvSchema.parse(process.env);
 }
