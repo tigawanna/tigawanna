@@ -1,4 +1,5 @@
-import { createDb, isTursoRemote } from "@repo/db";
+import { createDb } from "@repo/db/client";
+import { isTursoRemote } from "@repo/db";
 import { getServerEnv } from "@/lib/envs/server-env";
 
 export function getDb() {

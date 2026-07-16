@@ -1,5 +1,4 @@
 export * from "./constants.js";
-export * from "./client.js";
 export * from "./pagination.js";
 export * from "./schema/index.js";
 export * from "./turso.js";

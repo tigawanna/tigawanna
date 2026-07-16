@@ -1,4 +1,5 @@
-import { createDb, DEFAULT_DATABASE_URL, journalEntries } from "@repo/db";
+import { createDb, DEFAULT_DATABASE_URL } from "@repo/db/client";
+import { journalEntries } from "@repo/db";
 import { config } from "dotenv";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
