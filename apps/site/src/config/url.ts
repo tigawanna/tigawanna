@@ -5,7 +5,7 @@
  */
 export function getBaseUrl() {
   if (process.env.VERCEL_URL && process.env.VERCEL_URL !== "") {
-    return process.env.VERCEL_URL;
+    return `https://${process.env.VERCEL_URL}`;
   }
   if (process.env.VITE_APP_URL && process.env.VITE_APP_URL !== "") {
     return process.env.VITE_APP_URL;
