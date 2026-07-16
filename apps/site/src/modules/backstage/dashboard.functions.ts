@@ -1,4 +1,4 @@
-import { getDb } from "@/lib/db/get-db";
+import { getDb } from "@/lib/db/get-db.server";
 import { createBackstageServerFn } from "@/lib/tanstack/create-backstage-server-fn";
 import { contactMessages, count, eq, journalEntries, projectRepos } from "@repo/db";
 

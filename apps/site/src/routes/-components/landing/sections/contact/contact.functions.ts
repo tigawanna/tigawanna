@@ -3,7 +3,7 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 import { contactFormSchema, type ContactFormValues } from "./contact-schema";
 import { getTelegramClient } from "@/lib/telegram/client";
 import { contactMessages } from "@repo/db";
-import { getDb } from "@/lib/db/get-db";
+import { getDb } from "@/lib/db/get-db.server";
 
 function createMessageId() {
   return crypto.randomUUID();

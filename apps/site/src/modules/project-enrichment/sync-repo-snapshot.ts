@@ -1,4 +1,4 @@
-import { getDb } from "@/lib/db/get-db";
+import { getDb } from "@/lib/db/get-db.server";
 import { projectRepos } from "@repo/db";
 import {
   hasCustomSocialPreview,

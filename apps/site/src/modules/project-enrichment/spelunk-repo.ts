@@ -1,4 +1,4 @@
-import { getDb } from "@/lib/db/get-db";
+import { getDb } from "@/lib/db/get-db.server";
 import { getServerEnv } from "@/lib/envs/server-env";
 import { CURRENT_COLLECTOR_VERSION, collectArtifacts, createGitHubClient } from "@repo/github";
 import { eq, projectRepoArtifacts } from "@repo/db";

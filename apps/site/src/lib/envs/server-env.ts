@@ -29,7 +29,6 @@ const serverEnvSchema = z.object({
   OPENROUTER_API_KEY: z.string().optional(),
   OPENROUTER_MODEL: z.string().optional(),
   DEV_TO_KEY: z.string().optional(),
-  PB_URL: z.string().optional(),
   DATABASE_URL: z.string().default(DEFAULT_DATABASE_URL),
   DATABASE_AUTH_TOKEN: z.string().optional(),
   VITE_APP_URL: z.string().optional(),

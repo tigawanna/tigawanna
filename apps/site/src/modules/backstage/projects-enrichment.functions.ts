@@ -1,7 +1,7 @@
 import { createBackstageServerFn } from "@/lib/tanstack/create-backstage-server-fn";
 import { logEnrichmentEvent } from "@/lib/evlog/enrichment-log";
 import { applyRepoMetadata } from "@/modules/github/apply-repo-metadata";
-import { getDb } from "@/lib/db/get-db";
+import { getDb } from "@/lib/db/get-db.server";
 import { createRunRecord } from "@/modules/project-enrichment/run-enrichment";
 import type { EnrichmentRunParams } from "@/modules/project-enrichment/types";
 import { getServerEnv } from "@/lib/envs/server-env";

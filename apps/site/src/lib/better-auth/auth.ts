@@ -1,7 +1,7 @@
 import { account, apikey, deviceCode, session, user, verification } from "@repo/db";
 import { authAc, authRoles } from "@repo/auth";
 import { apiKey } from "@better-auth/api-key";
-import { getDb } from "@/lib/db/get-db";
+import { getDb } from "@/lib/db/get-db.server";
 import { getServerEnv } from "@/lib/envs/server-env";
 import { sendOtpViaTelegram } from "@/lib/better-auth/send-otp-telegram";
 import { rejectBackstageAuth } from "@/lib/better-auth/guard-admin-auth";

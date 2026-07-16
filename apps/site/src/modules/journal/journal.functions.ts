@@ -4,7 +4,7 @@ import {
   type JournalEntryFormValues,
 } from "@/modules/journal/journal-form-schema";
 import { journalRowToLessonItem } from "@/modules/journal/map-journal-row";
-import { getDb } from "@/lib/db/get-db";
+import { getDb } from "@/lib/db/get-db.server";
 import type { LessonItem } from "@/types/lessons";
 import {
   asc,

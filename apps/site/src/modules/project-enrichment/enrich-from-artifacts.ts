@@ -1,4 +1,4 @@
-import { getDb } from "@/lib/db/get-db";
+import { getDb } from "@/lib/db/get-db.server";
 import { getServerEnv } from "@/lib/envs/server-env";
 import { enrichRepoFromArtifacts } from "@repo/ai";
 import type { SpelunkPayload } from "@repo/github";
