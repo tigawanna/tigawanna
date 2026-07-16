@@ -97,5 +97,11 @@
     "vite-plus": "catalog:",
     "vitest": "catalog:",
     "web-vitals": "^5.3.0"
+  },
+  "optionalDependencies": {
+    "@libsql/linux-arm64-gnu": "^0.5.29",
+    "@libsql/linux-arm64-musl": "^0.5.29",
+    "@libsql/linux-x64-gnu": "^0.5.29",
+    "@libsql/linux-x64-musl": "^0.5.29"
   }
 }

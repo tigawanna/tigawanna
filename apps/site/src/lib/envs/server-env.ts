@@ -1,4 +1,4 @@
-import { DEFAULT_DATABASE_URL } from "@repo/db";
+import { DEFAULT_DATABASE_URL } from "@repo/db/constants";
 import { z } from "zod";
 
 /**

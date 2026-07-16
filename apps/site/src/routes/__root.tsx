@@ -1,5 +1,4 @@
 import type { TViewer } from "@/data-access-layer/auth/viewer";
-import { viewerqueryOptions } from "@/data-access-layer/auth/viewer";
 import { rootServerMiddleware } from "@/middleware/root.server";
 import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 

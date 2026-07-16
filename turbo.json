@@ -5,7 +5,27 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "env": [
+        "ADMIN_EMAIL",
+        "ADMIN_SESSION_SECRET",
+        "BETTER_AUTH_SECRET",
+        "BETTER_AUTH_URL",
+        "BETTER_AUTH_TRUSTED_ORIGINS",
+        "DATABASE_AUTH_TOKEN",
+        "DATABASE_URL",
+        "DEV_TO_KEY",
+        "GH_PAT",
+        "OPENROUTER_API_KEY",
+        "OPENROUTER_MODEL",
+        "POSTHOG_API_KEY",
+        "POSTHOG_HOST",
+        "TELEGRAM_BOT_TOKEN",
+        "TELEGRAM_CHANNEL_ID",
+        "VITE_APP_URL",
+        "VITE_POSTHOG_HOST",
+        "VITE_POSTHOG_KEY"
+      ]
     },
     "//#lint": {},
     "//#lint:fix": {
