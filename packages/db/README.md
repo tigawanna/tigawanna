@@ -11,14 +11,16 @@ The package is split so **server-only code never leaks into the browser bundle**
 | `@repo/db` | Schema tables, query helpers (`eq`, `count`, …), pagination utils, `isTursoRemote` | Yes |
 | `@repo/db/client` | Remote Turso via `@libsql/client/http` (`createDb`) | Yes (HTTP only) |
 | `@repo/db/local-client` | Local `file:` SQLite via native `@libsql/client` (`createLocalDb`) | **No** — Node/native only |
+| `@repo/db/d1-client` | Cloudflare D1 binding via `drizzle-orm/d1` (`createD1Db`) | **No** — Workers / server only |
 | `@repo/db/constants` | `DEFAULT_DATABASE_URL` | Yes |
 
-### Why two clients?
+### Why multiple clients?
 
 - **`@repo/db/client`** uses the HTTP transport. It has no `node:fs`, `node:path`, or native libsql bindings.
 - **`@repo/db/local-client`** uses the native libsql driver for local `file:./local.db` development.
+- **`@repo/db/d1-client`** wraps a Cloudflare D1 binding (`env.DB`). Same schema; different driver.
 
-Never combine both transports in one module. Branch at the app layer instead.
+Never combine transports in one module. Branch at the app layer instead. Keep Turso HTTP available while importing data into D1.
 
 ## App integration (TanStack Start)
 
