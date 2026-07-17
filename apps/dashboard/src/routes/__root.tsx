@@ -1,16 +1,14 @@
-import type { TViewer } from "@/data-access-layer/auth/viewer";
-import { rootServerMiddleware } from "@/middleware/root.server";
 import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
 
-import { PostHogRoot } from "@/components/posthog/PostHogRoot";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { TanstackDevtools } from "@/lib/tanstack/devtools/devtools";
-import { AppConfig } from "@/utils/system";
 import type { QueryClient } from "@tanstack/react-query";
 import { z } from "zod";
+import type { TViewer } from "@/data-access-layer/auth/viewer";
+import { rootServerMiddleware } from "@/middleware/root.server";
 
 interface MyRouterContext {
   queryClient: QueryClient;
@@ -23,6 +21,10 @@ const searchparams = z.object({
   globalSearch: z.string().optional(),
 });
 
+/**
+ * Dashboard preview shell — minimal head, noindex.
+ * Canonical SEO + PostHog live in `apps/portfolio`.
+ */
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   server: {
     middleware: [...rootServerMiddleware],
@@ -32,48 +34,10 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: AppConfig.seo.title },
-      { name: "description", content: AppConfig.seo.description },
-      { name: "keywords", content: AppConfig.seo.keywords },
-      { name: "author", content: AppConfig.name },
-      { name: "robots", content: "index, follow" },
-      { property: "og:site_name", content: AppConfig.name },
-      { property: "og:title", content: AppConfig.seo.title },
-      { property: "og:description", content: AppConfig.seo.description },
-      { property: "og:url", content: AppConfig.links.website },
-      { property: "og:type", content: "website" },
-      {
-        property: "og:image",
-        content: AppConfig.absoluteAsset(AppConfig.assets.ogImage),
-      },
-      { property: "og:image:alt", content: AppConfig.seo.ogImageAlt },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@tigawanna" },
-      { name: "twitter:creator", content: "@tigawanna" },
-      { name: "twitter:title", content: AppConfig.seo.title },
-      { name: "twitter:description", content: AppConfig.seo.description },
-      {
-        name: "twitter:image",
-        content: AppConfig.absoluteAsset(AppConfig.assets.ogImage),
-      },
+      { title: "Dashboard (preview)" },
+      { name: "robots", content: "noindex, nofollow" },
     ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: AppConfig.assets.favicon, sizes: "48x48", type: "image/x-icon" },
-      {
-        rel: "icon",
-        href: "/favicon-96x96.png",
-        sizes: "96x96",
-        type: "image/png",
-      },
-      {
-        rel: "apple-touch-icon",
-        href: AppConfig.assets.appleTouchIcon,
-        sizes: "180x180",
-      },
-      { rel: "manifest", href: "/site.webmanifest" },
-      { rel: "alternate", type: "text/markdown", href: "/llms.txt", title: "LLMs" },
-    ],
+    links: [{ rel: "stylesheet", href: appCss }],
   }),
   validateSearch: (search) => searchparams.parse(search),
   shellComponent: RootDocument,
@@ -86,13 +50,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <PostHogRoot>
-          <TooltipProvider>
-            {children}
-            <TanstackDevtools />
-            <Toaster />
-          </TooltipProvider>
-        </PostHogRoot>
+        <TooltipProvider>
+          {children}
+          <TanstackDevtools />
+          <Toaster />
+        </TooltipProvider>
         <Scripts />
       </body>
     </html>

@@ -1,9 +1,9 @@
 {
-  "name": "site",
+  "name": "dashboard",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vp dev --port 3044",
+    "dev": "vp dev --port 3046",
     "build": "vp build",
     "preview": "vp preview",
     "deploy": "pnpm run build && wrangler deploy",
@@ -21,7 +21,6 @@
   "dependencies": {
     "@base-ui/react": "^1.6.0",
     "@better-auth/api-key": "1.6.20",
-    "@posthog/react": "^1.10.3",
     "@repo/ai": "workspace:*",
     "@repo/auth": "workspace:*",
     "@repo/db": "workspace:*",
@@ -59,7 +58,6 @@
     "lucide-react": "^0.561.0",
     "next-themes": "^0.4.6",
     "nitro": "npm:nitro-nightly@latest",
-    "posthog-node": "^5.42.0",
     "radix-ui": "^1.6.0",
     "react": "^19.2.7",
     "react-day-picker": "^10.0.1",

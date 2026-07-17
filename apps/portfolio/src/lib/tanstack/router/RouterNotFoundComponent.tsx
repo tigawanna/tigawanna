@@ -30,32 +30,7 @@ export function RouterNotFoundProduction() {
   );
 }
 
-/** In-layout not-found for shells that already provide page chrome (e.g. backstage sidebar). */
-export function RouterNotFoundSection() {
-  return (
-    <div
-      data-test="router-not-found-section"
-      className="-m-6 flex min-h-screen h-full flex-1 flex-col items-center justify-center p-6 w-full"
-    >
-      <div className="landing-void-surface relative w-full max-w-lg overflow-hidden rounded-2xl px-6 py-16">
-        <div className="landing-void-glow-center pointer-events-none absolute inset-0" />
-        <div className="relative z-10">
-          <RouterNotFoundContent homeTo="/backstage/projects" homeLabel="Back to projects" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-interface RouterNotFoundContentProps {
-  homeTo?: "/" | "/backstage/projects";
-  homeLabel?: string;
-}
-
-function RouterNotFoundContent({
-  homeTo = "/",
-  homeLabel = "Back home",
-}: RouterNotFoundContentProps) {
+function RouterNotFoundContent() {
   return (
     <div className="flex max-w-md flex-col items-center text-center">
       <SiteIcon size={88} className="text-landing-sage/35" aria-hidden />
@@ -87,11 +62,11 @@ function RouterNotFoundContent({
 
       <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
         <Link
-          to={homeTo}
+          to="/"
           data-test="router-not-found-home"
           className="rounded-full border border-landing-sage/20 bg-landing-sage/8 px-6 py-2.5 text-sm text-landing-sage transition-colors hover:bg-landing-sage/14"
         >
-          {homeLabel}
+          Back home
         </Link>
       </div>
     </div>

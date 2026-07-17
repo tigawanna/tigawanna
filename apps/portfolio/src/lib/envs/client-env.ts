@@ -2,7 +2,7 @@ import { DEFAULT_POSTHOG_HOST } from "@/lib/posthog/constants";
 import { z } from "zod";
 
 const clientEnvSchema = z.object({
-  VITE_APP_URL: z.url().default("http://localhost:3044"),
+  VITE_APP_URL: z.url().default("http://localhost:3045"),
   VITE_POSTHOG_KEY: z.string().optional(),
   VITE_POSTHOG_HOST: z.url().default(DEFAULT_POSTHOG_HOST),
 });

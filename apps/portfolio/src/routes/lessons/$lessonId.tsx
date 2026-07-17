@@ -4,7 +4,6 @@ import {
 } from "@/data-access-layer/portfolio/landng-page-query-options";
 import { LandingFooter } from "@/routes/-components/landing/layout/LandingFooter";
 import { LandingNavbar } from "@/routes/-components/landing/layout/LandingNavbar";
-import { LessonAdminEditButton } from "@/routes/lessons/-components/LessonAdminEditButton";
 import { buildLessonDetailSeoHead } from "@/utils/lesson-seo";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, redirect } from "@tanstack/react-router";
@@ -42,7 +41,7 @@ function LessonDetailContent({ lessonId }: { lessonId: string }) {
 
   return (
     <article className="mx-auto max-w-4xl h-ful min-h-screen" data-test="lesson-detail">
-      <div className="mb-8 flex items-center justify-between gap-3">
+      <div className="mb-8">
         <Link
           to="/lessons"
           search={{}}
@@ -50,7 +49,6 @@ function LessonDetailContent({ lessonId }: { lessonId: string }) {
         >
           Back to lessons
         </Link>
-        <LessonAdminEditButton lessonId={lessonId} />
       </div>
 
       <h1 className="text-balance text-center font-serif text-5xl font-semibold tracking-[-0.04em] md:text-6xl">

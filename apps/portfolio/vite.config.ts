@@ -12,10 +12,10 @@ const config = defineConfig({
   root: fileURLToPath(new URL(".", import.meta.url)),
   server: {
     host: true,
-    port: 3044,
+    port: 3045,
     hmr: {
       host: "localhost",
-      port: 3044,
+      port: 3045,
     },
   },
   resolve: {

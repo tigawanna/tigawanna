@@ -1,5 +1,3 @@
-import type { TViewer } from "@/data-access-layer/auth/viewer";
-import { rootServerMiddleware } from "@/middleware/root.server";
 import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
@@ -14,8 +12,6 @@ import { z } from "zod";
 
 interface MyRouterContext {
   queryClient: QueryClient;
-  viewer?: TViewer;
-  testValue?: string;
 }
 
 const searchparams = z.object({
@@ -24,10 +20,6 @@ const searchparams = z.object({
 });
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-  server: {
-    middleware: [...rootServerMiddleware],
-  },
-
   head: () => ({
     meta: [
       { charSet: "utf-8" },

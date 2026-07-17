@@ -10,29 +10,15 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as OgRouteImport } from './routes/og'
-import { Route as BackstageLayoutRouteImport } from './routes/_backstage/layout'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LessonsIndexRouteImport } from './routes/lessons/index'
 import { Route as CreatureFeatureIndexRouteImport } from './routes/creature-feature/index'
 import { Route as ProjectNameRouteImport } from './routes/project/$name'
 import { Route as LessonsLessonIdRouteImport } from './routes/lessons/$lessonId'
-import { Route as BackstageSignInRouteImport } from './routes/backstage/sign-in'
-import { Route as BackstageBackstageIndexRouteImport } from './routes/_backstage/backstage/index'
-import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
-import { Route as BackstageBackstageReposRouteImport } from './routes/_backstage/backstage/repos'
-import { Route as BackstageBackstageMessagesRouteImport } from './routes/_backstage/backstage/messages'
-import { Route as BackstageBackstageJournalRouteImport } from './routes/_backstage/backstage/journal'
-import { Route as BackstageBackstageProjectsIndexRouteImport } from './routes/_backstage/backstage/projects/index'
-import { Route as BackstageBackstageProjectsOwnerIndexRouteImport } from './routes/_backstage/backstage/projects/$owner/index'
-import { Route as BackstageBackstageProjectsOwnerRepoIndexRouteImport } from './routes/_backstage/backstage/projects/$owner/$repo/index'
 
 const OgRoute = OgRouteImport.update({
   id: '/og',
   path: '/og',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BackstageLayoutRoute = BackstageLayoutRouteImport.update({
-  id: '/_backstage',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -60,175 +46,66 @@ const LessonsLessonIdRoute = LessonsLessonIdRouteImport.update({
   path: '/lessons/$lessonId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BackstageSignInRoute = BackstageSignInRouteImport.update({
-  id: '/backstage/sign-in',
-  path: '/backstage/sign-in',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BackstageBackstageIndexRoute = BackstageBackstageIndexRouteImport.update({
-  id: '/backstage/',
-  path: '/backstage/',
-  getParentRoute: () => BackstageLayoutRoute,
-} as any)
-const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
-  id: '/api/auth/$',
-  path: '/api/auth/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BackstageBackstageReposRoute = BackstageBackstageReposRouteImport.update({
-  id: '/backstage/repos',
-  path: '/backstage/repos',
-  getParentRoute: () => BackstageLayoutRoute,
-} as any)
-const BackstageBackstageMessagesRoute =
-  BackstageBackstageMessagesRouteImport.update({
-    id: '/backstage/messages',
-    path: '/backstage/messages',
-    getParentRoute: () => BackstageLayoutRoute,
-  } as any)
-const BackstageBackstageJournalRoute =
-  BackstageBackstageJournalRouteImport.update({
-    id: '/backstage/journal',
-    path: '/backstage/journal',
-    getParentRoute: () => BackstageLayoutRoute,
-  } as any)
-const BackstageBackstageProjectsIndexRoute =
-  BackstageBackstageProjectsIndexRouteImport.update({
-    id: '/backstage/projects/',
-    path: '/backstage/projects/',
-    getParentRoute: () => BackstageLayoutRoute,
-  } as any)
-const BackstageBackstageProjectsOwnerIndexRoute =
-  BackstageBackstageProjectsOwnerIndexRouteImport.update({
-    id: '/backstage/projects/$owner/',
-    path: '/backstage/projects/$owner/',
-    getParentRoute: () => BackstageLayoutRoute,
-  } as any)
-const BackstageBackstageProjectsOwnerRepoIndexRoute =
-  BackstageBackstageProjectsOwnerRepoIndexRouteImport.update({
-    id: '/backstage/projects/$owner/$repo/',
-    path: '/backstage/projects/$owner/$repo/',
-    getParentRoute: () => BackstageLayoutRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/og': typeof OgRoute
-  '/backstage/sign-in': typeof BackstageSignInRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/project/$name': typeof ProjectNameRoute
   '/creature-feature/': typeof CreatureFeatureIndexRoute
   '/lessons/': typeof LessonsIndexRoute
-  '/backstage/journal': typeof BackstageBackstageJournalRoute
-  '/backstage/messages': typeof BackstageBackstageMessagesRoute
-  '/backstage/repos': typeof BackstageBackstageReposRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
-  '/backstage/': typeof BackstageBackstageIndexRoute
-  '/backstage/projects/': typeof BackstageBackstageProjectsIndexRoute
-  '/backstage/projects/$owner/': typeof BackstageBackstageProjectsOwnerIndexRoute
-  '/backstage/projects/$owner/$repo/': typeof BackstageBackstageProjectsOwnerRepoIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/og': typeof OgRoute
-  '/backstage/sign-in': typeof BackstageSignInRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/project/$name': typeof ProjectNameRoute
   '/creature-feature': typeof CreatureFeatureIndexRoute
   '/lessons': typeof LessonsIndexRoute
-  '/backstage/journal': typeof BackstageBackstageJournalRoute
-  '/backstage/messages': typeof BackstageBackstageMessagesRoute
-  '/backstage/repos': typeof BackstageBackstageReposRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
-  '/backstage': typeof BackstageBackstageIndexRoute
-  '/backstage/projects': typeof BackstageBackstageProjectsIndexRoute
-  '/backstage/projects/$owner': typeof BackstageBackstageProjectsOwnerIndexRoute
-  '/backstage/projects/$owner/$repo': typeof BackstageBackstageProjectsOwnerRepoIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_backstage': typeof BackstageLayoutRouteWithChildren
   '/og': typeof OgRoute
-  '/backstage/sign-in': typeof BackstageSignInRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/project/$name': typeof ProjectNameRoute
   '/creature-feature/': typeof CreatureFeatureIndexRoute
   '/lessons/': typeof LessonsIndexRoute
-  '/_backstage/backstage/journal': typeof BackstageBackstageJournalRoute
-  '/_backstage/backstage/messages': typeof BackstageBackstageMessagesRoute
-  '/_backstage/backstage/repos': typeof BackstageBackstageReposRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
-  '/_backstage/backstage/': typeof BackstageBackstageIndexRoute
-  '/_backstage/backstage/projects/': typeof BackstageBackstageProjectsIndexRoute
-  '/_backstage/backstage/projects/$owner/': typeof BackstageBackstageProjectsOwnerIndexRoute
-  '/_backstage/backstage/projects/$owner/$repo/': typeof BackstageBackstageProjectsOwnerRepoIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/og'
-    | '/backstage/sign-in'
     | '/lessons/$lessonId'
     | '/project/$name'
     | '/creature-feature/'
     | '/lessons/'
-    | '/backstage/journal'
-    | '/backstage/messages'
-    | '/backstage/repos'
-    | '/api/auth/$'
-    | '/backstage/'
-    | '/backstage/projects/'
-    | '/backstage/projects/$owner/'
-    | '/backstage/projects/$owner/$repo/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/og'
-    | '/backstage/sign-in'
     | '/lessons/$lessonId'
     | '/project/$name'
     | '/creature-feature'
     | '/lessons'
-    | '/backstage/journal'
-    | '/backstage/messages'
-    | '/backstage/repos'
-    | '/api/auth/$'
-    | '/backstage'
-    | '/backstage/projects'
-    | '/backstage/projects/$owner'
-    | '/backstage/projects/$owner/$repo'
   id:
     | '__root__'
     | '/'
-    | '/_backstage'
     | '/og'
-    | '/backstage/sign-in'
     | '/lessons/$lessonId'
     | '/project/$name'
     | '/creature-feature/'
     | '/lessons/'
-    | '/_backstage/backstage/journal'
-    | '/_backstage/backstage/messages'
-    | '/_backstage/backstage/repos'
-    | '/api/auth/$'
-    | '/_backstage/backstage/'
-    | '/_backstage/backstage/projects/'
-    | '/_backstage/backstage/projects/$owner/'
-    | '/_backstage/backstage/projects/$owner/$repo/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  BackstageLayoutRoute: typeof BackstageLayoutRouteWithChildren
   OgRoute: typeof OgRoute
-  BackstageSignInRoute: typeof BackstageSignInRoute
   LessonsLessonIdRoute: typeof LessonsLessonIdRoute
   ProjectNameRoute: typeof ProjectNameRoute
   CreatureFeatureIndexRoute: typeof CreatureFeatureIndexRoute
   LessonsIndexRoute: typeof LessonsIndexRoute
-  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -238,13 +115,6 @@ declare module '@tanstack/react-router' {
       path: '/og'
       fullPath: '/og'
       preLoaderRoute: typeof OgRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_backstage': {
-      id: '/_backstage'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof BackstageLayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -282,108 +152,16 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LessonsLessonIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/backstage/sign-in': {
-      id: '/backstage/sign-in'
-      path: '/backstage/sign-in'
-      fullPath: '/backstage/sign-in'
-      preLoaderRoute: typeof BackstageSignInRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_backstage/backstage/': {
-      id: '/_backstage/backstage/'
-      path: '/backstage'
-      fullPath: '/backstage/'
-      preLoaderRoute: typeof BackstageBackstageIndexRouteImport
-      parentRoute: typeof BackstageLayoutRoute
-    }
-    '/api/auth/$': {
-      id: '/api/auth/$'
-      path: '/api/auth/$'
-      fullPath: '/api/auth/$'
-      preLoaderRoute: typeof ApiAuthSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_backstage/backstage/repos': {
-      id: '/_backstage/backstage/repos'
-      path: '/backstage/repos'
-      fullPath: '/backstage/repos'
-      preLoaderRoute: typeof BackstageBackstageReposRouteImport
-      parentRoute: typeof BackstageLayoutRoute
-    }
-    '/_backstage/backstage/messages': {
-      id: '/_backstage/backstage/messages'
-      path: '/backstage/messages'
-      fullPath: '/backstage/messages'
-      preLoaderRoute: typeof BackstageBackstageMessagesRouteImport
-      parentRoute: typeof BackstageLayoutRoute
-    }
-    '/_backstage/backstage/journal': {
-      id: '/_backstage/backstage/journal'
-      path: '/backstage/journal'
-      fullPath: '/backstage/journal'
-      preLoaderRoute: typeof BackstageBackstageJournalRouteImport
-      parentRoute: typeof BackstageLayoutRoute
-    }
-    '/_backstage/backstage/projects/': {
-      id: '/_backstage/backstage/projects/'
-      path: '/backstage/projects'
-      fullPath: '/backstage/projects/'
-      preLoaderRoute: typeof BackstageBackstageProjectsIndexRouteImport
-      parentRoute: typeof BackstageLayoutRoute
-    }
-    '/_backstage/backstage/projects/$owner/': {
-      id: '/_backstage/backstage/projects/$owner/'
-      path: '/backstage/projects/$owner'
-      fullPath: '/backstage/projects/$owner/'
-      preLoaderRoute: typeof BackstageBackstageProjectsOwnerIndexRouteImport
-      parentRoute: typeof BackstageLayoutRoute
-    }
-    '/_backstage/backstage/projects/$owner/$repo/': {
-      id: '/_backstage/backstage/projects/$owner/$repo/'
-      path: '/backstage/projects/$owner/$repo'
-      fullPath: '/backstage/projects/$owner/$repo/'
-      preLoaderRoute: typeof BackstageBackstageProjectsOwnerRepoIndexRouteImport
-      parentRoute: typeof BackstageLayoutRoute
-    }
   }
 }
 
-interface BackstageLayoutRouteChildren {
-  BackstageBackstageJournalRoute: typeof BackstageBackstageJournalRoute
-  BackstageBackstageMessagesRoute: typeof BackstageBackstageMessagesRoute
-  BackstageBackstageReposRoute: typeof BackstageBackstageReposRoute
-  BackstageBackstageIndexRoute: typeof BackstageBackstageIndexRoute
-  BackstageBackstageProjectsIndexRoute: typeof BackstageBackstageProjectsIndexRoute
-  BackstageBackstageProjectsOwnerIndexRoute: typeof BackstageBackstageProjectsOwnerIndexRoute
-  BackstageBackstageProjectsOwnerRepoIndexRoute: typeof BackstageBackstageProjectsOwnerRepoIndexRoute
-}
-
-const BackstageLayoutRouteChildren: BackstageLayoutRouteChildren = {
-  BackstageBackstageJournalRoute: BackstageBackstageJournalRoute,
-  BackstageBackstageMessagesRoute: BackstageBackstageMessagesRoute,
-  BackstageBackstageReposRoute: BackstageBackstageReposRoute,
-  BackstageBackstageIndexRoute: BackstageBackstageIndexRoute,
-  BackstageBackstageProjectsIndexRoute: BackstageBackstageProjectsIndexRoute,
-  BackstageBackstageProjectsOwnerIndexRoute:
-    BackstageBackstageProjectsOwnerIndexRoute,
-  BackstageBackstageProjectsOwnerRepoIndexRoute:
-    BackstageBackstageProjectsOwnerRepoIndexRoute,
-}
-
-const BackstageLayoutRouteWithChildren = BackstageLayoutRoute._addFileChildren(
-  BackstageLayoutRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  BackstageLayoutRoute: BackstageLayoutRouteWithChildren,
   OgRoute: OgRoute,
-  BackstageSignInRoute: BackstageSignInRoute,
   LessonsLessonIdRoute: LessonsLessonIdRoute,
   ProjectNameRoute: ProjectNameRoute,
   CreatureFeatureIndexRoute: CreatureFeatureIndexRoute,
   LessonsIndexRoute: LessonsIndexRoute,
-  ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

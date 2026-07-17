@@ -1,4 +1,3 @@
-import { PostHogUserIdentity } from "@/components/posthog/PostHogUserIdentity";
 import { ClientOnly } from "@/components/wrappers/ClientOnly";
 import { clientEnv } from "@/lib/envs/client-env";
 import { DEFAULT_POSTHOG_HOST } from "@/lib/posthog/constants";
@@ -24,7 +23,6 @@ export function PostHogRoot({ children }: { children: React.ReactNode }) {
           capture_exceptions: true,
         }}
       >
-        <PostHogUserIdentity />
         {children}
       </PostHogProvider>
     </ClientOnly>

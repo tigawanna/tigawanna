@@ -14,5 +14,5 @@ export function getBaseUrl() {
     return process.env.BETTER_AUTH_URL;
   }
   console.error("No base URL found");
-  return "http://localhost:3044";
+  return "http://localhost:3045";
 }

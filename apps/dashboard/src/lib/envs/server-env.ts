@@ -32,8 +32,6 @@ const serverEnvSchema = z.object({
   DATABASE_URL: z.string().default(DEFAULT_DATABASE_URL),
   DATABASE_AUTH_TOKEN: z.string().optional(),
   VITE_APP_URL: z.string().optional(),
-  POSTHOG_API_KEY: z.string().optional(),
-  POSTHOG_HOST: z.string().optional(),
 });
 
 export function getServerEnv() {
