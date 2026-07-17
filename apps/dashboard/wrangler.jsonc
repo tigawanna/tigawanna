@@ -1,10 +1,18 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "site",
-  "compatibility_date": "2026-07-17",
-  "compatibility_flags": ["nodejs_compat"],
-  "main": "@tanstack/react-start/server-entry",
-  "observability": {
-    "enabled": true
-  }
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "tigawanna-dashboard",
+	"compatibility_date": "2026-07-17",
+	"compatibility_flags": ["nodejs_compat"],
+	"main": "@tanstack/react-start/server-entry",
+	"observability": {
+		"enabled": true,
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "tigawanna",
+			"database_id": "fbbdfcc6-d561-4c0e-8c76-e343fa4ba9a7",
+			"migrations_dir": "../../packages/db/drizzle",
+		},
+	],
 }

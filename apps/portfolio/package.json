@@ -15,8 +15,8 @@
     "db:generate": "pnpm --filter @repo/db db:generate",
     "db:studio": "DATABASE_URL=\"file:$(find .wrangler/state/v3/d1 -name '*.sqlite' ! -name metadata.sqlite 2>/dev/null | head -1)\" drizzle-kit studio --config drizzle.config.ts",
     "db:migrate": "pnpm --filter @repo/db db:migrate",
-    "db:migrate:local": "wrangler d1 migrations apply tigawanna-portfolio --local",
-    "db:migrate:remote": "wrangler d1 migrations apply tigawanna-portfolio --remote"
+    "db:migrate:local": "wrangler d1 migrations apply tigawanna --local",
+    "db:migrate:remote": "wrangler d1 migrations apply tigawanna --remote"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

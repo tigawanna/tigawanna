@@ -10,8 +10,8 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "tigawanna-portfolio",
-      // Replace with a real id from `wrangler d1 create tigawanna-portfolio` before remote deploy
+      // Same shared D1 as dashboard — paste the id from `wrangler d1 create tigawanna`
+      "database_name": "tigawanna",
       "database_id": "00000000-0000-0000-0000-000000000001",
       "migrations_dir": "../../packages/db/drizzle",
     },
