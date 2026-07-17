@@ -1,4 +1,5 @@
 import { defineConfig } from "drizzle-kit";
+import { env } from "node:process";
 
 /**
  * Local D1 / sqlite studio config for the dashboard app.
@@ -10,7 +11,7 @@ export default defineConfig({
   dialect: "sqlite",
   dbCredentials: {
     url:
-      process.env.DATABASE_URL ??
+      env.DATABASE_URL ??
       "file:.wrangler/state/v3/d1/miniflare-D1DatabaseObject/placeholder.sqlite",
   },
 });
