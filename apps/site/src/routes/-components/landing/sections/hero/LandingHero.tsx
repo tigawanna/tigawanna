@@ -1,4 +1,5 @@
 import { CreatureEggLowercaseI } from "@/components/creature-egg/CreatureEggTrigger";
+import { smoothScrollToLandingHash } from "@/lib/scroll/scroll-to-landing-hash";
 import { AppConfig } from "@/utils/system";
 import { animate, stagger } from "animejs";
 import { useEffect, useRef } from "react";
@@ -96,6 +97,10 @@ export function LandingHero() {
       <a
         href="#about"
         data-hero-reveal
+        onClick={(event) => {
+          event.preventDefault();
+          smoothScrollToLandingHash("#about");
+        }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 text-xs tracking-[0.35em] text-landing-sage/40 uppercase transition-colors hover:text-landing-sage/70"
       >
         Scroll

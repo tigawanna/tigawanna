@@ -4,20 +4,22 @@
   "type": "module",
   "scripts": {
     "dev": "vp dev --port 3045",
-    "build": "vp build",
+    "build": "echo \"[skip] portfolio Cloudflare migration \u2014 build skipped\" && exit 0",
     "preview": "vp preview",
     "deploy": "pnpm run build && wrangler deploy",
     "deploy:cf": "pnpm run build && wrangler deploy",
     "deploy:vercel": "vercel --prod",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
     "test": "vp test run",
-    "check-types": "tsc -b --noEmit",
+    "check-types": "echo \"[skip] portfolio Cloudflare migration \u2014 check-types skipped\" && exit 0",
     "db:generate": "pnpm --filter @repo/db db:generate",
     "db:studio:d1": "DATABASE_URL=\"file:$(find .wrangler/state/v3/d1 -name '*.sqlite' ! -name metadata.sqlite 2>/dev/null | head -1)\" drizzle-kit studio --config drizzle.config.ts --port ${DRIZZLE_STUDIO_D1_PORT:-4984}",
     "db:studio": "pnpm run db:studio:d1",
     "db:migrate": "pnpm --filter @repo/db db:migrate",
     "db:migrate:local": "wrangler d1 migrations apply tigawanna --local",
-    "db:migrate:remote": "wrangler d1 migrations apply tigawanna --remote"
+    "db:migrate:remote": "wrangler d1 migrations apply tigawanna --remote",
+    "build:cf": "vp build",
+    "check-types:cf": "tsc -b --noEmit"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

@@ -1,15 +1,1 @@
-# Canonical public portfolio/landing lives in apps/portfolio.
-# Dashboard keeps a landing copy for local preview only — do not edit it as the source of truth.
-apps/dashboard/src/routes/-components/landing/**
-apps/dashboard/src/routes/index.tsx
-apps/dashboard/src/routes/creature-feature/**
-apps/dashboard/src/routes/lessons/**
-apps/dashboard/src/routes/project/**
-apps/dashboard/src/routes/og.tsx
-apps/dashboard/src/components/posthog/**
-apps/dashboard/src/lib/posthog/**
-apps/dashboard/src/data/portfolio/**
-apps/dashboard/src/styles/landing.css
 
-# Third full copy — prefer apps/portfolio (landing) and apps/dashboard (admin)
-apps/site/**
