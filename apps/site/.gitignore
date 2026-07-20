@@ -25,3 +25,6 @@ lighthouse-reports-desktop/
 **/*lighthouse*.trace.json*
 **/*lighthouse*.json.gz
 
+
+# Cloudflare Wrangler local secrets (never commit)
+.dev.vars

@@ -51,3 +51,6 @@ minio/
 *.db-shm
 *.db-journal
 *.sqlite
+
+# Cloudflare Wrangler local secrets (never commit)
+.dev.vars
