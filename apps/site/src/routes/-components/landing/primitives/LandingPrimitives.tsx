@@ -1,4 +1,4 @@
-import { useScrollReveal } from "@/hooks/use-scroll-reveal";
+import { useScrollReveal } from "@/routes/-components/landing/hooks/use-scroll-reveal";
 import type { LandingSectionProps, OrganicDividerProps, ScrollRevealProps } from "@/types/landing";
 import { useRef, type ReactNode } from "react";
 import { twMerge } from "tailwind-merge";

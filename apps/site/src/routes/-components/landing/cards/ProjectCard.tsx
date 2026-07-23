@@ -1,5 +1,5 @@
 import { TimeCompponent } from "@/components/wrappers/TimeCompponent";
-import { useLandingCardMotion } from "@/hooks/use-landing-card-motion";
+import { useLandingCardMotion } from "@/routes/-components/landing/hooks/use-landing-card-motion";
 import type { GithubRepoNode } from "@/types/github";
 import { Link } from "@tanstack/react-router";
 import { Github, Globe, Lock } from "lucide-react";

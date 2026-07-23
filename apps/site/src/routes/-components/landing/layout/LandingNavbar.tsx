@@ -1,4 +1,4 @@
-import { smoothScrollToLandingHash } from "@/lib/scroll/scroll-to-landing-hash";
+import { smoothScrollToLandingHash } from "@/routes/-components/landing/utils/scroll-to-landing-hash";
 import { AppConfig } from "@/utils/system";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";

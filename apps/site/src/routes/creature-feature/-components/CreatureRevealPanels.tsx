@@ -1,4 +1,4 @@
-import { useCreaturePanelSequence } from "@/hooks/use-creature-panel-sequence";
+import { useCreaturePanelSequence } from "@/hooks/creature/use-creature-panel-sequence";
 import type { CreatureRevealPanel } from "@/types/creature-feature";
 import { animate } from "animejs";
 import { Bug, Clapperboard, Popcorn, Skull, Sparkles, Ticket } from "lucide-react";

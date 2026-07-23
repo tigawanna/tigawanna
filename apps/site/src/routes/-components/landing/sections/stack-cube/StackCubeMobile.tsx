@@ -1,5 +1,5 @@
 import { stackCubeFaces } from "@/config/info";
-import { useStackFacesReveal } from "@/hooks/use-stack-faces-reveal";
+import { useStackFacesReveal } from "@/routes/-components/landing/hooks/use-stack-faces-reveal";
 import { Bot, Code2, Server, Smartphone, type LucideIcon } from "lucide-react";
 import { useRef } from "react";
 import { CubeVisual } from "./CubeVisual";

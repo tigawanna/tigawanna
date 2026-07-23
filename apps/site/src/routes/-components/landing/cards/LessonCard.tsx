@@ -1,4 +1,4 @@
-import { useLandingCardMotion } from "@/hooks/use-landing-card-motion";
+import { useLandingCardMotion } from "@/routes/-components/landing/hooks/use-landing-card-motion";
 import type { LessonPreviewItem } from "@/types/lessons";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, ExternalLink } from "lucide-react";

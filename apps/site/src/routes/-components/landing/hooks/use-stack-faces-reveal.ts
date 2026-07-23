@@ -1,4 +1,7 @@
-import { observeLayoutResize, subscribeScroll } from "@/lib/scroll/landing-scroll";
+import {
+  observeLayoutResize,
+  subscribeScroll,
+} from "@/routes/-components/landing/utils/landing-scroll";
 import { useEffect, type RefObject } from "react";
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));

@@ -1,5 +1,5 @@
 import { CreatureEggLowercaseI } from "@/components/creature-egg/CreatureEggTrigger";
-import { smoothScrollToLandingHash } from "@/lib/scroll/scroll-to-landing-hash";
+import { smoothScrollToLandingHash } from "@/routes/-components/landing/utils/scroll-to-landing-hash";
 import { AppConfig } from "@/utils/system";
 import { animate, stagger } from "animejs";
 import { useEffect, useRef } from "react";

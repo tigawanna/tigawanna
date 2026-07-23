@@ -1,6 +1,6 @@
 import { techChoices } from "@/config/info";
-import { useTechChoiceMobileCard } from "@/hooks/use-tech-choice-mobile-card";
-import { useTechChoicePanel } from "@/hooks/use-tech-choice-panel";
+import { useTechChoiceMobileCard } from "@/routes/-components/landing/hooks/use-tech-choice-mobile-card";
+import { useTechChoicePanel } from "@/routes/-components/landing/hooks/use-tech-choice-panel";
 import { ChevronLeft, ChevronRight, Keyboard, MousePointerClick } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";

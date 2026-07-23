@@ -1,5 +1,5 @@
-import { useLandingCardMotion } from "@/hooks/use-landing-card-motion";
 import type { InfoDietSource } from "@/config/info";
+import { useLandingCardMotion } from "@/routes/-components/landing/hooks/use-landing-card-motion";
 import { ArrowUpRight, Mic, Newspaper } from "lucide-react";
 import { useRef } from "react";
 import { twMerge } from "tailwind-merge";

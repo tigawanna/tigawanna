@@ -3,7 +3,7 @@ import {
   CreatureEggTrigger,
 } from "@/components/creature-egg/CreatureEggTrigger";
 import { Button } from "@/components/ui/button";
-import { useCurvedMarquee } from "@/hooks/use-curved-marquee";
+import { useCurvedMarquee } from "@/routes/-components/landing/hooks/use-curved-marquee";
 import { unwrapUnknownError } from "@/utils/errors";
 import { AppConfig } from "@/utils/system";
 import { Link } from "@tanstack/react-router";

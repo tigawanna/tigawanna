@@ -1,6 +1,6 @@
 import { techChoices } from "@/config/info";
-import { useTechChoiceMobileCard } from "@/hooks/use-tech-choice-mobile-card";
-import { useTechChoicePanel } from "@/hooks/use-tech-choice-panel";
+import { useTechChoiceMobileCard } from "@/routes/-components/landing/hooks/use-tech-choice-mobile-card";
+import { useTechChoicePanel } from "@/routes/-components/landing/hooks/use-tech-choice-panel";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRef } from "react";
 import { ScrollReveal, SectionEyebrow } from "../../primitives";
