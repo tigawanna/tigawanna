@@ -1,5 +1,4 @@
 import { CreatureEggLowercaseI } from "../../stubs/creature-egg";
-import { smoothScrollToLandingHash } from "../../utils/scroll-to-landing-hash";
 import { AppConfig } from "../../config/system";
 import { HeroIllustration } from "./HeroIllustration";
 
@@ -7,7 +6,7 @@ export function LandingHero() {
   return (
     <section
       data-test="landing-hero"
-      className="landing-void-surface relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pt-24 pb-20 lg:pt-28"
+      className="landing-void-surface relative flex min-h-svh flex-col items-center justify-start overflow-hidden px-6 pt-40 pb-24 md:pt-48 lg:pt-[min(34vh,18rem)] lg:pb-28"
     >
       <div className="landing-hero-glow pointer-events-none absolute inset-0" />
 
@@ -17,11 +16,11 @@ export function LandingHero() {
           <CreatureEggLowercaseI />s Waweru
         </h1>
 
-        <p className="mt-6 w-full font-serif text-xl tracking-[0.02em] text-landing-sage/85 md:mt-8 md:text-2xl lg:mt-5 lg:text-center">
+        <p className="mt-6 w-full font-serif text-xl tracking-[0.02em] text-landing-sage/85 md:mt-8 md:text-2xl lg:mt-6 lg:text-center">
           {AppConfig.brief}
         </p>
 
-        <div className="mt-10 w-full max-w-md md:mt-12 lg:mt-8">
+        <div className="mt-10 w-full max-w-md md:mt-12 lg:mt-10">
           <svg
             viewBox="0 0 400 24"
             fill="none"
@@ -42,7 +41,7 @@ export function LandingHero() {
         </div>
 
         <div
-          className="mt-14 flex w-full items-center justify-center gap-8 text-landing-sage/70 md:mt-16 lg:mt-12"
+          className="mt-16 flex w-full items-center justify-center gap-8 text-landing-sage/70 md:mt-20 lg:mt-16"
           aria-hidden="true"
         >
           <div className="h-px w-16 bg-landing-sage/20 md:w-24" />
@@ -50,17 +49,6 @@ export function LandingHero() {
           <div className="h-px w-16 bg-landing-sage/20 md:w-24" />
         </div>
       </div>
-
-      <a
-        href="#about"
-        onClick={(event) => {
-          event.preventDefault();
-          smoothScrollToLandingHash("#about");
-        }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-xs tracking-[0.35em] text-landing-sage/40 uppercase transition-colors hover:text-landing-sage/70"
-      >
-        Scroll
-      </a>
     </section>
   );
 }
