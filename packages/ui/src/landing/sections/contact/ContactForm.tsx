@@ -10,6 +10,9 @@ const emptyValues: ContactFormValues = {
   message: "",
 };
 
+const fieldClassName =
+  "w-full rounded-none border border-base-content/15 bg-base-content/4 px-4 py-3 text-base text-base-content shadow-none outline-none transition-[border-color,box-shadow] placeholder:text-base-content/35 focus-visible:border-base-content/35 focus-visible:ring-1 focus-visible:ring-base-content/15";
+
 /**
  * Contact form for the shared landing package.
  * Submits through `LandingProvider.sendContactMessage` from the host app.
@@ -64,38 +67,44 @@ export function ContactForm() {
       onSubmit={(event) => {
         void onSubmit(event);
       }}
-      className="mx-auto flex w-full max-w-xl flex-col gap-6 text-left [&_input]:rounded-none [&_input]:border-0 [&_input]:border-b [&_input]:border-base-content/20 [&_input]:bg-transparent [&_input]:px-0 [&_input]:text-base-content [&_input]:shadow-none [&_input]:placeholder:text-base-content/35 [&_label]:text-sm [&_label]:font-medium [&_label]:text-base-content/70 [&_textarea]:min-h-32 [&_textarea]:rounded-none [&_textarea]:border-0 [&_textarea]:border-b [&_textarea]:border-base-content/20 [&_textarea]:bg-transparent [&_textarea]:px-0 [&_textarea]:text-base-content [&_textarea]:shadow-none [&_textarea]:placeholder:text-base-content/35"
+      className="mx-auto flex w-full max-w-xl flex-col gap-6 text-left"
     >
-      <label className="flex flex-col gap-2">
+      <label className="flex flex-col gap-2 text-sm font-medium text-base-content/70">
         <span>Name</span>
         <input
           name="name"
           value={values.name}
           placeholder="Your name"
+          autoComplete="name"
+          className={fieldClassName}
           onChange={(event) => setValues((current) => ({ ...current, name: event.target.value }))}
         />
         {fieldErrors.name ? <span className="text-xs text-error">{fieldErrors.name}</span> : null}
       </label>
 
-      <label className="flex flex-col gap-2">
+      <label className="flex flex-col gap-2 text-sm font-medium text-base-content/70">
         <span>Contact (optional)</span>
         <input
           id="contact-details"
           name="contact"
           value={values.contact ?? ""}
           placeholder="Email, phone, or anything to reach you"
+          autoComplete="email"
+          className={fieldClassName}
           onChange={(event) =>
             setValues((current) => ({ ...current, contact: event.target.value }))
           }
         />
       </label>
 
-      <label className="flex flex-col gap-2">
+      <label className="flex flex-col gap-2 text-sm font-medium text-base-content/70">
         <span>Message</span>
         <textarea
           name="message"
           value={values.message}
           placeholder="What would you like to talk about?"
+          rows={5}
+          className={`${fieldClassName} min-h-36 resize-y leading-relaxed`}
           onChange={(event) =>
             setValues((current) => ({ ...current, message: event.target.value }))
           }

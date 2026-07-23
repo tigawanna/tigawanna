@@ -74,10 +74,9 @@ export function useScrollReveal(
     };
 
     if (isInView(element)) {
-      reveal();
-      return () => {
-        anim?.revert();
-      };
+      // Already on screen at mount — leave as-is. Animating from a hidden
+      // start after first paint is what made the landing page bounce.
+      return;
     }
 
     primeHiddenState(element, y, variant);

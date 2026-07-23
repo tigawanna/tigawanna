@@ -1,7 +1,15 @@
-import { siteConfig } from "./site";
-import { siteSeoDescription, siteSeoKeywords, siteSeoOgImageAlt, siteSeoTitle } from "./info";
+import {
+  siteConfig,
+  siteSeoDescription,
+  siteSeoKeywords,
+  siteSeoOgImageAlt,
+  siteSeoTitle,
+} from "@repo/site-constants";
 import { Code2 } from "lucide-react";
 
+/**
+ * Resolves a site asset path against the configured website origin.
+ */
 function absoluteAsset(path: string) {
   return `${siteConfig.links.website}${path}`;
 }

@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@repo/github": "workspace:*",
+    "@repo/site-constants": "workspace:*",
     "animejs": "^4.5.0",
     "clsx": "^2.1.1",
     "lucide-react": "catalog:",

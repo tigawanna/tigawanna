@@ -1,4 +1,5 @@
-/** Re-export site content/SEO constants from the shared package. */
+export { siteConfig } from "./site.js";
+export type { TechChoice } from "./types.js";
 export {
   howIWorkCards,
   howIWorkSections,
@@ -14,4 +15,4 @@ export {
   type InfoDietSource,
   type InfoDietSourceKind,
   type StackCubeFace,
-} from "@repo/site-constants";
+} from "./info.js";

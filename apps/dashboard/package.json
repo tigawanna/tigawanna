@@ -30,6 +30,7 @@
     "@repo/auth": "workspace:*",
     "@repo/db": "workspace:*",
     "@repo/github": "workspace:*",
+    "@repo/site-constants": "workspace:*",
     "@repo/telegram": "workspace:*",
     "@repo/ui": "workspace:*",
     "@shikijs/langs": "^3.23.0",

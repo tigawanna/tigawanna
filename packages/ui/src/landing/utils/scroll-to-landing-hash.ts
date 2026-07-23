@@ -133,3 +133,13 @@ export function smoothScrollToLandingTop() {
   cancelActiveLandingScroll = undefined;
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
+/**
+ * Smoothly scrolls to the document bottom (footer / end of page).
+ */
+export function smoothScrollToLandingBottom() {
+  cancelActiveLandingScroll?.();
+  cancelActiveLandingScroll = undefined;
+  const top = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+  window.scrollTo({ top, behavior: "smooth" });
+}

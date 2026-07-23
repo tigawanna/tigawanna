@@ -1,12 +1,15 @@
-import { siteConfig } from "@/config/site";
 import {
+  siteConfig,
   siteSeoDescription,
   siteSeoKeywords,
   siteSeoOgImageAlt,
   siteSeoTitle,
-} from "@/config/info";
+} from "@repo/site-constants";
 import { Code2 } from "lucide-react";
 
+/**
+ * Resolves a site asset path against the configured website origin.
+ */
 function absoluteAsset(path: string) {
   return `${siteConfig.links.website}${path}`;
 }
@@ -24,6 +27,7 @@ export const AppConfig = {
   themeStorageKey: "tigawanna.theme",
   links: siteConfig.links,
   navItems: siteConfig.navItems,
+  contactHeading: siteConfig.contactHeading,
   techSkills: siteConfig.techSkills,
   assets: siteConfig.assets,
   absoluteAsset,

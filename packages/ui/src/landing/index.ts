@@ -3,6 +3,7 @@ export { LandingProvider, useLandingRuntime, type LandingRuntime } from "./provi
 
 export { LandingNavbar } from "./layout/LandingNavbar";
 export { LandingFooter } from "./layout/LandingFooter";
+export { LandingScrollFab } from "./layout/LandingScrollFab";
 export { LandingHero } from "./sections/hero/LandingHero";
 export { LandingHowIWork } from "./sections/about/LandingHowIWork";
 export { LandingFeaturesDeferred } from "./sections/features/LandingFeaturesDeferred";

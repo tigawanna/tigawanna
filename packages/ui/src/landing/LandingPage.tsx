@@ -1,6 +1,7 @@
 import type { LessonPreviewItem } from "./types/lessons";
 import { LandingFooter } from "./layout/LandingFooter";
 import { LandingNavbar } from "./layout/LandingNavbar";
+import { LandingScrollFab } from "./layout/LandingScrollFab";
 import { LandingProvider, type LandingRuntime } from "./provider";
 import { LandingHowIWork } from "./sections/about/LandingHowIWork";
 import { LandingArticles } from "./sections/articles/LandingArticles";
@@ -38,6 +39,7 @@ export function LandingPage({ runtime, lessonPreviews }: LandingPageProps) {
           <LandingCTA />
         </main>
         <LandingFooter />
+        <LandingScrollFab />
       </div>
     </LandingProvider>
   );

@@ -1,11 +1,11 @@
 import {
   howIWorkSections,
   howIWorkSummary,
+  siteConfig,
   siteSeoKeywords,
   stackCubeFaces,
   techChoices,
-} from "@/config/info";
-import { siteConfig } from "@/config/site";
+} from "@repo/site-constants";
 
 export type CompactSiteProfile = {
   name: string;
@@ -43,7 +43,7 @@ export function getCompactSiteProfile(): CompactSiteProfile {
       label: face.label,
       techs: face.techs,
     })),
-    primaryTech: techChoices.map((tech) => ({
+    primaryTech: techChoices.slice(0, 6).map((tech) => ({
       name: tech.name,
       category: tech.category,
       position: tech.position,

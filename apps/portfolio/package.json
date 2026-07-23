@@ -29,6 +29,7 @@
     "@posthog/react": "^1.10.3",
     "@repo/db": "workspace:*",
     "@repo/github": "workspace:*",
+    "@repo/site-constants": "workspace:*",
     "@repo/telegram": "workspace:*",
     "@repo/ui": "workspace:*",
     "@shikijs/langs": "^3.23.0",

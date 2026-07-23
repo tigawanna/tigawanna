@@ -7,10 +7,10 @@
 import {
   howIWorkSections,
   infoDietSources,
+  siteConfig,
   stackCubeFaces,
   techChoices,
-} from "../../../src/config/info";
-import { siteConfig } from "../../../src/config/site";
+} from "@repo/site-constants";
 import {
   STATIC_ARTICLES,
   STATIC_LESSONS,

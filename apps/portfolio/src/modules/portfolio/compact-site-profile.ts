@@ -1,11 +1,11 @@
 import {
   howIWorkSections,
   howIWorkSummary,
+  siteConfig,
   siteSeoKeywords,
   stackCubeFaces,
   techChoices,
-} from "@/config/info";
-import { siteConfig } from "@/config/site";
+} from "@repo/site-constants";
 
 export type CompactSiteProfile = {
   name: string;
