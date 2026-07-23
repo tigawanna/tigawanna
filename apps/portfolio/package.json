@@ -11,6 +11,8 @@
     "deploy:vercel": "vercel --prod",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
     "test": "vp test run",
+    "test:e2e": "playwright test --config src/routes/-components/landing/tests/playwright.config.ts",
+    "test:e2e:install": "playwright install chromium",
     "check-types": "echo \"[skip] portfolio Cloudflare migration — check-types skipped\" && exit 0",
     "db:generate": "pnpm --filter @repo/db db:generate",
     "db:studio:d1": "DATABASE_URL=\"file:$(find .wrangler/state/v3/d1 -name '*.sqlite' ! -name metadata.sqlite 2>/dev/null | head -1)\" drizzle-kit studio --config drizzle.config.ts --port ${DRIZZLE_STUDIO_D1_PORT:-4984}",
@@ -79,6 +81,7 @@
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.45.0",
+    "@playwright/test": "^1.61.1",
     "@tanstack/devtools-vite": "^0.8.1",
     "@tanstack/react-pacer-devtools": "^0.7.1",
     "@testing-library/dom": "^10.4.1",

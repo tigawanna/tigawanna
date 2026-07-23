@@ -70,9 +70,11 @@ export function LandingNavbar() {
 
         {isLandingRoute ? (
           <button
+            type="button"
             onClick={() => setMobileOpen(!mobileOpen)}
             className="text-landing-sage md:hidden"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            data-test="landing-nav-menu"
           >
             {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
