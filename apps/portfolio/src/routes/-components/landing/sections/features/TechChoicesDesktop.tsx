@@ -70,8 +70,15 @@ export function TechChoicesDesktop() {
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    activeItem.scrollIntoView({
-      block: "nearest",
+    // Scroll only the rail itself, never the page. Element.scrollIntoView()
+    // also scrolls the window, which yanked the whole landing page down to this
+    // section on initial mount.
+    const railRect = rail.getBoundingClientRect();
+    const itemRect = activeItem.getBoundingClientRect();
+    const delta = itemRect.top - railRect.top + activeItem.clientHeight / 2 - rail.clientHeight / 2;
+
+    rail.scrollBy({
+      top: delta,
       behavior: prefersReducedMotion ? "instant" : "smooth",
     });
   }, [activeIndex]);

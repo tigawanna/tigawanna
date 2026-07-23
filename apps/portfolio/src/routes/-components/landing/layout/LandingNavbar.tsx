@@ -1,7 +1,8 @@
+import { scrollToLandingHashWhenReady } from "@/lib/scroll/scroll-to-landing-hash";
 import { AppConfig } from "@/utils/system";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useState, type MouseEvent } from "react";
 
 const navLinkClass =
   "text-sm tracking-wide text-landing-sage/70 transition-colors hover:text-landing-sage";
@@ -13,6 +14,13 @@ export function LandingNavbar() {
   const isLandingRoute = useRouterState({
     select: (state) => state.location.pathname === "/",
   });
+
+  function handleHashClick(event: MouseEvent<HTMLAnchorElement>, href: string) {
+    if (!href.startsWith("#")) return;
+    event.preventDefault();
+    setMobileOpen(false);
+    scrollToLandingHashWhenReady(href);
+  }
 
   return (
     <nav
@@ -30,7 +38,12 @@ export function LandingNavbar() {
         {isLandingRoute ? (
           <div className="hidden flex-1 items-center justify-center gap-10 lg:flex">
             {AppConfig.navItems.map((item) => (
-              <a key={item.label} href={item.href} className={navLinkClass}>
+              <a
+                key={item.label}
+                href={item.href}
+                onClick={(event) => handleHashClick(event, item.href)}
+                className={navLinkClass}
+              >
                 {item.label}
               </a>
             ))}
@@ -45,7 +58,11 @@ export function LandingNavbar() {
             <p className="font-serif text-sm text-landing-sage/80">Nairobi</p>
           </div>
           {isLandingRoute ? (
-            <a href="#contact" className={ctaClass}>
+            <a
+              href="#contact"
+              onClick={(event) => handleHashClick(event, "#contact")}
+              className={ctaClass}
+            >
               Get in touch
             </a>
           ) : null}
@@ -68,7 +85,7 @@ export function LandingNavbar() {
             <a
               key={item.label}
               href={item.href}
-              onClick={() => setMobileOpen(false)}
+              onClick={(event) => handleHashClick(event, item.href)}
               className="block text-landing-sage/75 transition-colors hover:text-landing-sage"
             >
               {item.label}
@@ -76,7 +93,7 @@ export function LandingNavbar() {
           ))}
           <a
             href="#contact"
-            onClick={() => setMobileOpen(false)}
+            onClick={(event) => handleHashClick(event, "#contact")}
             className={`inline-flex ${ctaClass}`}
           >
             Get in touch
