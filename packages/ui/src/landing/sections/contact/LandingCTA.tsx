@@ -27,7 +27,7 @@ export function LandingCTA() {
     <LandingSection
       id="contact"
       tone="base"
-      className="relative z-0 pb-40 text-base-content md:pb-52"
+      className="relative z-0 pb-40 text-base-content md:pb-52 mb-30"
     >
       <div className="container">
         <div className="mx-auto grid max-w-5xl gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start lg:gap-16">
