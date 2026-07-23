@@ -1,4 +1,4 @@
-import { useLandingCardMotion } from "@/hooks/use-landing-card-motion";
+import { useLandingCardMotion } from "@/routes/-components/landing/hooks/use-landing-card-motion";
 import type { LessonPreviewItem } from "@/types/lessons";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, ExternalLink } from "lucide-react";
@@ -35,8 +35,7 @@ export function LessonCard({ item, className, tone = 0 }: LessonCardProps) {
         "landing-card group flex flex-col overflow-hidden",
         cardSurfaces[tone],
         className,
-      )}
-    >
+      )}>
       <div className="flex flex-1 flex-col gap-3 p-6 pt-4">
         <div className="flex items-center justify-between gap-2">
           <span className="text-[0.65rem] font-semibold tracking-[0.22em] text-landing-olive uppercase">
@@ -57,8 +56,7 @@ export function LessonCard({ item, className, tone = 0 }: LessonCardProps) {
           <Link
             to="/lessons/$lessonId"
             params={{ lessonId: item.id }}
-            className="inline-flex min-h-6 items-center gap-1 text-xs font-medium text-landing-sage transition-colors hover:text-landing-cream"
-          >
+            className="inline-flex min-h-6 items-center gap-1 text-xs font-medium text-landing-sage transition-colors hover:text-landing-cream">
             <span className="sr-only">{item.title}: </span>
             Read lesson
             <ArrowUpRight className="size-3.5" aria-hidden="true" />
@@ -69,8 +67,7 @@ export function LessonCard({ item, className, tone = 0 }: LessonCardProps) {
               href={item.gist}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs text-landing-sage/50 transition-colors hover:text-landing-cream"
-            >
+              className="inline-flex items-center gap-1 text-xs text-landing-sage/50 transition-colors hover:text-landing-cream">
               Gist
               <ExternalLink className="size-3.5" />
             </a>
@@ -90,8 +87,7 @@ export function LessonCard({ item, className, tone = 0 }: LessonCardProps) {
               "pointer-events-none absolute inset-x-0 bottom-0 flex h-12 items-end justify-center bg-linear-to-t to-transparent pb-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
               previewFades[tone],
             )}
-            aria-hidden="true"
-          >
+            aria-hidden="true">
             <span className="inline-flex items-center gap-1 text-[0.65rem] font-medium text-landing-cream/90">
               Read lesson
               <ArrowUpRight className="size-3" />

@@ -1,4 +1,4 @@
-import { useCurvedSectionsMotion } from "@/hooks/use-curved-sections-motion";
+import { useCurvedSectionsMotion } from "@/routes/-components/landing/hooks/use-curved-sections-motion";
 import type { CurvedNumberedSectionsProps } from "@/types/curved-sections";
 import { useRef } from "react";
 import { twMerge } from "tailwind-merge";

@@ -1,4 +1,4 @@
-import { useStackTraceFlood } from "@/hooks/use-stack-trace-flood";
+import { useStackTraceFlood } from "@/hooks/creature/use-stack-trace-flood";
 import { getStackTraceLines } from "@/modules/creature-feature/stack-trace";
 import type { StackTraceTone } from "@/types/creature-feature";
 import { useRef, useState } from "react";

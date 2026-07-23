@@ -1,5 +1,5 @@
-import { useLandingCardMotion } from "@/hooks/use-landing-card-motion";
 import type { InfoDietSource } from "@/config/info";
+import { useLandingCardMotion } from "@/routes/-components/landing/hooks/use-landing-card-motion";
 import { ArrowUpRight, Mic, Newspaper } from "lucide-react";
 import { useRef } from "react";
 import { twMerge } from "tailwind-merge";
@@ -30,8 +30,7 @@ export function InfoDietCard({ source, className }: InfoDietCardProps) {
       className={twMerge(
         "landing-card group relative flex h-full flex-col gap-4 border-landing-cream/10 bg-landing-panel p-6 transition-colors",
         className,
-      )}
-    >
+      )}>
       <div className="flex items-start justify-between gap-4">
         <span className="grid size-11 shrink-0 place-items-center rounded-full border border-landing-cream/12 bg-landing-cream/6 text-landing-sage transition-colors group-hover:border-landing-cream/22 group-hover:text-landing-cream">
           <Icon className="size-5" strokeWidth={1.6} aria-hidden="true" />

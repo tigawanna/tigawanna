@@ -106,3 +106,20 @@ export function scrollToLandingHashWhenReady(
 
   return cleanup;
 }
+
+let cancelActiveLandingScroll: (() => void) | undefined;
+
+/**
+ * Smoothly scrolls to a landing section for in-page nav clicks.
+ *
+ * Cancels any scroll still in flight (e.g. rapid clicks) before starting a new
+ * one, and drives the scroll from JS so it bypasses the browser's native anchor
+ * jump. This avoids TanStack Router's scroll restoration overriding the target
+ * on the first click, and keeps correcting for below-the-fold hydration shifts.
+ *
+ * @param hash - Target section hash, with or without a leading "#".
+ */
+export function smoothScrollToLandingHash(hash: string) {
+  cancelActiveLandingScroll?.();
+  cancelActiveLandingScroll = scrollToLandingHashWhenReady(hash, { behavior: "smooth" });
+}

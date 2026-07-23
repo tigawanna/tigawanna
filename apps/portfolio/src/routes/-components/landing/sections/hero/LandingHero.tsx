@@ -1,5 +1,5 @@
 import { CreatureEggLowercaseI } from "@/components/creature-egg/CreatureEggTrigger";
-import { scrollToLandingHashWhenReady } from "@/lib/scroll/scroll-to-landing-hash";
+import { smoothScrollToLandingHash } from "@/routes/-components/landing/utils/scroll-to-landing-hash";
 import { AppConfig } from "@/utils/system";
 import { animate, stagger } from "animejs";
 import { useEffect, useRef } from "react";
@@ -42,24 +42,21 @@ export function LandingHero() {
     <section
       ref={sectionRef}
       data-test="landing-hero"
-      className="landing-void-surface relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pt-24 pb-20 lg:pt-28"
-    >
+      className="landing-void-surface relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pt-24 pb-20 lg:pt-28">
       <div className="landing-hero-glow pointer-events-none absolute inset-0" />
 
       <div className="relative z-10 flex w-full max-w-6xl flex-col items-center text-center">
         <h1
           data-hero-reveal
           data-hero-reveal-motion
-          className="w-full font-serif text-7xl leading-[0.9] font-medium tracking-[-0.04em] md:text-8xl lg:text-[7rem] lg:whitespace-nowrap xl:text-[8.5rem] 2xl:text-[9rem]"
-        >
+          className="w-full font-serif text-7xl leading-[0.9] font-medium tracking-[-0.04em] md:text-8xl lg:text-[7rem] lg:whitespace-nowrap xl:text-[8.5rem] 2xl:text-[9rem]">
           Denn
           <CreatureEggLowercaseI />s Waweru
         </h1>
 
         <p
           data-hero-reveal
-          className="mt-6 w-full font-serif text-xl tracking-[0.02em] text-landing-sage/85 md:mt-8 md:text-2xl lg:mt-5 lg:text-center"
-        >
+          className="mt-6 w-full font-serif text-xl tracking-[0.02em] text-landing-sage/85 md:mt-8 md:text-2xl lg:mt-5 lg:text-center">
           {AppConfig.brief}
         </p>
 
@@ -69,8 +66,7 @@ export function LandingHero() {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             className="mx-auto h-6 w-full max-w-sm text-landing-sage/35"
-            aria-hidden="true"
-          >
+            aria-hidden="true">
             <path
               d="M0 14C60 4 120 22 200 12C280 2 340 20 400 10"
               stroke="currentColor"
@@ -86,8 +82,7 @@ export function LandingHero() {
         <div
           data-hero-reveal
           className="mt-14 flex w-full items-center justify-center gap-8 text-landing-sage/70 md:mt-16 lg:mt-12"
-          aria-hidden="true"
-        >
+          aria-hidden="true">
           <div className="h-px w-16 bg-landing-sage/20 md:w-24" />
           <HeroIllustration />
           <div className="h-px w-16 bg-landing-sage/20 md:w-24" />
@@ -99,10 +94,9 @@ export function LandingHero() {
         data-hero-reveal
         onClick={(event) => {
           event.preventDefault();
-          scrollToLandingHashWhenReady("#about");
+          smoothScrollToLandingHash("#about");
         }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-xs tracking-[0.35em] text-landing-sage/40 uppercase transition-colors hover:text-landing-sage/70"
-      >
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-xs tracking-[0.35em] text-landing-sage/40 uppercase transition-colors hover:text-landing-sage/70">
         Scroll
       </a>
     </section>

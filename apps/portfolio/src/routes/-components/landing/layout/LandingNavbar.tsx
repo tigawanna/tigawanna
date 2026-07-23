@@ -1,4 +1,4 @@
-import { scrollToLandingHashWhenReady } from "@/lib/scroll/scroll-to-landing-hash";
+import { smoothScrollToLandingHash } from "@/routes/-components/landing/utils/scroll-to-landing-hash";
 import { AppConfig } from "@/utils/system";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
@@ -19,19 +19,17 @@ export function LandingNavbar() {
     if (!href.startsWith("#")) return;
     event.preventDefault();
     setMobileOpen(false);
-    scrollToLandingHashWhenReady(href);
+    smoothScrollToLandingHash(href);
   }
 
   return (
     <nav
       data-test="landing-navbar"
-      className="fixed top-0 right-0 left-0 z-50 bg-landing-void/80 backdrop-blur-sm"
-    >
+      className="fixed top-0 right-0 left-0 z-50 bg-landing-void/80 backdrop-blur-sm">
       <div className="container flex h-20 items-center justify-between gap-6">
         <Link
           to="/"
-          className="shrink-0 font-serif text-lg tracking-tight text-landing-sage md:text-xl"
-        >
+          className="shrink-0 font-serif text-lg tracking-tight text-landing-sage md:text-xl">
           tigawanna
         </Link>
 
@@ -42,8 +40,7 @@ export function LandingNavbar() {
                 key={item.label}
                 href={item.href}
                 onClick={(event) => handleHashClick(event, item.href)}
-                className={navLinkClass}
-              >
+                className={navLinkClass}>
                 {item.label}
               </a>
             ))}
@@ -61,8 +58,7 @@ export function LandingNavbar() {
             <a
               href="#contact"
               onClick={(event) => handleHashClick(event, "#contact")}
-              className={ctaClass}
-            >
+              className={ctaClass}>
               Get in touch
             </a>
           ) : null}
@@ -72,8 +68,7 @@ export function LandingNavbar() {
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="text-landing-sage md:hidden"
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          >
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}>
             {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
         ) : null}
@@ -86,16 +81,14 @@ export function LandingNavbar() {
               key={item.label}
               href={item.href}
               onClick={(event) => handleHashClick(event, item.href)}
-              className="block text-landing-sage/75 transition-colors hover:text-landing-sage"
-            >
+              className="block text-landing-sage/75 transition-colors hover:text-landing-sage">
               {item.label}
             </a>
           ))}
           <a
             href="#contact"
             onClick={(event) => handleHashClick(event, "#contact")}
-            className={`inline-flex ${ctaClass}`}
-          >
+            className={`inline-flex ${ctaClass}`}>
             Get in touch
           </a>
         </div>
