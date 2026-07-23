@@ -10,8 +10,11 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "lucide-react": "catalog:",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "tailwind-merge": "catalog:",
+    "tailwindcss": "catalog:"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",

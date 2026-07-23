@@ -49,7 +49,8 @@ export function LandingSection({
         "relative scroll-mt-20 overflow-hidden py-24 md:py-32",
         sectionToneClasses[tone],
         className,
-      )}>
+      )}
+    >
       {children}
     </section>
   );
@@ -80,7 +81,8 @@ export function OrganicDivider({ className, flip = false, tone = "base" }: Organ
         flip ? "-bottom-px rotate-180" : "-top-px",
         dividerToneClasses[tone],
         className,
-      )}>
+      )}
+    >
       <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="h-full w-full fill-current">
         <path d="M0 68L60 62C120 56 240 44 360 47C480 50 600 68 720 76C840 84 960 82 1080 70C1200 58 1320 36 1380 25L1440 14V120H0V68Z" />
         <path

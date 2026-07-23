@@ -7,7 +7,6 @@ import { defineConfig } from "vite-plus";
 
 import tailwindcss from "@tailwindcss/vite";
 
-
 const config = defineConfig({
   root: fileURLToPath(new URL(".", import.meta.url)),
   server: {

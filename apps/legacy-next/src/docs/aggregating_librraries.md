@@ -493,14 +493,7 @@ export type PlainDecodedPackageJson = RequiredDecodedPackageJson & {
 export type DecodedPackageJsonList = RequiredDecodedPackageJson;
 
 export type DepsComBo =
-  | "React + Vite"
-  | "React"
-  | "Vite"
-  | "Rakkasjs"
-  | "Nextjs"
-  | "Nodejs"
-  | "Deno"
-  | "Bun";
+  "React + Vite" | "React" | "Vite" | "Rakkasjs" | "Nextjs" | "Nodejs" | "Deno" | "Bun";
 
 export interface Packageinfo {
   name: string;

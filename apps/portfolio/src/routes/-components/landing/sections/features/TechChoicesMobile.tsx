@@ -39,7 +39,8 @@ export function TechChoicesMobile() {
           <div
             ref={cardRef}
             data-test="tech-choice-card-mobile"
-            className="relative w-full touch-pan-y overflow-hidden rounded-none border border-landing-cream/12 bg-landing-panel/82 px-12 py-6 pb-14 shadow-xl shadow-black/20 will-change-transform">
+            className="relative w-full touch-pan-y overflow-hidden rounded-none border border-landing-cream/12 bg-landing-panel/82 px-12 py-6 pb-14 shadow-xl shadow-black/20 will-change-transform"
+          >
             <TechChoiceDetailPanel choice={activeChoice} index={activeIndex} />
 
             <button
@@ -49,7 +50,8 @@ export function TechChoicesMobile() {
               aria-label="Previous tool"
               disabled={isFirst}
               onClick={() => goToIndex(activeIndex - 1)}
-              className="btn btn-ghost btn-circle absolute top-1/2 left-2 z-20 size-10 min-h-10 -translate-y-1/2 border border-landing-cream/12 bg-landing-panel/90 backdrop-blur-sm disabled:pointer-events-none disabled:opacity-30">
+              className="btn btn-ghost btn-circle absolute top-1/2 left-2 z-20 size-10 min-h-10 -translate-y-1/2 border border-landing-cream/12 bg-landing-panel/90 backdrop-blur-sm disabled:pointer-events-none disabled:opacity-30"
+            >
               <ChevronLeft className="size-5" />
             </button>
 
@@ -60,7 +62,8 @@ export function TechChoicesMobile() {
               aria-label="Next tool"
               disabled={isLast}
               onClick={() => goToIndex(activeIndex + 1)}
-              className="btn btn-ghost btn-circle absolute top-1/2 right-2 z-20 size-10 min-h-10 -translate-y-1/2 border border-landing-cream/12 bg-landing-panel/90 backdrop-blur-sm disabled:pointer-events-none disabled:opacity-30">
+              className="btn btn-ghost btn-circle absolute top-1/2 right-2 z-20 size-10 min-h-10 -translate-y-1/2 border border-landing-cream/12 bg-landing-panel/90 backdrop-blur-sm disabled:pointer-events-none disabled:opacity-30"
+            >
               <ChevronRight className="size-5" />
             </button>
 

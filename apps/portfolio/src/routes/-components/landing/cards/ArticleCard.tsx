@@ -19,7 +19,8 @@ export function ArticleCard({ article, className }: ArticleCardProps) {
     <article
       ref={cardRef}
       data-test="article-card"
-      className={twMerge("landing-card group relative flex flex-col overflow-hidden", className)}>
+      className={twMerge("landing-card group relative flex flex-col overflow-hidden", className)}
+    >
       <div className="landing-card-media relative h-48 shrink-0 overflow-hidden">
         {imageUrl ? (
           <>
@@ -60,7 +61,8 @@ export function ArticleCard({ article, className }: ArticleCardProps) {
             href={article.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-6 items-center gap-1 text-xs font-medium text-landing-sage transition-colors hover:text-landing-cream">
+            className="inline-flex min-h-6 items-center gap-1 text-xs font-medium text-landing-sage transition-colors hover:text-landing-cream"
+          >
             <span className="sr-only">{article.title}: </span>
             Read article
             <ArrowUpRight className="size-3.5" aria-hidden="true" />

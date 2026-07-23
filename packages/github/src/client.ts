@@ -102,7 +102,6 @@ export class GitHubClient {
         rateLimit: result.rateLimit ?? null,
       };
     } catch (error: unknown) {
-  
       if (isIgnorableGraphqlAggregateError(error)) {
         return {
           data: {
@@ -154,8 +153,6 @@ export class GitHubClient {
       ENRICHMENT_RECENT_REPOS_QUERY,
       { variables: { first: limit } },
     );
-
-
 
     return filterRepoNodes(result.viewer.repositories.nodes, { excludePrivate: true }).map(
       mapEnrichmentRepoNode,

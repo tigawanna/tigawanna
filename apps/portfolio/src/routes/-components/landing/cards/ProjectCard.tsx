@@ -26,7 +26,8 @@ export function PrivateProjectCard({ repo, className }: ProjectCardProps) {
       className={twMerge(
         "landing-card flex min-h-[320px] flex-col items-center justify-center gap-4 overflow-hidden p-7 text-center",
         className,
-      )}>
+      )}
+    >
       <div className="grid size-14 place-items-center rounded-none border border-landing-cream/10 bg-landing-cream/5 text-landing-sage/50">
         <Lock className="size-5" />
       </div>
@@ -57,7 +58,8 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
     <article
       ref={cardRef}
       data-test="project-card"
-      className={twMerge("landing-card group relative flex flex-col overflow-hidden", className)}>
+      className={twMerge("landing-card group relative flex flex-col overflow-hidden", className)}
+    >
       <div className="landing-card-media relative h-48 shrink-0 overflow-hidden">
         {imageUrl ? (
           <>
@@ -106,7 +108,8 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
                 href={repo.homepageUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs text-landing-sage/60 transition-colors hover:text-landing-cream">
+                className="inline-flex items-center gap-1.5 text-xs text-landing-sage/60 transition-colors hover:text-landing-cream"
+              >
                 <Globe className="size-3.5" />
                 Site
               </a>
@@ -115,7 +118,8 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
               href={repo.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs text-landing-sage/60 transition-colors hover:text-landing-cream">
+              className="inline-flex items-center gap-1.5 text-xs text-landing-sage/60 transition-colors hover:text-landing-cream"
+            >
               <Github className="size-3.5" />
               Source
             </a>
@@ -124,7 +128,8 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
           <Link
             to="/project/$name"
             params={{ name: projectRouteParam(repo.nameWithOwner) }}
-            className="rounded-none border border-landing-cream/15 px-3.5 py-1.5 text-xs font-medium text-landing-sage/75 transition-all hover:border-landing-cream/30 hover:bg-landing-cream/5 hover:text-landing-cream">
+            className="rounded-none border border-landing-cream/15 px-3.5 py-1.5 text-xs font-medium text-landing-sage/75 transition-all hover:border-landing-cream/30 hover:bg-landing-cream/5 hover:text-landing-cream"
+          >
             Details
           </Link>
         </div>

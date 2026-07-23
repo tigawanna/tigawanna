@@ -6,13 +6,13 @@ The package is split so **server-only code never leaks into the browser bundle**
 
 ## Package layout
 
-| Export | Use for | Safe in browser? |
-| --- | --- | --- |
-| `@repo/db` | Schema tables, query helpers (`eq`, `count`, …), pagination utils, `isTursoRemote` | Yes |
-| `@repo/db/client` | Remote Turso via `@libsql/client/http` (`createDb`) | Yes (HTTP only) |
-| `@repo/db/local-client` | Local `file:` SQLite via native `@libsql/client` (`createLocalDb`) | **No** — Node/native only |
-| `@repo/db/d1-client` | Cloudflare D1 binding via `drizzle-orm/d1` (`createD1Db`) | **No** — Workers / server only |
-| `@repo/db/constants` | `DEFAULT_DATABASE_URL` | Yes |
+| Export                  | Use for                                                                            | Safe in browser?               |
+| ----------------------- | ---------------------------------------------------------------------------------- | ------------------------------ |
+| `@repo/db`              | Schema tables, query helpers (`eq`, `count`, …), pagination utils, `isTursoRemote` | Yes                            |
+| `@repo/db/client`       | Remote Turso via `@libsql/client/http` (`createDb`)                                | Yes (HTTP only)                |
+| `@repo/db/local-client` | Local `file:` SQLite via native `@libsql/client` (`createLocalDb`)                 | **No** — Node/native only      |
+| `@repo/db/d1-client`    | Cloudflare D1 binding via `drizzle-orm/d1` (`createD1Db`)                          | **No** — Workers / server only |
+| `@repo/db/constants`    | `DEFAULT_DATABASE_URL`                                                             | Yes                            |
 
 ### Why multiple clients?
 
@@ -106,13 +106,16 @@ If a module imported by the client exports a plain async function that touches t
 
 ```ts
 // journal.server.ts
-export async function fetchJournalLessonPage(page: number, perPage: number) { /* ... */ }
+export async function fetchJournalLessonPage(page: number, perPage: number) {
+  /* ... */
+}
 
 // lessons.ts — static import, only referenced inside handlers
 import { fetchLessonsPage } from "./lessons.server";
 
-export const getLessons = createServerFn({ method: "GET" })
-  .handler(async ({ data }) => fetchLessonsPage(data.page, data.perPage));
+export const getLessons = createServerFn({ method: "GET" }).handler(async ({ data }) =>
+  fetchLessonsPage(data.page, data.perPage),
+);
 ```
 
 ## Environment variables
@@ -140,10 +143,10 @@ pnpm --filter site db:studio
 
 ## Common mistakes
 
-| Mistake | Symptom | Fix |
-| --- | --- | --- |
-| Leaky helper in `.functions.ts` | `[import-protection] Import denied` | Move DB logic to `.server.ts`; call only from handlers |
-| Dynamic `import()` of `.server.*` | Same error | Use static imports per TanStack docs |
-| `get-db.server` in client-reachable file | Import denied | Route through `domain.server.ts` |
-| Mixed barrel re-exporting `.server` modules | Transitive leak | Split safe and server-only entry points |
-| Putting native libsql in `@repo/db/client` | `node:fs` in browser | Keep HTTP in `client.ts`, native in `local-client.ts` |
+| Mistake                                     | Symptom                             | Fix                                                    |
+| ------------------------------------------- | ----------------------------------- | ------------------------------------------------------ |
+| Leaky helper in `.functions.ts`             | `[import-protection] Import denied` | Move DB logic to `.server.ts`; call only from handlers |
+| Dynamic `import()` of `.server.*`           | Same error                          | Use static imports per TanStack docs                   |
+| `get-db.server` in client-reachable file    | Import denied                       | Route through `domain.server.ts`                       |
+| Mixed barrel re-exporting `.server` modules | Transitive leak                     | Split safe and server-only entry points                |
+| Putting native libsql in `@repo/db/client`  | `node:fs` in browser                | Keep HTTP in `client.ts`, native in `local-client.ts`  |

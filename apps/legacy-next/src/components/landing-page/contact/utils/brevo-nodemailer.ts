@@ -37,8 +37,6 @@ export async function sendEmailwithBrevoSmtpAction(
     sender_message: formData.get("sender_message"),
   };
 
-
-
   const mailOptions = {
     from: mail_from,
     to: mail_to,
@@ -76,5 +74,4 @@ export async function sendEmailwithBrevoSmtpAction(
         fieldValues: prevState?.fieldValues,
       };
     });
-
 }
