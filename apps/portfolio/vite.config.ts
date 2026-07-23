@@ -6,7 +6,7 @@ import { fileURLToPath, URL } from "url";
 import { defineConfig } from "vite-plus";
 
 import tailwindcss from "@tailwindcss/vite";
-import evlog from "evlog/vite";
+
 
 const config = defineConfig({
   root: fileURLToPath(new URL(".", import.meta.url)),
@@ -27,7 +27,6 @@ const config = defineConfig({
   plugins: [
     cloudflare({ viteEnvironment: { name: "ssr" } }),
     devtools(),
-    evlog({ service: "tigawanna-site", sourceLocation: "dev" }),
     tanstackStart({
       router: {
         routeToken: "layout",
