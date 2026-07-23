@@ -26,7 +26,7 @@ export function assertLandingSectionId(id: string): asserts id is LandingSection
 /**
  * Opens the landing page with network mocks installed and waits for the shell.
  *
- * Set `LANDING_PATH=/gg` to exercise the shared `@repo/ui/landing` route.
+ * Set `LANDING_PATH=/gg` to exercise the `/gg` alias (same shared package as `/`).
  */
 export async function openLanding(page: Page) {
   await installLandingNetworkMocks(page);

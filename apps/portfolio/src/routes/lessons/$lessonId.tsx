@@ -2,9 +2,8 @@ import {
   lessonHtmlQueryOptions,
   lessonQueryOptions,
 } from "@/data-access-layer/portfolio/landng-page-query-options";
-import { LandingFooter } from "@/routes/-components/landing/layout/LandingFooter";
-import { LandingNavbar } from "@/routes/-components/landing/layout/LandingNavbar";
 import { buildLessonDetailSeoHead } from "@/utils/lesson-seo";
+import { LandingFooter, LandingNavbar } from "@repo/ui/landing";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, redirect } from "@tanstack/react-router";
 import { CalendarRange, ExternalLink } from "lucide-react";

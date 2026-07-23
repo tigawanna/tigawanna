@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
-import { contactFormSchema, type ContactFormValues } from "./contact-schema";
+import { contactFormSchema, type ContactFormValues } from "@repo/ui/landing";
 import { getTelegramClient } from "@/lib/telegram/client";
 import { persistContactMessage } from "./contact.server";
 

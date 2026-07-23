@@ -12,7 +12,7 @@ const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:3045";
  *
  * E2E lives with the app (not `@repo/ui`) because it needs a running host,
  * route tree, QueryClient, and server-fn adapters. Point `LANDING_PATH`
- * at `/` (local components) or `/gg` (shared `@repo/ui/landing`).
+ * at `/` or `/gg` (both mount shared `@repo/ui/landing`).
  */
 export default defineConfig({
   testDir: testsDir,

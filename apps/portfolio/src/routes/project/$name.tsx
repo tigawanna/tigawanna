@@ -1,6 +1,5 @@
 import { getRepoDetail, getRepoReadmeHtml } from "@/modules/github/repo-detail";
-import { LandingFooter } from "@/routes/-components/landing/layout/LandingFooter";
-import { LandingNavbar } from "@/routes/-components/landing/layout/LandingNavbar";
+import { LandingFooter, LandingNavbar } from "@repo/ui/landing";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, redirect } from "@tanstack/react-router";
 import { Github, Globe } from "lucide-react";

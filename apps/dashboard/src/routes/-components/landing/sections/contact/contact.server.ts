@@ -1,6 +1,6 @@
 import { getDb } from "@/lib/db/get-db.server";
 import { contactMessages } from "@repo/db";
-import type { ContactFormValues } from "./contact-schema";
+import type { ContactFormValues } from "@repo/ui/landing";
 
 export async function persistContactMessage(
   data: ContactFormValues,

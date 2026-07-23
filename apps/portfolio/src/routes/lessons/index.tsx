@@ -1,9 +1,8 @@
+import { LandingFooter, LandingNavbar } from "@repo/ui/landing";
 import {
   LESSONS_LIST_PER_PAGE,
   lessonsListQueryOptions,
 } from "@/data-access-layer/portfolio/landng-page-query-options";
-import { LandingFooter } from "@/routes/-components/landing/layout/LandingFooter";
-import { LandingNavbar } from "@/routes/-components/landing/layout/LandingNavbar";
 import { buildLessonsIndexSeoHead } from "@/utils/lesson-seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";

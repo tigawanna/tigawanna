@@ -1,4 +1,4 @@
-import { useScrollReveal } from "@/routes/-components/landing/hooks/use-scroll-reveal";
+import { useScrollReveal } from "@repo/ui/landing";
 import { twMerge } from "tailwind-merge";
 import { useRef, type ReactNode } from "react";
 

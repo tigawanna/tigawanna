@@ -1,9 +1,9 @@
+import { sendContactMessage } from "@/routes/-components/landing/sections/contact/contact.functions";
+import { contactFormSchema } from "@repo/ui/landing";
 import { isWebMcpAvailable } from "@/lib/webmcp/is-webmcp-available";
 import type { WebMcpToolDefinition } from "@/lib/webmcp/types";
 import { getCompactSiteProfile } from "@/modules/portfolio/compact-site-profile";
 import { findRelevantProjects } from "@/modules/portfolio/find-relevant-projects";
-import { sendContactMessage } from "@/routes/-components/landing/sections/contact/contact.functions";
-import { contactFormSchema } from "@/routes/-components/landing/sections/contact/contact-schema";
 import type { GithubRepoNode } from "@/types/github";
 import { unwrapUnknownError } from "@/utils/errors";
 

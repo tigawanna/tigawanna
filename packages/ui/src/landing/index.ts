@@ -13,6 +13,14 @@ export { LandingLessonsDeferred } from "./sections/lessons/LandingLessonsDeferre
 export { LandingCTA } from "./sections/contact/LandingCTA";
 export { StackCubeDeferred } from "./sections/stack-cube/StackCubeDeferred";
 
+export { LessonCard } from "./cards/LessonCard";
+export { PortfolioGridSkeleton } from "./cards/PortfolioGridSkeleton";
+export { contactFormSchema, type ContactFormValues } from "./sections/contact/contact-schema";
+export type { LessonPreviewItem } from "./types/lessons";
+
+export { useScrollReveal } from "./hooks/use-scroll-reveal";
+export { getScrollRestorationKey } from "./utils/scroll-restoration-key";
+
 export { AppConfig } from "./config/system";
 export { siteConfig } from "./config/site";
 export * from "./config/info";

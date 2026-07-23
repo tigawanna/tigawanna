@@ -8,7 +8,7 @@ These Playwright tests belong to the **portfolio app**, not `@repo/ui`.
 | ------------------------------ | ------------------ |
 | Running HTTP server / SSR      | App                |
 | QueryClient + server fns       | App                |
-| Route tree (`/` vs `/gg`)      | App                |
+| Route tree                     | App                |
 | Network stubs for `/_serverFn` | App                |
 | Presentational landing UI      | `@repo/ui/landing` |
 
@@ -17,11 +17,13 @@ composition.
 
 ## Routes under test
 
+Both `/` and `/gg` mount the shared `@repo/ui/landing` `LandingPage`.
+
 ```bash
-# Local landing components (apps/portfolio/.../landing)
+# Default: shared landing at /
 pnpm test:e2e
 
-# Shared package mounted at /gg
+# Explicit alias route (same package)
 pnpm test:e2e:gg
 ```
 

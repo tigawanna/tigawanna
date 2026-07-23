@@ -1,3 +1,4 @@
+import { LessonCard, PortfolioGridSkeleton } from "@repo/ui/landing";
 import { TSRListPagination } from "@/components/pagination/TSRListPagination";
 import { SearchBox } from "@/components/search/SearchBox";
 import { usePageSearchQuery } from "@/components/search/use-page-search-query";
@@ -21,8 +22,6 @@ import {
   LESSONS_LIST_PER_PAGE,
   lessonsListQueryOptions,
 } from "@/data-access-layer/portfolio/landng-page-query-options";
-import { LessonCard } from "@/routes/-components/landing/cards/LessonCard";
-import { PortfolioGridSkeleton } from "@/routes/-components/landing/cards/PortfolioGridSkeleton";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { BookOpen, SearchX } from "lucide-react";
 import { Suspense } from "react";

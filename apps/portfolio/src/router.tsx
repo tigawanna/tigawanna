@@ -1,3 +1,4 @@
+import { getScrollRestorationKey } from "@repo/ui/landing";
 import { createRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 
@@ -7,7 +8,6 @@ import { RouterNotFoundComponent } from "./lib/tanstack/router/RouterNotFoundCom
 import { RouterPendingComponent } from "./lib/tanstack/router/RouterPendingComponent";
 import { RouterErrorComponent } from "./lib/tanstack/router/routerErrorComponent";
 import { routeTree } from "./routeTree.gen";
-import { getScrollRestorationKey } from "./routes/-components/landing/utils/scroll-restoration-key";
 
 // Create a new router instance
 export const getRouter = async () => {
