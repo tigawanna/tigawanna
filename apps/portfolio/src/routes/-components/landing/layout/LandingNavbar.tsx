@@ -82,7 +82,10 @@ export function LandingNavbar() {
       </div>
 
       {isLandingRoute && mobileOpen ? (
-        <div className="space-y-4 border-t border-landing-sage/10 bg-landing-void p-6 md:hidden">
+        <div
+          data-test="landing-nav-drawer"
+          className="space-y-4 border-t border-landing-sage/10 bg-landing-void p-6 md:hidden"
+        >
           {AppConfig.navItems.map((item) => (
             <a
               key={item.label}

@@ -4,6 +4,7 @@ export const siteConfig = {
   role: "Full Stack TypeScript Developer",
   description:
     "Crafting exceptional web experiences with full-stack TypeScript. Based in Nairobi, Kenya.",
+  contactHeading: "Let's make the next system less haunted.",
   navItems: [
     { label: "About", href: "#about" },
     { label: "Skills", href: "#skills" },

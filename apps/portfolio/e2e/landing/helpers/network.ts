@@ -14,6 +14,9 @@ const TRANSPARENT_PNG = Buffer.from(
 const EXTERNAL_HOST_PATTERN =
   /^(api\.github\.com|raw\.githubusercontent\.com|media2?\.dev\.to|dev\.to|www\.googletagmanager\.com|www\.google-analytics\.com|us\.i\.posthog\.com|app\.posthog\.com|api\.telegram\.org)/i;
 
+/** POST server-fns that e2e intentionally stubs with `{ success: true }`. */
+const MOCKED_POST_SERVER_FNS = ["sendContactMessage", "reportSiteError"] as const;
+
 /**
  * Fulfills a TanStack Start server-fn JSON envelope.
  */
@@ -71,12 +74,17 @@ export async function installLandingNetworkMocks(page: Page) {
     }
 
     if (url.pathname.startsWith("/_serverFn/")) {
+      const decoded = decodeServerFnId(url.pathname);
+
       if (request.method() === "POST") {
-        await route.fulfill(serverFnJson({ success: true }));
+        if (MOCKED_POST_SERVER_FNS.some((name) => decoded.includes(name))) {
+          await route.fulfill(serverFnJson({ success: true }));
+          return;
+        }
+        console.warn(`[e2e] unmocked POST server-fn: ${decoded}`);
+        await route.continue();
         return;
       }
-
-      const decoded = decodeServerFnId(url.pathname);
 
       if (
         decoded.includes("getPinnedRepos") ||

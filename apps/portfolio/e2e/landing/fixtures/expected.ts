@@ -26,8 +26,10 @@ export const expected = {
   github: siteConfig.links.github,
   linkedin: siteConfig.links.linkedin,
   devto: siteConfig.links.devto,
-  navLabels: siteConfig.navItems.map((item) => item.label),
-  sectionIds: siteConfig.navItems.map((item) => item.href.replace(/^#/, "")),
+  navItems: siteConfig.navItems.map((item) => ({
+    label: item.label,
+    sectionId: item.href.replace(/^#/, ""),
+  })),
   aboutTitle: howIWorkSections[0].title,
   aboutBodySnippet: howIWorkSections[0].body.slice(0, 40),
   stackFace: stackCubeFaces[0].label,
@@ -38,5 +40,5 @@ export const expected = {
   article: STATIC_ARTICLES[0],
   infoDiet: infoDietSources[0],
   lesson: STATIC_LESSONS[0],
-  contactHeading: "Let's make the next system less haunted.",
+  contactHeading: siteConfig.contactHeading,
 } as const;

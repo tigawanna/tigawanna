@@ -1,17 +1,18 @@
 import { CreatureEggLowercaseI, CreatureEggTrigger } from "../stubs/creature-egg";
 import { Button } from "../stubs/button";
-import { useCurvedMarquee } from "../hooks/use-curved-marquee";
 import { unwrapUnknownError } from "../stubs/errors";
 import { AppConfig } from "../config/system";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, Check, Copy } from "lucide-react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
-const MARQUEE_PHRASE = "full-stack systems - warm interfaces - maintainable products - Nairobi - ";
-const MARQUEE_REPEAT = 8;
-const TEXT_SNAKE_PATH =
-  "M0 191 C 140 248, 300 266, 440 242 C 540 206, 700 128, 900 137 C 1100 149, 1350 254, 1600 290";
+/**
+ * Closed fill under the former snake curve — same silhouette, no text, no motion.
+ * Top edge matches the old marquee path character; fill extends to the footer band.
+ */
+const FOOTER_WAVE_PATH =
+  "M0 90 C140 145, 300 165, 440 135 C540 100, 700 25, 900 35 C1100 48, 1350 145, 1600 175 L1600 200 L0 200 Z";
 
 const footerContacts = [
   { label: "GitHub", href: AppConfig.links.github, copyValue: AppConfig.links.github },
@@ -20,30 +21,24 @@ const footerContacts = [
   { label: "Email", href: AppConfig.links.emailTo, copyValue: AppConfig.links.email },
 ] as const;
 
-function FooterCurveMarquee() {
-  const textPathRef = useRef<SVGTextPathElement>(null);
-  useCurvedMarquee(textPathRef, { repeatCount: MARQUEE_REPEAT });
-
+/**
+ * Static dual-tone wave crest that peeks into the contact section.
+ * Filled with the footer surface (`base-200`) so CTA content reads as sitting behind it.
+ */
+function FooterWaveShape() {
   return (
     <div
-      className="pointer-events-none relative z-30 h-28 overflow-visible md:h-32 lg:h-36"
       aria-hidden="true"
+      data-test="footer-wave"
+      className="pointer-events-none absolute inset-x-0 top-0 z-20 h-28 -translate-y-[calc(100%-1px)] text-base-200 md:h-36 lg:h-40"
     >
       <svg
-        viewBox="0 0 1600 320"
-        fill="none"
+        viewBox="0 0 1600 200"
         xmlns="http://www.w3.org/2000/svg"
-        className="absolute inset-x-0 top-1/2 z-30 h-[130%] w-full -translate-y-1/2"
+        className="h-full w-full fill-current"
         preserveAspectRatio="none"
       >
-        <defs>
-          <path id="footer-curve-text-path" d={TEXT_SNAKE_PATH} />
-        </defs>
-        <text className="fill-base-content font-serif text-[76px] font-semibold tracking-[0.09em] opacity-35 md:text-[92px] lg:text-[108px]">
-          <textPath ref={textPathRef} href="#footer-curve-text-path" startOffset="0">
-            {MARQUEE_PHRASE.repeat(MARQUEE_REPEAT)}
-          </textPath>
-        </text>
+        <path d={FOOTER_WAVE_PATH} />
       </svg>
     </div>
   );
@@ -72,9 +67,9 @@ export function LandingFooter() {
   return (
     <footer
       data-test="landing-footer"
-      className="relative overflow-x-clip bg-base-100 pt-12 text-base-content md:pt-20"
+      className="relative z-20 -mt-20 overflow-x-clip bg-base-200 pt-8 text-base-content md:-mt-28 md:pt-10"
     >
-      <FooterCurveMarquee />
+      <FooterWaveShape />
 
       <div className="container relative z-10 pb-10 pt-4 md:pt-6">
         <div className="grid gap-10 pt-8 md:grid-cols-[1fr_auto] md:items-end md:pt-10">

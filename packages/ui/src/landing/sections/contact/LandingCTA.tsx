@@ -24,14 +24,16 @@ export function LandingCTA() {
   }
 
   return (
-    <LandingSection id="contact" tone="base" className="pb-12 text-base-content md:pb-16">
+    <LandingSection
+      id="contact"
+      tone="base"
+      className="relative z-0 pb-40 text-base-content md:pb-52"
+    >
       <div className="container">
         <div className="mx-auto grid max-w-5xl gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start lg:gap-16">
           <div>
             <SectionEyebrow>Contact</SectionEyebrow>
-            <h2 className="landing-section-heading">
-              Let&apos;s make the next system less haunted.
-            </h2>
+            <h2 className="landing-section-heading">{AppConfig.contactHeading}</h2>
             <p className="mt-6 max-w-md text-lg leading-8 text-base-content/70">
               Open to projects, collaborations, and useful conversations about TypeScript, product
               architecture, and web systems.

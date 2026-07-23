@@ -15,6 +15,15 @@ const SECTION_SELECTORS = {
 export type LandingSectionId = keyof typeof SECTION_SELECTORS;
 
 /**
+ * Narrows a nav href id to a known landing section, or throws.
+ */
+export function assertLandingSectionId(id: string): asserts id is LandingSectionId {
+  if (!(id in SECTION_SELECTORS)) {
+    throw new Error(`Unknown landing section id: ${id}`);
+  }
+}
+
+/**
  * Opens the landing page with network mocks installed and waits for the shell.
  *
  * Set `LANDING_PATH=/gg` to exercise the shared `@repo/ui/landing` route.
@@ -25,9 +34,6 @@ export async function openLanding(page: Page) {
   await page.goto(landingPath, { waitUntil: "domcontentloaded" });
   await expect(page.getByTestId("landing-page")).toBeVisible();
   await expect(page.getByTestId("landing-hero")).toBeVisible();
-  page.on("close", () => {
-    void page.unrouteAll({ behavior: "ignoreErrors" }).catch(() => undefined);
-  });
 }
 
 /**
@@ -48,7 +54,8 @@ export async function expectSectionInView(page: Page, id: LandingSectionId) {
       async () => {
         return section.evaluate((el) => {
           const rect = el.getBoundingClientRect();
-          const navbarOffset = 80;
+          const navbar = document.querySelector('[data-test="landing-navbar"]');
+          const navbarOffset = navbar?.getBoundingClientRect().height ?? 80;
           return rect.top < window.innerHeight * 0.75 && rect.bottom > navbarOffset;
         });
       },
@@ -62,7 +69,7 @@ export async function expectSectionInView(page: Page, id: LandingSectionId) {
  */
 export async function clickDesktopNav(page: Page, label: string) {
   const nav = page.getByTestId("landing-navbar");
-  await nav.locator("a", { hasText: label }).first().click();
+  await nav.getByRole("link", { name: label, exact: true }).first().click();
 }
 
 /**
@@ -88,7 +95,7 @@ export async function clickMobileNav(page: Page, label: string) {
     )
     .toBe(true);
 
-  const drawer = nav.locator("div.space-y-4.border-t");
+  const drawer = nav.getByTestId("landing-nav-drawer");
   await expect(drawer).toBeVisible();
   await drawer.getByRole("link", { name: label, exact: true }).click();
 }

@@ -2,6 +2,10 @@ import { expect, test } from "@playwright/test";
 import { expected } from "./fixtures/expected";
 import { openLanding, revealSection } from "./helpers/landing";
 
+/**
+ * Link / detail coverage runs on both desktop and mobile projects — hrefs and
+ * detail routes are shared; layout differences are covered elsewhere.
+ */
 test.describe("landing links and detail pages", () => {
   test("project cards expose Source / Site / Details that match fixtures", async ({ page }) => {
     await openLanding(page);

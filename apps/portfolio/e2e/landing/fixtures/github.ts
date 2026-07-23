@@ -44,14 +44,10 @@ function toStaticRepoDetail(node: GithubRepoNode): GithubRepoDetail {
 }
 
 /**
- * Returns a static repo detail for the first public pinned fixture.
+ * Returns a static repo detail for the first pinned fixture (matches project-detail e2e).
  */
-export function mockRepoDetailResult(owner = "tigawanna", repo = "tigawanna") {
-  const nameWithOwner = `${owner}/${repo}`;
-  const match =
-    STATIC_RECENT_PROJECTS.find((node) => node.nameWithOwner === nameWithOwner) ??
-    STATIC_PINNED_PROJECTS[0];
-  return toStaticRepoDetail(match);
+export function mockRepoDetailResult() {
+  return toStaticRepoDetail(STATIC_PINNED_PROJECTS[0]);
 }
 
 /**

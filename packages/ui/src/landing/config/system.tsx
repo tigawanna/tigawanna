@@ -19,6 +19,7 @@ export const AppConfig = {
   themeStorageKey: "tigawanna.theme",
   links: siteConfig.links,
   navItems: siteConfig.navItems,
+  contactHeading: siteConfig.contactHeading,
   techSkills: siteConfig.techSkills,
   assets: siteConfig.assets,
   absoluteAsset,

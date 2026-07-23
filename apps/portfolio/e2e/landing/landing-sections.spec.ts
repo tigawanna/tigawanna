@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { expected } from "./fixtures/expected";
 import {
+  assertLandingSectionId,
   expectCoreLandingContent,
   expectSectionInView,
   openLanding,
@@ -49,17 +50,8 @@ test.describe("landing hash navigation @desktop", () => {
 
     const nav = page.getByTestId("landing-navbar");
 
-    for (let index = 0; index < expected.navLabels.length; index++) {
-      const label = expected.navLabels[index];
-      const sectionId = expected.sectionIds[index] as
-        | "about"
-        | "skills"
-        | "projects"
-        | "articles"
-        | "infodiet"
-        | "journal"
-        | "contact";
-
+    for (const { label, sectionId } of expected.navItems) {
+      assertLandingSectionId(sectionId);
       await nav.getByRole("link", { name: label, exact: true }).first().click();
       await expectSectionInView(page, sectionId);
     }
