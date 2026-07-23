@@ -123,3 +123,13 @@ export function smoothScrollToLandingHash(hash: string) {
   cancelActiveLandingScroll?.();
   cancelActiveLandingScroll = scrollToLandingHashWhenReady(hash, { behavior: "smooth" });
 }
+
+/**
+ * Smoothly scrolls to the landing hero (page top). Used by the brand mark when
+ * already on the landing route — a plain `/` Link is a no-op mid-page.
+ */
+export function smoothScrollToLandingTop() {
+  cancelActiveLandingScroll?.();
+  cancelActiveLandingScroll = undefined;
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}

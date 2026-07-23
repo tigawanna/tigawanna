@@ -1,4 +1,7 @@
-import { smoothScrollToLandingHash } from "../utils/scroll-to-landing-hash";
+import {
+  smoothScrollToLandingHash,
+  smoothScrollToLandingTop,
+} from "../utils/scroll-to-landing-hash";
 import { AppConfig } from "../config/system";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
@@ -25,6 +28,17 @@ export function LandingNavbar() {
     smoothScrollToLandingHash(href);
   }
 
+  /**
+   * On the landing page, `/` is already current so the brand Link would no-op.
+   * Scroll to the hero instead, matching the other in-page nav clicks.
+   */
+  function handleBrandClick(event: MouseEvent<HTMLAnchorElement>) {
+    if (!isLandingRoute) return;
+    event.preventDefault();
+    setMobileOpen(false);
+    smoothScrollToLandingTop();
+  }
+
   return (
     <nav
       data-test="landing-navbar"
@@ -33,7 +47,9 @@ export function LandingNavbar() {
       <div className="container flex h-20 items-center justify-between gap-6">
         <Link
           to="/"
+          onClick={handleBrandClick}
           className="shrink-0 font-serif text-lg tracking-tight text-landing-sage md:text-xl"
+          data-test="landing-nav-brand"
         >
           tigawanna
         </Link>
