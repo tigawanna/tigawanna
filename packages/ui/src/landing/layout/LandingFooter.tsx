@@ -67,7 +67,7 @@ export function LandingFooter() {
   return (
     <footer
       data-test="landing-footer"
-      className="relative z-20 mt-30 overflow-x-clip bg-base-200 pt-2 text-base-content md:pt-1"
+      className="relative z-20 mt-14 overflow-x-clip bg-base-200 pt-2 text-base-content"
     >
       <FooterWaveShape />
 
