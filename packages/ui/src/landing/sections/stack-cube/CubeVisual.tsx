@@ -1,4 +1,5 @@
 import { stackCubeFaces } from "../../config/info";
+import { twMerge } from "tailwind-merge";
 
 const FACE_TEXTURE_CLASSES = [
   "cube-face--front",
@@ -8,17 +9,13 @@ const FACE_TEXTURE_CLASSES = [
 ] as const;
 
 type CubeVisualProps = {
-  cubeRef?: React.RefObject<HTMLDivElement | null>;
+  className?: string;
 };
 
-export function CubeVisual({ cubeRef }: CubeVisualProps) {
+export function CubeVisual({ className }: CubeVisualProps) {
   return (
     <div className="cube-perspective">
-      <div
-        ref={cubeRef}
-        className="cube-scene"
-        style={{ transform: "rotateY(-20deg) rotateX(-12deg)" }}
-      >
+      <div className={twMerge("cube-scene", className)}>
         {stackCubeFaces.map((face, index) => (
           <div key={face.label} className={`cube-face ${FACE_TEXTURE_CLASSES[index]}`} />
         ))}

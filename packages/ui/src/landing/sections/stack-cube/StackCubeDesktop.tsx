@@ -1,121 +1,32 @@
 import { stackCubeFaces } from "../../config/info";
-import { createTimeline, onScroll, stagger } from "animejs";
-import { useEffect, useRef } from "react";
 import { CubeVisual } from "./CubeVisual";
 
-const LG_QUERY = "(min-width: 1024px)";
+const FACE_COUNT = stackCubeFaces.length;
+
+/**
+ * Cover-range slice for a face panel. Slight overlap softens crossfades.
+ */
+function faceCoverRange(index: number): string {
+  const start = Math.max(0, (index / FACE_COUNT) * 100 - 1);
+  const end = Math.min(100, ((index + 1) / FACE_COUNT) * 100 + 3);
+  return `cover ${start}% cover ${end}%`;
+}
+
+/**
+ * Cover-range for a tech row, staggered slightly after the face opens.
+ */
+function techCoverRange(faceIndex: number, techIndex: number): string {
+  const faceStart = Math.max(0, (faceIndex / FACE_COUNT) * 100 - 1);
+  const faceEnd = Math.min(100, ((faceIndex + 1) / FACE_COUNT) * 100 + 3);
+  const start = Math.min(faceEnd - 4, faceStart + 2 + techIndex * 1.4);
+  return `cover ${start}% cover ${faceEnd}%`;
+}
 
 export function StackCubeDesktop() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const cubeRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const sectionEl = sectionRef.current;
-    const cubeEl = cubeRef.current;
-    if (!sectionEl || !cubeEl) return;
-
-    const lg = window.matchMedia(LG_QUERY);
-    if (!lg.matches) return;
-
-    let timeline: ReturnType<typeof createTimeline> | null = null;
-
-    function buildTimeline(section: HTMLDivElement, cube: HTMLDivElement) {
-      if (!lg.matches) {
-        timeline?.revert();
-        timeline = null;
-        return;
-      }
-
-      timeline?.revert();
-
-      timeline = createTimeline({
-        autoplay: onScroll({
-          target: section,
-          enter: "top",
-          leave: "bottom",
-          sync: true,
-        }),
-      });
-
-      timeline
-        .add(cube, {
-          rotateY: ["-20deg", "70deg"],
-          rotateX: ["-12deg", "-12deg"],
-          duration: 250,
-        })
-        .add(cube, { rotateY: ["70deg", "160deg"], duration: 250 })
-        .add(cube, { rotateY: ["160deg", "250deg"], duration: 250 })
-        .add(cube, { rotateY: ["250deg", "340deg"], duration: 250 });
-
-      const labelGroups = section.querySelectorAll("[data-label-group]");
-      const techGroups = section.querySelectorAll("[data-tech-group]");
-
-      labelGroups.forEach((group, index) => {
-        const entryOffset = index * 250 + 20;
-        const exitOffset = (index + 1) * 250 - 30;
-
-        timeline!.add(
-          group,
-          { opacity: [0, 1], translateY: [30, 0], duration: 100, ease: "outQuart" },
-          entryOffset,
-        );
-        timeline!.add(
-          group,
-          { opacity: [1, 0], translateY: [0, -30], duration: 80, ease: "inQuart" },
-          exitOffset,
-        );
-      });
-
-      techGroups.forEach((group, index) => {
-        const techEls = group.querySelectorAll("[data-tech]");
-        const entryOffset = index * 250 + 30;
-        const exitOffset = (index + 1) * 250 - 30;
-
-        timeline!.add(group, { opacity: [0, 1], duration: 60, ease: "outQuart" }, entryOffset);
-        timeline!.add(group, { opacity: [1, 0], duration: 50, ease: "inQuart" }, exitOffset);
-
-        timeline!.add(
-          techEls,
-          {
-            opacity: [0, 1],
-            translateX: [-20, 0],
-            duration: 70,
-            delay: stagger(35),
-            ease: "outQuart",
-          },
-          entryOffset + 20,
-        );
-        timeline!.add(
-          techEls,
-          {
-            opacity: [1, 0],
-            translateX: [0, 20],
-            duration: 50,
-            delay: stagger(20),
-            ease: "inQuart",
-          },
-          exitOffset - 10,
-        );
-      });
-    }
-
-    buildTimeline(sectionEl, cubeEl);
-
-    const onBreakpointChange = () => buildTimeline(sectionEl, cubeEl);
-    lg.addEventListener("change", onBreakpointChange);
-
-    return () => {
-      lg.removeEventListener("change", onBreakpointChange);
-      timeline?.revert();
-    };
-  }, []);
-
   return (
     <div
-      ref={sectionRef}
       data-test="stack-cube-desktop"
-      className="landing-void-surface relative"
-      style={{ height: "400vh" }}
+      className="stack-cube-desktop landing-void-surface relative"
     >
       <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden">
         <div className="landing-void-glow-center pointer-events-none absolute inset-0" />
@@ -126,8 +37,9 @@ export function StackCubeDesktop() {
               <div
                 key={face.label}
                 data-label-group
-                className="absolute inset-0 flex flex-col justify-center"
-                style={{ opacity: index === 0 ? 1 : 0 }}
+                data-face={index}
+                className="stack-cube-label absolute inset-0 flex flex-col justify-center"
+                style={{ animationRange: faceCoverRange(index) }}
               >
                 <p className="text-xs tracking-[0.38em] text-landing-sage/40 uppercase">
                   I build for
@@ -142,7 +54,7 @@ export function StackCubeDesktop() {
 
           <div className="flex flex-col items-center justify-center px-10 lg:px-14">
             <div className="cube-stage cube-stage--centered">
-              <CubeVisual cubeRef={cubeRef} />
+              <CubeVisual />
             </div>
           </div>
 
@@ -151,17 +63,15 @@ export function StackCubeDesktop() {
               <div
                 key={face.label}
                 data-tech-group
+                data-face={index}
                 className="absolute inset-0 flex flex-col justify-center gap-2.5"
-                style={{
-                  opacity: index === 0 ? 1 : 0,
-                  pointerEvents: index === 0 ? "auto" : "none",
-                }}
               >
-                {face.techs.map((tech) => (
+                {face.techs.map((tech, techIndex) => (
                   <span
                     key={tech}
                     data-tech
-                    className="block text-base leading-snug tracking-wide text-landing-sage/70 lg:text-lg"
+                    className="stack-cube-tech block text-base leading-snug tracking-wide text-landing-sage/70 lg:text-lg"
+                    style={{ animationRange: techCoverRange(index, techIndex) }}
                   >
                     {tech}
                   </span>

@@ -305,3 +305,124 @@
     }
   }
 }
+
+/* ── Stack cube desktop: scroll-driven rotate + panel reveals ── */
+
+.cube-scene {
+  transform: rotateY(-20deg) rotateX(-12deg);
+}
+
+.stack-cube-desktop {
+  height: 400vh;
+  view-timeline-name: --stack-cube;
+  view-timeline-axis: block;
+}
+
+.stack-cube-desktop .stack-cube-label:not([data-face="0"]),
+.stack-cube-desktop [data-tech-group]:not([data-face="0"]) .stack-cube-tech {
+  opacity: 0;
+}
+
+.stack-cube-desktop .stack-cube-label[data-face="0"],
+.stack-cube-desktop [data-tech-group][data-face="0"] .stack-cube-tech {
+  opacity: 1;
+}
+
+@keyframes stack-cube-rotate {
+  from {
+    transform: rotateY(-20deg) rotateX(-12deg);
+  }
+  to {
+    transform: rotateY(340deg) rotateX(-12deg);
+  }
+}
+
+@keyframes stack-cube-label {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  14% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  72% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+}
+
+@keyframes stack-cube-label-first {
+  0%,
+  72% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+}
+
+@keyframes stack-cube-tech {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  18% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  78% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+}
+
+@keyframes stack-cube-tech-first {
+  0%,
+  78% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .stack-cube-desktop .cube-scene {
+      animation: stack-cube-rotate linear both;
+      animation-timeline: --stack-cube;
+      animation-range: cover;
+    }
+
+    .stack-cube-desktop .stack-cube-label {
+      animation: stack-cube-label linear both;
+      animation-timeline: --stack-cube;
+    }
+
+    .stack-cube-desktop .stack-cube-label[data-face="0"] {
+      animation-name: stack-cube-label-first;
+    }
+
+    .stack-cube-desktop .stack-cube-tech {
+      animation: stack-cube-tech linear both;
+      animation-timeline: --stack-cube;
+    }
+
+    .stack-cube-desktop [data-tech-group][data-face="0"] .stack-cube-tech {
+      animation-name: stack-cube-tech-first;
+    }
+  }
+}
