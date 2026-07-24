@@ -1,15 +1,16 @@
 import { Suspense, type ReactNode } from "react";
+import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { siteConfig } from "../../config/site";
 import { STATIC_ARTICLES } from "../../data/static";
-import { getLandingPostPreviews } from "@/data-access/journals";
+import { getLandingPostPreviews } from "@/data-access/blogs";
 import type { JournalPreviewItem } from "@/types/journals";
 import { ArticleCard } from "../../cards/ArticleCard";
 import { JournalCard } from "../../cards/JournalCard";
 import { PortfolioGridSkeleton } from "../../cards/PortfolioGridSkeleton";
 import { LandingSection, OrganicDivider, SectionEyebrow } from "../../primitives";
 
-function LandingArticlesShell({
+function LandingBlogsShell({
   children,
   seeMoreHref,
   seeMoreLabel,
@@ -22,17 +23,17 @@ function LandingArticlesShell({
 }) {
   return (
     <LandingSection
-      id="articles"
+      id="blogs"
       tone="darkMid"
       className="text-landing-cream"
-      dataTest="landing-articles"
+      dataTest="landing-blogs"
     >
       <OrganicDivider tone="darkMid" />
       <OrganicDivider tone="darkMid" flip />
 
       <div className="container relative z-10">
         <div className="mx-auto mb-14 max-w-3xl text-center">
-          <SectionEyebrow>Articles</SectionEyebrow>
+          <SectionEyebrow>Blogs</SectionEyebrow>
           <h2 className="landing-section-heading">Writing in public.</h2>
           <p className="landing-section-lead">
             Published here first — then cross-posted to Dev.to with a canonical URL.
@@ -48,20 +49,21 @@ function LandingArticlesShell({
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-1 rounded-full border border-primary/30 px-6 py-3 text-sm text-primary transition-colors hover:bg-primary/10"
-              data-test="articles-see-more"
+              data-test="blogs-see-more"
             >
               {seeMoreLabel}
               <ArrowUpRight className="size-4" />
             </a>
           ) : (
-            <a
+            <Link
               href={seeMoreHref}
+              transitionTypes={["nav-forward"]}
               className="inline-flex items-center justify-center gap-1 rounded-full border border-primary/30 px-6 py-3 text-sm text-primary transition-colors hover:bg-primary/10"
-              data-test="articles-see-more"
+              data-test="blogs-see-more"
             >
               {seeMoreLabel}
               <ArrowUpRight className="size-4" />
-            </a>
+            </Link>
           )}
         </div>
       </div>
@@ -79,23 +81,19 @@ function PayloadPostsGrid({ items }: { items: JournalPreviewItem[] }) {
   );
 }
 
-async function LandingArticlesContent() {
+async function LandingBlogsContent() {
   const posts = await getLandingPostPreviews();
 
   if (posts.length > 0) {
     return (
-      <LandingArticlesShell
-        seeMoreHref="/journals"
-        seeMoreLabel="More journals"
-        seeMoreExternal={false}
-      >
+      <LandingBlogsShell seeMoreHref="/blogs" seeMoreLabel="More blogs" seeMoreExternal={false}>
         <PayloadPostsGrid items={posts} />
-      </LandingArticlesShell>
+      </LandingBlogsShell>
     );
   }
 
   return (
-    <LandingArticlesShell
+    <LandingBlogsShell
       seeMoreHref={siteConfig.links.devto}
       seeMoreLabel="More on Dev.to"
       seeMoreExternal
@@ -105,27 +103,27 @@ async function LandingArticlesContent() {
           <ArticleCard key={article.id} article={article} />
         ))}
       </div>
-    </LandingArticlesShell>
+    </LandingBlogsShell>
   );
 }
 
 /**
- * Articles section — Payload blog posts when published, else Dev.to fixtures.
+ * Landing blogs section — Payload posts when published, else Dev.to fixtures.
  */
 export function LandingArticles() {
   return (
     <Suspense
       fallback={
-        <LandingArticlesShell
+        <LandingBlogsShell
           seeMoreHref={siteConfig.links.devto}
           seeMoreLabel="More on Dev.to"
           seeMoreExternal
         >
           <PortfolioGridSkeleton count={4} />
-        </LandingArticlesShell>
+        </LandingBlogsShell>
       }
     >
-      <LandingArticlesContent />
+      <LandingBlogsContent />
     </Suspense>
   );
 }

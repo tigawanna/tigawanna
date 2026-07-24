@@ -1,161 +1,70 @@
 import { config as loadEnv } from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
-import {
-  convertMarkdownToLexical,
-  editorConfigFactory,
-} from "@payloadcms/richtext-lexical";
-import { getPayload } from "payload";
+import { editorConfigFactory } from "@payloadcms/richtext-lexical";
+import { getPayload, type Payload } from "payload";
 
-import { STATIC_ARTICLES, STATIC_LESSONS } from "../components/landing/data/static";
+import { STATIC_LESSONS } from "../components/landing/data/static";
+import { markdownToLexicalWithCodeBlocks } from "../lib/markdown-to-lexical";
 import payloadConfig from "../payload.config";
+import { upsertBlogBySlug } from "./upsert-blog";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
 loadEnv({ path: path.resolve(dirname, "../../.env") });
 
-/**
- * Normalizes GitHub-style callouts so Lexical markdown import stays readable.
- */
-function normalizeMarkdown(markdown: string): string {
-  return markdown
-    .replace(/^\[!TIP\]\s*$/gm, "> **Tip**")
-    .replace(/^\[!NOTE\]\s*$/gm, "> **Note**")
-    .replace(/^\[!WARNING\]\s*$/gm, "> **Warning**")
-    .replace(/^\[!IMPORTANT\]\s*$/gm, "> **Important**");
-}
+export type SeedJournalsResult = {
+  expected: number;
+  created: number;
+  updated: number;
+};
 
 /**
- * Seeds static TIL fixtures + Dev.to article stubs into the Journals collection.
+ * Seeds static journal fixtures (old TILs) into the Blogs collection as `kind: journal`.
  *
- * Idempotent: existing slugs are updated in place.
- *
- * Run from `apps/next-landing`:
- *   pnpm seed:journals
+ * Idempotent by slug. Does not touch Dev.to posts.
  */
-async function seedJournals() {
-  const payload = await getPayload({ config: payloadConfig });
+export async function seedJournals(payload?: Payload): Promise<SeedJournalsResult> {
+  const ownsPayload = !payload;
+  const client = payload ?? (await getPayload({ config: payloadConfig }));
   const editorConfig = await editorConfigFactory.default({
-    config: payload.config,
+    config: client.config,
   });
 
-  payload.logger.info(`Seeding ${STATIC_LESSONS.length} TIL journals…`);
+  client.logger.info(`Seeding ${STATIC_LESSONS.length} journals from static fixtures…`);
+
+  let created = 0;
+  let updated = 0;
 
   for (const lesson of STATIC_LESSONS) {
-    const content = convertMarkdownToLexical({
-      editorConfig,
-      markdown: normalizeMarkdown(lesson.markdown),
-    });
-
-    const data = {
+    const content = markdownToLexicalWithCodeBlocks(lesson.markdown, editorConfig);
+    const result = await upsertBlogBySlug(client, {
       title: lesson.title,
-      kind: "til" as const,
+      kind: "journal",
       description: lesson.description,
       content,
       gist: lesson.gist ?? undefined,
       slug: lesson.id,
-      generateSlug: false,
       publishedAt: lesson.created,
-      _status: "published" as const,
-    };
-
-    const existing = await payload.find({
-      collection: "journals",
-      depth: 0,
-      limit: 1,
-      pagination: false,
-      where: { slug: { equals: lesson.id } },
+      _status: "published",
     });
 
-    if (existing.docs[0]) {
-      await payload.update({
-        collection: "journals",
-        id: existing.docs[0].id,
-        data,
-        context: { disableRevalidate: true, skipDevtoScaffold: true },
-        draft: false,
-        overrideAccess: true,
-      });
-      payload.logger.info(`  updated til: ${lesson.id}`);
-    } else {
-      await payload.create({
-        collection: "journals",
-        data,
-        context: { disableRevalidate: true, skipDevtoScaffold: true },
-        draft: false,
-        overrideAccess: true,
-      });
-      payload.logger.info(`  created til: ${lesson.id}`);
-    }
+    if (result === "created") created += 1;
+    else updated += 1;
+    client.logger.info(`  ${result} journal: ${lesson.id}`);
   }
 
-  payload.logger.info(`Seeding ${STATIC_ARTICLES.length} blog posts from Dev.to stubs…`);
+  client.logger.info(
+    `Journal seed complete. expected=${STATIC_LESSONS.length} created=${created} updated=${updated}`,
+  );
 
-  for (const article of STATIC_ARTICLES) {
-    const markdown = [
-      article.description,
-      "",
-      `Originally published on [Dev.to](${article.url}).`,
-      "",
-      "Full body can be pasted into Lexical later — this seed keeps the card + canonical link.",
-    ].join("\n");
+  if (ownsPayload) await client.destroy();
 
-    const content = convertMarkdownToLexical({
-      editorConfig,
-      markdown,
-    });
-
-    const data = {
-      title: article.title,
-      kind: "post" as const,
-      description: article.description,
-      content,
-      slug: article.slug,
-      generateSlug: false,
-      tags: article.tag_list.map((tag) => ({ tag })),
-      publishedAt: article.published_at || article.published_timestamp,
-      _status: "published" as const,
-      devto: {
-        enabled: true,
-        status: "published" as const,
-        url: article.url,
-        lastSyncedAt: article.published_at || article.published_timestamp,
-      },
-    };
-
-    const existing = await payload.find({
-      collection: "journals",
-      depth: 0,
-      limit: 1,
-      pagination: false,
-      where: { slug: { equals: article.slug } },
-    });
-
-    if (existing.docs[0]) {
-      await payload.update({
-        collection: "journals",
-        id: existing.docs[0].id,
-        data,
-        context: { disableRevalidate: true, skipDevtoScaffold: true },
-        draft: false,
-        overrideAccess: true,
-      });
-      payload.logger.info(`  updated post: ${article.slug}`);
-    } else {
-      await payload.create({
-        collection: "journals",
-        data,
-        context: { disableRevalidate: true, skipDevtoScaffold: true },
-        draft: false,
-        overrideAccess: true,
-      });
-      payload.logger.info(`  created post: ${article.slug}`);
-    }
-  }
-
-  payload.logger.info("Journal seed complete.");
-  await payload.destroy();
+  return { expected: STATIC_LESSONS.length, created, updated };
 }
 
-await seedJournals();
+const isDirectRun = process.argv[1]?.includes("seed-journals");
+if (isDirectRun) {
+  await seedJournals();
+}

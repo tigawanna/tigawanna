@@ -1,27 +1,17 @@
 import type { CollectionConfig } from "payload";
 import { slugField } from "payload";
-import {
-  BlocksFeature,
-  FixedToolbarFeature,
-  HeadingFeature,
-  HorizontalRuleFeature,
-  InlineToolbarFeature,
-  lexicalEditor,
-} from "@payloadcms/richtext-lexical";
 
 import { authenticated } from "@/access/authenticated";
 import { authenticatedOrPublished } from "@/access/authenticatedOrPublished";
-import { Banner } from "@/blocks/Banner/config";
-import { Code } from "@/blocks/Code/config";
-import { MediaBlock } from "@/blocks/MediaBlock/config";
-import { revalidateJournal, revalidateJournalDelete } from "./hooks/revalidateJournal";
+import { contentLexicalEditor } from "@/fields/contentLexicalEditor";
+import { revalidateBlog, revalidateBlogDelete } from "./hooks/revalidateBlog";
 import { scaffoldDevtoCrossPost } from "./hooks/scaffoldDevtoCrossPost";
 
-export const Journals: CollectionConfig = {
-  slug: "journals",
+export const Blogs: CollectionConfig = {
+  slug: "blogs",
   labels: {
-    singular: "Journal",
-    plural: "Journals",
+    singular: "Blog",
+    plural: "Blogs",
   },
   access: {
     create: authenticated,
@@ -32,13 +22,16 @@ export const Journals: CollectionConfig = {
   defaultPopulate: {
     title: true,
     slug: true,
-    kind: true,
     description: true,
+    kind: true,
     publishedAt: true,
   },
   admin: {
     useAsTitle: "title",
     defaultColumns: ["title", "kind", "slug", "_status", "updatedAt"],
+    group: "Content",
+    description:
+      "All writing lives here. Mark an entry as Journal or Blog post — you can switch later if a short note grows into a full post.",
   },
   fields: [
     {
@@ -50,14 +43,21 @@ export const Journals: CollectionConfig = {
       name: "kind",
       type: "select",
       required: true,
-      defaultValue: "til",
+      defaultValue: "journal",
       options: [
-        { label: "Blog post", value: "post" },
-        { label: "TIL / snippet", value: "til" },
+        {
+          label: "Journal",
+          value: "journal",
+        },
+        {
+          label: "Blog post",
+          value: "post",
+        },
       ],
       admin: {
         position: "sidebar",
-        description: "Posts are longer essays; TILs are short notes and snippets.",
+        description:
+          "Journals are short TILs/snippets. Blog posts are longer pieces. Switch anytime.",
       },
     },
     {
@@ -79,23 +79,14 @@ export const Journals: CollectionConfig = {
               type: "upload",
               relationTo: "media",
               admin: {
-                condition: (data) => data?.kind === "post",
+                condition: (_, siblingData) => siblingData?.kind === "post",
               },
             },
             {
               name: "content",
               type: "richText",
               required: true,
-              editor: lexicalEditor({
-                features: ({ rootFeatures }) => [
-                  ...rootFeatures,
-                  HeadingFeature({ enabledHeadingSizes: ["h1", "h2", "h3", "h4"] }),
-                  BlocksFeature({ blocks: [Banner, Code, MediaBlock] }),
-                  FixedToolbarFeature(),
-                  InlineToolbarFeature(),
-                  HorizontalRuleFeature(),
-                ],
-              }),
+              editor: contentLexicalEditor(),
             },
           ],
         },
@@ -106,8 +97,8 @@ export const Journals: CollectionConfig = {
               name: "gist",
               type: "text",
               admin: {
-                description: "Optional GitHub Gist URL for TIL snippets.",
-                condition: (data) => data?.kind === "til",
+                description: "Optional GitHub Gist URL (handy for journal snippets).",
+                condition: (_, siblingData) => siblingData?.kind === "journal",
               },
             },
             {
@@ -129,7 +120,7 @@ export const Journals: CollectionConfig = {
               admin: {
                 description:
                   "Scaffold only — publish workflow lands later. Canonical URL on Dev.to should point back here.",
-                condition: (data) => data?.kind === "post",
+                condition: (_, siblingData) => siblingData?.kind === "post",
               },
               fields: [
                 {
@@ -197,8 +188,8 @@ export const Journals: CollectionConfig = {
     slugField(),
   ],
   hooks: {
-    afterChange: [revalidateJournal, scaffoldDevtoCrossPost],
-    afterDelete: [revalidateJournalDelete],
+    afterChange: [revalidateBlog, scaffoldDevtoCrossPost],
+    afterDelete: [revalidateBlogDelete],
   },
   versions: {
     drafts: {

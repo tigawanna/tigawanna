@@ -47,9 +47,9 @@ test.describe("landing links and detail pages", () => {
     ).toHaveAttribute("href", expected.project.url);
   });
 
-  test("article cards prefer Payload posts when seeded", async ({ page }) => {
+  test("blog cards prefer Payload posts when seeded", async ({ page }) => {
     await openLanding(page);
-    await revealSection(page, "articles");
+    await revealSection(page, "blogs");
 
     const card = page
       .getByTestId("journal-card")
@@ -62,14 +62,14 @@ test.describe("landing links and detail pages", () => {
     const external = card.getByRole("link", { name: /read article/i });
 
     if ((await internal.count()) > 0) {
-      await expect(internal).toHaveAttribute("href", /\/journals\//);
+      await expect(internal).toHaveAttribute("href", /\/blogs\//);
     } else {
       await expect(external).toHaveAttribute("href", expected.article.url);
     }
 
-    const seeMore = page.getByTestId("articles-see-more");
+    const seeMore = page.getByTestId("blogs-see-more");
     const href = await seeMore.getAttribute("href");
-    expect(href === "/journals" || href === expected.devto).toBe(true);
+    expect(href === "/blogs" || href === expected.devto).toBe(true);
   });
 
   test("infodiet cards link to known sources", async ({ page }) => {

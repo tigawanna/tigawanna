@@ -69,7 +69,7 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
-    journals: Journal;
+    blogs: Blog;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
@@ -80,7 +80,7 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
-    journals: JournalsSelect<false> | JournalsSelect<true>;
+    blogs: BlogsSelect<false> | BlogsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -173,16 +173,18 @@ export interface Media {
   focalY?: number | null;
 }
 /**
+ * All writing lives here. Mark an entry as Journal or Blog post — you can switch later if a short note grows into a full post.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "journals".
+ * via the `definition` "blogs".
  */
-export interface Journal {
+export interface Blog {
   id: number;
   title: string;
   /**
-   * Posts are longer essays; TILs are short notes and snippets.
+   * Journals are short TILs/snippets. Blog posts are longer pieces. Switch anytime.
    */
-  kind: 'post' | 'til';
+  kind: 'journal' | 'post';
   /**
    * Short summary shown on cards and SEO previews.
    */
@@ -204,7 +206,7 @@ export interface Journal {
     [k: string]: unknown;
   };
   /**
-   * Optional GitHub Gist URL for TIL snippets.
+   * Optional GitHub Gist URL (handy for journal snippets).
    */
   gist?: string | null;
   tags?:
@@ -360,8 +362,8 @@ export interface PayloadLockedDocument {
         value: number | Media;
       } | null)
     | ({
-        relationTo: 'journals';
-        value: number | Journal;
+        relationTo: 'blogs';
+        value: number | Blog;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -448,9 +450,9 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "journals_select".
+ * via the `definition` "blogs_select".
  */
-export interface JournalsSelect<T extends boolean = true> {
+export interface BlogsSelect<T extends boolean = true> {
   title?: T;
   kind?: T;
   description?: T;
@@ -568,8 +570,8 @@ export interface TaskSchedulePublish {
     type?: ('publish' | 'unpublish') | null;
     locale?: string | null;
     doc?: {
-      relationTo: 'journals';
-      value: number | Journal;
+      relationTo: 'blogs';
+      value: number | Blog;
     } | null;
     global?: string | null;
     user?: (number | null) | User;
@@ -607,7 +609,27 @@ export interface BannerBlock {
  */
 export interface CodeBlock {
   language?:
-    | ('typescript' | 'javascript' | 'tsx' | 'jsx' | 'css' | 'html' | 'json' | 'bash' | 'sql' | 'plaintext')
+    | (
+        | 'typescript'
+        | 'javascript'
+        | 'tsx'
+        | 'jsx'
+        | 'css'
+        | 'html'
+        | 'json'
+        | 'bash'
+        | 'shell'
+        | 'sql'
+        | 'graphql'
+        | 'yaml'
+        | 'markdown'
+        | 'kotlin'
+        | 'java'
+        | 'xml'
+        | 'diff'
+        | 'dockerfile'
+        | 'plaintext'
+      )
     | null;
   code: string;
   id?: string | null;

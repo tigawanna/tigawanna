@@ -3,9 +3,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { CalendarRange, ExternalLink } from "lucide-react";
-import { getBlogBySlug } from "@/data-access/blogs";
-import { getJournalBySlug, getJournalStaticParams } from "@/data-access/journals";
+import { CalendarRange } from "lucide-react";
+import { getBlogBySlug, getBlogStaticParams } from "@/data-access/blogs";
 import { LandingFooter } from "@/components/landing/layout/LandingFooter";
 import { LandingNavbar } from "@/components/landing/layout/LandingNavbar";
 import { RichText } from "@/components/richtext/RichText";
@@ -17,80 +16,77 @@ type Args = {
 };
 
 export async function generateStaticParams() {
-  return getJournalStaticParams();
+  return getBlogStaticParams();
 }
 
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params;
   const decoded = decodeURIComponent(slug);
-  const journal = await getJournalBySlug(decoded);
-  if (!journal) {
-    const post = await getBlogBySlug(decoded, { kind: "post" });
-    if (post) {
+  const blog = await getBlogBySlug(decoded, { kind: "post" });
+  if (!blog) {
+    const journal = await getBlogBySlug(decoded, { kind: "journal" });
+    if (journal) {
       return {
-        title: post.title,
-        description: post.description,
-        alternates: { canonical: `/blogs/${post.slug}` },
+        title: journal.title,
+        description: journal.description,
+        alternates: { canonical: `/journals/${journal.slug}` },
       };
     }
-    return { title: "Journal" };
+    return { title: "Blog" };
   }
 
   return {
-    title: journal.title,
-    description: journal.description,
+    title: blog.title,
+    description: blog.description,
     alternates: {
-      canonical: `/journals/${journal.slug}`,
+      canonical: `/blogs/${blog.slug}`,
     },
   };
 }
 
-async function JournalDetail({ params }: Args) {
+async function BlogDetail({ params }: Args) {
   const { slug } = await params;
   const decoded = decodeURIComponent(slug);
-  const journal = await getJournalBySlug(decoded);
-  if (!journal) {
-    const post = await getBlogBySlug(decoded, { kind: "post" });
-    if (post) redirect(`/blogs/${post.slug}`);
+  const blog = await getBlogBySlug(decoded, { kind: "post" });
+  if (!blog) {
+    const journal = await getBlogBySlug(decoded, { kind: "journal" });
+    if (journal) redirect(`/journals/${journal.slug}`);
     notFound();
   }
 
-  const formattedDate = new Date(journal.publishedAt ?? journal.created).toLocaleDateString(
-    "en-US",
-    {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    },
-  );
+  const formattedDate = new Date(blog.publishedAt ?? blog.created).toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 
   return (
     <ViewTransition enter="slide-up" default="none">
-      <div data-test="journal-detail-page" className="min-h-screen bg-base-100 text-base-content">
+      <div data-test="blog-detail-page" className="min-h-screen bg-base-100 text-base-content">
         <LandingNavbar />
         <main className="min-h-screen py-24">
-          <article className="mx-auto max-w-4xl px-6" data-test="journal-detail">
+          <article className="mx-auto max-w-4xl px-6" data-test="blog-detail">
             <div className="mb-8">
               <Link
-                href="/journals"
+                href="/blogs"
                 transitionTypes={["nav-back"]}
                 className="inline-flex text-sm text-primary hover:underline"
               >
-                Back to journals
+                Back to blogs
               </Link>
             </div>
 
             <p className="text-center text-[0.65rem] font-semibold tracking-[0.22em] text-primary uppercase">
-              TIL
+              Post
             </p>
 
-            <ViewTransition name={journalTitleVtName(journal.slug)} share="text-morph" default="none">
+            <ViewTransition name={journalTitleVtName(blog.slug)} share="text-morph" default="none">
               <h1 className="mt-3 text-balance text-center font-serif text-5xl font-semibold tracking-[-0.04em] md:text-6xl">
-                {journal.title}
+                {blog.title}
               </h1>
             </ViewTransition>
             <p className="mx-auto mt-4 max-w-3xl text-center text-lg leading-8 text-base-content/70">
-              {journal.description}
+              {blog.description}
             </p>
 
             <div className="mt-6 flex flex-wrap items-center justify-center gap-5 text-sm text-base-content/70">
@@ -98,24 +94,25 @@ async function JournalDetail({ params }: Args) {
                 <CalendarRange className="size-4" />
                 {formattedDate}
               </div>
-              {journal.gist ? (
-                <a
-                  href={journal.gist}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-primary hover:underline"
-                >
-                  Gist
-                  <ExternalLink className="size-4" />
-                </a>
+              {blog.tags.length > 0 ? (
+                <ul className="flex flex-wrap justify-center gap-2">
+                  {blog.tags.map((tag) => (
+                    <li
+                      key={tag}
+                      className="rounded-full border border-base-content/10 px-2.5 py-0.5 text-xs text-base-content/55"
+                    >
+                      {tag}
+                    </li>
+                  ))}
+                </ul>
               ) : null}
             </div>
 
-            {journal.heroImageUrl ? (
+            {blog.heroImageUrl ? (
               <div className="relative mt-10 aspect-video overflow-hidden rounded-2xl border border-base-content/10">
                 <Image
-                  src={journal.heroImageUrl}
-                  alt={journal.title}
+                  src={blog.heroImageUrl}
+                  alt={blog.title}
                   fill
                   className="object-cover"
                   sizes="(max-width: 896px) 100vw, 896px"
@@ -124,14 +121,10 @@ async function JournalDetail({ params }: Args) {
               </div>
             ) : null}
 
-            {journal.content ? (
+            {blog.content ? (
               <div className="mt-12">
-                <RichText data={journal.content} enableGutter={false} />
+                <RichText data={blog.content} enableGutter={false} />
               </div>
-            ) : journal.markdown ? (
-              <pre className="mt-10 overflow-x-auto whitespace-pre-wrap rounded-lg border border-base-content/10 bg-base-200/40 p-6 font-sans text-sm leading-7 text-base-content/80">
-                {journal.markdown}
-              </pre>
             ) : null}
           </article>
         </main>
@@ -142,21 +135,21 @@ async function JournalDetail({ params }: Args) {
 }
 
 /**
- * Journal detail — Lexical HTML from Payload, or static markdown fallback.
+ * Blog post detail — Lexical HTML from the Payload `blogs` collection.
  */
-export default function JournalDetailPage({ params }: Args) {
+export default function BlogDetailPage({ params }: Args) {
   return (
     <DirectionalPageTransition>
       <Suspense
         fallback={
           <ViewTransition exit="slide-down" default="none">
             <main className="mx-auto flex min-h-svh max-w-2xl flex-col justify-center px-6 py-24">
-              <p className="text-sm text-base-content/60">Loading journal…</p>
+              <p className="text-sm text-base-content/60">Loading post…</p>
             </main>
           </ViewTransition>
         }
       >
-        <JournalDetail params={params} />
+        <BlogDetail params={params} />
       </Suspense>
     </DirectionalPageTransition>
   );

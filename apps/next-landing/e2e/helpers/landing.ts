@@ -6,7 +6,7 @@ const SECTION_SELECTORS = {
   about: "#about",
   skills: "#skills",
   projects: "#projects",
-  articles: "#articles",
+  blogs: "#blogs",
   infodiet: "#infodiet",
   journal: "#journal",
   contact: "#contact",
@@ -128,8 +128,8 @@ export async function expectCoreLandingContent(page: Page) {
   await expect(page.getByTestId("project-card").first()).toBeVisible({ timeout: 30_000 });
   await expect(page.getByTestId("landing-projects")).toContainText(expected.project.name);
 
-  await revealSection(page, "articles");
-  await expect(page.getByTestId("landing-articles")).toContainText(expected.article.title);
+  await revealSection(page, "blogs");
+  await expect(page.getByTestId("landing-blogs")).toContainText(expected.article.title);
 
   await revealSection(page, "infodiet");
   await expect(page.getByTestId("landing-infodiet")).toContainText(expected.infoDiet.name);

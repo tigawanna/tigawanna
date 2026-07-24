@@ -14,12 +14,6 @@ const nextConfig: NextConfig = {
     /** React View Transitions for App Router navigations. */
     viewTransition: true,
   },
-  async redirects() {
-    return [
-      { source: "/lessons", destination: "/journals", permanent: true },
-      { source: "/lessons/:id", destination: "/journals/:id", permanent: true },
-    ];
-  },
   images: {
     localPatterns: [
       {

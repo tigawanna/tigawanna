@@ -2,9 +2,9 @@
  * Dev.to cross-post workflow scaffold.
  *
  * Intended later shape:
- * 1. Journal published with `kind: 'post'` and `devto.enabled`
+ * 1. Blog published with `devto.enabled`
  * 2. Job reads markdown/Lexical → Dev.to markdown
- * 3. POST https://dev.to/api/articles with `canonical_url` = site `/journals/{slug}`
+ * 3. POST https://dev.to/api/articles with `canonical_url` = site `/blogs/{slug}`
  * 4. Store returned `url` on `devto.url` and set `devto.status: 'published'`
  *
  * Required env (when implemented):

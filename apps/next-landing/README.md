@@ -15,19 +15,21 @@ Admin: [http://localhost:3055/admin](http://localhost:3055/admin)
 
 - Next.js 16 (`cacheComponents`, experimental `viewTransition`)
 - Payload 3 + `@payloadcms/db-sqlite` (Drizzle + libSQL) — local `file:` SQLite or Turso
-- Journals collection with draft/publish, Lexical + Code/Banner/Media blocks
+- Blogs collection (journal or post) with draft/publish, Lexical + Code/Banner/Media blocks
++ Blogs collection (journal or post) with draft/publish, Lexical + Code/Banner/Media blocks
 - Landing UI is Next-native
 - Data: Cache Components (`use cache` + Suspense + `cacheTag` revalidation from Payload hooks)
 - Contact: server action (`src/actions/contact.ts`)
 
-## Journals
+## Blogs
 
-- Admin → **Journals** — `kind: post` (blog) or `til` (short snippet)
-- Public routes: `/journals`, `/journals/[slug]`
-- `/lessons` redirects to `/journals`
-- Landing TIL section + articles section read published journals (static fixtures until first publish)
-- Seed fixtures into Payload: `pnpm seed:journals`
-- Dev.to cross-post is scaffolded (`devto` fields + `src/workflows/devto-crosspost.ts`)
+- Admin → **Blogs** — one collection; each entry is `Journal` or `Blog post` (`kind`). Switch later if a journal grows into a full post.
+- Public routes: `/journals` (journals), `/blogs` (posts), plus `[slug]` detail pages
+- Landing sections filter by `kind`
+- Seed fixtures: `pnpm seed:journals` (journals) · `pnpm import:devto` (full Dev.to posts) · `pnpm seed:all` (both + verify)
+- Import live Dev.to posts: `pnpm import:devto` (optional `DEVTO_USERNAME`, `DEVTO_API_KEY`)
+- One-time migrate from the old Journals collection: `pnpm migrate:journals-to-blogs`
+- Dev.to cross-post is scaffolded for posts (`devto` fields + `src/workflows/devto-crosspost.ts`)
 
 ## Notes
 

@@ -34,8 +34,11 @@ export function JournalCard({ item, className, tone = 0 }: JournalCardProps) {
   const cardRef = useRef<HTMLElement | null>(null);
   useLandingCardMotion(cardRef);
 
-  const href = `/journals/${encodeURIComponent(item.slug)}`;
-  const kindLabel = item.kind === "post" ? "Post" : "TIL";
+  const href =
+    item.kind === "post"
+      ? `/blogs/${encodeURIComponent(item.slug)}`
+      : `/journals/${encodeURIComponent(item.slug)}`;
+  const kindLabel = item.kind === "post" ? "Post" : "Journal";
   const cta = item.kind === "post" ? "Read post" : "Read journal";
 
   return (

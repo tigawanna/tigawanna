@@ -5,7 +5,7 @@ import { buildConfig } from "payload";
 import { fileURLToPath } from "url";
 import sharp from "sharp";
 
-import { Journals } from "./collections/Journals";
+import { Blogs } from "./collections/Blogs";
 import { Media } from "./collections/Media";
 import { Users } from "./collections/Users";
 
@@ -22,15 +22,18 @@ export default buildConfig({
       titleSuffix: " · Tigawanna",
     },
   },
-  collections: [Users, Media, Journals],
+  collections: [Users, Media, Blogs],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
   // Drizzle + libSQL: local `file:` SQLite or remote Turso (`libsql://…` + auth token).
+  // `push: false` — schema is managed via seed/migrate scripts; auto-push fights
+  // renamed journals→blogs indexes and prompts interactively in CI/scripts.
   db: sqliteAdapter({
     wal: true,
+    push: false,
     client: {
       url: process.env.DATABASE_URL || "file:./payload.db",
       authToken: process.env.DATABASE_AUTH_TOKEN,
