@@ -1,5 +1,3 @@
-"use client";
-
 import { CreatureEggCapitalI, CreatureEggTrigger } from "../../stubs/creature-egg";
 import type { LessonPreviewItem } from "../../types/lessons";
 import Link from "next/link";
