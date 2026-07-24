@@ -1,4 +1,4 @@
-import { LandingSection, OrganicDivider } from "../../primitives";
+import { LandingSection } from "../../primitives";
 import { TechChoicesDesktop } from "./TechChoicesDesktop";
 import { TechChoicesMobile } from "./TechChoicesMobile";
 
@@ -10,7 +10,6 @@ export function LandingFeatures() {
       dataTest="landing-tech-choices"
       className="bg-landing-face-3 py-0 text-landing-cream lg:overflow-hidden"
     >
-      <OrganicDivider tone="olive" />
       <TechChoicesDesktop />
       <TechChoicesMobile />
     </LandingSection>

@@ -1,6 +1,6 @@
 import { techChoices } from "../../config/info";
 import { ClientOnly } from "../../stubs/client-only";
-import { LandingSection, OrganicDivider, SectionEyebrow } from "../../primitives";
+import { LandingSection, SectionEyebrow } from "../../primitives";
 import { LandingFeatures } from "./LandingFeatures";
 
 function LandingFeaturesFallback() {
@@ -13,7 +13,6 @@ function LandingFeaturesFallback() {
       dataTest="landing-tech-choices"
       className="bg-landing-face-3 py-20 text-landing-cream lg:overflow-hidden"
     >
-      <OrganicDivider tone="olive" />
       <div className="container relative z-10">
         <div className="mx-auto max-w-xl">
           <SectionEyebrow>Why I choose what I choose</SectionEyebrow>
