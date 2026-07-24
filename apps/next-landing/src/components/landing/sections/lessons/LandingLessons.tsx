@@ -21,6 +21,7 @@ export function LandingLessons({ items }: LandingLessonsProps) {
       <div className="mt-10 text-center">
         <Link
           href="/lessons"
+          transitionTypes={["nav-forward"]}
           className="inline-flex items-center justify-center rounded-full border border-primary/30 px-6 py-3 text-sm text-primary transition-colors hover:bg-primary/10"
           data-test="lessons-see-more"
         >

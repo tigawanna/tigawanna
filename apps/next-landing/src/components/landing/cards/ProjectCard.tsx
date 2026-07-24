@@ -1,8 +1,10 @@
 "use client";
 
+import { ViewTransition } from "react";
 import { TimeCompponent } from "../stubs/time";
 import { useLandingCardMotion } from "../hooks/use-landing-card-motion";
 import type { GithubRepoNode } from "../types/github";
+import { projectImageVtName } from "@/components/view-transitions/names";
 import Link from "next/link";
 import { Github, Globe, Lock } from "lucide-react";
 import { useRef } from "react";
@@ -67,22 +69,28 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
       data-test="project-card"
       className={twMerge("landing-card group relative flex flex-col overflow-hidden", className)}
     >
-      <div className="landing-card-media relative h-48 shrink-0 overflow-hidden">
-        {imageUrl ? (
-          <>
-            <img
-              src={imageUrl}
-              alt={repo.name}
-              className="landing-card-media-image h-full w-full object-cover"
-            />
-            <div className="absolute inset-0 bg-linear-to-t from-landing-panel via-landing-panel/10 to-transparent" />
-          </>
-        ) : (
-          <div className="flex h-full items-center justify-center bg-linear-to-br from-landing-gradient-mid-from to-landing-gradient-mid-to">
-            <Github className="size-8 text-landing-cream/15" />
-          </div>
-        )}
-      </div>
+      <ViewTransition
+        name={projectImageVtName(repo.nameWithOwner)}
+        share="morph"
+        default="none"
+      >
+        <div className="landing-card-media relative h-48 shrink-0 overflow-hidden">
+          {imageUrl ? (
+            <>
+              <img
+                src={imageUrl}
+                alt={repo.name}
+                className="landing-card-media-image h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-linear-to-t from-landing-panel via-landing-panel/10 to-transparent" />
+            </>
+          ) : (
+            <div className="flex h-full items-center justify-center bg-linear-to-br from-landing-gradient-mid-from to-landing-gradient-mid-to">
+              <Github className="size-8 text-landing-cream/15" />
+            </div>
+          )}
+        </div>
+      </ViewTransition>
 
       <div className="flex flex-1 flex-col gap-3 p-6 pt-4">
         <div className="flex flex-wrap items-start justify-between gap-2">
@@ -134,6 +142,7 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
 
           <Link
             href={projectDetailHref(repo.nameWithOwner)}
+            transitionTypes={["nav-forward"]}
             className="rounded-none border border-landing-cream/15 px-3.5 py-1.5 text-xs font-medium text-landing-sage/75 transition-all hover:border-landing-cream/30 hover:bg-landing-cream/5 hover:text-landing-cream"
           >
             Details

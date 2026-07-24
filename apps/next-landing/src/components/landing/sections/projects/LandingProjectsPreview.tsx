@@ -58,8 +58,8 @@ export function LandingProjectsPreview() {
           <div className="grid gap-5">
             {featuredProjects.map((project, index) => (
               <ScrollReveal key={project.title} delay={index === 0 ? "short" : "medium"}>
-                <article className="group relative overflow-hidden rounded-none border border-landing-ink/10 bg-landing-cream/80 p-7 shadow-xl shadow-landing-ink/10 transition-transform duration-300 hover:-translate-y-1">
-                  <div className="absolute top-0 right-0 size-40 translate-x-1/3 -translate-y-1/3 rounded-full bg-accent/20 blur-2xl transition-transform duration-500 group-hover:scale-125" />
+                <article className="group relative overflow-hidden rounded-none border border-landing-ink/10 bg-landing-cream/80 p-7 shadow-xl shadow-landing-ink/10">
+                  <div className="absolute top-0 right-0 size-40 translate-x-1/3 -translate-y-1/3 rounded-full bg-accent/20 blur-2xl" />
                   <div className="relative z-10 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
                     <div>
                       <p className="mb-4 text-xs font-semibold tracking-[0.28em] text-landing-olive uppercase">
