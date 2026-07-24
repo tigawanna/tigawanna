@@ -85,7 +85,10 @@ test.describe("landing links and detail pages", () => {
     await openLanding(page);
     await revealSection(page, "journal");
 
-    const card = page.getByTestId("journal-card").filter({ hasText: expected.lesson.title }).first();
+    const card = page
+      .getByTestId("journal-card")
+      .filter({ hasText: expected.lesson.title })
+      .first();
     const journalLink = card.getByRole("link", { name: /read journal/i });
     const href = await journalLink.getAttribute("href");
     expect(href).toBeTruthy();

@@ -34,12 +34,7 @@ interface JournalCardProps {
  * Landing / index card for a journal entry (blog post or TIL).
  * Image-led when a hero is present — mirrors Payload website `Card`.
  */
-export function JournalCard({
-  item,
-  className,
-  tone = 0,
-  featured = false,
-}: JournalCardProps) {
+export function JournalCard({ item, className, tone = 0, featured = false }: JournalCardProps) {
   const cardRef = useRef<HTMLElement | null>(null);
   useLandingCardMotion(cardRef);
 
@@ -65,10 +60,7 @@ export function JournalCard({
       <Link
         href={href}
         transitionTypes={["nav-forward"]}
-        className={twMerge(
-          "flex flex-1 flex-col -outline-offset-2",
-          featured && "md:contents",
-        )}
+        className={twMerge("flex flex-1 flex-col -outline-offset-2", featured && "md:contents")}
         aria-label={`${cta}: ${item.title}`}
       >
         {hasHero ? (

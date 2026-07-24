@@ -2,10 +2,7 @@ import { Suspense, ViewTransition } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Github, Globe } from "lucide-react";
-import {
-  STATIC_PINNED_PROJECTS,
-  STATIC_RECENT_PROJECTS,
-} from "@/components/landing/data/static";
+import { STATIC_PINNED_PROJECTS, STATIC_RECENT_PROJECTS } from "@/components/landing/data/static";
 import { LandingFooter } from "@/components/landing/layout/LandingFooter";
 import { LandingNavbar } from "@/components/landing/layout/LandingNavbar";
 import type { GithubRepoNode } from "@/components/landing/types/github";
@@ -21,11 +18,7 @@ function findStaticRepo(owner: string, repo: string): GithubRepoNode | null {
   return all.find((item) => item.nameWithOwner === nameWithOwner || item.name === repo) ?? null;
 }
 
-async function ProjectDetail({
-  params,
-}: {
-  params: Promise<{ owner: string; repo: string }>;
-}) {
+async function ProjectDetail({ params }: { params: Promise<{ owner: string; repo: string }> }) {
   const { owner, repo } = await params;
   const project = findStaticRepo(owner, repo);
   if (!project) notFound();

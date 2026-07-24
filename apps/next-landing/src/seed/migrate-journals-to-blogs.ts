@@ -63,7 +63,9 @@ function migrateJournalsToBlogs() {
   }
 
   if (!hasJournals) {
-    console.log("No legacy journals table and no blogs table — start the app once to push schema, then seed.");
+    console.log(
+      "No legacy journals table and no blogs table — start the app once to push schema, then seed.",
+    );
     db.close();
     return;
   }
@@ -147,9 +149,7 @@ function migrateJournalsToBlogs() {
   `);
 
   const counts = db
-    .prepare(
-      `SELECT kind, COUNT(*) AS n FROM blogs GROUP BY kind ORDER BY kind`,
-    )
+    .prepare(`SELECT kind, COUNT(*) AS n FROM blogs GROUP BY kind ORDER BY kind`)
     .all() as Array<{ kind: string; n: number }>;
 
   db.close();

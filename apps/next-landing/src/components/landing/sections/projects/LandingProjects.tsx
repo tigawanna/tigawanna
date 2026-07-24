@@ -33,10 +33,7 @@ export function LandingProjectsShell({ children }: { children: ReactNode }) {
 }
 
 async function LandingProjectsContent() {
-  const [pinnedRepos, recentRepos] = await Promise.all([
-    getPinnedRepos(),
-    getRecentRepos(),
-  ]);
+  const [pinnedRepos, recentRepos] = await Promise.all([getPinnedRepos(), getRecentRepos()]);
 
   if (pinnedRepos.length === 0 && recentRepos.length === 0) {
     return null;

@@ -1,10 +1,7 @@
 import "server-only";
 
 import { cacheLife, cacheTag } from "next/cache";
-import {
-  STATIC_PINNED_PROJECTS,
-  STATIC_RECENT_PROJECTS,
-} from "@/components/landing/data/static";
+import { STATIC_PINNED_PROJECTS, STATIC_RECENT_PROJECTS } from "@/components/landing/data/static";
 import type { GithubRepoNode } from "@/components/landing/types/github";
 import type { JournalPreviewItem } from "@/types/journals";
 import { getLandingTilPreviews } from "./journals";

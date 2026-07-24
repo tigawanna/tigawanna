@@ -130,9 +130,7 @@ export function LandingFooter() {
           <p>
             &copy; {currentYear} {AppConfig.name}
           </p>
-          <p>
-            Built from {AppConfig.location} with TypeScript
-          </p>
+          <p>Built from {AppConfig.location} with TypeScript</p>
         </div>
       </div>
     </footer>

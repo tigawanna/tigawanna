@@ -4,10 +4,7 @@ import { cacheLife, cacheTag } from "next/cache";
 import { getPayload } from "payload";
 import config from "@payload-config";
 
-import {
-  STATIC_LESSONS,
-  toLessonPreviewItem,
-} from "@/components/landing/data/static";
+import { STATIC_LESSONS, toLessonPreviewItem } from "@/components/landing/data/static";
 import { formatDisplayDate } from "@/components/landing/utils/date-helpers";
 import type { Blog } from "@/payload-types";
 import type {
@@ -26,12 +23,9 @@ export const JOURNALS_PER_PAGE = 8;
 function toPreviewFromPayload(doc: Blog): JournalPreviewItem {
   const published = doc.publishedAt ?? doc.createdAt;
   const kind: ContentKind = doc.kind === "post" ? "post" : "journal";
-  const hero =
-    doc.heroImage && typeof doc.heroImage === "object" ? doc.heroImage.url : null;
+  const hero = doc.heroImage && typeof doc.heroImage === "object" ? doc.heroImage.url : null;
   const cover =
-    typeof doc.coverUrl === "string" && doc.coverUrl.trim().length > 0
-      ? doc.coverUrl.trim()
-      : null;
+    typeof doc.coverUrl === "string" && doc.coverUrl.trim().length > 0 ? doc.coverUrl.trim() : null;
 
   return {
     id: String(doc.id),
@@ -92,8 +86,8 @@ function paginateStaticJournals(page: number, perPage: number): JournalsListPage
   const start = (safePage - 1) * perPage;
 
   return {
-    items: STATIC_LESSONS.slice(start, start + perPage).map(
-      (lesson) => toPreviewFromStatic(lesson.id)!,
+    items: STATIC_LESSONS.slice(start, start + perPage).map((lesson) =>
+      toPreviewFromStatic(lesson.id)!,
     ),
     page: safePage,
     perPage,
@@ -352,10 +346,7 @@ export async function getRelatedBlogs(options: {
       pagination: false,
       sort: "-publishedAt",
       where: {
-        and: [
-          { kind: { equals: options.kind } },
-          { slug: { not_equals: options.slug } },
-        ],
+        and: [{ kind: { equals: options.kind } }, { slug: { not_equals: options.slug } }],
       },
     });
 
@@ -369,10 +360,7 @@ export async function getRelatedBlogs(options: {
     const scored = previews
       .map((item) => ({
         item,
-        score: item.tags.reduce(
-          (sum, tag) => sum + (tagSet.has(tag.toLowerCase()) ? 1 : 0),
-          0,
-        ),
+        score: item.tags.reduce((sum, tag) => sum + (tagSet.has(tag.toLowerCase()) ? 1 : 0), 0),
       }))
       .sort((a, b) => b.score - a.score || b.item.created.localeCompare(a.item.created));
 

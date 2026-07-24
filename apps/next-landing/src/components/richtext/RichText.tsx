@@ -1,7 +1,4 @@
-import type {
-  DefaultTypedEditorState,
-  SerializedBlockNode,
-} from "@payloadcms/richtext-lexical";
+import type { DefaultTypedEditorState, SerializedBlockNode } from "@payloadcms/richtext-lexical";
 import {
   RichText as ConvertRichText,
   LinkJSXConverter,
@@ -13,7 +10,10 @@ import { BannerBlock } from "@/blocks/Banner/Component";
 import { CodeBlock, type CodeBlockProps } from "@/blocks/Code/Component";
 import { MediaBlock } from "@/blocks/MediaBlock/Component";
 import { cn } from "@/lib/cn";
-import type { BannerBlock as BannerBlockProps, MediaBlock as MediaBlockProps } from "@/payload-types";
+import type {
+  BannerBlock as BannerBlockProps,
+  MediaBlock as MediaBlockProps,
+} from "@/payload-types";
 
 type NodeTypes =
   | SerializedBlockNode<BannerBlockProps>
@@ -31,9 +31,7 @@ function internalDocToHref({ linkNode }: { linkNode: SerializedLinkNode }): stri
   const slug = "slug" in value && typeof value.slug === "string" ? value.slug : "";
   if (relationTo === "blogs") {
     const kind =
-      "kind" in value && (value.kind === "journal" || value.kind === "post")
-        ? value.kind
-        : "post";
+      "kind" in value && (value.kind === "journal" || value.kind === "post") ? value.kind : "post";
     return kind === "journal" ? `/journals/${slug}` : `/blogs/${slug}`;
   }
   return `/${slug}`;
@@ -59,12 +57,7 @@ type Props = {
 /**
  * Renders Payload Lexical rich text with Code / Banner / Media blocks.
  */
-export function RichText({
-  className,
-  data,
-  enableGutter = true,
-  enableProse = true,
-}: Props) {
+export function RichText({ className, data, enableGutter = true, enableProse = true }: Props) {
   return (
     <ConvertRichText
       converters={jsxConverters}

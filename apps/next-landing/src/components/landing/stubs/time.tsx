@@ -28,9 +28,7 @@ export function TimeCompponent({ time, relative = false, className }: TimeComppo
       );
       return;
     }
-    setLabel(
-      date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
-    );
+    setLabel(date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }));
   }, [relative, time]);
 
   return (

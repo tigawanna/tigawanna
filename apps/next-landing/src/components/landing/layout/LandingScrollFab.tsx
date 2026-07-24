@@ -84,9 +84,7 @@ export function LandingScrollFab() {
   const idleTimerRef = useRef<number | null>(null);
   const pointerInsideRef = useRef(false);
   const skipInitialScrollRef = useRef(true);
-  const prefersReducedMotion = useRef(
-    typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-  );
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   /**
    * Keeps the FAB visible briefly after scroll; clears when idle unless the pointer is over it.
@@ -104,9 +102,17 @@ export function LandingScrollFab() {
   };
 
   useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const syncPreference = () => setPrefersReducedMotion(media.matches);
+    syncPreference();
+    media.addEventListener("change", syncPreference);
+    return () => media.removeEventListener("change", syncPreference);
+  }, []);
+
+  useEffect(() => {
     const unsubscribe = subscribeScroll((scrollY) => {
       const state = readFabVisualState(scrollY);
-      const nextSplit = state.visible ? (prefersReducedMotion.current ? 1 : state.split) : 0;
+      const nextSplit = state.visible ? (prefersReducedMotion ? 1 : state.split) : 0;
 
       if (state.nearBottom !== nearBottomRef.current) {
         nearBottomRef.current = state.nearBottom;
@@ -151,7 +157,7 @@ export function LandingScrollFab() {
         window.clearTimeout(idleTimerRef.current);
       }
     };
-  }, []);
+  }, [prefersReducedMotion]);
 
   const visible = pastThreshold && scrollActive;
   const splitReady = split > SPLIT_INTERACTIVE_AT;
@@ -191,82 +197,82 @@ export function LandingScrollFab() {
             : "pointer-events-none translate-y-3 scale-75 opacity-0",
         )}
       >
-      <svg width="0" height="0" aria-hidden="true" className="absolute">
-        <defs>
-          <filter id={filterId} colorInterpolationFilters="sRGB">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur" />
-            <feColorMatrix
-              in="blur"
-              mode="matrix"
-              values="
+        <svg width="0" height="0" aria-hidden="true" className="absolute">
+          <defs>
+            <filter id={filterId} colorInterpolationFilters="sRGB">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur" />
+              <feColorMatrix
+                in="blur"
+                mode="matrix"
+                values="
                 1 0 0 0 0
                 0 1 0 0 0
                 0 0 1 0 0
                 0 0 0 20 -9
               "
+              />
+            </filter>
+          </defs>
+        </svg>
+
+        <div className="relative flex h-36 w-14 items-center justify-center" style={travelStyle}>
+          {/* Goo mass stays slightly more opaque so the SVG filter can still form a neck. */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -inset-10 flex items-center justify-center"
+            style={prefersReducedMotion ? undefined : { filter: `url(#${filterId})` }}
+          >
+            <span
+              className={twMerge(
+                "absolute size-11 rounded-full bg-landing-cream/35",
+                "transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                "motion-reduce:transition-none",
+                "-translate-y-(--fab-travel)",
+              )}
             />
-          </filter>
-        </defs>
-      </svg>
+            <span
+              className={twMerge(
+                "absolute size-11 rounded-full bg-landing-cream/35",
+                "transition-[transform,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                "motion-reduce:transition-none",
+                "translate-y-(--fab-travel)",
+              )}
+              style={{ opacity: nearBottom ? 0 : 1 }}
+            />
+          </div>
 
-      <div className="relative flex h-36 w-14 items-center justify-center" style={travelStyle}>
-        {/* Goo mass stays slightly more opaque so the SVG filter can still form a neck. */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -inset-10 flex items-center justify-center"
-          style={prefersReducedMotion.current ? undefined : { filter: `url(#${filterId})` }}
-        >
-          <span
+          <button
+            type="button"
+            data-test="landing-scroll-fab-up"
+            aria-label="Scroll to top"
+            className={twMerge(glassIconClass, "-translate-y-(--fab-travel)")}
+            onClick={smoothScrollToLandingTop}
+          >
+            <ArrowUp className="size-4.5 stroke-[2.25]" aria-hidden="true" />
+          </button>
+
+          <button
+            type="button"
+            data-test="landing-scroll-fab-down"
+            aria-label="Scroll to bottom"
+            aria-hidden={!showDown}
+            aria-disabled={!showDown}
+            disabled={!showDown}
+            tabIndex={showDown ? 0 : -1}
             className={twMerge(
-              "absolute size-11 rounded-full bg-landing-cream/35",
-              "transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
-              "motion-reduce:transition-none",
-              "-translate-y-[var(--fab-travel)]",
+              glassIconClass,
+              "translate-y-(--fab-travel)",
+              "disabled:cursor-default",
             )}
-          />
-          <span
-            className={twMerge(
-              "absolute size-11 rounded-full bg-landing-cream/35",
-              "transition-[transform,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
-              "motion-reduce:transition-none",
-              "translate-y-[var(--fab-travel)]",
-            )}
-            style={{ opacity: nearBottom ? 0 : 1 }}
-          />
+            style={{
+              opacity: downOpacity,
+              pointerEvents: showDown ? "auto" : "none",
+            }}
+            onClick={smoothScrollToLandingBottom}
+          >
+            <ArrowDown className="size-4.5 stroke-[2.25]" aria-hidden="true" />
+          </button>
         </div>
-
-        <button
-          type="button"
-          data-test="landing-scroll-fab-up"
-          aria-label="Scroll to top"
-          className={twMerge(glassIconClass, "-translate-y-[var(--fab-travel)]")}
-          onClick={smoothScrollToLandingTop}
-        >
-          <ArrowUp className="size-[18px] stroke-[2.25]" aria-hidden="true" />
-        </button>
-
-        <button
-          type="button"
-          data-test="landing-scroll-fab-down"
-          aria-label="Scroll to bottom"
-          aria-hidden={!showDown}
-          aria-disabled={!showDown}
-          disabled={!showDown}
-          tabIndex={showDown ? 0 : -1}
-          className={twMerge(
-            glassIconClass,
-            "translate-y-[var(--fab-travel)]",
-            "disabled:cursor-default",
-          )}
-          style={{
-            opacity: downOpacity,
-            pointerEvents: showDown ? "auto" : "none",
-          }}
-          onClick={smoothScrollToLandingBottom}
-        >
-          <ArrowDown className="size-[18px] stroke-[2.25]" aria-hidden="true" />
-        </button>
-      </div>
       </div>
     </>
   );

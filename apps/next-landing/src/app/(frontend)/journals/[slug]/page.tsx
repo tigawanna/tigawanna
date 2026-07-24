@@ -1,9 +1,11 @@
 import { Suspense, ViewTransition } from "react";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import { getBlogBySlug, getRelatedBlogs } from "@/data-access/blogs";
+import { getBlogBySlug } from "@/data-access/blogs";
 import { getJournalBySlug, getJournalStaticParams } from "@/data-access/journals";
 import { ContentArticle } from "@/components/blogs/ContentArticle";
+import { ContentArticleSkeleton } from "@/components/blogs/ContentArticleSkeleton";
+import { RelatedBlogsSection } from "@/components/blogs/RelatedBlogsSection";
 import { DirectionalPageTransition } from "@/components/view-transitions/DirectionalPageTransition";
 
 type Args = {
@@ -49,13 +51,6 @@ async function JournalDetail({ params }: Args) {
     notFound();
   }
 
-  const related = await getRelatedBlogs({
-    slug: journal.slug,
-    kind: "journal",
-    tags: journal.tags,
-    limit: 3,
-  });
-
   return (
     <ViewTransition enter="slide-up" default="none">
       <div data-test="journal-detail-page">
@@ -64,10 +59,16 @@ async function JournalDetail({ params }: Args) {
           backHref="/journals"
           backLabel="Back to journals"
           dataTest="journal-detail"
-          related={related}
-          relatedHeading="More TILs"
           asideHref={journal.gist}
           asideLabel="Gist"
+          related={
+            <RelatedBlogsSection
+              slug={journal.slug}
+              kind="journal"
+              tags={journal.tags}
+              heading="More TILs"
+            />
+          }
           fallbackBody={
             journal.markdown ? (
               <pre className="overflow-x-auto whitespace-pre-wrap rounded-lg border border-base-content/10 bg-base-200/40 p-6 font-sans text-sm leading-7 text-base-content/80">
@@ -88,13 +89,7 @@ export default function JournalDetailPage({ params }: Args) {
   return (
     <DirectionalPageTransition>
       <Suspense
-        fallback={
-          <ViewTransition exit="slide-down" default="none">
-            <main className="mx-auto flex min-h-svh max-w-2xl flex-col justify-center px-6 py-24">
-              <p className="text-sm text-base-content/60">Loading journal…</p>
-            </main>
-          </ViewTransition>
-        }
+        fallback={<ContentArticleSkeleton backLabel="Back to journals" showCover={false} />}
       >
         <JournalDetail params={params} />
       </Suspense>

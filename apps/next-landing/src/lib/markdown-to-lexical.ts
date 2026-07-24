@@ -2,10 +2,7 @@ import { randomBytes } from "crypto";
 import { convertMarkdownToLexical } from "@payloadcms/richtext-lexical";
 import type { DefaultTypedEditorState } from "@payloadcms/richtext-lexical";
 
-import {
-  CODE_BLOCK_LANGUAGES,
-  type CodeBlockLanguage,
-} from "@/blocks/Code/config";
+import { CODE_BLOCK_LANGUAGES, type CodeBlockLanguage } from "@/blocks/Code/config";
 
 const FENCE_RE = /```([\w+-]*)\r?\n([\s\S]*?)```/g;
 

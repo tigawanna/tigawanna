@@ -11,11 +11,7 @@ type RelatedPostsProps = {
 /**
  * Related posts grid — adapted from Payload website template `RelatedPosts`.
  */
-export function RelatedPosts({
-  docs,
-  className,
-  heading = "Related writing",
-}: RelatedPostsProps) {
+export function RelatedPosts({ docs, className, heading = "Related writing" }: RelatedPostsProps) {
   if (docs.length === 0) return null;
 
   return (

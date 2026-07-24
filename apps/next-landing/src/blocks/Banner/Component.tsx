@@ -33,10 +33,7 @@ export function BannerBlock({ className, content, style }: Props) {
         className,
       )}
     >
-      <ConvertRichText
-        data={content as SerializedEditorState}
-        converters={bannerConverters}
-      />
+      <ConvertRichText data={content as SerializedEditorState} converters={bannerConverters} />
     </div>
   );
 }

@@ -1,8 +1,10 @@
 import { Suspense, ViewTransition } from "react";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import { getBlogBySlug, getBlogStaticParams, getRelatedBlogs } from "@/data-access/blogs";
+import { getBlogBySlug, getBlogStaticParams } from "@/data-access/blogs";
 import { ContentArticle } from "@/components/blogs/ContentArticle";
+import { ContentArticleSkeleton } from "@/components/blogs/ContentArticleSkeleton";
+import { RelatedBlogsSection } from "@/components/blogs/RelatedBlogsSection";
 import { DirectionalPageTransition } from "@/components/view-transitions/DirectionalPageTransition";
 
 type Args = {
@@ -48,13 +50,6 @@ async function BlogDetail({ params }: Args) {
     notFound();
   }
 
-  const related = await getRelatedBlogs({
-    slug: blog.slug,
-    kind: "post",
-    tags: blog.tags,
-    limit: 3,
-  });
-
   return (
     <ViewTransition enter="slide-up" default="none">
       <div data-test="blog-detail-page">
@@ -63,8 +58,14 @@ async function BlogDetail({ params }: Args) {
           backHref="/blogs"
           backLabel="Back to blogs"
           dataTest="blog-detail"
-          related={related}
-          relatedHeading="More posts"
+          related={
+            <RelatedBlogsSection
+              slug={blog.slug}
+              kind="post"
+              tags={blog.tags}
+              heading="More posts"
+            />
+          }
         />
       </div>
     </ViewTransition>
@@ -77,15 +78,7 @@ async function BlogDetail({ params }: Args) {
 export default function BlogDetailPage({ params }: Args) {
   return (
     <DirectionalPageTransition>
-      <Suspense
-        fallback={
-          <ViewTransition exit="slide-down" default="none">
-            <main className="mx-auto flex min-h-svh max-w-2xl flex-col justify-center px-6 py-24">
-              <p className="text-sm text-base-content/60">Loading post…</p>
-            </main>
-          </ViewTransition>
-        }
-      >
+      <Suspense fallback={<ContentArticleSkeleton backLabel="Back to blogs" showCover />}>
         <BlogDetail params={params} />
       </Suspense>
     </DirectionalPageTransition>

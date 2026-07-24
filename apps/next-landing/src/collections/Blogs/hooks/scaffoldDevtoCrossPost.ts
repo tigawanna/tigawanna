@@ -22,8 +22,7 @@ export const scaffoldDevtoCrossPost: CollectionAfterChangeHook<Blog> = ({
     return doc;
   }
 
-  const justPublished =
-    doc._status === "published" && previousDoc?._status !== "published";
+  const justPublished = doc._status === "published" && previousDoc?._status !== "published";
   const wantsCrossPost = Boolean(doc.devto?.enabled);
 
   if (!justPublished || !wantsCrossPost) {

@@ -5,6 +5,7 @@ import { TimeCompponent } from "../stubs/time";
 import { useLandingCardMotion } from "../hooks/use-landing-card-motion";
 import type { GithubRepoNode } from "../types/github";
 import { projectImageVtName } from "@/components/view-transitions/names";
+import Image from "next/image";
 import Link from "next/link";
 import { Github, Globe, Lock } from "lucide-react";
 import { useRef } from "react";
@@ -33,7 +34,7 @@ export function PrivateProjectCard({ repo, className }: ProjectCardProps) {
       ref={cardRef}
       data-test="private-project-card"
       className={twMerge(
-        "landing-card flex min-h-[320px] flex-col items-center justify-center gap-4 overflow-hidden p-7 text-center",
+        "landing-card flex min-h-80 flex-col items-center justify-center gap-4 overflow-hidden p-7 text-center",
         className,
       )}
     >
@@ -69,18 +70,16 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
       data-test="project-card"
       className={twMerge("landing-card group relative flex flex-col overflow-hidden", className)}
     >
-      <ViewTransition
-        name={projectImageVtName(repo.nameWithOwner)}
-        share="morph"
-        default="none"
-      >
+      <ViewTransition name={projectImageVtName(repo.nameWithOwner)} share="morph" default="none">
         <div className="landing-card-media relative h-48 shrink-0 overflow-hidden">
           {imageUrl ? (
             <>
-              <img
+              <Image
                 src={imageUrl}
                 alt={repo.name}
-                className="landing-card-media-image h-full w-full object-cover"
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="landing-card-media-image object-cover"
               />
               <div className="absolute inset-0 bg-linear-to-t from-landing-panel via-landing-panel/10 to-transparent" />
             </>

@@ -2,8 +2,8 @@
   "name": "next-landing",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "description": "Next.js + Payload experiment for the portfolio landing page (Lighthouse comparison vs TanStack)",
+  "type": "module",
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev --port 3055",
     "devsafe": "rm -rf .next && cross-env NODE_OPTIONS=--no-deprecation next dev --port 3055",

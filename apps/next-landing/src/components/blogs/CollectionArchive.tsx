@@ -12,11 +12,7 @@ type CollectionArchiveProps = {
 /**
  * Archive grid — adapted from Payload website template `CollectionArchive`.
  */
-export function CollectionArchive({
-  items,
-  className,
-  featured = false,
-}: CollectionArchiveProps) {
+export function CollectionArchive({ items, className, featured = false }: CollectionArchiveProps) {
   if (items.length === 0) return null;
 
   const [lead, ...rest] = featured && items[0]?.heroImageUrl ? items : [null, ...items];

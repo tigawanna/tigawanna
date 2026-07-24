@@ -2,17 +2,16 @@ import type { ReactNode } from "react";
 import { LandingFooter } from "@/components/landing/layout/LandingFooter";
 import { LandingNavbar } from "@/components/landing/layout/LandingNavbar";
 import { PostHero } from "@/heros/PostHero";
-import { RelatedPosts } from "@/components/blogs/RelatedPosts";
 import { RichText } from "@/components/richtext/RichText";
-import type { JournalDetail, JournalPreviewItem } from "@/types/journals";
+import type { JournalDetail } from "@/types/journals";
 
 type ContentArticleProps = {
   doc: JournalDetail;
   backHref: "/blogs" | "/journals";
   backLabel: string;
   dataTest: string;
-  related: JournalPreviewItem[];
-  relatedHeading?: string;
+  /** Related posts (often a Suspense-wrapped section). */
+  related?: ReactNode;
   asideHref?: string | null;
   asideLabel?: string;
   /** Fallback body when Lexical content is missing (static TILs). */
@@ -21,7 +20,7 @@ type ContentArticleProps = {
 
 /**
  * Shared blog/journal article shell (Payload post page shape):
- * PostHero → Lexical body → RelatedPosts.
+ * PostHero → Lexical body → related slot.
  */
 export function ContentArticle({
   doc,
@@ -29,7 +28,6 @@ export function ContentArticle({
   backLabel,
   dataTest,
   related,
-  relatedHeading,
   asideHref,
   asideLabel,
   fallbackBody,
@@ -49,13 +47,9 @@ export function ContentArticle({
 
           <div className="container pt-10">
             <div className="mx-auto max-w-3xl">
-              {doc.content ? (
-                <RichText data={doc.content} enableGutter={false} />
-              ) : (
-                fallbackBody
-              )}
+              {doc.content ? <RichText data={doc.content} enableGutter={false} /> : fallbackBody}
 
-              <RelatedPosts docs={related} heading={relatedHeading} />
+              {related}
             </div>
           </div>
         </article>

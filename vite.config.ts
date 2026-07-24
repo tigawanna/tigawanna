@@ -11,7 +11,7 @@ export default defineConfig({
     overrides: [
       {
         files: ["apps/site/**"],
-        plugins: ["typescript", "react"],
+        plugins: ["typescript", "react", "nextjs"],
       },
     ],
   },
