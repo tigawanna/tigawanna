@@ -19,6 +19,12 @@ const nextConfig: NextConfig = {
       {
         pathname: "/api/media/file/**",
       },
+      {
+        pathname: "/opengraph-image.jpg",
+      },
+      {
+        pathname: "/icon.png",
+      },
     ],
     remotePatterns: [
       {

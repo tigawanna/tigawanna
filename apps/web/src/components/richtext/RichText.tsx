@@ -5,6 +5,7 @@ import {
   type JSXConvertersFunction,
 } from "@payloadcms/richtext-lexical/react";
 import type { SerializedLinkNode } from "@payloadcms/richtext-lexical";
+import { connection } from "next/server";
 
 import { BannerBlock } from "@/blocks/Banner/Component";
 import { CodeBlock, type CodeBlockProps } from "@/blocks/Code/Component";
@@ -56,8 +57,18 @@ type Props = {
 
 /**
  * Renders Payload Lexical rich text with Code / Banner / Media blocks.
+ *
+ * `connection()` opts this subtree into request time so Payload's Lexical
+ * converter can call `randomUUID()` under Cache Components.
  */
-export function RichText({ className, data, enableGutter = true, enableProse = true }: Props) {
+export async function RichText({
+  className,
+  data,
+  enableGutter = true,
+  enableProse = true,
+}: Props) {
+  await connection();
+
   return (
     <ConvertRichText
       converters={jsxConverters}

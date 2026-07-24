@@ -4,7 +4,11 @@ import { cacheLife, cacheTag } from "next/cache";
 import { getPayload } from "payload";
 import config from "@payload-config";
 
-import { STATIC_LESSONS, toLessonPreviewItem } from "@/components/landing/data/static";
+import {
+  STATIC_ARTICLES,
+  STATIC_LESSONS,
+  toLessonPreviewItem,
+} from "@/components/landing/data/static";
 import { formatDisplayDate } from "@/components/landing/utils/date-helpers";
 import type { Blog } from "@/payload-types";
 import type {
@@ -378,11 +382,16 @@ export async function getRelatedBlogs(options: {
 
 /**
  * Slugs for `generateStaticParams` on `/blogs/[slug]` (posts only).
+ * Always returns at least one slug — Cache Components rejects empty params.
  */
 export async function getBlogStaticParams(): Promise<Array<{ slug: string }>> {
   "use cache";
   cacheLife("hours");
   cacheTag("blogs");
+
+  const fromStatic = STATIC_ARTICLES.map((article) => ({ slug: article.slug })).filter(
+    (entry): entry is { slug: string } => Boolean(entry.slug),
+  );
 
   try {
     const payload = await getPayload({ config });
@@ -396,14 +405,17 @@ export async function getBlogStaticParams(): Promise<Array<{ slug: string }>> {
       where: { kind: { equals: "post" } },
     });
 
-    return result.docs
+    const fromCms = result.docs
       .map((doc) => doc.slug)
       .filter((slug): slug is string => Boolean(slug))
       .map((slug) => ({ slug }));
+
+    if (fromCms.length > 0) return fromCms;
   } catch (err: unknown) {
     console.error("[blogs] Payload blog static params query failed", err);
-    return [];
   }
+
+  return fromStatic.length > 0 ? fromStatic : [{ slug: "_placeholder" }];
 }
 
 /**

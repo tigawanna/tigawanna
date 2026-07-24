@@ -1,11 +1,19 @@
 import { configDefaults, defineConfig } from "vite-plus";
 
+/** Parked / non-active apps — skip fmt, lint, and root Vitest. */
+const ignoredApps = [
+  "apps/legacy-next/**",
+  "apps/site/**",
+  "apps/portfolio/**",
+  "apps/dashboard/**",
+] as const;
+
 export default defineConfig({
   fmt: {
-    ignorePatterns: ["**/routeTree.gen.ts"],
+    ignorePatterns: ["**/routeTree.gen.ts", ...ignoredApps],
   },
   lint: {
-    ignorePatterns: ["apps/legacy-next/**"],
+    ignorePatterns: [...ignoredApps],
     plugins: ["typescript"],
     options: { typeAware: true, typeCheck: true },
     overrides: [
@@ -20,6 +28,7 @@ export default defineConfig({
     include: ["**/*.test.{ts,tsx}"],
     exclude: [
       ...configDefaults.exclude,
+      ...ignoredApps,
       "**/e2e/**",
       "**/dist/**",
       "**/playwright-report/**",
