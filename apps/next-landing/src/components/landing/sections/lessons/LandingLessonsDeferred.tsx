@@ -32,7 +32,11 @@ function LandingLessonsShell({ children }: { children: ReactNode }) {
 
 async function LandingLessonsContent() {
   const items = await getLandingLessonPreviews();
-  return <LandingLessons items={items} />;
+  return (
+    <LandingLessonsShell>
+      <LandingLessons items={items} />
+    </LandingLessonsShell>
+  );
 }
 
 /**

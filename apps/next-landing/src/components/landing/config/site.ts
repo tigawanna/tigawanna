@@ -1,2 +1,2 @@
-/** Local site identity — vendored for Next/Turbopack (no `.js` import extensions). */
-export { siteConfig } from "@/config/site-constants/site";
+/** Re-export shared site identity from the workspace package. */
+export { siteConfig } from "@repo/site-constants";

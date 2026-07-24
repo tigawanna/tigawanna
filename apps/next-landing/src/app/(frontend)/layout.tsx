@@ -1,5 +1,11 @@
 import { Fraunces, Space_Grotesk } from "next/font/google";
 import { Toaster } from "sonner";
+import {
+  siteConfig,
+  siteSeoDescription,
+  siteSeoKeywords,
+  siteSeoTitle,
+} from "@repo/site-constants";
 import "./styles.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -15,19 +21,18 @@ const fraunces = Fraunces({
 });
 
 export const metadata = {
-  metadataBase: new URL("http://localhost:3055"),
-  title: "Dennis Waweru — tigawanna",
-  description:
-    "Full-stack TypeScript engineer building warm interfaces, strict systems, and occasional creature features.",
+  metadataBase: new URL(siteConfig.links.website),
+  title: siteSeoTitle,
+  description: siteSeoDescription,
+  keywords: siteSeoKeywords,
   icons: {
-    icon: [{ url: "/favicon.ico" }, { url: "/icon.png", type: "image/png" }],
-    apple: [{ url: "/apple-touch-icon.png" }],
+    icon: [{ url: siteConfig.assets.favicon }, { url: siteConfig.assets.icon, type: "image/png" }],
+    apple: [{ url: siteConfig.assets.appleTouchIcon }],
   },
   openGraph: {
-    title: "Dennis Waweru — tigawanna",
-    description:
-      "Full-stack TypeScript engineer building warm interfaces, strict systems, and occasional creature features.",
-    images: [{ url: "/opengraph-image.jpg" }],
+    title: siteSeoTitle,
+    description: siteSeoDescription,
+    images: [{ url: siteConfig.assets.ogImage, alt: siteConfig.assets.ogImageAlt }],
   },
 };
 

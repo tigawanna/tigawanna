@@ -1,10 +1,19 @@
 export const siteConfig = {
   name: "Dennis Waweru",
   title: "Dennis Kinuthia",
+  /** Public brand / handle shown in nav, footer, and SEO keywords. */
+  brand: "tigawanna",
   role: "Full Stack TypeScript Developer",
   description:
     "Crafting exceptional web experiences with full-stack TypeScript. Based in Nairobi, Kenya.",
+  locationLabel: "Based in",
+  location: "Nairobi",
   contactHeading: "Let's build the next system without the ghosts.",
+  /** Short footer blurb under the brand wordmark. */
+  tagline:
+    "Full-stack TypeScript, warm interfaces, strict systems, and occasionally a creature feature.",
+  contactBlurb:
+    "Open to projects, collaborations, and useful conversations about TypeScript, product architecture, and web systems.",
   navItems: [
     { label: "About", href: "#about" },
     { label: "Skills", href: "#skills" },

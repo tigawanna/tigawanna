@@ -33,8 +33,7 @@ export function LandingCTA() {
             <SectionEyebrow>Contact</SectionEyebrow>
             <h2 className="landing-section-heading">{AppConfig.contactHeading}</h2>
             <p className="mt-6 max-w-md text-lg leading-8 text-base-content/70">
-              Open to projects, collaborations, and useful conversations about TypeScript, product
-              architecture, and web systems.
+              {AppConfig.contactBlurb}
             </p>
 
             <div

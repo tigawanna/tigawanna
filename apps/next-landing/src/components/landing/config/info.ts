@@ -1,4 +1,3 @@
-/** Landing/site content constants — local copy for the Next experiment. */
 export {
   howIWorkCards,
   howIWorkSections,
@@ -14,4 +13,4 @@ export {
   type InfoDietSource,
   type InfoDietSourceKind,
   type StackCubeFace,
-} from "@/config/site-constants";
+} from "@repo/site-constants";

@@ -1,8 +1,7 @@
 /**
  * Telltale values asserted by landing e2e tests.
  *
- * Sourced from the portfolio app config / static fixtures. E2E is app-coupled
- * (see `e2e/landing/README.md`) — it does not live inside `@repo/ui`.
+ * Sourced from `@repo/site-constants` + next-landing static fixtures.
  */
 import {
   howIWorkSections,
@@ -15,7 +14,7 @@ import {
   STATIC_ARTICLES,
   STATIC_LESSONS,
   STATIC_PINNED_PROJECTS,
-} from "../../../src/data/portfolio/static";
+} from "../../src/components/landing/data/static";
 
 export const expected = {
   brand: siteConfig.brand,

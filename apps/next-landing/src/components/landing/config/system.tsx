@@ -4,7 +4,7 @@ import {
   siteSeoKeywords,
   siteSeoOgImageAlt,
   siteSeoTitle,
-} from "@/config/site-constants";
+} from "@repo/site-constants";
 import { Code2 } from "lucide-react";
 
 /**
@@ -16,15 +16,20 @@ function absoluteAsset(path: string) {
 
 export const AppConfig = {
   name: siteConfig.name,
+  brand: siteConfig.brand,
   brief: siteConfig.role,
   description: siteConfig.description,
+  locationLabel: siteConfig.locationLabel,
+  location: siteConfig.location,
+  tagline: siteConfig.tagline,
+  contactBlurb: siteConfig.contactBlurb,
   icon: Code2,
   logo: {
     src: siteConfig.assets.ogImage,
     alt: siteSeoOgImageAlt,
     href: "/",
   },
-  themeStorageKey: "tigawanna.theme",
+  themeStorageKey: `${siteConfig.brand}.theme`,
   links: siteConfig.links,
   navItems: siteConfig.navItems,
   contactHeading: siteConfig.contactHeading,

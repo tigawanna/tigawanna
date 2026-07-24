@@ -50,7 +50,7 @@ export function LandingNavbar() {
           className="shrink-0 font-serif text-lg tracking-tight text-landing-sage md:text-xl"
           data-test="landing-nav-brand"
         >
-          tigawanna
+          {AppConfig.brand}
         </Link>
 
         {isLandingRoute ? (
@@ -72,8 +72,10 @@ export function LandingNavbar() {
 
         <div className="hidden items-center gap-6 md:flex">
           <div className="hidden text-center xl:block">
-            <p className="text-[10px] tracking-[0.32em] text-landing-sage/65 uppercase">Based in</p>
-            <p className="font-serif text-sm text-landing-sage/80">Nairobi</p>
+            <p className="text-[10px] tracking-[0.32em] text-landing-sage/65 uppercase">
+              {AppConfig.locationLabel}
+            </p>
+            <p className="font-serif text-sm text-landing-sage/80">{AppConfig.location}</p>
           </div>
           {isLandingRoute ? (
             <a

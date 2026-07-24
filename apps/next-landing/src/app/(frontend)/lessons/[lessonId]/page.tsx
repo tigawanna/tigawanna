@@ -1,28 +1,74 @@
 import { Suspense } from "react";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import { CalendarRange, ExternalLink } from "lucide-react";
+import { getStaticLessonById } from "@/components/landing/data/static";
+import { LandingFooter } from "@/components/landing/layout/LandingFooter";
+import { LandingNavbar } from "@/components/landing/layout/LandingNavbar";
 
 async function LessonDetail({ params }: { params: Promise<{ lessonId: string }> }) {
   const { lessonId } = await params;
+  const lesson = getStaticLessonById(decodeURIComponent(lessonId));
+  if (!lesson) notFound();
+
+  const formattedDate = new Date(lesson.created).toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 
   return (
-    <main className="landing-void-surface mx-auto flex min-h-svh max-w-2xl flex-col justify-center px-6 py-24 text-landing-sage">
-      <p className="text-xs tracking-[0.28em] text-landing-sage/50 uppercase">Lesson</p>
-      <h1 className="mt-4 font-serif text-4xl font-medium tracking-[-0.03em]">{lessonId}</h1>
-      <p className="mt-4 text-sm leading-7 text-landing-sage/70">
-        Detail rendering is intentionally stubbed for the performance experiment.
-      </p>
-      <Link
-        href="/lessons"
-        className="mt-8 text-sm text-landing-cream underline-offset-4 hover:underline"
-      >
-        All lessons
-      </Link>
-    </main>
+    <div data-test="lesson-detail-page" className="min-h-screen bg-base-100 text-base-content">
+      <LandingNavbar />
+      <main className="min-h-screen py-24">
+        <article className="mx-auto max-w-4xl px-6" data-test="lesson-detail">
+          <div className="mb-8">
+            <Link href="/lessons" className="inline-flex text-sm text-primary hover:underline">
+              Back to lessons
+            </Link>
+          </div>
+
+          <h1 className="text-balance text-center font-serif text-5xl font-semibold tracking-[-0.04em] md:text-6xl">
+            {lesson.title}
+          </h1>
+          <p className="mx-auto mt-4 max-w-3xl text-center text-lg leading-8 text-base-content/70">
+            {lesson.description}
+          </p>
+
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-5 text-sm text-base-content/70">
+            <div className="flex items-center gap-2">
+              <CalendarRange className="size-4" />
+              {formattedDate}
+            </div>
+            {lesson.gist ? (
+              <a
+                href={lesson.gist}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-primary hover:underline"
+              >
+                Gist
+                <ExternalLink className="size-4" />
+              </a>
+            ) : null}
+          </div>
+
+          {/* Markdown body styling lands with Payload/blog — keep raw text readable for now. */}
+          {lesson.markdown ? (
+            <pre className="mt-10 overflow-x-auto whitespace-pre-wrap rounded-lg border border-base-content/10 bg-base-200/40 p-6 font-sans text-sm leading-7 text-base-content/80">
+              {lesson.markdown}
+            </pre>
+          ) : null}
+        </article>
+      </main>
+      <LandingFooter />
+    </div>
   );
 }
 
 /**
- * Placeholder lesson detail — Payload blog posts will replace this later.
+ * Lesson detail scaffold — enough for landing e2e (title + description).
+ * Rich HTML styling comes later with Payload Lexical markup.
  */
 export default function LessonDetailPage({
   params,
@@ -32,8 +78,8 @@ export default function LessonDetailPage({
   return (
     <Suspense
       fallback={
-        <main className="landing-void-surface mx-auto flex min-h-svh max-w-2xl flex-col justify-center px-6 py-24 text-landing-sage">
-          <p className="text-sm text-landing-sage/60">Loading lesson…</p>
+        <main className="mx-auto flex min-h-svh max-w-2xl flex-col justify-center px-6 py-24">
+          <p className="text-sm text-base-content/60">Loading lesson…</p>
         </main>
       }
     >

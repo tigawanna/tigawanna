@@ -13,13 +13,16 @@
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "lint": "cross-env NODE_OPTIONS=--no-deprecation eslint .",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "test:e2e": "playwright test --config e2e/playwright.config.ts",
+    "test:e2e:install": "playwright install chromium"
   },
   "dependencies": {
     "@payloadcms/db-sqlite": "3.86.0",
     "@payloadcms/next": "3.86.0",
     "@payloadcms/richtext-lexical": "3.86.0",
     "@payloadcms/ui": "3.86.0",
+    "@repo/site-constants": "workspace:*",
     "@tailwindcss/postcss": "^4.1.18",
     "animejs": "^4.5.0",
     "clsx": "^2.1.1",
@@ -42,6 +45,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.57.0",
     "@types/node": "^24.12.3",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",

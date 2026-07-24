@@ -1,6 +1,5 @@
 "use client";
 
-import { CreatureEggLowercaseI, CreatureEggTrigger } from "../stubs/creature-egg";
 import { Button } from "../stubs/button";
 import { unwrapUnknownError } from "../stubs/errors";
 import { AppConfig } from "../config/system";
@@ -82,20 +81,11 @@ export function LandingFooter() {
           <div>
             <span className="font-serif text-5xl font-semibold tracking-[-0.055em] text-base-content md:text-7xl">
               <Link href="/" className="transition-colors hover:text-primary">
-                tigawanna
+                {AppConfig.brand}
               </Link>
-              <CreatureEggTrigger className="ml-1 align-middle" />
             </span>
             <p className="mt-5 max-w-xl text-base leading-7 text-base-content/70">
-              Full-stack TypeScript, warm int
-              <CreatureEggLowercaseI />
-              erfaces, strict systems, and occas
-              <CreatureEggLowercaseI />
-              ionally a creature feature
-              <CreatureEggTrigger
-                className="ml-1 align-middle"
-                data-test="creature-feature-egg-period"
-              />
+              {AppConfig.tagline}
             </p>
           </div>
 
@@ -140,7 +130,9 @@ export function LandingFooter() {
           <p>
             &copy; {currentYear} {AppConfig.name}
           </p>
-          <p>Built from Nairobi with TypeScript</p>
+          <p>
+            Built from {AppConfig.location} with TypeScript
+          </p>
         </div>
       </div>
     </footer>

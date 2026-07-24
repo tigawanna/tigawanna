@@ -9,6 +9,7 @@ const dirname = path.dirname(__filename);
 const nextConfig: NextConfig = {
   /** Cache Components: static shell + selective `use cache` / PPR-style streaming. */
   cacheComponents: true,
+  transpilePackages: ["@repo/site-constants"],
   experimental: {
     /** React View Transitions for App Router navigations. */
     viewTransition: true,

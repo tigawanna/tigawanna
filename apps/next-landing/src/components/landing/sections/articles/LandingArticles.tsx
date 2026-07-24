@@ -1,5 +1,4 @@
 import { siteConfig } from "../../config/site";
-import { CreatureEggLowercaseI } from "../../stubs/creature-egg";
 import { STATIC_ARTICLES } from "../../data/static";
 import { ArrowUpRight } from "lucide-react";
 import { ArticleCard } from "../../cards/ArticleCard";
@@ -19,11 +18,7 @@ export function LandingArticles() {
       <div className="container relative z-10">
         <div className="mx-auto mb-14 max-w-3xl text-center">
           <SectionEyebrow>Articles</SectionEyebrow>
-          <h2 className="landing-section-heading">
-            Wr
-            <CreatureEggLowercaseI />
-            ting in public.
-          </h2>
+          <h2 className="landing-section-heading">Writing in public.</h2>
           <p className="landing-section-lead">Published on Dev.to.</p>
         </div>
 

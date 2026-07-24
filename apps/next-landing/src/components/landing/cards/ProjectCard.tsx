@@ -9,10 +9,12 @@ import { useRef } from "react";
 import { twMerge } from "tailwind-merge";
 
 /**
- * Encodes `owner/repo` into a URL-safe project slug used by `/project/[name]`.
+ * Builds the project detail href for a `owner/repo` slug.
  */
-function projectRouteParam(nameWithOwner: string) {
-  return nameWithOwner.replace("/", "=>");
+function projectDetailHref(nameWithOwner: string) {
+  const [owner, repo] = nameWithOwner.split("/");
+  if (!owner || !repo) return "/";
+  return `/project/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`;
 }
 
 interface ProjectCardProps {
@@ -131,7 +133,7 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
           </div>
 
           <Link
-            href={`/project/${encodeURIComponent(projectRouteParam(repo.nameWithOwner))}`}
+            href={projectDetailHref(repo.nameWithOwner)}
             className="rounded-none border border-landing-cream/15 px-3.5 py-1.5 text-xs font-medium text-landing-sage/75 transition-all hover:border-landing-cream/30 hover:bg-landing-cream/5 hover:text-landing-cream"
           >
             Details

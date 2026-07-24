@@ -1,1 +1,1 @@
-export type { TechChoice } from "@/config/site-constants/types";
+export type { TechChoice } from "@repo/site-constants";

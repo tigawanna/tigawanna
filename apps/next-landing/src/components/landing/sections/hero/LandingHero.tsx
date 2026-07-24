@@ -1,4 +1,3 @@
-import { CreatureEggLowercaseI } from "../../stubs/creature-egg";
 import { AppConfig } from "../../config/system";
 import { HeroIllustration } from "./HeroIllustration";
 
@@ -12,8 +11,7 @@ export function LandingHero() {
 
       <div className="relative z-10 flex w-full max-w-6xl flex-col items-center text-center">
         <h1 className="w-full font-serif text-7xl leading-[0.9] font-medium tracking-[-0.04em] md:text-8xl lg:text-[7rem] lg:whitespace-nowrap xl:text-[8.5rem] 2xl:text-[9rem]">
-          Denn
-          <CreatureEggLowercaseI />s Waweru
+          {AppConfig.name}
         </h1>
 
         <p className="mt-6 w-full font-serif text-xl tracking-[0.02em] text-landing-sage/85 md:mt-8 md:text-2xl lg:mt-6 lg:text-center">

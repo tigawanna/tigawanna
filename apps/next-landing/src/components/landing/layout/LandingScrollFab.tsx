@@ -4,6 +4,7 @@ import { ArrowDown, ArrowUp } from "lucide-react";
 import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
 import { twMerge } from "tailwind-merge";
 import { subscribeScroll } from "../utils/landing-scroll";
+import { CreatureEggFlash } from "@/components/creature-egg/CreatureEggFlash";
 import {
   smoothScrollToLandingBottom,
   smoothScrollToLandingTop,
@@ -164,30 +165,32 @@ export function LandingScrollFab() {
   } satisfies CSSProperties;
 
   return (
-    <div
-      data-test="landing-scroll-fab"
-      data-visible={visible ? "true" : "false"}
-      data-split-ready={splitReady ? "true" : "false"}
-      onPointerEnter={() => {
-        pointerInsideRef.current = true;
-        if (idleTimerRef.current !== null) {
-          window.clearTimeout(idleTimerRef.current);
-          idleTimerRef.current = null;
-        }
-        if (pastThresholdRef.current) setScrollActive(true);
-      }}
-      onPointerLeave={() => {
-        pointerInsideRef.current = false;
-        if (pastThresholdRef.current && scrollActive) scheduleIdleHide();
-      }}
-      className={twMerge(
-        "fixed right-4 bottom-20 z-40 origin-bottom md:right-7 md:bottom-24",
-        "transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
-        visible
-          ? "pointer-events-auto translate-y-0 scale-100 opacity-100"
-          : "pointer-events-none translate-y-3 scale-75 opacity-0",
-      )}
-    >
+    <>
+      <CreatureEggFlash fabVisible={visible} />
+      <div
+        data-test="landing-scroll-fab"
+        data-visible={visible ? "true" : "false"}
+        data-split-ready={splitReady ? "true" : "false"}
+        onPointerEnter={() => {
+          pointerInsideRef.current = true;
+          if (idleTimerRef.current !== null) {
+            window.clearTimeout(idleTimerRef.current);
+            idleTimerRef.current = null;
+          }
+          if (pastThresholdRef.current) setScrollActive(true);
+        }}
+        onPointerLeave={() => {
+          pointerInsideRef.current = false;
+          if (pastThresholdRef.current && scrollActive) scheduleIdleHide();
+        }}
+        className={twMerge(
+          "fixed right-4 bottom-20 z-40 origin-bottom md:right-7 md:bottom-24",
+          "transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+          visible
+            ? "pointer-events-auto translate-y-0 scale-100 opacity-100"
+            : "pointer-events-none translate-y-3 scale-75 opacity-0",
+        )}
+      >
       <svg width="0" height="0" aria-hidden="true" className="absolute">
         <defs>
           <filter id={filterId} colorInterpolationFilters="sRGB">
@@ -264,6 +267,7 @@ export function LandingScrollFab() {
           <ArrowDown className="size-[18px] stroke-[2.25]" aria-hidden="true" />
         </button>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
