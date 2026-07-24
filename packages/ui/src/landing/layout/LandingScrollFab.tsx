@@ -1,7 +1,6 @@
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
 import { twMerge } from "tailwind-merge";
-import { ClientOnly } from "../stubs/client-only";
 import { subscribeScroll } from "../utils/landing-scroll";
 import {
   smoothScrollToLandingBottom,
@@ -16,6 +15,8 @@ const SPLIT_VIEWPORT_RATIO = 0.5;
 const MAX_SEPARATION_PX = 26;
 /** Split amount at which the bottom target becomes interactive. */
 const SPLIT_INTERACTIVE_AT = 0.35;
+/** Hide the FAB after this long with no scroll (ms). */
+const IDLE_HIDE_MS = 5000;
 
 const glassSurfaceClass = twMerge(
   "rounded-full border border-landing-cream/30 bg-landing-cream/20",
@@ -62,20 +63,42 @@ function readFabVisualState(scrollY: number): FabVisualState {
 
 /**
  * Fixed bottom-right scroll control: a fused gooey blob that mitosis-splits into
- * “top” and “bottom” targets as you keep scrolling. The rubbery neck comes from
- * an SVG goo filter as the circles drift apart.
+ * “top” and “bottom” targets as you keep scrolling. Appears while scrolling past
+ * the threshold, then auto-hides after idle (stays up while hovered). The rubbery
+ * neck comes from an SVG goo filter as the circles drift apart.
+ *
+ * Mount via `LandingScrollFabDeferred` so this stays client-only and lazy.
  */
-function LandingScrollFabInner() {
+export function LandingScrollFab() {
   const filterId = `landing-scroll-goo-${useId().replace(/:/g, "")}`;
-  const [visible, setVisible] = useState(false);
+  const [pastThreshold, setPastThreshold] = useState(false);
+  const [scrollActive, setScrollActive] = useState(false);
   const [nearBottom, setNearBottom] = useState(false);
   const [split, setSplit] = useState(0);
   const nearBottomRef = useRef(false);
-  const visibleRef = useRef(false);
+  const pastThresholdRef = useRef(false);
   const splitRef = useRef(0);
+  const idleTimerRef = useRef<number | null>(null);
+  const pointerInsideRef = useRef(false);
+  const skipInitialScrollRef = useRef(true);
   const prefersReducedMotion = useRef(
     typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
+
+  /**
+   * Keeps the FAB visible briefly after scroll; clears when idle unless the pointer is over it.
+   */
+  const scheduleIdleHide = () => {
+    if (idleTimerRef.current !== null) {
+      window.clearTimeout(idleTimerRef.current);
+      idleTimerRef.current = null;
+    }
+    if (pointerInsideRef.current) return;
+    idleTimerRef.current = window.setTimeout(() => {
+      idleTimerRef.current = null;
+      setScrollActive(false);
+    }, IDLE_HIDE_MS);
+  };
 
   useEffect(() => {
     const unsubscribe = subscribeScroll((scrollY) => {
@@ -87,9 +110,9 @@ function LandingScrollFabInner() {
         setNearBottom(state.nearBottom);
       }
 
-      if (state.visible !== visibleRef.current) {
-        visibleRef.current = state.visible;
-        setVisible(state.visible);
+      if (state.visible !== pastThresholdRef.current) {
+        pastThresholdRef.current = state.visible;
+        setPastThreshold(state.visible);
       }
 
       if (Math.abs(nextSplit - splitRef.current) > 0.004) {
@@ -99,11 +122,35 @@ function LandingScrollFabInner() {
         splitRef.current = nextSplit;
         setSplit(nextSplit);
       }
+
+      // subscribeScroll fires once on subscribe — ignore that so we only appear on real scroll.
+      if (skipInitialScrollRef.current) {
+        skipInitialScrollRef.current = false;
+        return;
+      }
+
+      if (!state.visible) {
+        setScrollActive(false);
+        if (idleTimerRef.current !== null) {
+          window.clearTimeout(idleTimerRef.current);
+          idleTimerRef.current = null;
+        }
+        return;
+      }
+
+      setScrollActive(true);
+      scheduleIdleHide();
     });
 
-    return unsubscribe;
+    return () => {
+      unsubscribe();
+      if (idleTimerRef.current !== null) {
+        window.clearTimeout(idleTimerRef.current);
+      }
+    };
   }, []);
 
+  const visible = pastThreshold && scrollActive;
   const splitReady = split > SPLIT_INTERACTIVE_AT;
   const showDown = splitReady && !nearBottom;
   const visualSplit = nearBottom ? 0 : split;
@@ -119,6 +166,18 @@ function LandingScrollFabInner() {
       data-test="landing-scroll-fab"
       data-visible={visible ? "true" : "false"}
       data-split-ready={splitReady ? "true" : "false"}
+      onPointerEnter={() => {
+        pointerInsideRef.current = true;
+        if (idleTimerRef.current !== null) {
+          window.clearTimeout(idleTimerRef.current);
+          idleTimerRef.current = null;
+        }
+        if (pastThresholdRef.current) setScrollActive(true);
+      }}
+      onPointerLeave={() => {
+        pointerInsideRef.current = false;
+        if (pastThresholdRef.current && scrollActive) scheduleIdleHide();
+      }}
       className={twMerge(
         "fixed right-4 bottom-20 z-40 origin-bottom md:right-7 md:bottom-24",
         "transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
@@ -204,16 +263,5 @@ function LandingScrollFabInner() {
         </button>
       </div>
     </div>
-  );
-}
-
-/**
- * Client-only wrapper so the gooey scroll FAB never SSR-mismatches on `window`.
- */
-export function LandingScrollFab() {
-  return (
-    <ClientOnly>
-      <LandingScrollFabInner />
-    </ClientOnly>
   );
 }

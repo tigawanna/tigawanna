@@ -21,7 +21,7 @@ export const getRouter = async () => {
       ...tanstackQueryContext,
     },
     defaultPreload: "intent",
-    defaultViewTransition: true,
+    defaultViewTransition: false,
     scrollRestoration: true,
     scrollRestorationBehavior: "instant",
     getScrollRestorationKey,
