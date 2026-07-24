@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vp dev --port 3045",
-    "build": "echo \"[skip] portfolio Cloudflare migration — build skipped\" && exit 0",
+    "build": "vp build",
     "preview": "vp preview",
     "deploy": "pnpm run build && wrangler deploy",
     "deploy:cf": "pnpm run build && wrangler deploy",

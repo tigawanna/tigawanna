@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as OgRouteImport } from './routes/og'
-import { Route as GgRouteImport } from './routes/gg'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LessonsIndexRouteImport } from './routes/lessons/index'
 import { Route as CreatureFeatureIndexRouteImport } from './routes/creature-feature/index'
@@ -20,11 +19,6 @@ import { Route as LessonsLessonIdRouteImport } from './routes/lessons/$lessonId'
 const OgRoute = OgRouteImport.update({
   id: '/og',
   path: '/og',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const GgRoute = GgRouteImport.update({
-  id: '/gg',
-  path: '/gg',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -55,7 +49,6 @@ const LessonsLessonIdRoute = LessonsLessonIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/gg': typeof GgRoute
   '/og': typeof OgRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/project/$name': typeof ProjectNameRoute
@@ -64,7 +57,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/gg': typeof GgRoute
   '/og': typeof OgRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/project/$name': typeof ProjectNameRoute
@@ -74,7 +66,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/gg': typeof GgRoute
   '/og': typeof OgRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/project/$name': typeof ProjectNameRoute
@@ -85,7 +76,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/gg'
     | '/og'
     | '/lessons/$lessonId'
     | '/project/$name'
@@ -94,7 +84,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/gg'
     | '/og'
     | '/lessons/$lessonId'
     | '/project/$name'
@@ -103,7 +92,6 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/gg'
     | '/og'
     | '/lessons/$lessonId'
     | '/project/$name'
@@ -113,7 +101,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  GgRoute: typeof GgRoute
   OgRoute: typeof OgRoute
   LessonsLessonIdRoute: typeof LessonsLessonIdRoute
   ProjectNameRoute: typeof ProjectNameRoute
@@ -128,13 +115,6 @@ declare module '@tanstack/react-router' {
       path: '/og'
       fullPath: '/og'
       preLoaderRoute: typeof OgRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/gg': {
-      id: '/gg'
-      path: '/gg'
-      fullPath: '/gg'
-      preLoaderRoute: typeof GgRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -177,7 +157,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  GgRoute: GgRoute,
   OgRoute: OgRoute,
   LessonsLessonIdRoute: LessonsLessonIdRoute,
   ProjectNameRoute: ProjectNameRoute,

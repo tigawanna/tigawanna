@@ -34,6 +34,20 @@ const config = defineConfig({
         enabled: true,
         host: "https://www.tigawanna.vip",
       },
+      // https://tanstack.com/start/latest/docs/framework/react/guide/static-prerendering
+      prerender: {
+        enabled: true,
+        autoSubfolderIndex: true,
+        autoStaticPathsDiscovery: true,
+        crawlLinks: true,
+        concurrency: 14,
+        retryCount: 2,
+        retryDelay: 1000,
+        maxRedirects: 5,
+        failOnError: true,
+        // Skip e2e landing alias and OG image endpoint if crawled
+        filter: ({ path }) => !path.startsWith("/og"),
+      },
     }),
     tailwindcss(),
     viteReact(),
