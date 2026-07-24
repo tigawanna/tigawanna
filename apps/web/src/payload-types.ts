@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     blogs: Blog;
+    "contact-messages": ContactMessage;
     "payload-kv": PayloadKv;
     "payload-jobs": PayloadJob;
     "payload-locked-documents": PayloadLockedDocument;
@@ -81,6 +82,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     blogs: BlogsSelect<false> | BlogsSelect<true>;
+    "contact-messages": ContactMessagesSelect<false> | ContactMessagesSelect<true>;
     "payload-kv": PayloadKvSelect<false> | PayloadKvSelect<true>;
     "payload-jobs": PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     "payload-locked-documents":
@@ -247,6 +249,29 @@ export interface Blog {
   _status?: ("draft" | "published") | null;
 }
 /**
+ * Messages from the landing contact form. Telegram delivery status is recorded on each row.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-messages".
+ */
+export interface ContactMessage {
+  id: number;
+  name: string;
+  /**
+   * Email, phone, or other reply details (optional on the form).
+   */
+  contact?: string | null;
+  message: string;
+  ipAddress?: string | null;
+  userAgent?: string | null;
+  /**
+   * Whether Telegram received this submission.
+   */
+  telegramSent: boolean;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -373,6 +398,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: "blogs";
         value: number | Blog;
+      } | null)
+    | ({
+        relationTo: "contact-messages";
+        value: number | ContactMessage;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -489,6 +518,20 @@ export interface BlogsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-messages_select".
+ */
+export interface ContactMessagesSelect<T extends boolean = true> {
+  name?: T;
+  contact?: T;
+  message?: T;
+  ipAddress?: T;
+  userAgent?: T;
+  telegramSent?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

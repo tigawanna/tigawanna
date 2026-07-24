@@ -6,10 +6,15 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(__filename);
 
+/** Monorepo root — parent of `apps/web` and `packages/*` (linked workspace deps). */
+const monorepoRoot = path.resolve(dirname, "../..");
+
 const nextConfig: NextConfig = {
   /** Cache Components: static shell + selective `use cache` / PPR-style streaming. */
   cacheComponents: true,
-  transpilePackages: ["@repo/site-constants"],
+  transpilePackages: ["@repo/site-constants", "@repo/telegram"],
+  /** Trace files from workspace packages during `next build`. */
+  outputFileTracingRoot: monorepoRoot,
   experimental: {
     /** React View Transitions for App Router navigations. */
     viewTransition: true,
@@ -51,8 +56,9 @@ const nextConfig: NextConfig = {
     return webpackConfig;
   },
   turbopack: {
-    // Monorepo: resolve from workspace root so Next/payload packages hoist correctly.
-    root: path.resolve(dirname, "../.."),
+    // Must include apps/web (where next@16 lives) and packages/* (linked @repo deps).
+    // Do NOT leave a second Next app + lockfile under this root (see apps/legacy-next).
+    root: monorepoRoot,
   },
 };
 

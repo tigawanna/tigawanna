@@ -18,7 +18,8 @@ Admin: [http://localhost:3055/admin](http://localhost:3055/admin)
 - Blogs collection (journal or post) with draft/publish, Lexical + Code/Banner/Media blocks
 - Landing UI is Next-native
 - Data: Cache Components (`use cache` + Suspense + `cacheTag` revalidation from Payload hooks)
-- Contact: server action (`src/actions/contact.ts`)
+- Contact: server action → Telegram (`@repo/telegram`) + Payload **Contact messages** inbox
+- Critical frontend errors: `error.tsx` / `global-error.tsx` → Telegram in production
 
 ## Blogs
 
@@ -29,6 +30,7 @@ Admin: [http://localhost:3055/admin](http://localhost:3055/admin)
 - Import live Dev.to posts: `pnpm import:devto` (optional `DEVTO_USERNAME`, `DEVTO_API_KEY`)
 - After adding `coverUrl`: `pnpm migrate:cover-url` then `pnpm backfill:covers` (or re-run `import:devto`)
 - One-time migrate from the old Journals collection: `pnpm migrate:journals-to-blogs`
+- Contact inbox table: `pnpm migrate:contact-messages` (then Admin → **Contact messages**)
 - Dev.to cross-post is scaffolded for posts (`devto` fields + `src/workflows/devto-crosspost.ts`)
 
 ## Notes

@@ -1,7 +1,7 @@
 /**
  * Telltale values asserted by landing e2e tests.
  *
- * Sourced from `@repo/site-constants` + web static fixtures.
+ * Sourced from `@repo/site-constants`, web `AppConfig` nav, and static fixtures.
  */
 import {
   howIWorkSections,
@@ -10,6 +10,7 @@ import {
   stackCubeFaces,
   techChoices,
 } from "@repo/site-constants";
+import { AppConfig } from "../../src/components/landing/config/system";
 import {
   STATIC_ARTICLES,
   STATIC_LESSONS,
@@ -25,7 +26,8 @@ export const expected = {
   github: siteConfig.links.github,
   linkedin: siteConfig.links.linkedin,
   devto: siteConfig.links.devto,
-  navItems: siteConfig.navItems.map((item) => ({
+  // Match the web navbar (`AppConfig`), not parked site `#articles` nav.
+  navItems: AppConfig.navItems.map((item) => ({
     label: item.label,
     sectionId: item.href.replace(/^#/, ""),
   })),

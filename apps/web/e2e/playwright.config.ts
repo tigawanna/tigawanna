@@ -33,7 +33,8 @@ export default defineConfig({
     video: "retain-on-failure",
   },
   webServer: {
-    command: "pnpm dev --port 3055 --hostname 127.0.0.1",
+    // Webpack: Turbopack panics under parallel e2e ("Next.js package not found" with monorepo root).
+    command: "pnpm exec next dev --webpack --port 3055 --hostname 127.0.0.1",
     cwd: appRoot,
     url: baseURL,
     reuseExistingServer: !process.env.CI,

@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import sharp from "sharp";
 
 import { Blogs } from "./collections/Blogs";
+import { ContactMessages } from "./collections/ContactMessages";
 import { Media } from "./collections/Media";
 import { Users } from "./collections/Users";
 
@@ -22,7 +23,7 @@ export default buildConfig({
       titleSuffix: " · Tigawanna",
     },
   },
-  collections: [Users, Media, Blogs],
+  collections: [Users, Media, Blogs, ContactMessages],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: {

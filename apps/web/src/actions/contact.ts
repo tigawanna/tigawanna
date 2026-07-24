@@ -1,14 +1,44 @@
 "use server";
 
+import config from "@payload-config";
 import { headers } from "next/headers";
+import { getPayload } from "payload";
 import {
   contactFormSchema,
   type ContactFormValues,
 } from "@/components/landing/sections/contact/contact-schema";
+import { getTelegramClient } from "@/lib/telegram/client";
+
+type PersistMeta = {
+  hasContact: boolean;
+  ipAddress?: string;
+  userAgent?: string;
+  telegramSent: boolean;
+};
 
 /**
- * Persists / relays a portfolio contact submission.
- * Telegram is optional for the experiment — always validates + logs.
+ * Persists a contact submission into the Payload inbox collection.
+ */
+async function persistContactMessage(data: ContactFormValues, meta: PersistMeta) {
+  const payload = await getPayload({ config });
+
+  await payload.create({
+    collection: "contact-messages",
+    data: {
+      name: data.name,
+      contact: meta.hasContact ? data.contact : null,
+      message: data.message,
+      ipAddress: meta.ipAddress ?? null,
+      userAgent: meta.userAgent ?? null,
+      telegramSent: meta.telegramSent,
+    },
+    overrideAccess: true,
+  });
+}
+
+/**
+ * Relays a landing contact submission to Telegram and stores it in Payload.
+ * Mirrors the site app flow: always persist; rethrow when Telegram send fails after credentials exist.
  */
 export async function sendContactMessage(input: ContactFormValues) {
   const data = contactFormSchema.parse(input);
@@ -30,21 +60,42 @@ export async function sendContactMessage(input: ContactFormValues) {
     data.message,
   ].join("\n");
 
-  const botToken = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
+  const telegram = getTelegramClient();
+  let telegramSent = false;
 
-  if (botToken && chatId) {
-    const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: chatId, text }),
+  if (!telegram) {
+    console.warn("[contact] Telegram credentials unset — persisting message only");
+    await persistContactMessage(data, {
+      hasContact,
+      ipAddress,
+      userAgent,
+      telegramSent: false,
     });
-    if (!response.ok) {
-      throw new Error(`Telegram send failed (${response.status})`);
-    }
-  } else {
-    console.info("[contact]", text);
+    return { success: true as const };
   }
+
+  try {
+    const result = await telegram.send(text);
+    telegramSent = result.success;
+    if (!result.success) {
+      throw new Error(result.message);
+    }
+  } catch (error: unknown) {
+    await persistContactMessage(data, {
+      hasContact,
+      ipAddress,
+      userAgent,
+      telegramSent: false,
+    });
+    throw error;
+  }
+
+  await persistContactMessage(data, {
+    hasContact,
+    ipAddress,
+    userAgent,
+    telegramSent,
+  });
 
   return { success: true as const };
 }
