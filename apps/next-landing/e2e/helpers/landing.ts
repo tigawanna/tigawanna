@@ -135,7 +135,7 @@ export async function expectCoreLandingContent(page: Page) {
   await expect(page.getByTestId("landing-infodiet")).toContainText(expected.infoDiet.name);
 
   await revealSection(page, "journal");
-  await expect(page.getByTestId("landing-lessons")).toContainText(expected.lesson.title);
+  await expect(page.getByTestId("landing-journals")).toContainText(expected.lesson.title);
 
   await revealSection(page, "contact");
   await expect(page.getByTestId("contact-form")).toBeVisible();

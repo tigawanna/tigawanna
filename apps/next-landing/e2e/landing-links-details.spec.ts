@@ -47,19 +47,29 @@ test.describe("landing links and detail pages", () => {
     ).toHaveAttribute("href", expected.project.url);
   });
 
-  test("article cards link out to Dev.to urls from static fixtures", async ({ page }) => {
+  test("article cards prefer Payload posts when seeded", async ({ page }) => {
     await openLanding(page);
     await revealSection(page, "articles");
 
     const card = page
-      .getByTestId("article-card")
+      .getByTestId("journal-card")
+      .or(page.getByTestId("article-card"))
       .filter({ hasText: expected.article.title })
       .first();
-    await expect(card.getByRole("link", { name: /read article/i })).toHaveAttribute(
-      "href",
-      expected.article.url,
-    );
-    await expect(page.getByTestId("articles-see-more")).toHaveAttribute("href", expected.devto);
+    await expect(card).toBeVisible();
+
+    const internal = card.getByRole("link", { name: /read post/i });
+    const external = card.getByRole("link", { name: /read article/i });
+
+    if ((await internal.count()) > 0) {
+      await expect(internal).toHaveAttribute("href", /\/journals\//);
+    } else {
+      await expect(external).toHaveAttribute("href", expected.article.url);
+    }
+
+    const seeMore = page.getByTestId("articles-see-more");
+    const href = await seeMore.getAttribute("href");
+    expect(href === "/journals" || href === expected.devto).toBe(true);
   });
 
   test("infodiet cards link to known sources", async ({ page }) => {
@@ -71,19 +81,19 @@ test.describe("landing links and detail pages", () => {
     await expect(card).toContainText(expected.infoDiet.name);
   });
 
-  test("lesson cards open the detail page with known content", async ({ page }) => {
+  test("journal cards open the detail page with known content", async ({ page }) => {
     await openLanding(page);
     await revealSection(page, "journal");
 
-    const card = page.getByTestId("lesson-card").filter({ hasText: expected.lesson.title }).first();
-    const lessonLink = card.getByRole("link", { name: /read lesson/i });
-    const href = await lessonLink.getAttribute("href");
+    const card = page.getByTestId("journal-card").filter({ hasText: expected.lesson.title }).first();
+    const journalLink = card.getByRole("link", { name: /read journal/i });
+    const href = await journalLink.getAttribute("href");
     expect(href).toBeTruthy();
     await page.goto(href!, { waitUntil: "domcontentloaded" });
 
-    await expect(page.getByTestId("lesson-detail")).toBeVisible();
-    await expect(page.getByTestId("lesson-detail")).toContainText(expected.lesson.title);
-    await expect(page.getByTestId("lesson-detail")).toContainText(expected.lesson.description);
+    await expect(page.getByTestId("journal-detail")).toBeVisible();
+    await expect(page.getByTestId("journal-detail")).toContainText(expected.lesson.title);
+    await expect(page.getByTestId("journal-detail")).toContainText(expected.lesson.description);
   });
 
   test("contact block shows email and footer social hrefs", async ({ page }) => {

@@ -7,7 +7,7 @@ import { LandingCTA } from "./sections/contact/LandingCTA";
 import { LandingFeaturesDeferred } from "./sections/features/LandingFeaturesDeferred";
 import { LandingHero } from "./sections/hero/LandingHero";
 import { LandingInfodiet } from "./sections/infodiet/LandingInfodiet";
-import { LandingLessonsDeferred } from "./sections/lessons/LandingLessonsDeferred";
+import { LandingJournalsDeferred } from "./sections/journals/LandingJournalsDeferred";
 import { LandingProjects } from "./sections/projects/LandingProjects";
 import { StackCubeDeferred } from "./sections/stack-cube/StackCubeDeferred";
 
@@ -16,7 +16,7 @@ import { StackCubeDeferred } from "./sections/stack-cube/StackCubeDeferred";
  *
  * Sync composition only — no page-level awaits. Cached / async sections
  * resolve inside their own Server Components under Suspense so the static
- * shell (nav, hero, copy) is not blocked by GitHub / lessons data.
+ * shell (nav, hero, copy) is not blocked by GitHub / journals data.
  */
 export function LandingPage() {
   return (
@@ -30,7 +30,7 @@ export function LandingPage() {
         <LandingProjects />
         <LandingArticles />
         <LandingInfodiet />
-        <LandingLessonsDeferred />
+        <LandingJournalsDeferred />
         <LandingCTA />
       </main>
       <LandingFooter />

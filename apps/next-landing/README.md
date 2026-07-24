@@ -9,19 +9,31 @@ pnpm --filter next-landing install   # from monorepo root: pnpm install
 pnpm --filter next-landing dev       # http://localhost:3055
 ```
 
+Admin: [http://localhost:3055/admin](http://localhost:3055/admin)
+
 ## Stack
 
 - Next.js 16 (`cacheComponents`, experimental `viewTransition`)
-- Payload 3 (SQLite) — admin at `/admin`, blog later
-- Landing UI is Next-native (no `@repo/ui/landing`)
-- Data: Cache Components (`use cache` + Suspense) — sections fetch themselves, page stays sync
+- Payload 3 + `@payloadcms/db-sqlite` (Drizzle + libSQL) — local `file:` SQLite or Turso
+- Journals collection with draft/publish, Lexical + Code/Banner/Media blocks
+- Landing UI is Next-native
+- Data: Cache Components (`use cache` + Suspense + `cacheTag` revalidation from Payload hooks)
 - Contact: server action (`src/actions/contact.ts`)
+
+## Journals
+
+- Admin → **Journals** — `kind: post` (blog) or `til` (short snippet)
+- Public routes: `/journals`, `/journals/[slug]`
+- `/lessons` redirects to `/journals`
+- Landing TIL section + articles section read published journals (static fixtures until first publish)
+- Seed fixtures into Payload: `pnpm seed:journals`
+- Dev.to cross-post is scaffolded (`devto` fields + `src/workflows/devto-crosspost.ts`)
 
 ## Notes
 
 - Set `PORTFOLIO_USE_STATIC_FIXTURES=1` (default in `.env`) for offline fixtures
-- Payload admin is available but not required to render the landing page
-- Nested `/lessons` and `/project` routes are stubbed; cards link there already
+- For Turso: set `DATABASE_URL=libsql://…` and `DATABASE_AUTH_TOKEN`
+- Payload auth powers `/admin` only — no separate Better Auth in this app
 
 ## Lighthouse (local smoke)
 
@@ -32,5 +44,3 @@ pnpm --filter next-landing exec lighthouse http://localhost:3055/ \
   --only-categories=performance --form-factor=mobile \
   --chrome-flags="--headless --no-sandbox" --output=json --output-path=./lighthouse-next-landing.json
 ```
-
-First mobile run on this machine landed around **Performance 66** (FCP ~1.5s, LCP ~2.8s, TBT ~1.8s). Compare against the TanStack portfolio on the same machine/network before deciding — TBT is still the main drag (lots of client islands for animations/filters).

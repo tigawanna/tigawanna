@@ -4,20 +4,21 @@ import { cacheLife, cacheTag } from "next/cache";
 import {
   STATIC_PINNED_PROJECTS,
   STATIC_RECENT_PROJECTS,
-  STATIC_LESSONS,
-  toLessonPreviewItem,
 } from "@/components/landing/data/static";
 import type { GithubRepoNode } from "@/components/landing/types/github";
-import type { LessonPreviewItem } from "@/components/landing/types/lessons";
+import type { JournalPreviewItem } from "@/types/journals";
+import { getLandingTilPreviews } from "./journals";
 
 /**
- * Landing lesson cards — static fixtures until Payload blog lands.
+ * Landing journal / TIL cards — Payload-backed with static fixture fallback.
  */
-export async function getLandingLessonPreviews(): Promise<LessonPreviewItem[]> {
-  "use cache";
-  cacheLife("hours");
-  cacheTag("landing-lessons");
-  return STATIC_LESSONS.slice(0, 8).map(toLessonPreviewItem);
+export async function getLandingJournalPreviews(): Promise<JournalPreviewItem[]> {
+  return getLandingTilPreviews();
+}
+
+/** @deprecated Prefer {@link getLandingJournalPreviews} */
+export async function getLandingLessonPreviews(): Promise<JournalPreviewItem[]> {
+  return getLandingTilPreviews();
 }
 
 /**

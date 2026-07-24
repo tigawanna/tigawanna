@@ -1,27 +1,27 @@
 import { Suspense, type ReactNode } from "react";
-import { getLandingLessonPreviews } from "@/data-access/landing";
+import { getLandingTilPreviews } from "@/data-access/journals";
 import { PortfolioGridSkeleton } from "../../cards/PortfolioGridSkeleton";
 import { LandingSection, OrganicDivider, SectionEyebrow } from "../../primitives";
-import { LandingLessons } from "./LandingLessons";
+import { LandingJournals } from "./LandingJournals";
 
-function LandingLessonsShell({ children }: { children: ReactNode }) {
+function LandingJournalsShell({ children }: { children: ReactNode }) {
   return (
     <LandingSection
       id="journal"
       tone="panel"
       className="text-base-content"
-      dataTest="landing-lessons"
+      dataTest="landing-journals"
     >
       <OrganicDivider tone="panel" />
       <OrganicDivider tone="panel" flip />
 
       <div className="container relative z-10">
         <div className="mx-auto mb-14 max-w-3xl text-center">
-          <SectionEyebrow>Today I learned</SectionEyebrow>
+          <SectionEyebrow>Journal</SectionEyebrow>
           <h2 className="landing-section-heading">Cool things I recently learned</h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-base-content/70">
-            Small lessons, debugging wins, and notes — stored in Tirso so I can add new ones from
-            the admin panel later.
+            Short TILs and debugging notes — written in Payload, stored on Turso/SQLite, and ready
+            to publish from the admin panel.
           </p>
         </div>
         {children}
@@ -30,29 +30,29 @@ function LandingLessonsShell({ children }: { children: ReactNode }) {
   );
 }
 
-async function LandingLessonsContent() {
-  const items = await getLandingLessonPreviews();
+async function LandingJournalsContent() {
+  const items = await getLandingTilPreviews();
   return (
-    <LandingLessonsShell>
-      <LandingLessons items={items} />
-    </LandingLessonsShell>
+    <LandingJournalsShell>
+      <LandingJournals items={items} />
+    </LandingJournalsShell>
   );
 }
 
 /**
- * Lessons section — Suspense shell in the static page; content resolves here
+ * Journals section — Suspense shell in the static page; content resolves here
  * via `use cache` so Cache Components can stream without blocking the route.
  */
-export function LandingLessonsDeferred() {
+export function LandingJournalsDeferred() {
   return (
     <Suspense
       fallback={
-        <LandingLessonsShell>
+        <LandingJournalsShell>
           <PortfolioGridSkeleton count={8} />
-        </LandingLessonsShell>
+        </LandingJournalsShell>
       }
     >
-      <LandingLessonsContent />
+      <LandingJournalsContent />
     </Suspense>
   );
 }

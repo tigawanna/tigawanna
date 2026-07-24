@@ -2,8 +2,8 @@
 
 import { ViewTransition } from "react";
 import { useLandingCardMotion } from "../hooks/use-landing-card-motion";
-import type { LessonPreviewItem } from "../types/lessons";
-import { lessonTitleVtName } from "@/components/view-transitions/names";
+import type { JournalPreviewItem } from "@/types/journals";
+import { journalTitleVtName } from "@/components/view-transitions/names";
 import Link from "next/link";
 import { ArrowUpRight, ExternalLink } from "lucide-react";
 import { useRef } from "react";
@@ -21,22 +21,27 @@ const previewFades = [
   "from-landing-panel-alt",
 ] as const;
 
-interface LessonCardProps {
-  item: LessonPreviewItem;
+interface JournalCardProps {
+  item: JournalPreviewItem;
   className?: string;
   tone?: 0 | 1 | 2;
 }
 
-export function LessonCard({ item, className, tone = 0 }: LessonCardProps) {
+/**
+ * Landing / index card for a journal entry (blog post or TIL).
+ */
+export function JournalCard({ item, className, tone = 0 }: JournalCardProps) {
   const cardRef = useRef<HTMLElement | null>(null);
   useLandingCardMotion(cardRef);
 
-  const lessonHref = `/lessons/${encodeURIComponent(item.id)}`;
+  const href = `/journals/${encodeURIComponent(item.slug)}`;
+  const kindLabel = item.kind === "post" ? "Post" : "TIL";
+  const cta = item.kind === "post" ? "Read post" : "Read journal";
 
   return (
     <article
       ref={cardRef}
-      data-test="lesson-card"
+      data-test="journal-card"
       className={twMerge(
         "landing-card group relative flex flex-col overflow-hidden",
         cardSurfaces[tone],
@@ -44,22 +49,22 @@ export function LessonCard({ item, className, tone = 0 }: LessonCardProps) {
       )}
     >
       <Link
-        href={lessonHref}
+        href={href}
         transitionTypes={["nav-forward"]}
         className="flex flex-1 flex-col outline-offset-[-2px]"
-        aria-label={`Read lesson: ${item.title}`}
+        aria-label={`${cta}: ${item.title}`}
       >
         <div className="flex flex-1 flex-col gap-3 p-6 pt-4">
           <div className="flex items-center justify-between gap-2">
             <span className="text-[0.65rem] font-semibold tracking-[0.22em] text-landing-olive uppercase">
-              {item.type}
+              {kindLabel}
             </span>
             <time className="text-xs text-landing-sage/60" dateTime={item.created}>
               {item.createdLabel}
             </time>
           </div>
 
-          <ViewTransition name={lessonTitleVtName(item.id)} share="text-morph" default="none">
+          <ViewTransition name={journalTitleVtName(item.slug)} share="text-morph" default="none">
             <h3 className="line-clamp-2 font-serif text-xl leading-snug text-landing-cream">
               {item.title}
             </h3>
@@ -69,11 +74,10 @@ export function LessonCard({ item, className, tone = 0 }: LessonCardProps) {
 
           <div className="mt-auto flex items-center justify-between gap-3 border-t border-landing-cream/8 pt-4">
             <span className="inline-flex min-h-6 items-center gap-1 text-xs font-medium text-landing-sage transition-colors group-hover:text-landing-cream">
-              Read lesson
+              {cta}
               <ArrowUpRight className="size-3.5" aria-hidden="true" />
             </span>
 
-            {/* Spacer so gist can sit in the same row without nesting anchors. */}
             {item.gist ? <span className="size-4" aria-hidden="true" /> : null}
           </div>
         </div>
@@ -93,7 +97,7 @@ export function LessonCard({ item, className, tone = 0 }: LessonCardProps) {
               aria-hidden="true"
             >
               <span className="inline-flex items-center gap-1 text-[0.65rem] font-medium text-landing-cream/90">
-                Read lesson
+                {cta}
                 <ArrowUpRight className="size-3" />
               </span>
             </div>
@@ -122,3 +126,6 @@ export function LessonCard({ item, className, tone = 0 }: LessonCardProps) {
     </article>
   );
 }
+
+/** @deprecated Use {@link JournalCard} */
+export const LessonCard = JournalCard;

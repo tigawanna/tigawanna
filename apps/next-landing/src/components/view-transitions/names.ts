@@ -1,8 +1,13 @@
 /**
- * Shared view-transition name for a lesson title (list card ↔ detail hero).
+ * Shared view-transition name for a journal title (list card ↔ detail hero).
  */
+export function journalTitleVtName(slug: string) {
+  return `journal-title-${slug}`;
+}
+
+/** @deprecated Use {@link journalTitleVtName} */
 export function lessonTitleVtName(lessonId: string) {
-  return `lesson-title-${lessonId}`;
+  return journalTitleVtName(lessonId);
 }
 
 /**

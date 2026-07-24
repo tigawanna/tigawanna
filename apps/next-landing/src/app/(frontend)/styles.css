@@ -201,3 +201,46 @@ body {
     animation-delay: 0s !important;
   }
 }
+
+/* Payload Lexical journal body */
+.payload-richtext {
+  color: var(--color-base-content);
+}
+
+.payload-richtext h1,
+.payload-richtext h2,
+.payload-richtext h3,
+.payload-richtext h4 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.payload-richtext p,
+.payload-richtext ul,
+.payload-richtext ol {
+  margin-block: 1rem;
+  line-height: 1.75;
+  color: color-mix(in oklab, var(--color-base-content) 80%, transparent);
+}
+
+.payload-richtext a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.payload-richtext hr {
+  margin-block: 2rem;
+  border-color: color-mix(in oklab, var(--color-base-content) 12%, transparent);
+}
+
+.payload-richtext blockquote {
+  margin-block: 1.25rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  background: color-mix(in oklab, var(--color-base-200) 80%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 70%, transparent);
+}

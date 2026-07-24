@@ -10,13 +10,15 @@ export { LandingFeaturesDeferred } from "./sections/features/LandingFeaturesDefe
 export { LandingProjects } from "./sections/projects/LandingProjects";
 export { LandingArticles } from "./sections/articles/LandingArticles";
 export { LandingInfodiet } from "./sections/infodiet/LandingInfodiet";
-export { LandingLessonsDeferred } from "./sections/lessons/LandingLessonsDeferred";
+export { LandingJournalsDeferred } from "./sections/journals/LandingJournalsDeferred";
 export { LandingCTA } from "./sections/contact/LandingCTA";
 export { StackCubeDeferred } from "./sections/stack-cube/StackCubeDeferred";
 
-export { LessonCard } from "./cards/LessonCard";
+export { JournalCard } from "./cards/JournalCard";
+export { LessonCard } from "./cards/JournalCard";
 export { PortfolioGridSkeleton } from "./cards/PortfolioGridSkeleton";
 export { contactFormSchema, type ContactFormValues } from "./sections/contact/contact-schema";
+export type { JournalPreviewItem } from "@/types/journals";
 export type { LessonPreviewItem } from "./types/lessons";
 
 export { getScrollRestorationKey } from "./utils/scroll-restoration-key";
