@@ -150,6 +150,7 @@ export async function importDevtoPosts(payload?: Payload): Promise<ImportDevtoRe
         slug: detail.slug,
         tags: tags.map((tag) => ({ tag })),
         publishedAt: detail.published_at,
+        coverUrl: detail.cover_image || summary.cover_image || undefined,
         _status: "published",
         devto: {
           enabled: true,

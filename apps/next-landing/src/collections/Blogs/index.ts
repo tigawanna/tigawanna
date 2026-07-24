@@ -80,6 +80,16 @@ export const Blogs: CollectionConfig = {
               relationTo: "media",
               admin: {
                 condition: (_, siblingData) => siblingData?.kind === "post",
+                description: "Preferred cover — uploaded media wins over Cover URL.",
+              },
+            },
+            {
+              name: "coverUrl",
+              type: "text",
+              admin: {
+                condition: (_, siblingData) => siblingData?.kind === "post",
+                description:
+                  "Optional remote cover (e.g. Dev.to social image) when no uploaded hero is set.",
               },
             },
             {

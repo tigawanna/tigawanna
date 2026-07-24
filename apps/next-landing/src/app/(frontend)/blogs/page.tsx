@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getPublishedBlogsPage, BLOGS_PER_PAGE } from "@/data-access/blogs";
 import { LandingFooter } from "@/components/landing/layout/LandingFooter";
 import { LandingNavbar } from "@/components/landing/layout/LandingNavbar";
-import { JournalCard } from "@/components/landing/cards/JournalCard";
+import { CollectionArchive } from "@/components/blogs/CollectionArchive";
 import { BlogsPagination } from "@/components/blogs/BlogsPagination";
 import { DirectionalPageTransition } from "@/components/view-transitions/DirectionalPageTransition";
 
@@ -52,11 +52,7 @@ export default async function BlogsIndexPage({ searchParams }: Args) {
             </p>
 
             {items.length > 0 ? (
-              <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {items.map((item, index) => (
-                  <JournalCard key={item.id} item={item} tone={(index % 3) as 0 | 1 | 2} />
-                ))}
-              </div>
+              <CollectionArchive items={items} featured={page === 1} />
             ) : (
               <p className="mt-14 text-center text-base text-base-content/60">
                 No published posts yet. Import from Dev.to or create one in Payload admin.

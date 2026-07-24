@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getPublishedJournalsPage, JOURNALS_PER_PAGE } from "@/data-access/journals";
 import { LandingFooter } from "@/components/landing/layout/LandingFooter";
 import { LandingNavbar } from "@/components/landing/layout/LandingNavbar";
-import { JournalCard } from "@/components/landing/cards/JournalCard";
+import { CollectionArchive } from "@/components/blogs/CollectionArchive";
 import { JournalsPagination } from "@/components/journals/JournalsPagination";
 import { DirectionalPageTransition } from "@/components/view-transitions/DirectionalPageTransition";
 
@@ -50,19 +50,22 @@ export default async function JournalsIndexPage({ searchParams }: Args) {
               {totalPages > 1 ? ` · page ${page} of ${totalPages}` : null}
             </p>
 
-            <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {items.map((item, index) => (
-                <JournalCard key={item.id} item={item} tone={(index % 3) as 0 | 1 | 2} />
-              ))}
-            </div>
+            <CollectionArchive items={items} />
 
             <JournalsPagination page={page} totalPages={totalPages} />
 
-            <div className="mt-10 text-center">
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-sm">
+              <Link
+                href="/blogs"
+                transitionTypes={["nav-forward"]}
+                className="text-primary underline-offset-4 hover:underline"
+              >
+                Browse posts
+              </Link>
               <Link
                 href="/"
                 transitionTypes={["nav-back"]}
-                className="text-sm text-primary underline-offset-4 hover:underline"
+                className="text-primary underline-offset-4 hover:underline"
               >
                 Back to landing
               </Link>

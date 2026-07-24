@@ -28,6 +28,10 @@ function toPreviewFromPayload(doc: Blog): JournalPreviewItem {
   const kind: ContentKind = doc.kind === "post" ? "post" : "journal";
   const hero =
     doc.heroImage && typeof doc.heroImage === "object" ? doc.heroImage.url : null;
+  const cover =
+    typeof doc.coverUrl === "string" && doc.coverUrl.trim().length > 0
+      ? doc.coverUrl.trim()
+      : null;
 
   return {
     id: String(doc.id),
@@ -40,7 +44,7 @@ function toPreviewFromPayload(doc: Blog): JournalPreviewItem {
     updated: doc.updatedAt,
     gist: doc.gist ?? undefined,
     tags: (doc.tags ?? []).map((row) => row.tag).filter(Boolean),
-    heroImageUrl: hero,
+    heroImageUrl: hero ?? cover,
     previewHtml: null,
   };
 }
@@ -113,6 +117,7 @@ export async function getLandingTilPreviews(): Promise<JournalPreviewItem[]> {
     const result = await payload.find({
       collection: "blogs",
       draft: false,
+      depth: 1,
       limit: 8,
       overrideAccess: false,
       pagination: false,
@@ -144,6 +149,7 @@ export async function getLandingPostPreviews(): Promise<JournalPreviewItem[]> {
     const result = await payload.find({
       collection: "blogs",
       draft: false,
+      depth: 1,
       limit: 8,
       overrideAccess: false,
       pagination: false,
@@ -178,6 +184,7 @@ export async function getPublishedJournalsPage(options?: {
     const result = await payload.find({
       collection: "blogs",
       draft: false,
+      depth: 1,
       limit: perPage,
       page: requestedPage,
       overrideAccess: false,
@@ -223,6 +230,7 @@ export async function getPublishedBlogsPage(options?: {
     const result = await payload.find({
       collection: "blogs",
       draft: false,
+      depth: 1,
       limit: perPage,
       page: requestedPage,
       overrideAccess: false,
@@ -313,6 +321,71 @@ export async function getBlogBySlug(
  */
 export async function getJournalBySlug(slug: string): Promise<JournalDetail | null> {
   return getBlogBySlug(slug, { kind: "journal" });
+}
+
+/**
+ * Related writing for a detail page — same kind, excluding the current slug.
+ * Prefers tag overlap when the source doc has tags (Payload RelatedPosts pattern).
+ */
+export async function getRelatedBlogs(options: {
+  slug: string;
+  kind: ContentKind;
+  tags?: string[];
+  limit?: number;
+}): Promise<JournalPreviewItem[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("blogs");
+  if (options.kind === "journal") cacheTag("journals");
+  cacheTag(`blog_${options.slug}`);
+
+  const limit = Math.max(1, Math.min(options.limit ?? 3, 6));
+
+  try {
+    const payload = await getPayload({ config });
+    const result = await payload.find({
+      collection: "blogs",
+      draft: false,
+      depth: 1,
+      limit: Math.max(limit * 4, 12),
+      overrideAccess: false,
+      pagination: false,
+      sort: "-publishedAt",
+      where: {
+        and: [
+          { kind: { equals: options.kind } },
+          { slug: { not_equals: options.slug } },
+        ],
+      },
+    });
+
+    const previews = result.docs.map(toPreviewFromPayload);
+    const tagSet = new Set((options.tags ?? []).map((t) => t.toLowerCase()));
+
+    if (tagSet.size === 0) {
+      return previews.slice(0, limit);
+    }
+
+    const scored = previews
+      .map((item) => ({
+        item,
+        score: item.tags.reduce(
+          (sum, tag) => sum + (tagSet.has(tag.toLowerCase()) ? 1 : 0),
+          0,
+        ),
+      }))
+      .sort((a, b) => b.score - a.score || b.item.created.localeCompare(a.item.created));
+
+    const withTags = scored.filter((row) => row.score > 0).map((row) => row.item);
+    if (withTags.length >= limit) return withTags.slice(0, limit);
+
+    const seen = new Set(withTags.map((item) => item.id));
+    const fillers = previews.filter((item) => !seen.has(item.id));
+    return [...withTags, ...fillers].slice(0, limit);
+  } catch (err: unknown) {
+    console.error(`[blogs] Related blogs query failed for "${options.slug}"`, err);
+    return [];
+  }
 }
 
 /**

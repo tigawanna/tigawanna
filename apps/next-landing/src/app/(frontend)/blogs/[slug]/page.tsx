@@ -1,15 +1,9 @@
 import { Suspense, ViewTransition } from "react";
 import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { CalendarRange } from "lucide-react";
-import { getBlogBySlug, getBlogStaticParams } from "@/data-access/blogs";
-import { LandingFooter } from "@/components/landing/layout/LandingFooter";
-import { LandingNavbar } from "@/components/landing/layout/LandingNavbar";
-import { RichText } from "@/components/richtext/RichText";
+import { getBlogBySlug, getBlogStaticParams, getRelatedBlogs } from "@/data-access/blogs";
+import { ContentArticle } from "@/components/blogs/ContentArticle";
 import { DirectionalPageTransition } from "@/components/view-transitions/DirectionalPageTransition";
-import { journalTitleVtName } from "@/components/view-transitions/names";
 
 type Args = {
   params: Promise<{ slug: string }>;
@@ -54,81 +48,24 @@ async function BlogDetail({ params }: Args) {
     notFound();
   }
 
-  const formattedDate = new Date(blog.publishedAt ?? blog.created).toLocaleDateString("en-US", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
+  const related = await getRelatedBlogs({
+    slug: blog.slug,
+    kind: "post",
+    tags: blog.tags,
+    limit: 3,
   });
 
   return (
     <ViewTransition enter="slide-up" default="none">
-      <div data-test="blog-detail-page" className="min-h-screen bg-base-100 text-base-content">
-        <LandingNavbar />
-        <main className="min-h-screen py-24">
-          <article className="mx-auto max-w-4xl px-6" data-test="blog-detail">
-            <div className="mb-8">
-              <Link
-                href="/blogs"
-                transitionTypes={["nav-back"]}
-                className="inline-flex text-sm text-primary hover:underline"
-              >
-                Back to blogs
-              </Link>
-            </div>
-
-            <p className="text-center text-[0.65rem] font-semibold tracking-[0.22em] text-primary uppercase">
-              Post
-            </p>
-
-            <ViewTransition name={journalTitleVtName(blog.slug)} share="text-morph" default="none">
-              <h1 className="mt-3 text-balance text-center font-serif text-5xl font-semibold tracking-[-0.04em] md:text-6xl">
-                {blog.title}
-              </h1>
-            </ViewTransition>
-            <p className="mx-auto mt-4 max-w-3xl text-center text-lg leading-8 text-base-content/70">
-              {blog.description}
-            </p>
-
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-5 text-sm text-base-content/70">
-              <div className="flex items-center gap-2">
-                <CalendarRange className="size-4" />
-                {formattedDate}
-              </div>
-              {blog.tags.length > 0 ? (
-                <ul className="flex flex-wrap justify-center gap-2">
-                  {blog.tags.map((tag) => (
-                    <li
-                      key={tag}
-                      className="rounded-full border border-base-content/10 px-2.5 py-0.5 text-xs text-base-content/55"
-                    >
-                      {tag}
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-            </div>
-
-            {blog.heroImageUrl ? (
-              <div className="relative mt-10 aspect-video overflow-hidden rounded-2xl border border-base-content/10">
-                <Image
-                  src={blog.heroImageUrl}
-                  alt={blog.title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 896px) 100vw, 896px"
-                  priority
-                />
-              </div>
-            ) : null}
-
-            {blog.content ? (
-              <div className="mt-12">
-                <RichText data={blog.content} enableGutter={false} />
-              </div>
-            ) : null}
-          </article>
-        </main>
-        <LandingFooter />
+      <div data-test="blog-detail-page">
+        <ContentArticle
+          doc={blog}
+          backHref="/blogs"
+          backLabel="Back to blogs"
+          dataTest="blog-detail"
+          related={related}
+          relatedHeading="More posts"
+        />
       </div>
     </ViewTransition>
   );

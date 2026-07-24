@@ -202,9 +202,10 @@ body {
   }
 }
 
-/* Payload Lexical journal body */
+/* Payload Lexical journal / blog body (~48rem reading measure) */
 .payload-richtext {
   color: var(--color-base-content);
+  max-width: 48rem;
 }
 
 .payload-richtext h1,
@@ -214,16 +215,30 @@ body {
   font-family: var(--font-serif);
   font-weight: 600;
   letter-spacing: -0.03em;
-  margin-top: 2rem;
-  margin-bottom: 0.75rem;
+  text-wrap: balance;
+  margin-top: 2.5rem;
+  margin-bottom: 0.85rem;
+}
+
+.payload-richtext h2 {
+  font-size: clamp(1.45rem, 1.2rem + 0.8vw, 1.85rem);
+}
+
+.payload-richtext h3 {
+  font-size: clamp(1.2rem, 1.05rem + 0.5vw, 1.4rem);
 }
 
 .payload-richtext p,
 .payload-richtext ul,
 .payload-richtext ol {
-  margin-block: 1rem;
-  line-height: 1.75;
-  color: color-mix(in oklab, var(--color-base-content) 80%, transparent);
+  margin-block: 1.15rem;
+  line-height: 1.8;
+  text-wrap: pretty;
+  color: color-mix(in oklab, var(--color-base-content) 82%, transparent);
+}
+
+.payload-richtext li {
+  margin-block: 0.35rem;
 }
 
 .payload-richtext a {
@@ -233,14 +248,21 @@ body {
 }
 
 .payload-richtext hr {
-  margin-block: 2rem;
+  margin-block: 2.5rem;
   border-color: color-mix(in oklab, var(--color-base-content) 12%, transparent);
 }
 
 .payload-richtext blockquote {
-  margin-block: 1.25rem;
-  padding: 0.85rem 1rem;
+  margin-block: 1.5rem;
+  padding: 0.95rem 1.15rem;
   border-radius: 0.75rem;
   background: color-mix(in oklab, var(--color-base-200) 80%, transparent);
-  color: color-mix(in oklab, var(--color-base-content) 70%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 72%, transparent);
+}
+
+.payload-richtext code:not(pre code) {
+  border-radius: 0.35rem;
+  padding: 0.1em 0.35em;
+  font-size: 0.9em;
+  background: color-mix(in oklab, var(--color-base-200) 90%, transparent);
 }

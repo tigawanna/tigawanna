@@ -1,13 +1,14 @@
 "use client";
 
 import { ViewTransition } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRef } from "react";
+import { ArrowUpRight, ExternalLink } from "lucide-react";
+import { twMerge } from "tailwind-merge";
 import { useLandingCardMotion } from "../hooks/use-landing-card-motion";
 import type { JournalPreviewItem } from "@/types/journals";
 import { journalTitleVtName } from "@/components/view-transitions/names";
-import Link from "next/link";
-import { ArrowUpRight, ExternalLink } from "lucide-react";
-import { useRef } from "react";
-import { twMerge } from "tailwind-merge";
 
 const cardSurfaces = [
   "border-landing-cream/10 bg-landing-panel",
@@ -25,12 +26,20 @@ interface JournalCardProps {
   item: JournalPreviewItem;
   className?: string;
   tone?: 0 | 1 | 2;
+  /** Wide lead card (Payload archive featured treatment). */
+  featured?: boolean;
 }
 
 /**
  * Landing / index card for a journal entry (blog post or TIL).
+ * Image-led when a hero is present — mirrors Payload website `Card`.
  */
-export function JournalCard({ item, className, tone = 0 }: JournalCardProps) {
+export function JournalCard({
+  item,
+  className,
+  tone = 0,
+  featured = false,
+}: JournalCardProps) {
   const cardRef = useRef<HTMLElement | null>(null);
   useLandingCardMotion(cardRef);
 
@@ -40,6 +49,7 @@ export function JournalCard({ item, className, tone = 0 }: JournalCardProps) {
       : `/journals/${encodeURIComponent(item.slug)}`;
   const kindLabel = item.kind === "post" ? "Post" : "Journal";
   const cta = item.kind === "post" ? "Read post" : "Read journal";
+  const hasHero = Boolean(item.heroImageUrl);
 
   return (
     <article
@@ -48,16 +58,46 @@ export function JournalCard({ item, className, tone = 0 }: JournalCardProps) {
       className={twMerge(
         "landing-card group relative flex flex-col overflow-hidden",
         cardSurfaces[tone],
+        featured && "md:grid md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]",
         className,
       )}
     >
       <Link
         href={href}
         transitionTypes={["nav-forward"]}
-        className="flex flex-1 flex-col outline-offset-[-2px]"
+        className={twMerge(
+          "flex flex-1 flex-col -outline-offset-2",
+          featured && "md:contents",
+        )}
         aria-label={`${cta}: ${item.title}`}
       >
-        <div className="flex flex-1 flex-col gap-3 p-6 pt-4">
+        {hasHero ? (
+          <div
+            className={twMerge(
+              "relative aspect-16/10 overflow-hidden border-b border-landing-cream/8",
+              featured && "md:aspect-auto md:min-h-72 md:border-r md:border-b-0",
+            )}
+          >
+            <Image
+              src={item.heroImageUrl!}
+              alt=""
+              fill
+              sizes={
+                featured
+                  ? "(max-width: 768px) 100vw, 55vw"
+                  : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              }
+              className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+            />
+          </div>
+        ) : null}
+
+        <div
+          className={twMerge(
+            "flex flex-1 flex-col gap-3 p-6 pt-4",
+            featured && "md:justify-center md:p-8",
+          )}
+        >
           <div className="flex items-center justify-between gap-2">
             <span className="text-[0.65rem] font-semibold tracking-[0.22em] text-landing-olive uppercase">
               {kindLabel}
@@ -68,12 +108,34 @@ export function JournalCard({ item, className, tone = 0 }: JournalCardProps) {
           </div>
 
           <ViewTransition name={journalTitleVtName(item.slug)} share="text-morph" default="none">
-            <h3 className="line-clamp-2 font-serif text-xl leading-snug text-landing-cream">
+            <h3
+              className={twMerge(
+                "line-clamp-2 font-serif leading-snug text-landing-cream",
+                featured ? "text-3xl md:text-4xl" : "text-xl",
+              )}
+            >
               {item.title}
             </h3>
           </ViewTransition>
 
-          <p className="line-clamp-2 text-sm leading-6 text-landing-sage/80">{item.description}</p>
+          <p
+            className={twMerge(
+              "text-sm leading-6 text-landing-sage/80",
+              featured ? "line-clamp-3 md:text-base" : "line-clamp-2",
+            )}
+          >
+            {item.description}
+          </p>
+
+          {item.tags.length > 0 ? (
+            <ul className="flex flex-wrap gap-1.5">
+              {item.tags.slice(0, featured ? 5 : 3).map((tag) => (
+                <li key={tag} className="landing-card-tag">
+                  {tag}
+                </li>
+              ))}
+            </ul>
+          ) : null}
 
           <div className="mt-auto flex items-center justify-between gap-3 border-t border-landing-cream/8 pt-4">
             <span className="inline-flex min-h-6 items-center gap-1 text-xs font-medium text-landing-sage transition-colors group-hover:text-landing-cream">
@@ -85,7 +147,7 @@ export function JournalCard({ item, className, tone = 0 }: JournalCardProps) {
           </div>
         </div>
 
-        {item.previewHtml ? (
+        {!hasHero && item.previewHtml ? (
           <div className="relative mt-auto block" aria-hidden="true">
             <div
               className="markdown markdown-on-panel max-h-24 overflow-hidden [&_blockquote]:hidden [&_h2]:hidden [&_li]:hidden [&_p]:hidden"

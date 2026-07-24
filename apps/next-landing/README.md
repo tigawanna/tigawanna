@@ -28,6 +28,7 @@ Admin: [http://localhost:3055/admin](http://localhost:3055/admin)
 - Landing sections filter by `kind`
 - Seed fixtures: `pnpm seed:journals` (journals) · `pnpm import:devto` (full Dev.to posts) · `pnpm seed:all` (both + verify)
 - Import live Dev.to posts: `pnpm import:devto` (optional `DEVTO_USERNAME`, `DEVTO_API_KEY`)
+- After adding `coverUrl`: `pnpm migrate:cover-url` then `pnpm backfill:covers` (or re-run `import:devto`)
 - One-time migrate from the old Journals collection: `pnpm migrate:journals-to-blogs`
 - Dev.to cross-post is scaffolded for posts (`devto` fields + `src/workflows/devto-crosspost.ts`)
 

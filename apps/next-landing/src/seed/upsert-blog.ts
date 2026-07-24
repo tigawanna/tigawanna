@@ -13,6 +13,7 @@ type UpsertBlogInput = {
   gist?: string;
   tags?: Array<{ tag: string }>;
   heroImage?: number;
+  coverUrl?: string;
   _status?: "draft" | "published";
   devto?: {
     enabled?: boolean;
@@ -48,6 +49,7 @@ export async function upsertBlogBySlug(
     gist: data.gist,
     tags: data.tags,
     heroImage: data.heroImage,
+    coverUrl: data.coverUrl,
     _status: data._status ?? ("published" as const),
     ...(data.devto ? { devto: data.devto } : {}),
   };

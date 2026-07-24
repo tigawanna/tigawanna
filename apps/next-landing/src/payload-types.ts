@@ -189,7 +189,14 @@ export interface Blog {
    * Short summary shown on cards and SEO previews.
    */
   description: string;
+  /**
+   * Preferred cover — uploaded media wins over Cover URL.
+   */
   heroImage?: (number | null) | Media;
+  /**
+   * Optional remote cover (e.g. Dev.to social image) when no uploaded hero is set.
+   */
+  coverUrl?: string | null;
   content: {
     root: {
       type: string;
@@ -457,6 +464,7 @@ export interface BlogsSelect<T extends boolean = true> {
   kind?: T;
   description?: T;
   heroImage?: T;
+  coverUrl?: T;
   content?: T;
   gist?: T;
   tags?:
