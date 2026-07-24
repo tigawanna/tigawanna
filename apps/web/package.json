@@ -1,5 +1,5 @@
 {
-  "name": "next-landing",
+  "name": "web",
   "version": "0.1.0",
   "private": true,
   "description": "Next.js + Payload experiment for the portfolio landing page (Lighthouse comparison vs TanStack)",

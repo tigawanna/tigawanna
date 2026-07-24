@@ -1,7 +1,7 @@
 /**
  * Telltale values asserted by landing e2e tests.
  *
- * Sourced from `@repo/site-constants` + next-landing static fixtures.
+ * Sourced from `@repo/site-constants` + web static fixtures.
  */
 import {
   howIWorkSections,

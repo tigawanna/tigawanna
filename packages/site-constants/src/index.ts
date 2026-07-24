@@ -1,5 +1,5 @@
-export { siteConfig } from "./site";
-export type { TechChoice } from "./types";
+export { siteConfig } from "./site.js";
+export type { TechChoice } from "./types.js";
 export {
   howIWorkCards,
   howIWorkSections,
@@ -15,4 +15,4 @@ export {
   type InfoDietSource,
   type InfoDietSourceKind,
   type StackCubeFace,
-} from "./info";
+} from "./info.js";

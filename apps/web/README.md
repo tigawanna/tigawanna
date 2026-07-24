@@ -5,8 +5,8 @@ Isolated Lighthouse / performance comparison against the TanStack Start portfoli
 ## Run
 
 ```bash
-pnpm --filter next-landing install   # from monorepo root: pnpm install
-pnpm --filter next-landing dev       # http://localhost:3055
+pnpm --filter web install   # from monorepo root: pnpm install
+pnpm --filter web dev       # http://localhost:3055
 ```
 
 Admin: [http://localhost:3055/admin](http://localhost:3055/admin)
@@ -16,9 +16,6 @@ Admin: [http://localhost:3055/admin](http://localhost:3055/admin)
 - Next.js 16 (`cacheComponents`, experimental `viewTransition`)
 - Payload 3 + `@payloadcms/db-sqlite` (Drizzle + libSQL) — local `file:` SQLite or Turso
 - Blogs collection (journal or post) with draft/publish, Lexical + Code/Banner/Media blocks
-
-* Blogs collection (journal or post) with draft/publish, Lexical + Code/Banner/Media blocks
-
 - Landing UI is Next-native
 - Data: Cache Components (`use cache` + Suspense + `cacheTag` revalidation from Payload hooks)
 - Contact: server action (`src/actions/contact.ts`)
@@ -45,7 +42,7 @@ Admin: [http://localhost:3055/admin](http://localhost:3055/admin)
 ```bash
 # with Playwright Chromium
 export CHROME_PATH=~/.cache/ms-playwright/chromium-*/chrome-linux64/chrome
-pnpm --filter next-landing exec lighthouse http://localhost:3055/ \
+pnpm --filter web exec lighthouse http://localhost:3055/ \
   --only-categories=performance --form-factor=mobile \
-  --chrome-flags="--headless --no-sandbox" --output=json --output-path=./lighthouse-next-landing.json
+  --chrome-flags="--headless --no-sandbox" --output=json --output-path=./lighthouse-web.json
 ```

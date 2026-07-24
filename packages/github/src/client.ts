@@ -83,12 +83,12 @@ export class GitHubClient {
       cache = "no-store",
     } = options;
 
-    const result = await this.graphql<RecentReposGraphqlResponse>(RECENT_REPOS_QUERY, {
-      cache,
-      variables: { first, isFork, orderField, orderDirection },
-    });
-
     try {
+      const result = await this.graphql<RecentReposGraphqlResponse>(RECENT_REPOS_QUERY, {
+        cache,
+        variables: { first, isFork, orderField, orderDirection },
+      });
+
       const nodes = filterRepoNodes(result.viewer.repositories.nodes, { excludePrivate: true });
 
       return {

@@ -47,7 +47,7 @@ export type ImportDevtoResult = {
 async function devtoFetch<T>(url: string): Promise<T> {
   const headers: Record<string, string> = {
     Accept: "application/json",
-    "User-Agent": "tigawanna-next-landing-importer",
+    "User-Agent": "tigawanna-web-importer",
   };
   if (DEVTO_API_KEY) {
     headers["api-key"] = DEVTO_API_KEY;

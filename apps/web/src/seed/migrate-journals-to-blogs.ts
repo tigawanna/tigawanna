@@ -33,7 +33,7 @@ function tableExists(db: DatabaseSync, name: string): boolean {
  * One-time migration: rename legacy `journals*` tables to `blogs*` and map
  * `kind: til` → `kind: journal`. Safe to re-run (no-ops when already migrated).
  *
- * Stop the Next/Payload dev server first, then from `apps/next-landing`:
+ * Stop the Next/Payload dev server first, then from `apps/web`:
  *   pnpm migrate:journals-to-blogs
  */
 function migrateJournalsToBlogs() {

@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const testsDir = path.dirname(fileURLToPath(import.meta.url));
-/** `e2e` → next-landing app root. */
+/** `e2e` → web app root. */
 const appRoot = path.resolve(testsDir, "../");
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:3055";
 

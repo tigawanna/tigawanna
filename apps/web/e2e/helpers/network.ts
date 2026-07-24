@@ -11,7 +11,7 @@ const EXTERNAL_HOST_PATTERN =
 
 /**
  * Blocks third-party browser network I/O for stable offline e2e runs.
- * next-landing serves static fixtures in-process, so no server-fn stubs needed.
+ * web serves static fixtures in-process, so no server-fn stubs needed.
  */
 export async function installLandingNetworkMocks(page: Page) {
   await page.route("**/*", async (route: Route) => {

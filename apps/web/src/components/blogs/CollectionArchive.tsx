@@ -15,8 +15,8 @@ type CollectionArchiveProps = {
 export function CollectionArchive({ items, className, featured = false }: CollectionArchiveProps) {
   if (items.length === 0) return null;
 
-  const [lead, ...rest] = featured && items[0]?.heroImageUrl ? items : [null, ...items];
-  const gridItems = lead ? rest : items;
+  const lead = featured && items[0]?.heroImageUrl ? items[0] : null;
+  const gridItems = lead ? items.slice(1) : items;
 
   return (
     <div data-test="collection-archive" className={cn("mt-14", className)}>

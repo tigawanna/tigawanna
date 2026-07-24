@@ -1,4 +1,4 @@
-import type { TechChoice } from "./types";
+import type { TechChoice } from "./types.js";
 
 export type InfoCard = {
   tag: string;

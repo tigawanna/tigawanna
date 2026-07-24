@@ -19,7 +19,7 @@ export async function sendContactMessage(input: ContactFormValues) {
   const userAgent = requestHeaders.get("user-agent") ?? undefined;
 
   const text = [
-    "New portfolio contact submission (next-landing)",
+    "New portfolio contact submission (web)",
     "",
     `Name: ${data.name}`,
     `Contact: ${hasContact ? data.contact : "No contact provided"}`,

@@ -1,4 +1,4 @@
-# next-landing e2e (app-coupled)
+# web e2e (app-coupled)
 
 Playwright coverage for the Next.js + Payload landing experiment.
 
