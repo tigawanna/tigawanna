@@ -1,25 +1,10 @@
 import { LandingPage } from "@/components/landing/LandingPage";
-import {
-  getLandingLessonPreviews,
-  getPinnedRepos,
-  getRecentRepos,
-} from "@/data-access/landing";
 
 /**
- * Landing route — fetch data on the server, compose the page, stream shells where deferred.
+ * Landing route — sync shell. Data is fetched inside section Server Components
+ * (`use cache` + Suspense) so Cache Components can prerender the static shell
+ * and stream only the parts that need request-time work.
  */
-export default async function HomePage() {
-  const [lessonPreviews, pinnedRepos, recentRepos] = await Promise.all([
-    getLandingLessonPreviews(),
-    getPinnedRepos(),
-    getRecentRepos(),
-  ]);
-
-  return (
-    <LandingPage
-      lessonPreviews={lessonPreviews}
-      pinnedRepos={pinnedRepos}
-      recentRepos={recentRepos}
-    />
-  );
+export default function HomePage() {
+  return <LandingPage />;
 }

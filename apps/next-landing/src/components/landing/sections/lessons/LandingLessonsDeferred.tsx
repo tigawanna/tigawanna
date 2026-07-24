@@ -1,14 +1,10 @@
-import type { LessonPreviewItem } from "../../types/lessons";
-import { ClientOnly } from "../../stubs/client-only";
-import { LessonCard } from "../../cards/LessonCard";
+import { Suspense, type ReactNode } from "react";
+import { getLandingLessonPreviews } from "@/data-access/landing";
+import { PortfolioGridSkeleton } from "../../cards/PortfolioGridSkeleton";
 import { LandingSection, OrganicDivider, SectionEyebrow } from "../../primitives";
 import { LandingLessons } from "./LandingLessons";
 
-interface LandingLessonsDeferredProps {
-  items: LessonPreviewItem[];
-}
-
-function LandingLessonsFallback({ items }: LandingLessonsDeferredProps) {
+function LandingLessonsShell({ children }: { children: ReactNode }) {
   return (
     <LandingSection
       id="journal"
@@ -28,21 +24,31 @@ function LandingLessonsFallback({ items }: LandingLessonsDeferredProps) {
             the admin panel later.
           </p>
         </div>
-
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {items.map((item, index) => (
-            <LessonCard key={item.id} item={item} tone={(index % 3) as 0 | 1 | 2} />
-          ))}
-        </div>
+        {children}
       </div>
     </LandingSection>
   );
 }
 
-export function LandingLessonsDeferred({ items }: LandingLessonsDeferredProps) {
+async function LandingLessonsContent() {
+  const items = await getLandingLessonPreviews();
+  return <LandingLessons items={items} />;
+}
+
+/**
+ * Lessons section — Suspense shell in the static page; content resolves here
+ * via `use cache` so Cache Components can stream without blocking the route.
+ */
+export function LandingLessonsDeferred() {
   return (
-    <ClientOnly fallback={<LandingLessonsFallback items={items} />}>
-      <LandingLessons items={items} />
-    </ClientOnly>
+    <Suspense
+      fallback={
+        <LandingLessonsShell>
+          <PortfolioGridSkeleton count={8} />
+        </LandingLessonsShell>
+      }
+    >
+      <LandingLessonsContent />
+    </Suspense>
   );
 }

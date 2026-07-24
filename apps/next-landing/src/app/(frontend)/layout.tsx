@@ -15,9 +15,20 @@ const fraunces = Fraunces({
 });
 
 export const metadata = {
+  metadataBase: new URL("http://localhost:3055"),
   title: "Dennis Waweru — tigawanna",
   description:
     "Full-stack TypeScript engineer building warm interfaces, strict systems, and occasional creature features.",
+  icons: {
+    icon: [{ url: "/favicon.ico" }, { url: "/icon.png", type: "image/png" }],
+    apple: [{ url: "/apple-touch-icon.png" }],
+  },
+  openGraph: {
+    title: "Dennis Waweru — tigawanna",
+    description:
+      "Full-stack TypeScript engineer building warm interfaces, strict systems, and occasional creature features.",
+    images: [{ url: "/opengraph-image.jpg" }],
+  },
 };
 
 export default async function RootLayout(props: { children: React.ReactNode }) {

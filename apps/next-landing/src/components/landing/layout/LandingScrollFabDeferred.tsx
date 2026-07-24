@@ -1,22 +1,18 @@
 "use client";
 
-import { lazy, Suspense } from "react";
-import { ClientOnly } from "../stubs/client-only";
+import dynamic from "next/dynamic";
 
-const LandingScrollFab = lazy(() =>
-  import("./LandingScrollFab").then((mod) => ({ default: mod.LandingScrollFab })),
+const LandingScrollFab = dynamic(
+  () => import("./LandingScrollFab").then((mod) => ({ default: mod.LandingScrollFab })),
+  {
+    ssr: false,
+    loading: () => null,
+  },
 );
 
 /**
- * Client-only, code-split entry for the gooey scroll FAB so it never ships in the
- * landing SSR/critical path and only hydrates after mount.
+ * Below-the-fold FAB — code-split and skip SSR (not in LCP).
  */
 export function LandingScrollFabDeferred() {
-  return (
-    <ClientOnly>
-      <Suspense fallback={null}>
-        <LandingScrollFab />
-      </Suspense>
-    </ClientOnly>
-  );
+  return <LandingScrollFab />;
 }

@@ -179,7 +179,7 @@ export function TechChoicesDesktop() {
           </div>
         </div>
 
-        <p className="mt-4 flex shrink-0 flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[10px] tracking-[0.28em] text-landing-sage/65 uppercase">
+        <p className="mt-4 flex shrink-0 flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[10px] tracking-[0.28em] text-landing-sage/85 uppercase">
           <span className="inline-flex items-center gap-2">
             <MousePointerClick className="size-3.5" />
             Pick a tool or swipe the panel

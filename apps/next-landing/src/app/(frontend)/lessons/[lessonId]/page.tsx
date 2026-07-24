@@ -1,13 +1,7 @@
+import { Suspense } from "react";
 import Link from "next/link";
 
-/**
- * Placeholder lesson detail — Payload blog posts will replace this later.
- */
-export default async function LessonDetailPage({
-  params,
-}: {
-  params: Promise<{ lessonId: string }>;
-}) {
+async function LessonDetail({ params }: { params: Promise<{ lessonId: string }> }) {
   const { lessonId } = await params;
 
   return (
@@ -24,5 +18,26 @@ export default async function LessonDetailPage({
         All lessons
       </Link>
     </main>
+  );
+}
+
+/**
+ * Placeholder lesson detail — Payload blog posts will replace this later.
+ */
+export default function LessonDetailPage({
+  params,
+}: {
+  params: Promise<{ lessonId: string }>;
+}) {
+  return (
+    <Suspense
+      fallback={
+        <main className="landing-void-surface mx-auto flex min-h-svh max-w-2xl flex-col justify-center px-6 py-24 text-landing-sage">
+          <p className="text-sm text-landing-sage/60">Loading lesson…</p>
+        </main>
+      }
+    >
+      <LessonDetail params={params} />
+    </Suspense>
   );
 }

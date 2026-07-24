@@ -1,5 +1,3 @@
-import type { LessonPreviewItem } from "./types/lessons";
-import type { GithubRepoNode } from "./types/github";
 import { LandingFooter } from "./layout/LandingFooter";
 import { LandingNavbar } from "./layout/LandingNavbar";
 import { LandingScrollFabDeferred } from "./layout/LandingScrollFabDeferred";
@@ -13,17 +11,14 @@ import { LandingLessonsDeferred } from "./sections/lessons/LandingLessonsDeferre
 import { LandingProjects } from "./sections/projects/LandingProjects";
 import { StackCubeDeferred } from "./sections/stack-cube/StackCubeDeferred";
 
-export type LandingPageProps = {
-  lessonPreviews: LessonPreviewItem[];
-  pinnedRepos: GithubRepoNode[];
-  recentRepos: GithubRepoNode[];
-};
-
 /**
  * Portfolio landing page composed for the Next.js experiment app.
- * Data is fetched in Server Components and passed in as props.
+ *
+ * Sync composition only — no page-level awaits. Cached / async sections
+ * resolve inside their own Server Components under Suspense so the static
+ * shell (nav, hero, copy) is not blocked by GitHub / lessons data.
  */
-export function LandingPage({ lessonPreviews, pinnedRepos, recentRepos }: LandingPageProps) {
+export function LandingPage() {
   return (
     <div data-test="landing-page" className="min-h-screen">
       <LandingNavbar />
@@ -32,10 +27,10 @@ export function LandingPage({ lessonPreviews, pinnedRepos, recentRepos }: Landin
         <StackCubeDeferred />
         <LandingHowIWork />
         <LandingFeaturesDeferred />
-        <LandingProjects pinnedRepos={pinnedRepos} recentRepos={recentRepos} />
+        <LandingProjects />
         <LandingArticles />
         <LandingInfodiet />
-        <LandingLessonsDeferred items={lessonPreviews} />
+        <LandingLessonsDeferred />
         <LandingCTA />
       </main>
       <LandingFooter />

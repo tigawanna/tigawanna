@@ -1,5 +1,6 @@
 import "server-only";
 
+import { cacheLife, cacheTag } from "next/cache";
 import {
   STATIC_PINNED_PROJECTS,
   STATIC_RECENT_PROJECTS,
@@ -14,6 +15,8 @@ import type { LessonPreviewItem } from "@/components/landing/types/lessons";
  */
 export async function getLandingLessonPreviews(): Promise<LessonPreviewItem[]> {
   "use cache";
+  cacheLife("hours");
+  cacheTag("landing-lessons");
   return STATIC_LESSONS.slice(0, 8).map(toLessonPreviewItem);
 }
 
@@ -23,6 +26,8 @@ export async function getLandingLessonPreviews(): Promise<LessonPreviewItem[]> {
  */
 export async function getPinnedRepos(): Promise<GithubRepoNode[]> {
   "use cache";
+  cacheLife("hours");
+  cacheTag("landing-pinned-repos");
   return STATIC_PINNED_PROJECTS;
 }
 
@@ -31,5 +36,7 @@ export async function getPinnedRepos(): Promise<GithubRepoNode[]> {
  */
 export async function getRecentRepos(): Promise<GithubRepoNode[]> {
   "use cache";
+  cacheLife("hours");
+  cacheTag("landing-recent-repos");
   return STATIC_RECENT_PROJECTS;
 }

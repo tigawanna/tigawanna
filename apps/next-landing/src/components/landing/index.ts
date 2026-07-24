@@ -1,4 +1,4 @@
-export { LandingPage, type LandingPageProps } from "./LandingPage";
+export { LandingPage } from "./LandingPage";
 
 export { LandingNavbar } from "./layout/LandingNavbar";
 export { LandingFooter } from "./layout/LandingFooter";

@@ -1,13 +1,7 @@
+import { Suspense } from "react";
 import Link from "next/link";
 
-/**
- * Placeholder project detail — keeps landing card links from 404ing during the experiment.
- */
-export default async function ProjectDetailPage({
-  params,
-}: {
-  params: Promise<{ name: string }>;
-}) {
+async function ProjectDetail({ params }: { params: Promise<{ name: string }> }) {
   const { name } = await params;
   const decoded = decodeURIComponent(name).replace("=>", "/");
 
@@ -22,5 +16,26 @@ export default async function ProjectDetailPage({
         Back to landing
       </Link>
     </main>
+  );
+}
+
+/**
+ * Placeholder project detail — keeps landing card links from 404ing during the experiment.
+ */
+export default function ProjectDetailPage({
+  params,
+}: {
+  params: Promise<{ name: string }>;
+}) {
+  return (
+    <Suspense
+      fallback={
+        <main className="landing-void-surface mx-auto flex min-h-svh max-w-2xl flex-col justify-center px-6 py-24 text-landing-sage">
+          <p className="text-sm text-landing-sage/60">Loading project…</p>
+        </main>
+      }
+    >
+      <ProjectDetail params={params} />
+    </Suspense>
   );
 }

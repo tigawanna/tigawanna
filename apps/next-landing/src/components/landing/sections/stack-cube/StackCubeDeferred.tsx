@@ -1,7 +1,8 @@
+"use client";
+
+import dynamic from "next/dynamic";
 import { stackCubeFaces } from "../../config/info";
-import { ClientOnly } from "../../stubs/client-only";
 import { CubeVisual } from "./CubeVisual";
-import { StackCube } from "./StackCube";
 
 function StackCubeFallback() {
   const firstFace = stackCubeFaces[0];
@@ -34,10 +35,14 @@ function StackCubeFallback() {
   );
 }
 
+const StackCube = dynamic(() => import("./StackCube").then((mod) => ({ default: mod.StackCube })), {
+  ssr: false,
+  loading: () => <StackCubeFallback />,
+});
+
+/**
+ * Static cube shell SSRs immediately; interactive scroll cube loads as a separate chunk.
+ */
 export function StackCubeDeferred() {
-  return (
-    <ClientOnly fallback={<StackCubeFallback />}>
-      <StackCube />
-    </ClientOnly>
-  );
+  return <StackCube />;
 }

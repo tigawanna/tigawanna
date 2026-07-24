@@ -75,7 +75,7 @@ export function TechChoicesMobile() {
             </p>
           </div>
 
-          <p className="mt-4 px-4 text-center text-[10px] tracking-[0.24em] text-landing-sage/65 uppercase sm:px-6">
+          <p className="mt-4 px-4 text-center text-[10px] tracking-[0.24em] text-landing-sage/85 uppercase sm:px-6">
             Swipe the card
           </p>
         </div>

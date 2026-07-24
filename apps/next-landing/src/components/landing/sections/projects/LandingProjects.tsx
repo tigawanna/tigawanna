@@ -1,27 +1,10 @@
-"use client";
-
-import { useState, type ReactNode } from "react";
-import { renderProjectCard } from "../../cards/ProjectCard";
-import { orderReposByRelevance } from "../../modules/find-relevant-projects";
+import { Suspense, type ReactNode } from "react";
+import { getPinnedRepos, getRecentRepos } from "@/data-access/landing";
+import { PortfolioGridSkeleton } from "../../cards/PortfolioGridSkeleton";
 import { LandingSection, OrganicDivider, SectionEyebrow } from "../../primitives";
-import type { GithubRepoNode } from "../../types/github";
-import { filterReposByTopic, matchesProjectSearch } from "./-utils/project-search";
-import { ProjectsSearch } from "./ProjectsSearch";
-import { ProjectsTopicFilter, type ProjectView } from "./ProjectsTopicFilter";
+import { ProjectsSearchIsland } from "./ProjectsSearchIsland";
 
 const MAX_LANDING_PROJECTS = 6;
-
-function collectTopics(repos: GithubRepoNode[]) {
-  const topics = new Set<string>();
-  for (const repo of repos) {
-    for (const node of repo?.repositoryTopics?.nodes ?? []) {
-      if (node.topic.name) {
-        topics.add(node.topic.name);
-      }
-    }
-  }
-  return Array.from(topics).sort();
-}
 
 export function LandingProjectsShell({ children }: { children: ReactNode }) {
   return (
@@ -49,92 +32,46 @@ export function LandingProjectsShell({ children }: { children: ReactNode }) {
   );
 }
 
-function ProjectsContent({
-  pinnedRepos,
-  recentRepos,
-}: {
-  pinnedRepos: GithubRepoNode[];
-  recentRepos: GithubRepoNode[];
-}) {
-  const [activeView, setActiveView] = useState<ProjectView>("featured");
-  const [activeTopic, setActiveTopic] = useState("all");
-  const [searchDraft, setSearchDraft] = useState("");
-  const [appliedSearch, setAppliedSearch] = useState("");
+async function LandingProjectsContent() {
+  const [pinnedRepos, recentRepos] = await Promise.all([
+    getPinnedRepos(),
+    getRecentRepos(),
+  ]);
 
-  const topics = collectTopics(recentRepos);
-
-  const isSearching = appliedSearch.length > 0;
-
-  let visibleRepos: GithubRepoNode[] = [];
-  if (isSearching) {
-    visibleRepos = orderReposByRelevance(
-      filterReposByTopic(recentRepos, activeTopic).filter((repo) =>
-        matchesProjectSearch(repo, appliedSearch),
-      ),
-      appliedSearch,
-    );
-  } else if (activeView === "featured") {
-    visibleRepos = pinnedRepos.slice(0, MAX_LANDING_PROJECTS);
-  } else if (activeView === "recent") {
-    visibleRepos = recentRepos.slice(0, MAX_LANDING_PROJECTS);
-  } else {
-    visibleRepos = filterReposByTopic(recentRepos, activeTopic).slice(0, MAX_LANDING_PROJECTS);
-  }
-
-  const showEmptySearchState = isSearching && visibleRepos.length === 0;
-
-  return (
-    <div className="space-y-10">
-      <div className="space-y-5">
-        <ProjectsTopicFilter
-          topics={topics}
-          activeTopic={activeTopic}
-          activeView={activeView}
-          onTopicChange={setActiveTopic}
-          onViewChange={setActiveView}
-        />
-        <ProjectsSearch
-          value={searchDraft}
-          onChange={setSearchDraft}
-          onSubmit={() => setAppliedSearch(searchDraft.trim())}
-          onClear={() => {
-            setSearchDraft("");
-            setAppliedSearch("");
-          }}
-          hasPendingSearch={searchDraft.trim() !== appliedSearch}
-        />
-      </div>
-
-      {showEmptySearchState ? (
-        <p className="text-center text-sm text-landing-sage/50" data-test="projects-search-empty">
-          No projects match your search.
-        </p>
-      ) : (
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {visibleRepos.map((repo) => renderProjectCard(repo))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-/**
- * Projects section — receives repo lists from a Server Component (no TanStack Query).
- */
-export function LandingProjects({
-  pinnedRepos,
-  recentRepos,
-}: {
-  pinnedRepos: GithubRepoNode[];
-  recentRepos: GithubRepoNode[];
-}) {
   if (pinnedRepos.length === 0 && recentRepos.length === 0) {
     return null;
   }
 
+  const featured = (pinnedRepos.length > 0 ? pinnedRepos : recentRepos).slice(
+    0,
+    MAX_LANDING_PROJECTS,
+  );
+
   return (
     <LandingProjectsShell>
-      <ProjectsContent pinnedRepos={pinnedRepos} recentRepos={recentRepos} />
+      <ProjectsSearchIsland
+        pinnedRepos={pinnedRepos}
+        recentRepos={recentRepos}
+        featured={featured}
+      />
     </LandingProjectsShell>
+  );
+}
+
+/**
+ * Projects section — Suspense shell streams while cached repo fixtures resolve.
+ * Featured cards SSR in the island fallback; search/filter code-splits after.
+ */
+export function LandingProjects() {
+  return (
+    <Suspense
+      fallback={
+        <LandingProjectsShell>
+          <PortfolioGridSkeleton count={6} />
+        </LandingProjectsShell>
+      }
+    >
+      <LandingProjectsContent />
+    </Suspense>
   );
 }

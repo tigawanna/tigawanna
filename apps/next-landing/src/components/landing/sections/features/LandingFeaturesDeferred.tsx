@@ -1,7 +1,8 @@
+"use client";
+
+import dynamic from "next/dynamic";
 import { techChoices } from "../../config/info";
-import { ClientOnly } from "../../stubs/client-only";
 import { LandingSection, SectionEyebrow } from "../../primitives";
-import { LandingFeatures } from "./LandingFeatures";
 
 function LandingFeaturesFallback() {
   const firstChoice = techChoices[0];
@@ -34,10 +35,17 @@ function LandingFeaturesFallback() {
   );
 }
 
+const LandingFeatures = dynamic(
+  () => import("./LandingFeatures").then((mod) => ({ default: mod.LandingFeatures })),
+  {
+    ssr: false,
+    loading: () => <LandingFeaturesFallback />,
+  },
+);
+
+/**
+ * Static skills shell SSRs; interactive panels load as a separate chunk.
+ */
 export function LandingFeaturesDeferred() {
-  return (
-    <ClientOnly fallback={<LandingFeaturesFallback />}>
-      <LandingFeatures />
-    </ClientOnly>
-  );
+  return <LandingFeatures />;
 }

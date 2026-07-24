@@ -63,7 +63,7 @@ export function ProjectsTopicFilter({
             onTopicChange(event.target.value);
           }}
           className={twMerge(
-            "min-w-44 rounded-full border border-landing-cream/10 bg-transparent px-3 py-2 text-sm text-landing-sage/60 shadow-none outline-none",
+            "min-w-44 rounded-full border border-landing-cream/10 bg-transparent px-3 py-2 text-sm text-landing-sage/80 shadow-none outline-none",
             "hover:border-landing-cream/20 hover:bg-landing-cream/5 hover:text-landing-sage",
             tagSelectValue !== "all" &&
               "border-landing-cream/25 bg-landing-cream/10 text-landing-cream",
