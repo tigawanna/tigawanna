@@ -2,7 +2,7 @@ import { lazy, Suspense } from "react";
 import { ClientOnly } from "../stubs/client-only";
 
 const LandingScrollFab = lazy(() =>
-  import("./LandingScrollFab").then((mod) => ({ default: mod.LandingScrollFab })),
+  import("./LandingScrollFab.js").then((mod) => ({ default: mod.LandingScrollFab })),
 );
 
 /**

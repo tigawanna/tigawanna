@@ -20,7 +20,6 @@ export { PortfolioGridSkeleton } from "./cards/PortfolioGridSkeleton";
 export { contactFormSchema, type ContactFormValues } from "./sections/contact/contact-schema";
 export type { LessonPreviewItem } from "./types/lessons";
 
-export { useScrollReveal } from "./hooks/use-scroll-reveal";
 export { getScrollRestorationKey } from "./utils/scroll-restoration-key";
 
 export { AppConfig } from "./config/system";

@@ -247,3 +247,61 @@
     transform: none;
   }
 }
+
+/*
+  CSS scroll-driven reveals (View Timelines).
+  Without support / with reduced motion: content stays fully visible.
+*/
+@keyframes landing-reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(48px) scale(0.97);
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes landing-reveal-fade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.landing-scroll-reveal {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .landing-scroll-reveal {
+      animation: landing-reveal-up linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 34%;
+    }
+
+    .landing-scroll-reveal-fade {
+      animation-name: landing-reveal-fade;
+    }
+
+    .landing-scroll-reveal-delay-short {
+      animation-range: entry 18% cover 40%;
+    }
+
+    .landing-scroll-reveal-delay-medium {
+      animation-range: entry 26% cover 46%;
+    }
+
+    .landing-scroll-reveal-delay-long {
+      animation-range: entry 34% cover 52%;
+    }
+  }
+}

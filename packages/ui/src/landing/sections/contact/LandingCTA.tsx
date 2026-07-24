@@ -24,11 +24,7 @@ export function LandingCTA() {
   }
 
   return (
-    <LandingSection
-      id="contact"
-      tone="base"
-      className="relative z-0  text-base-content"
-    >
+    <LandingSection id="contact" tone="base" className="relative z-0  text-base-content">
       <div className="container">
         <div className="mx-auto grid max-w-5xl gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start lg:gap-16">
           <div>

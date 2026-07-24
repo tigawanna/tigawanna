@@ -1,6 +1,5 @@
-import { useScrollReveal } from "../hooks/use-scroll-reveal";
 import type { LandingSectionProps, OrganicDividerProps, ScrollRevealProps } from "../types/landing";
-import { useRef, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
 const sectionToneClasses = {
@@ -27,12 +26,18 @@ const dividerToneClasses = {
   darkMid: "text-landing-dark-mid",
 } satisfies Record<NonNullable<OrganicDividerProps["tone"]>, string>;
 
-const revealDelaySeconds = {
-  none: 0,
-  short: 0.12,
-  medium: 0.24,
-  long: 0.36,
-} satisfies Record<NonNullable<ScrollRevealProps["delay"]>, number>;
+/** Stagger via later `animation-range` starts — time delays don't apply on view timelines. */
+const revealDelayClasses = {
+  none: "",
+  short: "landing-scroll-reveal-delay-short",
+  medium: "landing-scroll-reveal-delay-medium",
+  long: "landing-scroll-reveal-delay-long",
+} satisfies Record<NonNullable<ScrollRevealProps["delay"]>, string>;
+
+const revealVariantClasses = {
+  default: "",
+  fade: "landing-scroll-reveal-fade",
+} satisfies Record<NonNullable<ScrollRevealProps["variant"]>, string>;
 
 export function LandingSection({
   children,
@@ -62,11 +67,15 @@ export function ScrollReveal({
   delay = "none",
   variant = "default",
 }: ScrollRevealProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  useScrollReveal(ref, { delay: revealDelaySeconds[delay], variant });
-
   return (
-    <div ref={ref} className={twMerge(className)}>
+    <div
+      className={twMerge(
+        "landing-scroll-reveal",
+        revealVariantClasses[variant],
+        revealDelayClasses[delay],
+        className,
+      )}
+    >
       {children}
     </div>
   );

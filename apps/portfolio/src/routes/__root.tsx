@@ -69,7 +69,6 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
   }),
   validateSearch: (search) => searchparams.parse(search),
   shellComponent: RootDocument,
-  
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
