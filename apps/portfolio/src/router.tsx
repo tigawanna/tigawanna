@@ -25,6 +25,20 @@ export const getRouter = async () => {
     scrollRestoration: true,
     scrollRestorationBehavior: "instant",
     getScrollRestorationKey,
+    // defaultViewTransition: {
+    //   types: ({ fromLocation, toLocation }) => {
+    //     let direction = 'none'
+
+    //     if (fromLocation) {
+    //       const fromIndex = fromLocation.state.__TSR_index
+    //       const toIndex = toLocation.state.__TSR_index
+
+    //       direction = fromIndex > toIndex ? 'right' : 'left'
+    //     }
+
+    //     return [`slide-${direction}`]
+    //   },
+    // },
   });
 
   setupRouterSsrQueryIntegration({ router, queryClient: tanstackQueryContext.queryClient });

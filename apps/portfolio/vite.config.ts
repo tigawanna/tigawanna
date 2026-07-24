@@ -45,7 +45,7 @@ const config = defineConfig({
         retryDelay: 1000,
         maxRedirects: 5,
         failOnError: true,
-        // Skip e2e landing alias and OG image endpoint if crawled
+        // Skip OG image endpoint if crawled
         filter: ({ path }) => !path.startsWith("/og"),
       },
     }),
