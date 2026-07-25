@@ -33,8 +33,14 @@ export const expected = {
   })),
   aboutTitle: howIWorkSections[0].title,
   aboutBodySnippet: howIWorkSections[0].body.slice(0, 40),
+  /** Titles for each sticky “how I work” curved segment (scroll-driven). */
+  howIWorkTitles: howIWorkSections.map((section) => section.title),
   stackFace: stackCubeFaces[0].label,
   stackTech: stackCubeFaces[0].techs[0],
+  /** Desktop cube face labels in scroll order. */
+  stackFaces: stackCubeFaces.map((face) => face.label),
+  /** Mobile face panel `data-test` ids in scroll order. */
+  stackFaceTestIds: stackCubeFaces.map((face) => `stack-face-${face.label.toLowerCase()}`),
   techChoice: techChoices[0].name,
   techSummarySnippet: techChoices[0].summary.slice(0, 40),
   project: STATIC_PINNED_PROJECTS[0],

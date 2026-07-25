@@ -3,9 +3,9 @@ import { useEffect, useRef, useState } from "react";
 
 const MIN_RADIUS = 7;
 const MAX_RADIUS = 108;
-const REVEAL_MS = 900;
-const FINALE_REVEAL_MS = 1350;
-const HOLD_MS = 4300;
+const REVEAL_MS = 750;
+const FINALE_REVEAL_MS = 1100;
+const HOLD_MS = 2800;
 const creepyEase = irregular(12, 0.42);
 
 function easeOutCubic(t: number) {

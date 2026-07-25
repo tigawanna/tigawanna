@@ -3,7 +3,10 @@ import { expected } from "./fixtures/expected";
 import {
   clickMobileNav,
   expectCoreLandingContent,
+  expectCurvedSectionsScrollThrough,
+  expectMobileStackFacesPopIn,
   expectSectionInView,
+  expectUnderHeroSections,
   openLanding,
   revealSection,
 } from "./helpers/landing";
@@ -19,6 +22,12 @@ test.describe("landing mobile", () => {
     await expectCoreLandingContent(page);
   });
 
+  test("post-hero stack cube and how-I-work segments always mount", async ({ page }) => {
+    await openLanding(page);
+    await expectUnderHeroSections(page);
+    await expect(page.getByTestId("stack-cube-mobile")).toBeVisible();
+  });
+
   test("mobile menu hash links scroll to sections", async ({ page }) => {
     await openLanding(page);
 
@@ -27,6 +36,16 @@ test.describe("landing mobile", () => {
 
     await clickMobileNav(page, "Contact");
     await expectSectionInView(page, "contact");
+  });
+
+  test("mobile stack faces pop into view while scrolling", async ({ page }) => {
+    await openLanding(page);
+    await expectMobileStackFacesPopIn(page);
+  });
+
+  test("how-I-work curved segments advance through all five steps", async ({ page }) => {
+    await openLanding(page);
+    await expectCurvedSectionsScrollThrough(page);
   });
 
   test("mobile stack faces and tech choices render", async ({ page }) => {

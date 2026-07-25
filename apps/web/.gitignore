@@ -60,3 +60,5 @@ lighthouse-*.json
 *.db
 *.db-*
 
+apps/web/e2e/playwright-report
+apps/web/e2e/test-results

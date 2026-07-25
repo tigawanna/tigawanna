@@ -23,7 +23,7 @@ export default function CreatureFeaturePage() {
   useHotkeys("escape", exit, { preventDefault: true }, [router]);
 
   return (
-    <div data-test="creature-feature-page" className="bg-[#050505] text-base-content">
+    <div data-test="creature-feature-page" className="min-h-svh bg-[#050505] text-base-content">
       <button
         type="button"
         onClick={exit}

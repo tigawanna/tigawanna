@@ -3,7 +3,11 @@ import { expected } from "./fixtures/expected";
 import {
   assertLandingSectionId,
   expectCoreLandingContent,
+  expectCurvedSectionsScrollThrough,
+  expectDesktopStackCubeScrollFaces,
   expectSectionInView,
+  expectUnderHeroSections,
+  openCreatureFeature,
   openLanding,
   revealSection,
 } from "./helpers/landing";
@@ -16,12 +20,29 @@ test.describe("landing sections @desktop", () => {
     await expectCoreLandingContent(page);
   });
 
+  test("post-hero stack cube and how-I-work segments always mount", async ({ page }) => {
+    await openLanding(page);
+    await expectUnderHeroSections(page);
+    await expect(page.getByTestId("stack-cube-desktop")).toBeVisible({ timeout: 30_000 });
+  });
+
+  test("stack cube face labels update while scrolling", async ({ page }) => {
+    await openLanding(page);
+    await expectDesktopStackCubeScrollFaces(page);
+  });
+
+  test("how-I-work curved segments advance through all five steps", async ({ page }) => {
+    await openLanding(page);
+    await expectCurvedSectionsScrollThrough(page);
+  });
+
   test("stack cube and skills expose known config values", async ({ page }) => {
     await openLanding(page);
 
+    // Dynamic cube chunk may still be on the SSR fallback briefly.
+    await expect(page.getByTestId("stack-cube-desktop")).toBeVisible({ timeout: 30_000 });
     await page.getByTestId("stack-cube").scrollIntoViewIfNeeded();
     await expect(page.getByTestId("stack-cube")).toBeVisible();
-    await expect(page.getByTestId("stack-cube-desktop")).toBeVisible();
     await expect(page.getByTestId("stack-cube")).toContainText(expected.stackFace);
 
     await revealSection(page, "skills");
@@ -63,5 +84,22 @@ test.describe("landing hash navigation @desktop", () => {
       .getByRole("link", { name: /get in touch/i })
       .click();
     await expectSectionInView(page, "contact");
+  });
+});
+
+test.describe("creature feature", () => {
+  test("page exists and reveal slides are navigable", async ({ page }) => {
+    await openCreatureFeature(page);
+
+    await expect(page.getByTestId("creature-panel-excited")).toBeVisible();
+    await expect(page.getByTestId("creature-panel-excited")).toContainText(/excited/i);
+
+    await page.getByTestId("creature-feature-next").click();
+    await expect(page.getByTestId("creature-panel-little")).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByTestId("creature-panel-little")).toContainText(/little did i know/i);
+
+    await page.getByTestId("creature-feature-next").click();
+    await expect(page.getByTestId("creature-panel-feature")).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByTestId("creature-panel-feature")).toContainText(/feature/i);
   });
 });
