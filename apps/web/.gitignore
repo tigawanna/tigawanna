@@ -42,12 +42,15 @@ next-env.d.ts
 
 /media
 
-# Playwright
+# Playwright (root-anchored paths are relative to this app dir)
 node_modules/
 /test-results/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+/e2e/test-results/
+/e2e/playwright-report/
+/e2e/blob-report/
 
 # SQLite
 *.db
@@ -55,10 +58,5 @@ node_modules/
 
 # Local audits
 lighthouse-*.json
-
-# SQLite
-*.db
-*.db-*
-
-apps/web/e2e/playwright-report
-apps/web/e2e/test-results
+lighthouse-*.html
+lighthouse-*.report.html
