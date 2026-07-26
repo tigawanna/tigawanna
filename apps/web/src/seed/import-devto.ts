@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 import { editorConfigFactory } from "@payloadcms/richtext-lexical";
 import { getPayload, type Payload } from "payload";
 
+import { normalizeDevtoTags, stripDevtoFrontmatter } from "../lib/devto/client";
 import { markdownToLexicalWithCodeBlocks } from "../lib/markdown-to-lexical";
 import payloadConfig from "../payload.config";
 import { upsertBlogBySlug } from "./upsert-blog";
@@ -14,7 +15,7 @@ const dirname = path.dirname(filename);
 loadEnv({ path: path.resolve(dirname, "../../.env") });
 
 const DEVTO_USERNAME = process.env.DEVTO_USERNAME || "tigawanna";
-const DEVTO_API_KEY = process.env.DEVTO_API_KEY;
+const DEV_TO_KEY = process.env.DEV_TO_KEY;
 const PER_PAGE = 30;
 
 type DevtoListArticle = {
@@ -49,8 +50,8 @@ async function devtoFetch<T>(url: string): Promise<T> {
     Accept: "application/json",
     "User-Agent": "tigawanna-web-importer",
   };
-  if (DEVTO_API_KEY) {
-    headers["api-key"] = DEVTO_API_KEY;
+  if (DEV_TO_KEY) {
+    headers["api-key"] = DEV_TO_KEY;
   }
 
   const res = await fetch(url, { headers });
@@ -59,27 +60,6 @@ async function devtoFetch<T>(url: string): Promise<T> {
     throw new Error(`Dev.to ${res.status} for ${url}: ${body.slice(0, 200)}`);
   }
   return res.json() as Promise<T>;
-}
-
-/**
- * Normalizes Dev.to tag_list which is sometimes a CSV string on list endpoints.
- */
-function normalizeTags(tagList: string[] | string): string[] {
-  if (Array.isArray(tagList)) return tagList.filter(Boolean);
-  return tagList
-    .split(",")
-    .map((tag) => tag.trim())
-    .filter(Boolean);
-}
-
-/**
- * Strips Dev.to YAML front matter from article markdown when present.
- */
-function stripDevtoFrontmatter(markdown: string): string {
-  if (!markdown.startsWith("---")) return markdown;
-  const end = markdown.indexOf("\n---", 3);
-  if (end === -1) return markdown;
-  return markdown.slice(end + 4).replace(/^\s+/, "");
 }
 
 /**
@@ -112,7 +92,7 @@ async function fetchArticleDetail(id: number): Promise<DevtoArticleDetail> {
 /**
  * Imports published Dev.to posts into Payload as `kind: post` blogs.
  *
- * Public username listing works without a key. Set `DEVTO_API_KEY` only if you
+ * Public username listing works without a key. Set `DEV_TO_KEY` only if you
  * need `/articles/me` (drafts) later.
  */
 export async function importDevtoPosts(payload?: Payload): Promise<ImportDevtoResult> {
@@ -135,7 +115,7 @@ export async function importDevtoPosts(payload?: Payload): Promise<ImportDevtoRe
     client.logger.info(`  importing: ${summary.slug}`);
     try {
       const detail = await fetchArticleDetail(summary.id);
-      const tags = normalizeTags(detail.tag_list ?? summary.tag_list);
+      const tags = normalizeDevtoTags(detail.tag_list ?? summary.tag_list);
       const markdown = detail.body_markdown?.trim()
         ? stripDevtoFrontmatter(detail.body_markdown)
         : `${detail.description}\n\n[Read on Dev.to](${detail.url})`;
@@ -155,6 +135,7 @@ export async function importDevtoPosts(payload?: Payload): Promise<ImportDevtoRe
         devto: {
           enabled: true,
           status: "published",
+          articleId: detail.id,
           url: detail.url,
           lastSyncedAt: new Date().toISOString(),
         },

@@ -23,6 +23,7 @@ import { LinkFeatureClient as LinkFeatureClient_e70f5e05f09f93e00b997edb1ef0c864
 import { RelationshipFeatureClient as RelationshipFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from "@payloadcms/richtext-lexical/client";
 import { BlockquoteFeatureClient as BlockquoteFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from "@payloadcms/richtext-lexical/client";
 import { UploadFeatureClient as UploadFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from "@payloadcms/richtext-lexical/client";
+import { DevtoActions as DevtoActions_27221a0e1d61814cbe7a650b141a2ce6 } from "../../../collections/Blogs/components/DevtoActions";
 import { SlugField as SlugField_2b8867833a34864a02ddf429b0728a40 } from "@payloadcms/next/client";
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from "@payloadcms/next/rsc";
 
@@ -78,6 +79,8 @@ export const importMap = {
     BlockquoteFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#UploadFeatureClient":
     UploadFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "/collections/Blogs/components/DevtoActions#DevtoActions":
+    DevtoActions_27221a0e1d61814cbe7a650b141a2ce6,
   "@payloadcms/next/client#SlugField": SlugField_2b8867833a34864a02ddf429b0728a40,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
 };

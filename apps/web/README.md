@@ -27,11 +27,11 @@ Admin: [http://localhost:3055/admin](http://localhost:3055/admin)
 - Public routes: `/journals` (journals), `/blogs` (posts), plus `[slug]` detail pages
 - Landing sections filter by `kind`
 - Seed fixtures: `pnpm seed:journals` (journals) · `pnpm import:devto` (full Dev.to posts) · `pnpm seed:all` (both + verify)
-- Import live Dev.to posts: `pnpm import:devto` (optional `DEVTO_USERNAME`, `DEVTO_API_KEY`)
+- Import live Dev.to posts: `pnpm import:devto` (optional `DEVTO_USERNAME`, `DEV_TO_KEY`)
 - After adding `coverUrl`: `pnpm migrate:cover-url` then `pnpm backfill:covers` (or re-run `import:devto`)
 - One-time migrate from the old Journals collection: `pnpm migrate:journals-to-blogs`
 - Contact inbox table: `pnpm migrate:contact-messages` (then Admin → **Contact messages**)
-- Dev.to cross-post is scaffolded for posts (`devto` fields + `src/workflows/devto-crosspost.ts`)
+- Dev.to workflow (posts): Admin → Meta → **Open in Dev.to** (seeds draft + canonical URL) → edit images on Dev.to → **Sync from Dev.to**. Requires `DEV_TO_KEY` + `NEXT_PUBLIC_SITE_URL`. After schema pull: `pnpm migrate:devto-article-id`
 
 ## Notes
 

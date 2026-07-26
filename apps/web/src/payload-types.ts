@@ -227,13 +227,20 @@ export interface Blog {
       }[]
     | null;
   /**
-   * Scaffold only — publish workflow lands later. Canonical URL on Dev.to should point back here.
+   * Write here as a draft → Open in Dev.to (seed text + canonical URL) → add images there → Sync back. Publish on this site when ready.
    */
   devto?: {
+    /**
+     * Set automatically when you Open or Sync.
+     */
     enabled?: boolean | null;
     status?: ("idle" | "pending" | "published" | "failed") | null;
     /**
-     * Filled after a successful cross-post (or pasted manually).
+     * Numeric Forem id — used for Sync / Update.
+     */
+    articleId?: number | null;
+    /**
+     * Filled after Open (or paste manually if linking an existing post).
      */
     url?: string | null;
     lastSyncedAt?: string | null;
@@ -511,6 +518,7 @@ export interface BlogsSelect<T extends boolean = true> {
     | {
         enabled?: T;
         status?: T;
+        articleId?: T;
         url?: T;
         lastSyncedAt?: T;
       };

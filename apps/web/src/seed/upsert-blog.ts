@@ -18,6 +18,7 @@ type UpsertBlogInput = {
   devto?: {
     enabled?: boolean;
     status?: "idle" | "pending" | "published" | "failed";
+    articleId?: number;
     url?: string;
     lastSyncedAt?: string;
   };
@@ -59,7 +60,7 @@ export async function upsertBlogBySlug(
       collection: "blogs",
       id: existing.docs[0].id,
       data: docData,
-      context: { disableRevalidate: true, skipDevtoScaffold: true },
+      context: { disableRevalidate: true },
       draft: docData._status === "draft",
       overrideAccess: true,
     });
@@ -69,7 +70,7 @@ export async function upsertBlogBySlug(
   await payload.create({
     collection: "blogs",
     data: docData,
-    context: { disableRevalidate: true, skipDevtoScaffold: true },
+    context: { disableRevalidate: true },
     draft: docData._status === "draft",
     overrideAccess: true,
   });

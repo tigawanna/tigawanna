@@ -4,8 +4,8 @@ import { slugField } from "payload";
 import { authenticated } from "@/access/authenticated";
 import { authenticatedOrPublished } from "@/access/authenticatedOrPublished";
 import { contentLexicalEditor } from "@/fields/contentLexicalEditor";
+import { openDevtoEndpoint, syncDevtoEndpoint } from "./endpoints/devto";
 import { revalidateBlog, revalidateBlogDelete } from "./hooks/revalidateBlog";
-import { scaffoldDevtoCrossPost } from "./hooks/scaffoldDevtoCrossPost";
 
 export const Blogs: CollectionConfig = {
   slug: "blogs",
@@ -33,6 +33,7 @@ export const Blogs: CollectionConfig = {
     description:
       "All writing lives here. Mark an entry as Journal or Blog post — you can switch later if a short note grows into a full post.",
   },
+  endpoints: [openDevtoEndpoint, syncDevtoEndpoint],
   fields: [
     {
       name: "title",
@@ -126,18 +127,31 @@ export const Blogs: CollectionConfig = {
             {
               name: "devto",
               type: "group",
-              label: "Dev.to cross-post",
+              label: "Dev.to",
               admin: {
                 description:
-                  "Scaffold only — publish workflow lands later. Canonical URL on Dev.to should point back here.",
+                  "Write here as a draft → Open in Dev.to (seed text + canonical URL) → add images there → Sync back. Publish on this site when ready.",
                 condition: (_, siblingData) => siblingData?.kind === "post",
               },
               fields: [
                 {
+                  name: "actions",
+                  type: "ui",
+                  admin: {
+                    components: {
+                      Field: "/collections/Blogs/components/DevtoActions#DevtoActions",
+                    },
+                  },
+                },
+                {
                   name: "enabled",
                   type: "checkbox",
                   defaultValue: false,
-                  label: "Cross-post to Dev.to when published",
+                  label: "Linked to Dev.to",
+                  admin: {
+                    readOnly: true,
+                    description: "Set automatically when you Open or Sync.",
+                  },
                 },
                 {
                   name: "status",
@@ -154,11 +168,21 @@ export const Blogs: CollectionConfig = {
                   },
                 },
                 {
+                  name: "articleId",
+                  type: "number",
+                  label: "Dev.to article ID",
+                  admin: {
+                    description: "Numeric Forem id — used for Sync / Update.",
+                    readOnly: true,
+                  },
+                },
+                {
                   name: "url",
                   type: "text",
                   label: "Dev.to article URL",
                   admin: {
-                    description: "Filled after a successful cross-post (or pasted manually).",
+                    description:
+                      "Filled after Open (or paste manually if linking an existing post).",
                   },
                 },
                 {
@@ -198,7 +222,7 @@ export const Blogs: CollectionConfig = {
     slugField(),
   ],
   hooks: {
-    afterChange: [revalidateBlog, scaffoldDevtoCrossPost],
+    afterChange: [revalidateBlog],
     afterDelete: [revalidateBlogDelete],
   },
   versions: {

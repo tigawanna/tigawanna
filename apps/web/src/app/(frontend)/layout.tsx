@@ -6,6 +6,7 @@ import {
   siteSeoKeywords,
   siteSeoTitle,
 } from "@repo/site-constants";
+import { getSiteUrl } from "@/lib/site-url";
 import "./styles.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -21,7 +22,7 @@ const fraunces = Fraunces({
 });
 
 export const metadata = {
-  metadataBase: new URL(siteConfig.links.website),
+  metadataBase: new URL(getSiteUrl()),
   title: siteSeoTitle,
   description: siteSeoDescription,
   keywords: siteSeoKeywords,

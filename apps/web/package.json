@@ -16,6 +16,7 @@
     "import:devto": "cross-env NODE_OPTIONS=--no-deprecation payload run ./src/seed/import-devto.ts",
     "backfill:covers": "cross-env NODE_OPTIONS=--no-deprecation payload run ./src/seed/backfill-covers.ts",
     "migrate:cover-url": "node --experimental-strip-types ./src/seed/migrate-add-cover-url.ts",
+    "migrate:devto-article-id": "node --experimental-strip-types ./src/seed/migrate-add-devto-article-id.ts",
     "migrate:contact-messages": "node --experimental-strip-types ./src/seed/migrate-contact-messages.ts",
     "seed:all": "cross-env NODE_OPTIONS=--no-deprecation CI=1 payload run ./src/seed/seed-all.ts",
     "migrate:journals-to-blogs": "node --experimental-strip-types ./src/seed/migrate-journals-to-blogs.ts",

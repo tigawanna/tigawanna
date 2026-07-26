@@ -65,7 +65,7 @@ async function main() {
       collection: "blogs",
       id: doc.id,
       data: { coverUrl: cover },
-      context: { skipDevtoScaffold: true },
+      context: { disableRevalidate: true },
       overrideAccess: true,
     });
     updated += 1;
