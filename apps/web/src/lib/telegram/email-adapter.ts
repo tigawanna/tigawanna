@@ -32,6 +32,7 @@ function stringifyToAddress(to: SendEmailOptions["to"]): string {
 
 /**
  * Extracts a plain-text body from a Payload email message (prefers `text`, else strips `html`).
+ * Preserves anchor `href`s so password-reset links survive HTML → Telegram conversion.
  */
 function extractPlainBody(message: SendEmailOptions): string {
   if (typeof message.text === "string" && message.text.trim().length > 0) {
@@ -42,6 +43,15 @@ function extractPlainBody(message: SendEmailOptions): string {
     return message.html
       .replace(/<br\s*\/?>/gi, "\n")
       .replace(/<\/p>/gi, "\n\n")
+      .replace(/<a\s+[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi, (_match, href, label) => {
+        const text = String(label)
+          .replace(/<[^>]+>/g, "")
+          .trim();
+        const url = String(href).trim();
+        if (!url) return text;
+        if (!text || text === url) return url;
+        return `${text}\n${url}`;
+      })
       .replace(/<[^>]+>/g, "")
       .replace(/&nbsp;/g, " ")
       .replace(/&amp;/g, "&")
@@ -83,6 +93,17 @@ export const telegramEmailAdapter: EmailAdapter<{ sent: boolean }> = ({ payload 
     const telegram = getTelegramClient();
     const to = stringifyToAddress(message.to);
     const subject = typeof message.subject === "string" ? message.subject : "(no subject)";
+    const hasText = typeof message.text === "string" && message.text.trim().length > 0;
+    const hasHtml = typeof message.html === "string" && message.html.trim().length > 0;
+
+    payload.logger.info({
+      msg: "Payload email send requested",
+      to,
+      subject,
+      hasText,
+      hasHtml,
+      telegramConfigured: Boolean(telegram),
+    });
 
     if (!telegram) {
       payload.logger.warn({
@@ -91,7 +112,13 @@ export const telegramEmailAdapter: EmailAdapter<{ sent: boolean }> = ({ payload 
       return { sent: false };
     }
 
-    const result = await telegram.send(formatEmailForTelegram(message));
+    const formatted = formatEmailForTelegram(message);
+    payload.logger.info({
+      msg: "Relaying email to Telegram",
+      preview: formatted.slice(0, 280),
+    });
+
+    const result = await telegram.send(formatted);
 
     if (!result.success) {
       payload.logger.error({

@@ -19,6 +19,8 @@
     "migrate:devto-article-id": "node --experimental-strip-types ./src/seed/migrate-add-devto-article-id.ts",
     "migrate:contact-messages": "node --experimental-strip-types ./src/seed/migrate-contact-messages.ts",
     "seed:all": "cross-env NODE_OPTIONS=--no-deprecation CI=1 payload run ./src/seed/seed-all.ts",
+    "test:email": "cross-env NODE_OPTIONS=--no-deprecation payload run ./src/seed/test-email.ts",
+    "test:email:forgot": "cross-env NODE_OPTIONS=--no-deprecation TEST_EMAIL_MODE=forgot payload run ./src/seed/test-email.ts",
     "migrate:journals-to-blogs": "node --experimental-strip-types ./src/seed/migrate-journals-to-blogs.ts",
     "lint": "cross-env NODE_OPTIONS=--no-deprecation eslint .",
     "check-types": "tsc --noEmit",

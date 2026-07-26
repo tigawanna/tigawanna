@@ -14,6 +14,19 @@ import { telegramEmailAdapter } from "./lib/telegram/email-adapter";
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
+/**
+ * Absolute origin for admin auth emails (password reset links, etc.).
+ * Prefer an explicit Payload URL so local admin can differ from the public site URL.
+ */
+function resolveServerURL(): string {
+  const fromEnv =
+    process.env.PAYLOAD_SERVER_URL?.trim() || process.env.NEXT_PUBLIC_SITE_URL?.trim() || "";
+  if (fromEnv) {
+    return fromEnv.replace(/\/$/, "");
+  }
+  return "http://localhost:3055";
+}
+
 export default buildConfig({
   admin: {
     user: Users.slug,
@@ -29,6 +42,8 @@ export default buildConfig({
   email: telegramEmailAdapter,
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
+  // Required so forgot-password emails include an absolute reset URL (not `/admin/reset/...`).
+  serverURL: resolveServerURL(),
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
