@@ -9,6 +9,7 @@ import { Blogs } from "./collections/Blogs";
 import { ContactMessages } from "./collections/ContactMessages";
 import { Media } from "./collections/Media";
 import { Users } from "./collections/Users";
+import { telegramEmailAdapter } from "./lib/telegram/email-adapter";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -24,6 +25,8 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Blogs, ContactMessages],
+  // Auth / system mail (forgot password, etc.) → Telegram via @repo/telegram.
+  email: telegramEmailAdapter,
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: {
