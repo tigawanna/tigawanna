@@ -68,15 +68,28 @@ function stripCalloutLabelChildren(
 ): SerializedQuoteNode["children"] {
   const strip = CALLOUT_STRIP[variant];
   const children = structuredClone(node.children);
+  let strippedLabel = false;
 
   for (const child of children) {
     if (child.type !== "text") continue;
     const textNode = child as unknown as { type: "text"; text: string };
     if (typeof textNode.text !== "string") continue;
-    const next = textNode.text.replace(strip, "");
-    if (next === textNode.text) break;
-    textNode.text = next;
-    break;
+
+    if (!strippedLabel) {
+      const next = textNode.text.replace(strip, "");
+      if (next !== textNode.text) {
+        textNode.text = next;
+        strippedLabel = true;
+        continue;
+      }
+    }
+
+    // “Note” + “: body” split across text nodes — drop the leftover colon.
+    if (strippedLabel && /^:\s*/.test(textNode.text)) {
+      textNode.text = textNode.text.replace(/^:\s*/, "");
+      break;
+    }
+    if (strippedLabel) break;
   }
 
   return children.filter((child) => {
