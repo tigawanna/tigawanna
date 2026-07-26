@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { LandingFooter } from "@/components/landing/layout/LandingFooter";
 import { LandingNavbar } from "@/components/landing/layout/LandingNavbar";
+import { LandingScrollFabDeferred } from "@/components/landing/layout/LandingScrollFabDeferred";
 import { PostHero } from "@/heros/PostHero";
 import { RichText } from "@/components/richtext/RichText";
 import type { JournalDetail } from "@/types/journals";
@@ -55,6 +56,7 @@ export function ContentArticle({
         </article>
       </main>
       <LandingFooter />
+      <LandingScrollFabDeferred />
     </div>
   );
 }

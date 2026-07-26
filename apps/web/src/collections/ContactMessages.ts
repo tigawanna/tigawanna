@@ -5,6 +5,7 @@ import { authenticated } from "@/access/authenticated";
 /**
  * Inbox for landing contact-form submissions.
  * Created only via the server action (Local API + overrideAccess) — not from admin UI.
+ * Stores only an approximate request location (city/region/country), not IP or user-agent.
  */
 export const ContactMessages: CollectionConfig = {
   slug: "contact-messages",
@@ -20,7 +21,7 @@ export const ContactMessages: CollectionConfig = {
   },
   admin: {
     useAsTitle: "name",
-    defaultColumns: ["name", "contact", "telegramSent", "createdAt"],
+    defaultColumns: ["name", "contact", "approximateLocation", "telegramSent", "createdAt"],
     group: "Inbox",
     description:
       "Messages from the landing contact form. Telegram delivery status is recorded on each row.",
@@ -44,19 +45,13 @@ export const ContactMessages: CollectionConfig = {
       required: true,
     },
     {
-      name: "ipAddress",
+      name: "approximateLocation",
       type: "text",
       admin: {
         position: "sidebar",
         readOnly: true,
-      },
-    },
-    {
-      name: "userAgent",
-      type: "text",
-      admin: {
-        position: "sidebar",
-        readOnly: true,
+        description:
+          "Rough city/region/country from geo headers or IP lookup. IP itself is not stored.",
       },
     },
     {

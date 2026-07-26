@@ -1,43 +1,68 @@
 import Image from "next/image";
 import type { MediaBlock as MediaBlockProps } from "@/payload-types";
 import { cn } from "@/lib/cn";
+import { resolveMediaUrl } from "@/utils/media-url";
 
 type Props = MediaBlockProps & {
   className?: string;
   imgClassName?: string;
 };
 
+type ResolvedImage = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+};
+
 /**
- * Resolves a Payload media upload URL for next/image.
+ * Resolves either an uploaded Payload media doc or a remote Image URL field.
  */
-function mediaUrl(media: MediaBlockProps["media"]): string | null {
-  if (!media || typeof media !== "object") return null;
-  if (!media.url) return null;
-  return media.url.startsWith("http") ? media.url : media.url;
+function resolveBlockImage(fields: MediaBlockProps): ResolvedImage | null {
+  const media = fields.media;
+  if (media && typeof media === "object") {
+    const src = resolveMediaUrl(media.url);
+    if (src) {
+      return {
+        src,
+        alt: media.alt || fields.alt || "",
+        width: media.width ?? 1200,
+        height: media.height ?? 675,
+      };
+    }
+  }
+
+  const src = resolveMediaUrl(fields.url);
+  if (!src) return null;
+
+  return {
+    src,
+    alt: fields.alt || "",
+    width: 1200,
+    height: 675,
+  };
 }
 
 /**
- * Image block embedded in journal Lexical content.
+ * Image block embedded in Lexical content — upload or remote URL.
  */
-export function MediaBlock({ className, imgClassName, media }: Props) {
-  const url = mediaUrl(media);
-  if (!url || typeof media !== "object") return null;
-
-  const alt = media.alt || "";
-  const width = media.width ?? 1200;
-  const height = media.height ?? 675;
+export function MediaBlock({ className, imgClassName, ...fields }: Props) {
+  const image = resolveBlockImage(fields);
+  if (!image) return null;
 
   return (
     <figure className={cn("not-prose my-8", className)}>
       <Image
-        src={url}
-        alt={alt}
-        width={width}
-        height={height}
+        src={image.src}
+        alt={image.alt}
+        width={image.width}
+        height={image.height}
         className={cn("h-auto w-full rounded-xl object-cover", imgClassName)}
       />
-      {alt ? (
-        <figcaption className="mt-3 text-center text-sm text-base-content/55">{alt}</figcaption>
+      {image.alt ? (
+        <figcaption className="mt-3 text-center text-sm text-base-content/55">
+          {image.alt}
+        </figcaption>
       ) : null}
     </figure>
   );

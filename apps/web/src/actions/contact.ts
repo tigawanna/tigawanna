@@ -7,12 +7,12 @@ import {
   contactFormSchema,
   type ContactFormValues,
 } from "@/components/landing/sections/contact/contact-schema";
+import { resolveApproximateLocation } from "@/lib/geo/approximate-location";
 import { getTelegramClient } from "@/lib/telegram/client";
 
 type PersistMeta = {
   hasContact: boolean;
-  ipAddress?: string;
-  userAgent?: string;
+  approximateLocation?: string;
   telegramSent: boolean;
 };
 
@@ -28,8 +28,7 @@ async function persistContactMessage(data: ContactFormValues, meta: PersistMeta)
       name: data.name,
       contact: meta.hasContact ? data.contact : null,
       message: data.message,
-      ipAddress: meta.ipAddress ?? null,
-      userAgent: meta.userAgent ?? null,
+      approximateLocation: meta.approximateLocation ?? null,
       telegramSent: meta.telegramSent,
     },
     overrideAccess: true,
@@ -38,23 +37,22 @@ async function persistContactMessage(data: ContactFormValues, meta: PersistMeta)
 
 /**
  * Relays a landing contact submission to Telegram and stores it in Payload.
- * Mirrors the site app flow: always persist; rethrow when Telegram send fails after credentials exist.
+ * Always persist; rethrow when Telegram send fails after credentials exist.
+ * Request metadata is limited to an approximate location (no IP / user-agent).
  */
 export async function sendContactMessage(input: ContactFormValues) {
   const data = contactFormSchema.parse(input);
   const hasContact = Boolean(data.contact && data.contact.trim().length > 0);
   const requestHeaders = await headers();
-  const ipAddress =
-    requestHeaders.get("cf-connecting-ip") ?? requestHeaders.get("x-forwarded-for") ?? undefined;
-  const userAgent = requestHeaders.get("user-agent") ?? undefined;
+  const location = await resolveApproximateLocation(requestHeaders);
+  const approximateLocation = location?.label;
 
   const text = [
     "New portfolio contact submission (web)",
     "",
     `Name: ${data.name}`,
     `Contact: ${hasContact ? data.contact : "No contact provided"}`,
-    `IP: ${ipAddress ?? "unknown"}`,
-    `UA: ${userAgent ?? "unknown"}`,
+    `Approx. location: ${approximateLocation ?? "unknown"}`,
     "",
     "Message:",
     data.message,
@@ -67,8 +65,7 @@ export async function sendContactMessage(input: ContactFormValues) {
     console.warn("[contact] Telegram credentials unset — persisting message only");
     await persistContactMessage(data, {
       hasContact,
-      ipAddress,
-      userAgent,
+      approximateLocation,
       telegramSent: false,
     });
     return { success: true as const };
@@ -83,8 +80,7 @@ export async function sendContactMessage(input: ContactFormValues) {
   } catch (error: unknown) {
     await persistContactMessage(data, {
       hasContact,
-      ipAddress,
-      userAgent,
+      approximateLocation,
       telegramSent: false,
     });
     throw error;
@@ -92,8 +88,7 @@ export async function sendContactMessage(input: ContactFormValues) {
 
   await persistContactMessage(data, {
     hasContact,
-    ipAddress,
-    userAgent,
+    approximateLocation,
     telegramSent,
   });
 

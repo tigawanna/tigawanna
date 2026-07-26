@@ -10,6 +10,7 @@ import {
   toLessonPreviewItem,
 } from "@/components/landing/data/static";
 import { formatDisplayDate } from "@/components/landing/utils/date-helpers";
+import { hydrateMarkdownImageBlocks } from "@/lib/markdown-to-lexical";
 import type { Blog } from "@/payload-types";
 import type {
   ContentKind,
@@ -17,6 +18,7 @@ import type {
   JournalPreviewItem,
   JournalsListPage,
 } from "@/types/journals";
+import { resolveMediaUrl } from "@/utils/media-url";
 
 export const BLOGS_PER_PAGE = 8;
 export const JOURNALS_PER_PAGE = 8;
@@ -27,9 +29,9 @@ export const JOURNALS_PER_PAGE = 8;
 function toPreviewFromPayload(doc: Blog): JournalPreviewItem {
   const published = doc.publishedAt ?? doc.createdAt;
   const kind: ContentKind = doc.kind === "post" ? "post" : "journal";
-  const hero = doc.heroImage && typeof doc.heroImage === "object" ? doc.heroImage.url : null;
-  const cover =
-    typeof doc.coverUrl === "string" && doc.coverUrl.trim().length > 0 ? doc.coverUrl.trim() : null;
+  const hero =
+    doc.heroImage && typeof doc.heroImage === "object" ? resolveMediaUrl(doc.heroImage.url) : null;
+  const cover = resolveMediaUrl(doc.coverUrl);
 
   return {
     id: String(doc.id),
@@ -290,9 +292,10 @@ export async function getBlogBySlug(
     const doc = result.docs[0];
     if (doc) {
       const preview = toPreviewFromPayload(doc);
+      const content = doc.content ? hydrateMarkdownImageBlocks(doc.content) : null;
       return {
         ...preview,
-        content: doc.content ?? null,
+        content,
         publishedAt: doc.publishedAt,
         source: "payload",
       };

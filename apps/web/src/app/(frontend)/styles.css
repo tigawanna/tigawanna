@@ -237,8 +237,90 @@ body {
   color: color-mix(in oklab, var(--color-base-content) 82%, transparent);
 }
 
-.payload-richtext li {
-  margin-block: 0.35rem;
+.payload-richtext ul,
+.payload-richtext ol {
+  padding-left: 0;
+  list-style: none;
+}
+
+.payload-richtext ul > li,
+.payload-richtext ol > li {
+  position: relative;
+  margin-block: 0.45rem;
+  padding-left: 1.55rem;
+}
+
+.payload-richtext ul > li::before {
+  content: "";
+  position: absolute;
+  top: 0.72em;
+  left: 0.2rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-primary) 75%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-primary) 14%, transparent);
+}
+
+.payload-richtext ol {
+  counter-reset: article-ol;
+}
+
+.payload-richtext ol > li {
+  counter-increment: article-ol;
+  padding-left: 2rem;
+}
+
+.payload-richtext ol > li::before {
+  content: counter(article-ol, decimal-leading-zero);
+  position: absolute;
+  top: 0.1em;
+  left: 0;
+  width: 1.55rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.72em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.8;
+  color: color-mix(in oklab, var(--color-primary) 88%, transparent);
+}
+
+/* Contents nav brings its own markers — don't stack article list chrome on it. */
+.payload-richtext [data-test="article-toc"] ol,
+.payload-richtext [data-test="article-toc"] li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-increment: none;
+}
+
+.payload-richtext [data-test="article-toc"] ol {
+  counter-reset: none;
+}
+
+.payload-richtext [data-test="article-toc"] li::before {
+  content: none;
+}
+
+.payload-richtext [data-test="article-toc"] a {
+  text-decoration: none;
+}
+
+.payload-richtext li > ul,
+.payload-richtext li > ol {
+  margin-block: 0.45rem;
+}
+
+.payload-richtext ul ul > li::before {
+  width: 0.28rem;
+  height: 0.28rem;
+  background: transparent;
+  border: 1.5px solid color-mix(in oklab, var(--color-primary) 65%, transparent);
+  box-shadow: none;
+}
+
+.payload-richtext li > p {
+  margin-block: 0.25rem;
 }
 
 .payload-richtext a {
@@ -258,6 +340,10 @@ body {
   border-radius: 0.75rem;
   background: color-mix(in oklab, var(--color-base-200) 80%, transparent);
   color: color-mix(in oklab, var(--color-base-content) 72%, transparent);
+}
+
+.payload-richtext :is(h2, h3, h4)[id] {
+  scroll-margin-top: 7rem;
 }
 
 .payload-richtext code:not(pre code) {

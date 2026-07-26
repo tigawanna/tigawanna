@@ -262,8 +262,10 @@ export interface ContactMessage {
    */
   contact?: string | null;
   message: string;
-  ipAddress?: string | null;
-  userAgent?: string | null;
+  /**
+   * Rough city/region/country from geo headers or IP lookup. IP itself is not stored.
+   */
+  approximateLocation?: string | null;
   /**
    * Whether Telegram received this submission.
    */
@@ -527,8 +529,7 @@ export interface ContactMessagesSelect<T extends boolean = true> {
   name?: T;
   contact?: T;
   message?: T;
-  ipAddress?: T;
-  userAgent?: T;
+  approximateLocation?: T;
   telegramSent?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -694,7 +695,18 @@ export interface CodeBlock {
  * via the `definition` "MediaBlock".
  */
 export interface MediaBlock {
-  media: number | Media;
+  /**
+   * Preferred — uploaded media wins over Image URL.
+   */
+  media?: (number | null) | Media;
+  /**
+   * Remote image (e.g. Dev.to upload) when nothing is uploaded.
+   */
+  url?: string | null;
+  /**
+   * Used for remote URLs; uploaded media carries its own alt.
+   */
+  alt?: string | null;
   id?: string | null;
   blockName?: string | null;
   blockType: "mediaBlock";

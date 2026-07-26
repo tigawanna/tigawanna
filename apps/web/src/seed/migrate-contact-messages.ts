@@ -38,8 +38,9 @@ function columnExists(db: DatabaseSync, table: string, column: string): boolean 
 }
 
 /**
- * Creates the Payload `contact-messages` collection tables + locked-doc relation column.
+ * Creates / updates the Payload `contact-messages` collection tables.
  * Safe to re-run. Local `file:` SQLite only (`push: false` in payload config).
+ * Privacy: stores approximate location only — drops legacy IP / user-agent columns.
  */
 function migrateContactMessages() {
   const databaseUrl = process.env.DATABASE_URL || "file:./payload.db";
@@ -58,8 +59,7 @@ function migrateContactMessages() {
         \`name\` text NOT NULL,
         \`contact\` text,
         \`message\` text NOT NULL,
-        \`ip_address\` text,
-        \`user_agent\` text,
+        \`approximate_location\` text,
         \`telegram_sent\` integer DEFAULT false NOT NULL,
         \`updated_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
         \`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL
@@ -70,6 +70,23 @@ function migrateContactMessages() {
     console.log("Created contact_messages");
   } else {
     console.log("contact_messages already present");
+
+    if (!columnExists(db, "contact_messages", "approximate_location")) {
+      db.exec(`ALTER TABLE \`contact_messages\` ADD COLUMN \`approximate_location\` text;`);
+      console.log("Added contact_messages.approximate_location");
+    } else {
+      console.log("contact_messages.approximate_location already present");
+    }
+
+    if (columnExists(db, "contact_messages", "ip_address")) {
+      db.exec(`ALTER TABLE \`contact_messages\` DROP COLUMN \`ip_address\`;`);
+      console.log("Dropped contact_messages.ip_address");
+    }
+
+    if (columnExists(db, "contact_messages", "user_agent")) {
+      db.exec(`ALTER TABLE \`contact_messages\` DROP COLUMN \`user_agent\`;`);
+      console.log("Dropped contact_messages.user_agent");
+    }
   }
 
   if (tableExists(db, "payload_locked_documents_rels")) {

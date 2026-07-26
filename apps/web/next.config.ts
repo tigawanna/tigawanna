@@ -38,6 +38,18 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "media.dev.to",
+      },
+      {
+        protocol: "https",
+        hostname: "dev-to-uploads.s3.amazonaws.com",
+      },
+      {
+        protocol: "https",
+        hostname: "dev-to-uploads.s3.us-east-2.amazonaws.com",
+      },
+      {
+        protocol: "https",
         hostname: "opengraph.githubassets.com",
       },
       {

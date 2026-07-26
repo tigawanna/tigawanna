@@ -26,30 +26,28 @@ export function ContentArticleSkeleton({
       <LandingNavbar />
       <main className="min-h-screen pt-20 pb-24">
         <article>
-          <header
-            className={
-              showCover ? "relative flex min-h-[min(56vh,32rem)] items-end" : "relative pt-8"
-            }
-          >
+          <header className="relative">
             {showCover ? (
               <div
-                className="pointer-events-none absolute inset-0 -z-10 animate-pulse bg-base-200/80"
+                className="aspect-21/9 w-full min-h-52 animate-pulse bg-base-200/80 sm:min-h-64 md:aspect-3/1 md:min-h-72"
                 aria-hidden="true"
               />
             ) : null}
-            <div className="container relative z-10 w-full pb-10">
+            <div className={showCover ? "container pt-10 pb-4" : "container pt-8 pb-4"}>
               <div className="mx-auto max-w-3xl">
-                <p className="mb-8 text-sm text-base-content/40">{backLabel}</p>
                 <Skeleton className="mb-4 h-3 w-40 bg-base-content/10" />
                 <Skeleton className="h-12 w-[min(100%,28rem)] bg-base-content/12 md:h-14" />
                 <Skeleton className="mt-3 h-10 w-[min(100%,22rem)] bg-base-content/10 md:h-12" />
                 <Skeleton className="mt-6 h-5 w-full max-w-xl bg-base-content/8" />
                 <Skeleton className="mt-2 h-5 w-4/5 max-w-lg bg-base-content/8" />
-                <div className="mt-8 flex gap-10">
+                <div className="mt-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
                   <div className="space-y-2">
                     <Skeleton className="h-3 w-24 bg-base-content/8" />
                     <Skeleton className="h-4 w-32 bg-base-content/10" />
                   </div>
+                  <p className="btn btn-ghost btn-sm pointer-events-none w-fit gap-2 rounded-full border border-base-content/10 px-4 font-normal text-base-content/40">
+                    {backLabel}
+                  </p>
                 </div>
               </div>
             </div>
