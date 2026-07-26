@@ -28,7 +28,7 @@ export function TableOfContents({ items, className }: TableOfContentsProps) {
         <ListTree className="size-4 text-primary" aria-hidden="true" />
         <h2
           id="article-toc-heading"
-          className="!m-0 font-sans text-[0.7rem] font-semibold tracking-[0.2em] text-base-content/70 uppercase"
+          className="m-0! font-sans text-[0.7rem] font-semibold tracking-[0.2em] text-base-content/70 uppercase"
         >
           Contents
         </h2>
