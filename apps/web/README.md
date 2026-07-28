@@ -31,7 +31,7 @@ Admin: [http://localhost:3055/admin](http://localhost:3055/admin)
 - After adding `coverUrl`: `pnpm migrate:cover-url` then `pnpm backfill:covers` (or re-run `import:devto`)
 - One-time migrate from the old Journals collection: `pnpm migrate:journals-to-blogs`
 - Contact inbox table: `pnpm migrate:contact-messages` (then Admin → **Contact messages**)
-- Dev.to workflow (posts): Admin → Meta → **Open in Dev.to** (seeds draft + canonical URL) → edit images on Dev.to → **Sync from Dev.to**. Requires `DEV_TO_KEY` + `NEXT_PUBLIC_SITE_URL`. After schema pull: `pnpm migrate:devto-article-id`
+- Dev.to workflow (posts): Admin → Meta → **Open in Dev.to** (seeds draft + canonical URL) → edit images on Dev.to → **Sync from Dev.to**. Requires `DEV_TO_KEY` + site origin (`NEXT_PUBLIC_SITE_URL` or `VERCEL_URL`). After schema pull: `pnpm migrate:devto-article-id`
 
 ## Notes
 
