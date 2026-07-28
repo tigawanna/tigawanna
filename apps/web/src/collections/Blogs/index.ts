@@ -11,6 +11,7 @@ import {
   aiRefineEndpoint,
 } from "./endpoints/ai-draft";
 import { openDevtoEndpoint, syncDevtoEndpoint } from "./endpoints/devto";
+import { fromMarkdownEndpoint } from "./endpoints/from-markdown";
 import { toMarkdownEndpoint } from "./endpoints/to-markdown";
 import { revalidateBlog, revalidateBlogDelete } from "./hooks/revalidateBlog";
 
@@ -46,6 +47,7 @@ export const Blogs: CollectionConfig = {
         beforeDocumentControls: [
           "/collections/Blogs/components/SmartRefineAction#SmartRefineAction",
           "/collections/Blogs/components/CopyMarkdownAction#CopyMarkdownAction",
+          "/collections/Blogs/components/ImportMarkdownAction#ImportMarkdownAction",
         ],
       },
     },
@@ -56,6 +58,7 @@ export const Blogs: CollectionConfig = {
     aiDraftEndpoint,
     aiRefineEndpoint,
     toMarkdownEndpoint,
+    fromMarkdownEndpoint,
     openDevtoEndpoint,
     syncDevtoEndpoint,
   ],
