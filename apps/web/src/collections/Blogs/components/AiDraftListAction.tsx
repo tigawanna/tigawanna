@@ -35,7 +35,7 @@ const DRAWER_SLUG = "ai-draft-blog";
  */
 async function readErrorMessage(res: Response): Promise<string> {
   try {
-    const data: unknown = await res.json();
+    const data = await res.json();
     if (data && typeof data === "object") {
       if ("errors" in data && Array.isArray(data.errors) && data.errors[0]?.message) {
         return String(data.errors[0].message);

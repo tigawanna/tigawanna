@@ -1,15 +1,18 @@
 const OPENROUTER_CHAT_URL = "https://openrouter.ai/api/v1/chat/completions";
 
-/** Curated OpenRouter models for the AI draft picker (keeps the select usable). */
+/** Cheap / writing-friendly OpenRouter models for the AI draft picker. */
 export const OPENROUTER_CURATED_MODELS = [
-  { id: "anthropic/claude-sonnet-4", name: "Claude Sonnet 4" },
-  { id: "anthropic/claude-3.5-sonnet", name: "Claude 3.5 Sonnet" },
-  { id: "openai/gpt-4.1", name: "GPT-4.1" },
-  { id: "openai/gpt-4.1-mini", name: "GPT-4.1 Mini" },
-  { id: "google/gemini-2.5-pro", name: "Gemini 2.5 Pro" },
-  { id: "google/gemini-2.5-flash", name: "Gemini 2.5 Flash" },
-  { id: "meta-llama/llama-3.3-70b-instruct", name: "Llama 3.3 70B" },
+  { id: "deepseek/deepseek-v4-flash", name: "DeepSeek V4 Flash" },
   { id: "deepseek/deepseek-chat-v3-0324", name: "DeepSeek V3" },
+  { id: "google/gemini-2.5-flash", name: "Gemini 2.5 Flash" },
+  { id: "google/gemini-3.5-flash", name: "Gemini 3.5 Flash" },
+  { id: "anthropic/claude-3.5-haiku", name: "Claude 3.5 Haiku" },
+  { id: "anthropic/claude-3-haiku", name: "Claude 3 Haiku" },
+  { id: "anthropic/claude-3.5-sonnet", name: "Claude 3.5 Sonnet" },
+  { id: "anthropic/claude-3-sonnet", name: "Claude 3 Sonnet" },
+  { id: "openai/gpt-4.1-mini", name: "GPT-4.1 Mini" },
+  { id: "openai/gpt-4o-mini", name: "GPT-4o Mini" },
+  { id: "meta-llama/llama-3.3-70b-instruct", name: "Llama 3.3 70B" },
 ] as const;
 
 export const OPENROUTER_FALLBACK_MODELS = OPENROUTER_CURATED_MODELS.map((m) => m.id);
@@ -88,7 +91,7 @@ export function requireOpenRouterApiKey(): string {
 }
 
 /**
- * Default model for AI drafts (`OPENROUTER_MODEL` or Claude Sonnet 4).
+ * Default model for AI drafts (`OPENROUTER_MODEL` or DeepSeek V4 Flash).
  */
 export function getDefaultOpenRouterModel(): string {
   return process.env.OPENROUTER_MODEL?.trim() || OPENROUTER_CURATED_MODELS[0].id;
