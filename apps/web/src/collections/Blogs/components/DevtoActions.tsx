@@ -112,8 +112,10 @@ export function DevtoActions() {
       <div>
         <strong>Dev.to workflow</strong>
         <p style={{ margin: "0.35rem 0 0", opacity: 0.8, fontSize: "0.9rem" }}>
-          Open seeds a Dev.to draft with this text + a canonical URL back to <code>/blogs/…</code>.
-          Add the cover and inline images on Dev.to, then Sync to pull those URLs into Payload.
+          <strong>Publish to Dev.to</strong> creates a Dev.to <em>draft</em> from this post (Payload
+          stays as-is) and opens the Dev.to editor so you can add the cover / images. Then{" "}
+          <strong>Sync from Dev.to</strong> pulls those assets back here. Also available from the
+          document ⋯ menu. Canonical URL points at <code>/blogs/…</code>.
         </p>
       </div>
 
@@ -125,17 +127,21 @@ export function DevtoActions() {
             setBusy("open");
             try {
               const result = await callEndpoint<OpenResponse>("/open-devto");
-              toast.success(result.created ? "Dev.to draft created" : "Dev.to draft updated");
+              toast.success(
+                result.created
+                  ? "Dev.to draft created — finish cover & images there"
+                  : "Dev.to draft updated",
+              );
               window.open(result.editUrl, "_blank", "noopener,noreferrer");
               window.location.reload();
             } catch (err: unknown) {
-              toast.error(err instanceof Error ? err.message : "Open on Dev.to failed");
+              toast.error(err instanceof Error ? err.message : "Publish to Dev.to failed");
             } finally {
               setBusy(null);
             }
           }}
         >
-          {busy === "open" ? "Opening…" : linked ? "Update & open Dev.to" : "Open in Dev.to"}
+          {busy === "open" ? "Publishing…" : linked ? "Update & open Dev.to" : "Publish to Dev.to"}
         </Button>
 
         <Button

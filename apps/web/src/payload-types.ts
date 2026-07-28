@@ -227,7 +227,7 @@ export interface Blog {
       }[]
     | null;
   /**
-   * Write here as a draft → Open in Dev.to (seed text + canonical URL) → add images there → Sync back. Publish on this site when ready.
+   * Write here as a draft → Publish to Dev.to (seed text + canonical URL) → add images there → Sync back. Also in the document ⋯ menu. Publish on this site when ready.
    */
   devto?: {
     /**

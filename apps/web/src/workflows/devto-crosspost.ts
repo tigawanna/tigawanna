@@ -3,10 +3,10 @@
  *
  * 0. (Optional) Blogs list → **Smart draft** → hardcoded `/admin/smart-draft` page (OpenRouter).
  * 1. Author / edit the post in Payload (usually as a draft).
- * 2. Admin → Meta → **Open in Dev.to** — Lexical→markdown, POST/PUT Forem API
+ * 2. Admin ⋯ → **Publish to Dev.to** (or Meta → Dev.to) — Lexical→markdown, POST/PUT Forem API
  *    with `canonical_url` from `getBlogCanonicalUrl(slug)`, store `articleId`.
  * 3. Finish cover + inline images on Dev.to.
- * 4. Admin → **Sync from Dev.to** — pull markdown/cover into Lexical + `coverUrl`.
+ * 4. Admin ⋯ → **Sync from Dev.to** — pull markdown/cover into Lexical + `coverUrl`.
  * 5. Publish on Payload when the site version is ready (or skip Dev.to and publish locally).
  *
  * Endpoints:

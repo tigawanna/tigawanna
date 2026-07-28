@@ -15,6 +15,32 @@ import { telegramEmailAdapter } from "./lib/telegram/email-adapter";
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
+const siteUrl = getSiteUrl();
+
+/**
+ * Origins allowed to present the Payload auth cookie on credentialed fetch.
+ *
+ * Payload always adds `serverURL` to this list. We also allow local admin and
+ * both apex / www, otherwise POSTs from `localhost` (or non-www) look logged-in
+ * in the UI but custom endpoints see `req.user === undefined` → 401.
+ */
+function csrfOrigins(): string[] {
+  const origins = new Set<string>(["http://localhost:3055", "http://127.0.0.1:3055", siteUrl]);
+
+  try {
+    const url = new URL(siteUrl);
+    if (url.hostname.startsWith("www.")) {
+      origins.add(`${url.protocol}//${url.hostname.slice(4)}`);
+    } else if (url.hostname.includes(".")) {
+      origins.add(`${url.protocol}//www.${url.hostname}`);
+    }
+  } catch {
+    // ignore invalid site URL — sanitize still pushes serverURL
+  }
+
+  return [...origins];
+}
+
 export default buildConfig({
   admin: {
     user: Users.slug,
@@ -43,7 +69,8 @@ export default buildConfig({
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   // Required so forgot-password emails include an absolute reset URL (not `/admin/reset/...`).
-  serverURL: getSiteUrl(),
+  serverURL: siteUrl,
+  csrf: csrfOrigins(),
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },

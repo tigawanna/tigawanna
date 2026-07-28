@@ -131,7 +131,7 @@ export function AiDraftForm() {
           <div className="list-header__after-header-content">
             <p style={{ margin: "0.35rem 0 0", opacity: 0.8 }}>
               Hardcoded admin page — not a CMS document. Expand notes into a draft blog post, then
-              edit / Open in Dev.to / Sync / publish as usual.
+              edit / Publish to Dev.to / Sync / publish as usual.
             </p>
           </div>
         </header>
