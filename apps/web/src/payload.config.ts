@@ -62,8 +62,9 @@ export default buildConfig({
   // Drizzle + libSQL: local `file:` SQLite or remote Turso (`libsql://…` + auth token).
   // `push: false` — schema is managed via seed/migrate scripts; auto-push fights
   // renamed journals→blogs indexes and prompts interactively in CI/scripts.
+  // WAL is local-file only; Turso/TCP gets a warn + auto-disable if `wal: true`.
   db: sqliteAdapter({
-    wal: true,
+    wal: (process.env.DATABASE_URL || "file:./payload.db").startsWith("file:"),
     push: false,
     client: {
       url: process.env.DATABASE_URL || "file:./payload.db",
