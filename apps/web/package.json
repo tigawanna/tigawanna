@@ -8,7 +8,8 @@
     "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev --port 3055",
     "devsafe": "rm -rf .next && cross-env NODE_OPTIONS=--no-deprecation next dev --port 3055",
     "build": "cross-env NODE_OPTIONS=\"--no-deprecation --max-old-space-size=8000\" next build",
-    "start": "cross-env NODE_OPTIONS=--no-deprecation next start --port 3055",
+    "start": "cross-env NODE_OPTIONS=--no-deprecation next start --port 3055 --hostname 127.0.0.1",
+    "preview": "pnpm start",
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
@@ -25,6 +26,7 @@
     "lint": "cross-env NODE_OPTIONS=--no-deprecation eslint .",
     "check-types": "tsc --noEmit",
     "test:e2e": "playwright test --config e2e/playwright.config.ts",
+    "test:e2e:preview": "pnpm build && pnpm test:e2e",
     "test:e2e:install": "playwright install chromium"
   },
   "dependencies": {

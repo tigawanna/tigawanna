@@ -9,6 +9,10 @@ const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:3055";
 
 /**
  * App-coupled Playwright config for the Next.js landing experiment.
+ *
+ * Expects a production build (`pnpm build`) and serves it with `next start`
+ * so the server cannot HMR / rewrite files mid-run. Pre-push builds first;
+ * locally use `pnpm test:e2e:preview` or `pnpm build && pnpm test:e2e`.
  */
 export default defineConfig({
   testDir: testsDir,
@@ -33,12 +37,13 @@ export default defineConfig({
     video: "retain-on-failure",
   },
   webServer: {
-    // Webpack: Turbopack panics under parallel e2e ("Next.js package not found" with monorepo root).
-    command: "pnpm exec next dev --webpack --port 3055 --hostname 127.0.0.1",
+    // Production preview — no Fast Refresh / importMap rewrites mid-suite.
+    command: "pnpm start",
     cwd: appRoot,
     url: baseURL,
-    reuseExistingServer: !process.env.CI,
-    timeout: 300_000,
+    // Do not attach to a stray `next dev` on :3055; e2e needs the built preview.
+    reuseExistingServer: process.env.PLAYWRIGHT_REUSE === "1",
+    timeout: 120_000,
     stdout: "pipe",
     stderr: "pipe",
   },

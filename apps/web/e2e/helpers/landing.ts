@@ -111,11 +111,29 @@ export async function revealSection(page: Page, id: LandingSectionId) {
 }
 
 /**
+ * Waits for the deferred interactive stack cube (past the SSR fallback shell).
+ * Both desktop and mobile nodes mount; CSS hides the inactive breakpoint variant.
+ */
+export async function waitForInteractiveStackCube(page: Page) {
+  await expect
+    .poll(
+      async () => {
+        if (await page.getByTestId("stack-cube-desktop").isVisible()) return "desktop";
+        if (await page.getByTestId("stack-cube-mobile").isVisible()) return "mobile";
+        return null;
+      },
+      { timeout: 30_000 },
+    )
+    .not.toBeNull();
+}
+
+/**
  * Asserts the post-hero stack cube + how-I-work shell always mounts
  * (even before those sections are scrolled into view).
  */
 export async function expectUnderHeroSections(page: Page) {
   await expect(page.getByTestId("stack-cube")).toBeAttached({ timeout: 30_000 });
+  await waitForInteractiveStackCube(page);
   await expect(page.getByTestId("landing-how-i-work")).toBeAttached();
   await expect(page.getByTestId("curved-numbered-sections")).toBeAttached();
 
@@ -137,6 +155,7 @@ export async function expectDesktopStackCubeScrollFaces(page: Page) {
   // Dynamic import — wait past the SSR fallback shell.
   await expect(cube).toBeVisible({ timeout: 30_000 });
 
+  // Remeasure after the interactive cube is stable (400vh timeline).
   const metrics = await cube.evaluate((el) => {
     const rect = el.getBoundingClientRect();
     return {
@@ -185,25 +204,33 @@ export async function expectDesktopStackCubeScrollFaces(page: Page) {
  * Scroll each sticky how-I-work segment into the stuck position and assert
  * the frontmost panel title updates (guards against a stuck-on-one-segment bug).
  *
- * Each panel is `h-svh`; scroll targets are aboutTop + index * vh + 12.
+ * Panel document tops are measured after the deferred stack cube mounts and while
+ * panels are still in normal flow (parked just above `#about`).
  */
 export async function expectCurvedSectionsScrollThrough(page: Page) {
   const about = page.getByTestId("landing-how-i-work");
   await expect(about).toBeAttached({ timeout: 30_000 });
+  // Stack cube above about expands from fallback → interactive; wait so tops are stable.
+  await waitForInteractiveStackCube(page);
 
-  const { top, vh } = await about.evaluate((el) => ({
-    top: el.getBoundingClientRect().top + window.scrollY,
-    vh: window.innerHeight,
-  }));
+  await about.evaluate((el) => {
+    const top = el.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({ top: Math.max(0, top - 24), behavior: "instant" });
+  });
+
+  const panelTops = await page.evaluate(() =>
+    Array.from(document.querySelectorAll<HTMLElement>("[data-curved-section]")).map(
+      (el) => el.getBoundingClientRect().top + window.scrollY,
+    ),
+  );
+  expect(panelTops.length).toBe(expected.howIWorkTitles.length);
 
   for (let index = 0; index < expected.howIWorkTitles.length; index++) {
     const title = expected.howIWorkTitles[index]!;
-    await page.evaluate(
-      ({ aboutTop, viewport, panelIndex }) => {
-        window.scrollTo({ top: aboutTop + panelIndex * viewport + 12, behavior: "instant" });
-      },
-      { aboutTop: top, viewport: vh, panelIndex: index },
-    );
+    const panelTop = panelTops[index]!;
+    await page.evaluate((top) => {
+      window.scrollTo({ top: top + 12, behavior: "instant" });
+    }, panelTop);
 
     await expect
       .poll(

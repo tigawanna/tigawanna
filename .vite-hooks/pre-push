@@ -26,5 +26,8 @@ if [ "$run_e2e" -eq 0 ]; then
   exit 0
 fi
 
-echo "VITE+ - pushing to main: running web e2e..."
+echo "VITE+ - pushing to main: building web (next build)..."
+pnpm --filter web build
+
+echo "VITE+ - pushing to main: running web e2e against next start preview..."
 pnpm --filter web test:e2e
