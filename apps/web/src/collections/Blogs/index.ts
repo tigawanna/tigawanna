@@ -4,6 +4,11 @@ import { slugField } from "payload";
 import { authenticated } from "@/access/authenticated";
 import { authenticatedOrPublished } from "@/access/authenticatedOrPublished";
 import { contentLexicalEditor } from "@/fields/contentLexicalEditor";
+import {
+  aiDraftEndpoint,
+  aiDraftModelsEndpoint,
+  aiDraftStatusEndpoint,
+} from "./endpoints/ai-draft";
 import { openDevtoEndpoint, syncDevtoEndpoint } from "./endpoints/devto";
 import { revalidateBlog, revalidateBlogDelete } from "./hooks/revalidateBlog";
 
@@ -32,8 +37,17 @@ export const Blogs: CollectionConfig = {
     group: "Content",
     description:
       "All writing lives here. Mark an entry as Journal or Blog post — you can switch later if a short note grows into a full post.",
+    components: {
+      beforeListTable: ["/collections/Blogs/components/AiDraftListAction#AiDraftListAction"],
+    },
   },
-  endpoints: [openDevtoEndpoint, syncDevtoEndpoint],
+  endpoints: [
+    aiDraftStatusEndpoint,
+    aiDraftModelsEndpoint,
+    aiDraftEndpoint,
+    openDevtoEndpoint,
+    syncDevtoEndpoint,
+  ],
   fields: [
     {
       name: "title",
