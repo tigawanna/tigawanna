@@ -15,6 +15,7 @@
  * - `GET  /api/blogs/ai-draft/models`
  * - `POST /api/blogs/ai-draft`
  * - `POST /api/blogs/ai-refine`
+ * - `POST /api/blogs/to-markdown`
  * - `POST /api/blogs/:id/open-devto`
  * - `POST /api/blogs/:id/sync-devto`
  *
