@@ -26,9 +26,7 @@ import { UploadFeatureClient as UploadFeatureClient_e70f5e05f09f93e00b997edb1ef0
 import { DevtoActions as DevtoActions_27221a0e1d61814cbe7a650b141a2ce6 } from "../../../collections/Blogs/components/DevtoActions";
 import { SlugField as SlugField_2b8867833a34864a02ddf429b0728a40 } from "@payloadcms/next/client";
 import { AiDraftListAction as AiDraftListAction_7a6814615d6ef3a82ee5eee97564ae19 } from "../../../collections/Blogs/components/AiDraftListAction";
-import { SmartRefineAction as SmartRefineAction_d679502095d649a76528bcd370da83dd } from "../../../collections/Blogs/components/SmartRefineAction";
-import { CopyMarkdownAction as CopyMarkdownAction_644860f6657ac6bd47575f5412aed4cd } from "../../../collections/Blogs/components/CopyMarkdownAction";
-import { ImportMarkdownAction as ImportMarkdownAction_6d843db025a20278cbf5da7997a20279 } from "../../../collections/Blogs/components/ImportMarkdownAction";
+import { BlogEditMenuItems as BlogEditMenuItems_72740095a05eec8474bff06f651be8c4 } from "../../../collections/Blogs/components/BlogEditMenuItems";
 import { AiDraftView as AiDraftView_d401f7b5270960408bcbb467cb0957b5 } from "../../../views/AiDraft";
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from "@payloadcms/next/rsc";
 
@@ -89,12 +87,8 @@ export const importMap = {
   "@payloadcms/next/client#SlugField": SlugField_2b8867833a34864a02ddf429b0728a40,
   "/collections/Blogs/components/AiDraftListAction#AiDraftListAction":
     AiDraftListAction_7a6814615d6ef3a82ee5eee97564ae19,
-  "/collections/Blogs/components/SmartRefineAction#SmartRefineAction":
-    SmartRefineAction_d679502095d649a76528bcd370da83dd,
-  "/collections/Blogs/components/CopyMarkdownAction#CopyMarkdownAction":
-    CopyMarkdownAction_644860f6657ac6bd47575f5412aed4cd,
-  "/collections/Blogs/components/ImportMarkdownAction#ImportMarkdownAction":
-    ImportMarkdownAction_6d843db025a20278cbf5da7997a20279,
+  "/collections/Blogs/components/BlogEditMenuItems#BlogEditMenuItems":
+    BlogEditMenuItems_72740095a05eec8474bff06f651be8c4,
   "/views/AiDraft#AiDraftView": AiDraftView_d401f7b5270960408bcbb467cb0957b5,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
 };

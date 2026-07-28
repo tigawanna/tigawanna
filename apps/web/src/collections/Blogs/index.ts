@@ -44,11 +44,7 @@ export const Blogs: CollectionConfig = {
       // Mount only — button is portaled next to "Create New" in the list header.
       beforeList: ["/collections/Blogs/components/AiDraftListAction#AiDraftListAction"],
       edit: {
-        beforeDocumentControls: [
-          "/collections/Blogs/components/SmartRefineAction#SmartRefineAction",
-          "/collections/Blogs/components/CopyMarkdownAction#CopyMarkdownAction",
-          "/collections/Blogs/components/ImportMarkdownAction#ImportMarkdownAction",
-        ],
+        editMenuItems: ["/collections/Blogs/components/BlogEditMenuItems#BlogEditMenuItems"],
       },
     },
   },

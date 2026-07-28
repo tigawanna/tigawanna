@@ -1,15 +1,7 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
-import {
-  Button,
-  Drawer,
-  DrawerToggler,
-  toast,
-  useForm,
-  useFormFields,
-  useModal,
-} from "@payloadcms/ui";
+import { Button, Drawer, toast, useForm, useFormFields, useModal } from "@payloadcms/ui";
 
 type AiDraftStatus = {
   configured: boolean;
@@ -34,7 +26,7 @@ type RefineResponse = {
   model: string;
 };
 
-const DRAWER_SLUG = "smart-refine-blog";
+export const SMART_REFINE_DRAWER_SLUG = "smart-refine-blog";
 
 /**
  * Reads a JSON error body from a failed Payload API response.
@@ -57,7 +49,7 @@ async function readErrorMessage(res: Response): Promise<string> {
 }
 
 /**
- * Edit-view action: refine the current form fields with OpenRouter and apply locally.
+ * Smart refine drawer (opened from the document ⋯ menu).
  */
 export function SmartRefineAction() {
   const instructionId = useId();
@@ -75,13 +67,11 @@ export function SmartRefineAction() {
   const [model, setModel] = useState("");
   const [customModel, setCustomModel] = useState("");
   const [busy, setBusy] = useState(false);
-  const [loadingMeta, setLoadingMeta] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
 
     async function load() {
-      setLoadingMeta(true);
       try {
         const [statusRes, modelsRes] = await Promise.all([
           fetch("/api/blogs/ai-draft/status", { credentials: "include" }),
@@ -103,8 +93,6 @@ export function SmartRefineAction() {
         if (!cancelled) {
           toast.error(err instanceof Error ? err.message : "Failed to load Smart refine settings");
         }
-      } finally {
-        if (!cancelled) setLoadingMeta(false);
       }
     }
 
@@ -119,137 +107,124 @@ export function SmartRefineAction() {
   const descriptionText = typeof description === "string" ? description : "";
 
   return (
-    <>
-      <DrawerToggler
-        slug={DRAWER_SLUG}
-        className="btn btn--style-secondary btn--size-medium"
-        disabled={loadingMeta}
+    <Drawer slug={SMART_REFINE_DRAWER_SLUG} title="Smart refine">
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "1rem",
+          padding: "0.5rem 0 1.5rem",
+          maxWidth: "40rem",
+        }}
       >
-        {loadingMeta ? "Loading…" : "Smart refine"}
-      </DrawerToggler>
+        {!configured ? (
+          <p style={{ margin: 0, opacity: 0.85 }}>
+            Set <code>OPENROUTER_API_KEY</code> in <code>apps/web/.env</code> to enable Smart
+            refine.
+          </p>
+        ) : (
+          <p style={{ margin: 0, opacity: 0.85 }}>
+            Tell the model what to change. It refines the current title, description, and content in
+            this edit form (unsaved until you publish / save draft).
+          </p>
+        )}
 
-      <Drawer slug={DRAWER_SLUG} title="Smart refine">
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "1rem",
-            padding: "0.5rem 0 1.5rem",
-            maxWidth: "40rem",
-          }}
-        >
-          {!configured ? (
-            <p style={{ margin: 0, opacity: 0.85 }}>
-              Set <code>OPENROUTER_API_KEY</code> in <code>apps/web/.env</code> to enable Smart
-              refine.
-            </p>
-          ) : (
-            <p style={{ margin: 0, opacity: 0.85 }}>
-              Tell the model what to change. It refines the current title, description, and content
-              in this edit form (unsaved until you publish / save draft).
-            </p>
-          )}
+        <label htmlFor={instructionId} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+          <span>What should we refine?</span>
+          <textarea
+            id={instructionId}
+            value={instruction}
+            onChange={(e) => setInstruction(e.target.value)}
+            placeholder="e.g. Tighten the intro, add a Next.js App Router code example, cut the SEO fluff..."
+            disabled={!configured || busy}
+            rows={8}
+            style={{ padding: "0.6rem 0.75rem", fontFamily: "inherit", resize: "vertical" }}
+          />
+        </label>
 
-          <label
-            htmlFor={instructionId}
-            style={{ display: "flex", flexDirection: "column", gap: 6 }}
+        <label htmlFor={modelId} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+          <span>Model</span>
+          <select
+            id={modelId}
+            value={model}
+            onChange={(e) => {
+              setModel(e.target.value);
+              setCustomModel("");
+            }}
+            disabled={!configured || busy || models.length === 0}
+            style={{ padding: "0.6rem 0.75rem" }}
           >
-            <span>What should we refine?</span>
-            <textarea
-              id={instructionId}
-              value={instruction}
-              onChange={(e) => setInstruction(e.target.value)}
-              placeholder="e.g. Tighten the intro, add a Next.js App Router code example, cut the SEO fluff..."
-              disabled={!configured || busy}
-              rows={8}
-              style={{ padding: "0.6rem 0.75rem", fontFamily: "inherit", resize: "vertical" }}
-            />
-          </label>
+            {models.map((m) => (
+              <option key={m.id} value={m.id}>
+                {m.name === m.id ? m.id : `${m.name} - ${m.id}`}
+              </option>
+            ))}
+          </select>
+          <input
+            value={customModel}
+            onChange={(e) => setCustomModel(e.target.value)}
+            placeholder="Optional custom model id (overrides select)"
+            disabled={!configured || busy}
+            style={{ padding: "0.6rem 0.75rem" }}
+          />
+        </label>
 
-          <label htmlFor={modelId} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            <span>Model</span>
-            <select
-              id={modelId}
-              value={model}
-              onChange={(e) => {
-                setModel(e.target.value);
-                setCustomModel("");
-              }}
-              disabled={!configured || busy || models.length === 0}
-              style={{ padding: "0.6rem 0.75rem" }}
-            >
-              {models.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.name === m.id ? m.id : `${m.name} - ${m.id}`}
-                </option>
-              ))}
-            </select>
-            <input
-              value={customModel}
-              onChange={(e) => setCustomModel(e.target.value)}
-              placeholder="Optional custom model id (overrides select)"
-              disabled={!configured || busy}
-              style={{ padding: "0.6rem 0.75rem" }}
-            />
-          </label>
+        <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+          <Button
+            buttonStyle="primary"
+            disabled={
+              !configured ||
+              busy ||
+              instruction.trim().length < 5 ||
+              !titleText.trim() ||
+              !descriptionText.trim() ||
+              !content
+            }
+            onClick={async () => {
+              setBusy(true);
+              try {
+                const res = await fetch("/api/blogs/ai-refine", {
+                  method: "POST",
+                  credentials: "include",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    title: titleText.trim(),
+                    description: descriptionText.trim(),
+                    content,
+                    instruction: instruction.trim(),
+                    model: customModel.trim() || model.trim() || undefined,
+                  }),
+                });
 
-          <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-            <Button
-              buttonStyle="primary"
-              disabled={
-                !configured ||
-                busy ||
-                instruction.trim().length < 5 ||
-                !titleText.trim() ||
-                !descriptionText.trim() ||
-                !content
-              }
-              onClick={async () => {
-                setBusy(true);
-                try {
-                  const res = await fetch("/api/blogs/ai-refine", {
-                    method: "POST",
-                    credentials: "include",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                      title: titleText.trim(),
-                      description: descriptionText.trim(),
-                      content,
-                      instruction: instruction.trim(),
-                      model: customModel.trim() || model.trim() || undefined,
-                    }),
-                  });
-
-                  if (!res.ok) {
-                    throw new Error(await readErrorMessage(res));
-                  }
-
-                  const result = (await res.json()) as RefineResponse;
-
-                  dispatchFields({ type: "UPDATE", path: "title", value: result.title });
-                  dispatchFields({
-                    type: "UPDATE",
-                    path: "description",
-                    value: result.description,
-                  });
-                  dispatchFields({ type: "UPDATE", path: "content", value: result.content });
-                  setModified(true);
-
-                  toast.success("Refined draft applied to the form");
-                  closeModal(DRAWER_SLUG);
-                  setInstruction("");
-                } catch (err: unknown) {
-                  toast.error(err instanceof Error ? err.message : "Smart refine failed");
-                } finally {
-                  setBusy(false);
+                if (!res.ok) {
+                  throw new Error(await readErrorMessage(res));
                 }
-              }}
-            >
-              {busy ? "Refining…" : "Refine"}
-            </Button>
-          </div>
+
+                const result = (await res.json()) as RefineResponse;
+
+                dispatchFields({ type: "UPDATE", path: "title", value: result.title });
+                dispatchFields({
+                  type: "UPDATE",
+                  path: "description",
+                  value: result.description,
+                });
+                dispatchFields({ type: "UPDATE", path: "content", value: result.content });
+                setModified(true);
+
+                toast.success("Refined draft applied to the form");
+                closeModal(SMART_REFINE_DRAWER_SLUG);
+                setInstruction("");
+              } catch (err: unknown) {
+                toast.error(err instanceof Error ? err.message : "Smart refine failed");
+              } finally {
+                setBusy(false);
+              }
+            }}
+          >
+            {busy ? "Refining…" : "Refine"}
+          </Button>
         </div>
-      </Drawer>
-    </>
+      </div>
+    </Drawer>
   );
 }
