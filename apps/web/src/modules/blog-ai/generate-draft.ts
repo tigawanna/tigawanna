@@ -10,6 +10,7 @@ import {
   openRouterChatCompletion,
   requireOpenRouterApiKey,
 } from "@/lib/openrouter/client";
+import { BLOG_AI_STYLE_RULES } from "@/modules/blog-ai/refine-draft";
 
 const aiDraftSchema = z.object({
   title: z.string().min(1).max(200),
@@ -63,10 +64,7 @@ ${refs}
 
 Requirements:
 - Expand the notes into a clear, structured article with depth (intro, sections, concrete examples, short conclusion).
-- Write in a direct, first-person developer voice. No fluff, no emojis, no SEO keyword stuffing.
-- Use Markdown: ## / ### headings, lists, fenced code blocks with language tags when useful.
-- Do NOT include a top-level # title heading — title is a separate field.
-- Do NOT invent images or image URLs — leave image placeholders out; the author adds those on Dev.to later.
+${BLOG_AI_STYLE_RULES}
 - Tags should be short lowercase Dev.to-style tags (e.g. javascript, nextjs), max 4.
 
 Respond with a single JSON object only (no markdown fences) matching:

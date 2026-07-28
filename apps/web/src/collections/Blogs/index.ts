@@ -8,6 +8,7 @@ import {
   aiDraftEndpoint,
   aiDraftModelsEndpoint,
   aiDraftStatusEndpoint,
+  aiRefineEndpoint,
 } from "./endpoints/ai-draft";
 import { openDevtoEndpoint, syncDevtoEndpoint } from "./endpoints/devto";
 import { revalidateBlog, revalidateBlogDelete } from "./hooks/revalidateBlog";
@@ -40,12 +41,18 @@ export const Blogs: CollectionConfig = {
     components: {
       // Mount only — button is portaled next to "Create New" in the list header.
       beforeList: ["/collections/Blogs/components/AiDraftListAction#AiDraftListAction"],
+      edit: {
+        beforeDocumentControls: [
+          "/collections/Blogs/components/SmartRefineAction#SmartRefineAction",
+        ],
+      },
     },
   },
   endpoints: [
     aiDraftStatusEndpoint,
     aiDraftModelsEndpoint,
     aiDraftEndpoint,
+    aiRefineEndpoint,
     openDevtoEndpoint,
     syncDevtoEndpoint,
   ],
