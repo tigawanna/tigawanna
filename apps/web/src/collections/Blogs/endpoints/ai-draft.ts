@@ -89,7 +89,7 @@ export const aiDraftEndpoint: Endpoint = {
     }
 
     if (!getOpenRouterApiKey()) {
-      throw new APIError("OPENROUTER_API_KEY is not set. Add it to enable AI drafts.", 503);
+      throw new APIError("OPENROUTER_API_KEY is not set. Add it to enable Smart draft.", 503);
     }
 
     let body: unknown;
@@ -117,7 +117,7 @@ export const aiDraftEndpoint: Endpoint = {
       );
       return Response.json(result);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Failed to generate AI draft";
+      const message = err instanceof Error ? err.message : "Failed to generate Smart draft";
       throw new APIError(message, 400);
     }
   },

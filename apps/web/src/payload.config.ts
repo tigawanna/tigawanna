@@ -36,6 +36,18 @@ export default buildConfig({
     meta: {
       titleSuffix: " · Tigawanna",
     },
+    components: {
+      views: {
+        smartDraft: {
+          Component: "/views/AiDraft#AiDraftView",
+          path: "/smart-draft",
+          meta: {
+            title: "Smart draft",
+            description: "Generate a blog draft from notes via OpenRouter",
+          },
+        },
+      },
+    },
   },
   collections: [Users, Media, Blogs, ContactMessages],
   // Auth / system mail (forgot password, etc.) → Telegram via @repo/telegram.

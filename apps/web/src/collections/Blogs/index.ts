@@ -38,7 +38,8 @@ export const Blogs: CollectionConfig = {
     description:
       "All writing lives here. Mark an entry as Journal or Blog post — you can switch later if a short note grows into a full post.",
     components: {
-      beforeListTable: ["/collections/Blogs/components/AiDraftListAction#AiDraftListAction"],
+      // Mount only — button is portaled next to "Create New" in the list header.
+      beforeList: ["/collections/Blogs/components/AiDraftListAction#AiDraftListAction"],
     },
   },
   endpoints: [

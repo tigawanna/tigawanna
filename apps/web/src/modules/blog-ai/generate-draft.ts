@@ -128,7 +128,7 @@ export async function generateBlogAiDraft(
     parsed = aiDraftSchema.parse(JSON.parse(extractJsonObject(raw)));
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Invalid AI response";
-    throw new Error(`AI draft parse failed: ${message}`);
+    throw new Error(`Smart draft parse failed: ${message}`);
   }
 
   const editorConfig = await getContentEditorConfig(payload.config);

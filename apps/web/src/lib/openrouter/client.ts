@@ -1,6 +1,6 @@
 const OPENROUTER_CHAT_URL = "https://openrouter.ai/api/v1/chat/completions";
 
-/** Cheap / writing-friendly OpenRouter models for the AI draft picker. */
+/** Cheap / writing-friendly OpenRouter models for the Smart draft picker. */
 export const OPENROUTER_CURATED_MODELS = [
   { id: "deepseek/deepseek-v4-flash", name: "DeepSeek V4 Flash" },
   { id: "deepseek/deepseek-chat-v3-0324", name: "DeepSeek V3" },
@@ -72,7 +72,7 @@ export function extractJsonObject(text: string): string {
 }
 
 /**
- * Reads `OPENROUTER_API_KEY` or returns null when AI draft is unavailable.
+ * Reads `OPENROUTER_API_KEY` or returns null when Smart draft is unavailable.
  */
 export function getOpenRouterApiKey(): string | null {
   const key = process.env.OPENROUTER_API_KEY?.trim();
@@ -85,13 +85,15 @@ export function getOpenRouterApiKey(): string | null {
 export function requireOpenRouterApiKey(): string {
   const key = getOpenRouterApiKey();
   if (!key) {
-    throw new Error("OPENROUTER_API_KEY is not set. Add it to apps/web/.env to enable AI drafts.");
+    throw new Error(
+      "OPENROUTER_API_KEY is not set. Add it to apps/web/.env to enable Smart draft.",
+    );
   }
   return key;
 }
 
 /**
- * Default model for AI drafts (`OPENROUTER_MODEL` or DeepSeek V4 Flash).
+ * Default model for Smart draft (`OPENROUTER_MODEL` or DeepSeek V4 Flash).
  */
 export function getDefaultOpenRouterModel(): string {
   return process.env.OPENROUTER_MODEL?.trim() || OPENROUTER_CURATED_MODELS[0].id;
