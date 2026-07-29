@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as OgRouteImport } from './routes/og'
+import { Route as CanvasLayoutRouteImport } from './routes/canvas/layout'
 import { Route as BackstageLayoutRouteImport } from './routes/_backstage/layout'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LessonsIndexRouteImport } from './routes/lessons/index'
@@ -33,6 +34,11 @@ const OgRoute = OgRouteImport.update({
   path: '/og',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CanvasLayoutRoute = CanvasLayoutRouteImport.update({
+  id: '/canvas',
+  path: '/canvas',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BackstageLayoutRoute = BackstageLayoutRouteImport.update({
   id: '/_backstage',
   getParentRoute: () => rootRouteImport,
@@ -53,9 +59,9 @@ const CreatureFeatureIndexRoute = CreatureFeatureIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const CanvasIndexRoute = CanvasIndexRouteImport.update({
-  id: '/canvas/',
-  path: '/canvas/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => CanvasLayoutRoute,
 } as any)
 const ProjectNameRoute = ProjectNameRouteImport.update({
   id: '/project/$name',
@@ -73,9 +79,9 @@ const BackstageSignInRoute = BackstageSignInRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const CanvasColorIndexRoute = CanvasColorIndexRouteImport.update({
-  id: '/canvas/$color/',
-  path: '/canvas/$color/',
-  getParentRoute: () => rootRouteImport,
+  id: '/$color/',
+  path: '/$color/',
+  getParentRoute: () => CanvasLayoutRoute,
 } as any)
 const BackstageBackstageIndexRoute = BackstageBackstageIndexRouteImport.update({
   id: '/backstage/',
@@ -125,6 +131,7 @@ const BackstageBackstageProjectsOwnerRepoIndexRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/canvas': typeof CanvasLayoutRouteWithChildren
   '/og': typeof OgRoute
   '/backstage/sign-in': typeof BackstageSignInRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
@@ -165,6 +172,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_backstage': typeof BackstageLayoutRouteWithChildren
+  '/canvas': typeof CanvasLayoutRouteWithChildren
   '/og': typeof OgRoute
   '/backstage/sign-in': typeof BackstageSignInRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
@@ -186,6 +194,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/canvas'
     | '/og'
     | '/backstage/sign-in'
     | '/lessons/$lessonId'
@@ -225,6 +234,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_backstage'
+    | '/canvas'
     | '/og'
     | '/backstage/sign-in'
     | '/lessons/$lessonId'
@@ -246,15 +256,14 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BackstageLayoutRoute: typeof BackstageLayoutRouteWithChildren
+  CanvasLayoutRoute: typeof CanvasLayoutRouteWithChildren
   OgRoute: typeof OgRoute
   BackstageSignInRoute: typeof BackstageSignInRoute
   LessonsLessonIdRoute: typeof LessonsLessonIdRoute
   ProjectNameRoute: typeof ProjectNameRoute
-  CanvasIndexRoute: typeof CanvasIndexRoute
   CreatureFeatureIndexRoute: typeof CreatureFeatureIndexRoute
   LessonsIndexRoute: typeof LessonsIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
-  CanvasColorIndexRoute: typeof CanvasColorIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -264,6 +273,13 @@ declare module '@tanstack/react-router' {
       path: '/og'
       fullPath: '/og'
       preLoaderRoute: typeof OgRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/canvas': {
+      id: '/canvas'
+      path: '/canvas'
+      fullPath: '/canvas'
+      preLoaderRoute: typeof CanvasLayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_backstage': {
@@ -296,10 +312,10 @@ declare module '@tanstack/react-router' {
     }
     '/canvas/': {
       id: '/canvas/'
-      path: '/canvas'
+      path: '/'
       fullPath: '/canvas/'
       preLoaderRoute: typeof CanvasIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof CanvasLayoutRoute
     }
     '/project/$name': {
       id: '/project/$name'
@@ -324,10 +340,10 @@ declare module '@tanstack/react-router' {
     }
     '/canvas/$color/': {
       id: '/canvas/$color/'
-      path: '/canvas/$color'
+      path: '/$color'
       fullPath: '/canvas/$color/'
       preLoaderRoute: typeof CanvasColorIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof CanvasLayoutRoute
     }
     '/_backstage/backstage/': {
       id: '/_backstage/backstage/'
@@ -414,18 +430,31 @@ const BackstageLayoutRouteWithChildren = BackstageLayoutRoute._addFileChildren(
   BackstageLayoutRouteChildren,
 )
 
+interface CanvasLayoutRouteChildren {
+  CanvasIndexRoute: typeof CanvasIndexRoute
+  CanvasColorIndexRoute: typeof CanvasColorIndexRoute
+}
+
+const CanvasLayoutRouteChildren: CanvasLayoutRouteChildren = {
+  CanvasIndexRoute: CanvasIndexRoute,
+  CanvasColorIndexRoute: CanvasColorIndexRoute,
+}
+
+const CanvasLayoutRouteWithChildren = CanvasLayoutRoute._addFileChildren(
+  CanvasLayoutRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BackstageLayoutRoute: BackstageLayoutRouteWithChildren,
+  CanvasLayoutRoute: CanvasLayoutRouteWithChildren,
   OgRoute: OgRoute,
   BackstageSignInRoute: BackstageSignInRoute,
   LessonsLessonIdRoute: LessonsLessonIdRoute,
   ProjectNameRoute: ProjectNameRoute,
-  CanvasIndexRoute: CanvasIndexRoute,
   CreatureFeatureIndexRoute: CreatureFeatureIndexRoute,
   LessonsIndexRoute: LessonsIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
-  CanvasColorIndexRoute: CanvasColorIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
