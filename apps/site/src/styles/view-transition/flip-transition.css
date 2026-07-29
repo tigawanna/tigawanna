@@ -1,6 +1,6 @@
 /**
  * Flip — 3D card flip between old and new (needs both snapshots).
- * Flash fix: suppress root crossfade; use dark bg instead of `canvas` (white).
+ * Flash fix: suppress root crossfade; use theme bg instead of `canvas` (white).
  */
 [data-style="flip"]:root {
   view-transition-name: none;

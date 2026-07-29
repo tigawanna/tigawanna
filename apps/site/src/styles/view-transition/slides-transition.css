@@ -1,6 +1,6 @@
 /**
  * Slides — columnar reveal of the incoming page.
- * Flash fix: hide old snapshot (was animation: none).
+ * Flash fix: hide old snapshot immediately.
  */
 @property --column-one {
   inherits: true;

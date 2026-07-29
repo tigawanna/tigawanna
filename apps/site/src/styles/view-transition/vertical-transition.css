@@ -1,18 +1,15 @@
 /**
  * Vertical — incoming page reveals from an edge.
- * TEMP: flash-fix commented out so we can compare old behavior.
+ * Flash fix: hide old snapshot immediately.
  */
 [data-style="vertical"]::view-transition-old(root) {
-  /* display: none; — flash fix */
-  z-index: -1; /* original */
-  animation: none; /* original */
+  display: none;
 }
 
 [data-style="vertical"]::view-transition-new(root) {
   animation: vertical-reveal 1s ease;
   animation-fill-mode: both;
   clip-path: inset(0 0 0 0);
-  z-index: 2; /* original */
 }
 
 @keyframes vertical-reveal {

@@ -10,4 +10,7 @@ export const queryKeyPrefixes = {
   github: "github",
   backstage: "backstage",
   openrouter: "openrouter",
+  canvas: "canvas",
+  canvasDemoItems: "canvasDemoItems",
+  "canvas-demo-items": "canvas-demo-items",
 } as const;

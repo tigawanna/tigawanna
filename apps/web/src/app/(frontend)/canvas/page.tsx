@@ -10,21 +10,38 @@ export default function CanvasPage() {
   ];
 
   return (
-    <ViewTransition enter="canvas-vt" exit="none" default="none">
-      <div data-test="canvas-list" className="flex flex-1 items-center justify-center">
-        <div className="flex flex-col gap-4">
-          {colors.map((color) => (
-            <Link
-              key={color.name}
-              href={`/canvas/${color.name}`}
-              transitionTypes={["wipe-forward"]}
-              data-test={`canvas-swatch-${color.name}`}
-            >
-              <div className="size-20 rounded-2xl" style={{ backgroundColor: color.value }} />
-            </Link>
-          ))}
-        </div>
-      </div>
-    </ViewTransition>
+    <div className="mx-auto flex w-full max-w-lg flex-1 flex-col items-center gap-10 p-6">
+      <ViewTransition enter="canvas-vt" exit="none" default="none">
+        <section className="flex w-full flex-col items-center gap-4" data-test="canvas-list">
+          <h2 className="text-lg font-semibold">View transitions</h2>
+          <div className="flex flex-col gap-4">
+            {colors.map((color) => (
+              <Link
+                key={color.name}
+                href={`/canvas/${color.name}`}
+                transitionTypes={["wipe-forward"]}
+                data-test={`canvas-swatch-${color.name}`}
+              >
+                <div className="size-20 rounded-2xl" style={{ backgroundColor: color.value }} />
+              </Link>
+            ))}
+          </div>
+        </section>
+      </ViewTransition>
+
+      <section className="flex w-full flex-col gap-3 border-t border-base-content/10 pt-8">
+        <h2 className="text-lg font-semibold">Suspense / search-param demos</h2>
+        <Link
+          href="/canvas/suspense"
+          className="rounded-2xl border border-base-content/10 px-4 py-3 hover:bg-base-200"
+          data-test="demo-link-suspense"
+        >
+          <span className="font-medium">useTransition + Suspense</span>
+          <span className="mt-1 block text-sm text-base-content/60">
+            Toggle startTransition to see / hide the fallback flash
+          </span>
+        </Link>
+      </section>
+    </div>
   );
 }

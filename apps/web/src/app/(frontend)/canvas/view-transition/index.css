@@ -1,8 +1,6 @@
 /**
  * Next.js canvas transitions — target React <ViewTransition> class `.canvas-vt`.
- * (Global styles.css kills ::view-transition-*(root); TanStack uses root instead.)
- *
- * Style is selected via documentElement[data-style].
+ * Flash fix: hide old snapshot immediately (except flip, which needs both).
  */
 
 ::view-transition-group(.canvas-vt) {

@@ -1,14 +1,13 @@
 /**
  * Wipe — incoming page reveals with a diagonal clip.
- * TEMP: flash-fix commented out so we can compare old behavior.
+ * Flash fix: hide old snapshot immediately.
  */
 [data-style="wipe"]::view-transition-group(root) {
   animation-duration: 1.25s;
 }
 
 [data-style="wipe"]::view-transition-old(root) {
-  /* display: none; — flash fix (hide old snapshot) */
-  animation: none; /* original: leave old underlay visible */
+  display: none;
 }
 
 [data-style="wipe"]::view-transition-new(root) {

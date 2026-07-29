@@ -19,6 +19,8 @@ import { Route as CanvasIndexRouteImport } from './routes/canvas/index'
 import { Route as ProjectNameRouteImport } from './routes/project/$name'
 import { Route as LessonsLessonIdRouteImport } from './routes/lessons/$lessonId'
 import { Route as BackstageSignInRouteImport } from './routes/backstage/sign-in'
+import { Route as CanvasSuspenseIndexRouteImport } from './routes/canvas/suspense/index'
+import { Route as CanvasKeepIndexRouteImport } from './routes/canvas/keep/index'
 import { Route as CanvasColorIndexRouteImport } from './routes/canvas/$color/index'
 import { Route as BackstageBackstageIndexRouteImport } from './routes/_backstage/backstage/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
@@ -77,6 +79,16 @@ const BackstageSignInRoute = BackstageSignInRouteImport.update({
   id: '/backstage/sign-in',
   path: '/backstage/sign-in',
   getParentRoute: () => rootRouteImport,
+} as any)
+const CanvasSuspenseIndexRoute = CanvasSuspenseIndexRouteImport.update({
+  id: '/suspense/',
+  path: '/suspense/',
+  getParentRoute: () => CanvasLayoutRoute,
+} as any)
+const CanvasKeepIndexRoute = CanvasKeepIndexRouteImport.update({
+  id: '/keep/',
+  path: '/keep/',
+  getParentRoute: () => CanvasLayoutRoute,
 } as any)
 const CanvasColorIndexRoute = CanvasColorIndexRouteImport.update({
   id: '/$color/',
@@ -145,6 +157,8 @@ export interface FileRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/backstage/': typeof BackstageBackstageIndexRoute
   '/canvas/$color/': typeof CanvasColorIndexRoute
+  '/canvas/keep/': typeof CanvasKeepIndexRoute
+  '/canvas/suspense/': typeof CanvasSuspenseIndexRoute
   '/backstage/projects/': typeof BackstageBackstageProjectsIndexRoute
   '/backstage/projects/$owner/': typeof BackstageBackstageProjectsOwnerIndexRoute
   '/backstage/projects/$owner/$repo/': typeof BackstageBackstageProjectsOwnerRepoIndexRoute
@@ -164,6 +178,8 @@ export interface FileRoutesByTo {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/backstage': typeof BackstageBackstageIndexRoute
   '/canvas/$color': typeof CanvasColorIndexRoute
+  '/canvas/keep': typeof CanvasKeepIndexRoute
+  '/canvas/suspense': typeof CanvasSuspenseIndexRoute
   '/backstage/projects': typeof BackstageBackstageProjectsIndexRoute
   '/backstage/projects/$owner': typeof BackstageBackstageProjectsOwnerIndexRoute
   '/backstage/projects/$owner/$repo': typeof BackstageBackstageProjectsOwnerRepoIndexRoute
@@ -186,6 +202,8 @@ export interface FileRoutesById {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_backstage/backstage/': typeof BackstageBackstageIndexRoute
   '/canvas/$color/': typeof CanvasColorIndexRoute
+  '/canvas/keep/': typeof CanvasKeepIndexRoute
+  '/canvas/suspense/': typeof CanvasSuspenseIndexRoute
   '/_backstage/backstage/projects/': typeof BackstageBackstageProjectsIndexRoute
   '/_backstage/backstage/projects/$owner/': typeof BackstageBackstageProjectsOwnerIndexRoute
   '/_backstage/backstage/projects/$owner/$repo/': typeof BackstageBackstageProjectsOwnerRepoIndexRoute
@@ -208,6 +226,8 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/backstage/'
     | '/canvas/$color/'
+    | '/canvas/keep/'
+    | '/canvas/suspense/'
     | '/backstage/projects/'
     | '/backstage/projects/$owner/'
     | '/backstage/projects/$owner/$repo/'
@@ -227,6 +247,8 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/backstage'
     | '/canvas/$color'
+    | '/canvas/keep'
+    | '/canvas/suspense'
     | '/backstage/projects'
     | '/backstage/projects/$owner'
     | '/backstage/projects/$owner/$repo'
@@ -248,6 +270,8 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/_backstage/backstage/'
     | '/canvas/$color/'
+    | '/canvas/keep/'
+    | '/canvas/suspense/'
     | '/_backstage/backstage/projects/'
     | '/_backstage/backstage/projects/$owner/'
     | '/_backstage/backstage/projects/$owner/$repo/'
@@ -337,6 +361,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/backstage/sign-in'
       preLoaderRoute: typeof BackstageSignInRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/canvas/suspense/': {
+      id: '/canvas/suspense/'
+      path: '/suspense'
+      fullPath: '/canvas/suspense/'
+      preLoaderRoute: typeof CanvasSuspenseIndexRouteImport
+      parentRoute: typeof CanvasLayoutRoute
+    }
+    '/canvas/keep/': {
+      id: '/canvas/keep/'
+      path: '/keep'
+      fullPath: '/canvas/keep/'
+      preLoaderRoute: typeof CanvasKeepIndexRouteImport
+      parentRoute: typeof CanvasLayoutRoute
     }
     '/canvas/$color/': {
       id: '/canvas/$color/'
@@ -433,11 +471,15 @@ const BackstageLayoutRouteWithChildren = BackstageLayoutRoute._addFileChildren(
 interface CanvasLayoutRouteChildren {
   CanvasIndexRoute: typeof CanvasIndexRoute
   CanvasColorIndexRoute: typeof CanvasColorIndexRoute
+  CanvasKeepIndexRoute: typeof CanvasKeepIndexRoute
+  CanvasSuspenseIndexRoute: typeof CanvasSuspenseIndexRoute
 }
 
 const CanvasLayoutRouteChildren: CanvasLayoutRouteChildren = {
   CanvasIndexRoute: CanvasIndexRoute,
   CanvasColorIndexRoute: CanvasColorIndexRoute,
+  CanvasKeepIndexRoute: CanvasKeepIndexRoute,
+  CanvasSuspenseIndexRoute: CanvasSuspenseIndexRoute,
 }
 
 const CanvasLayoutRouteWithChildren = CanvasLayoutRoute._addFileChildren(

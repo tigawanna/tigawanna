@@ -1,11 +1,9 @@
 /**
  * Angled — incoming page unclips from a corner.
- * TEMP: flash-fix commented out so we can compare old behavior.
+ * Flash fix: hide old snapshot immediately.
  */
 [data-style="angled"]::view-transition-old(root) {
-  /* display: none; — flash fix */
-  animation: none; /* original */
-  z-index: -1; /* original */
+  display: none;
 }
 
 [data-style="angled"]::view-transition-new(root) {
