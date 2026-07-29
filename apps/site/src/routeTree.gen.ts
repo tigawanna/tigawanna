@@ -14,9 +14,11 @@ import { Route as BackstageLayoutRouteImport } from './routes/_backstage/layout'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LessonsIndexRouteImport } from './routes/lessons/index'
 import { Route as CreatureFeatureIndexRouteImport } from './routes/creature-feature/index'
+import { Route as CanvasIndexRouteImport } from './routes/canvas/index'
 import { Route as ProjectNameRouteImport } from './routes/project/$name'
 import { Route as LessonsLessonIdRouteImport } from './routes/lessons/$lessonId'
 import { Route as BackstageSignInRouteImport } from './routes/backstage/sign-in'
+import { Route as CanvasColorIndexRouteImport } from './routes/canvas/$color/index'
 import { Route as BackstageBackstageIndexRouteImport } from './routes/_backstage/backstage/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as BackstageBackstageReposRouteImport } from './routes/_backstage/backstage/repos'
@@ -50,6 +52,11 @@ const CreatureFeatureIndexRoute = CreatureFeatureIndexRouteImport.update({
   path: '/creature-feature/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CanvasIndexRoute = CanvasIndexRouteImport.update({
+  id: '/canvas/',
+  path: '/canvas/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjectNameRoute = ProjectNameRouteImport.update({
   id: '/project/$name',
   path: '/project/$name',
@@ -63,6 +70,11 @@ const LessonsLessonIdRoute = LessonsLessonIdRouteImport.update({
 const BackstageSignInRoute = BackstageSignInRouteImport.update({
   id: '/backstage/sign-in',
   path: '/backstage/sign-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CanvasColorIndexRoute = CanvasColorIndexRouteImport.update({
+  id: '/canvas/$color/',
+  path: '/canvas/$color/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BackstageBackstageIndexRoute = BackstageBackstageIndexRouteImport.update({
@@ -117,6 +129,7 @@ export interface FileRoutesByFullPath {
   '/backstage/sign-in': typeof BackstageSignInRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/project/$name': typeof ProjectNameRoute
+  '/canvas/': typeof CanvasIndexRoute
   '/creature-feature/': typeof CreatureFeatureIndexRoute
   '/lessons/': typeof LessonsIndexRoute
   '/backstage/journal': typeof BackstageBackstageJournalRoute
@@ -124,6 +137,7 @@ export interface FileRoutesByFullPath {
   '/backstage/repos': typeof BackstageBackstageReposRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/backstage/': typeof BackstageBackstageIndexRoute
+  '/canvas/$color/': typeof CanvasColorIndexRoute
   '/backstage/projects/': typeof BackstageBackstageProjectsIndexRoute
   '/backstage/projects/$owner/': typeof BackstageBackstageProjectsOwnerIndexRoute
   '/backstage/projects/$owner/$repo/': typeof BackstageBackstageProjectsOwnerRepoIndexRoute
@@ -134,6 +148,7 @@ export interface FileRoutesByTo {
   '/backstage/sign-in': typeof BackstageSignInRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/project/$name': typeof ProjectNameRoute
+  '/canvas': typeof CanvasIndexRoute
   '/creature-feature': typeof CreatureFeatureIndexRoute
   '/lessons': typeof LessonsIndexRoute
   '/backstage/journal': typeof BackstageBackstageJournalRoute
@@ -141,6 +156,7 @@ export interface FileRoutesByTo {
   '/backstage/repos': typeof BackstageBackstageReposRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/backstage': typeof BackstageBackstageIndexRoute
+  '/canvas/$color': typeof CanvasColorIndexRoute
   '/backstage/projects': typeof BackstageBackstageProjectsIndexRoute
   '/backstage/projects/$owner': typeof BackstageBackstageProjectsOwnerIndexRoute
   '/backstage/projects/$owner/$repo': typeof BackstageBackstageProjectsOwnerRepoIndexRoute
@@ -153,6 +169,7 @@ export interface FileRoutesById {
   '/backstage/sign-in': typeof BackstageSignInRoute
   '/lessons/$lessonId': typeof LessonsLessonIdRoute
   '/project/$name': typeof ProjectNameRoute
+  '/canvas/': typeof CanvasIndexRoute
   '/creature-feature/': typeof CreatureFeatureIndexRoute
   '/lessons/': typeof LessonsIndexRoute
   '/_backstage/backstage/journal': typeof BackstageBackstageJournalRoute
@@ -160,6 +177,7 @@ export interface FileRoutesById {
   '/_backstage/backstage/repos': typeof BackstageBackstageReposRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_backstage/backstage/': typeof BackstageBackstageIndexRoute
+  '/canvas/$color/': typeof CanvasColorIndexRoute
   '/_backstage/backstage/projects/': typeof BackstageBackstageProjectsIndexRoute
   '/_backstage/backstage/projects/$owner/': typeof BackstageBackstageProjectsOwnerIndexRoute
   '/_backstage/backstage/projects/$owner/$repo/': typeof BackstageBackstageProjectsOwnerRepoIndexRoute
@@ -172,6 +190,7 @@ export interface FileRouteTypes {
     | '/backstage/sign-in'
     | '/lessons/$lessonId'
     | '/project/$name'
+    | '/canvas/'
     | '/creature-feature/'
     | '/lessons/'
     | '/backstage/journal'
@@ -179,6 +198,7 @@ export interface FileRouteTypes {
     | '/backstage/repos'
     | '/api/auth/$'
     | '/backstage/'
+    | '/canvas/$color/'
     | '/backstage/projects/'
     | '/backstage/projects/$owner/'
     | '/backstage/projects/$owner/$repo/'
@@ -189,6 +209,7 @@ export interface FileRouteTypes {
     | '/backstage/sign-in'
     | '/lessons/$lessonId'
     | '/project/$name'
+    | '/canvas'
     | '/creature-feature'
     | '/lessons'
     | '/backstage/journal'
@@ -196,6 +217,7 @@ export interface FileRouteTypes {
     | '/backstage/repos'
     | '/api/auth/$'
     | '/backstage'
+    | '/canvas/$color'
     | '/backstage/projects'
     | '/backstage/projects/$owner'
     | '/backstage/projects/$owner/$repo'
@@ -207,6 +229,7 @@ export interface FileRouteTypes {
     | '/backstage/sign-in'
     | '/lessons/$lessonId'
     | '/project/$name'
+    | '/canvas/'
     | '/creature-feature/'
     | '/lessons/'
     | '/_backstage/backstage/journal'
@@ -214,6 +237,7 @@ export interface FileRouteTypes {
     | '/_backstage/backstage/repos'
     | '/api/auth/$'
     | '/_backstage/backstage/'
+    | '/canvas/$color/'
     | '/_backstage/backstage/projects/'
     | '/_backstage/backstage/projects/$owner/'
     | '/_backstage/backstage/projects/$owner/$repo/'
@@ -226,9 +250,11 @@ export interface RootRouteChildren {
   BackstageSignInRoute: typeof BackstageSignInRoute
   LessonsLessonIdRoute: typeof LessonsLessonIdRoute
   ProjectNameRoute: typeof ProjectNameRoute
+  CanvasIndexRoute: typeof CanvasIndexRoute
   CreatureFeatureIndexRoute: typeof CreatureFeatureIndexRoute
   LessonsIndexRoute: typeof LessonsIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  CanvasColorIndexRoute: typeof CanvasColorIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -268,6 +294,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CreatureFeatureIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/canvas/': {
+      id: '/canvas/'
+      path: '/canvas'
+      fullPath: '/canvas/'
+      preLoaderRoute: typeof CanvasIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/project/$name': {
       id: '/project/$name'
       path: '/project/$name'
@@ -287,6 +320,13 @@ declare module '@tanstack/react-router' {
       path: '/backstage/sign-in'
       fullPath: '/backstage/sign-in'
       preLoaderRoute: typeof BackstageSignInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/canvas/$color/': {
+      id: '/canvas/$color/'
+      path: '/canvas/$color'
+      fullPath: '/canvas/$color/'
+      preLoaderRoute: typeof CanvasColorIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_backstage/backstage/': {
@@ -381,9 +421,11 @@ const rootRouteChildren: RootRouteChildren = {
   BackstageSignInRoute: BackstageSignInRoute,
   LessonsLessonIdRoute: LessonsLessonIdRoute,
   ProjectNameRoute: ProjectNameRoute,
+  CanvasIndexRoute: CanvasIndexRoute,
   CreatureFeatureIndexRoute: CreatureFeatureIndexRoute,
   LessonsIndexRoute: LessonsIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  CanvasColorIndexRoute: CanvasColorIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

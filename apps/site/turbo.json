@@ -4,9 +4,6 @@
   "tasks": {
     "build": {
       "extends": false
-    },
-    "dev": {
-      "extends": false
     }
   }
 }

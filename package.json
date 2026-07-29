@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "turbo run build --filter=!site --filter=!portfolio --filter=!dashboard",
-    "dev": "turbo run dev --filter=!site --filter=!portfolio --filter=!dashboard",
+    "dev": "turbo run dev  --filter=!portfolio --filter=!dashboard",
     "lint": "vp lint .",
     "lint:fix": "vp lint --fix .",
     "format": "vp fmt .",
