@@ -3,7 +3,6 @@ import { rootServerMiddleware } from "@/middleware/root.server";
 import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
-import viewTransitionsCss from "../styles/view-transition/index.css?url";
 
 import { PostHogRoot } from "@/components/posthog/PostHogRoot";
 import { Toaster } from "@/components/ui/sonner";
@@ -60,7 +59,6 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "stylesheet", href: viewTransitionsCss },
       { rel: "icon", href: AppConfig.assets.favicon, sizes: "48x48", type: "image/x-icon" },
       {
         rel: "icon",
