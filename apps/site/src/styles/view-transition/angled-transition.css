@@ -1,0 +1,21 @@
+/**
+ * Angled — incoming page unclips from a corner.
+ * TEMP: flash-fix commented out so we can compare old behavior.
+ */
+[data-style="angled"]::view-transition-old(root) {
+  /* display: none; — flash fix */
+  animation: none; /* original */
+  z-index: -1; /* original */
+}
+
+[data-style="angled"]::view-transition-new(root) {
+  animation: angled-unclip 1s ease;
+  animation-fill-mode: both;
+  clip-path: polygon(-100vmax 100%, 100% 100%, 100% -100vmax);
+}
+
+@keyframes angled-unclip {
+  0% {
+    clip-path: polygon(100% 100%, 100% 100%, 100% 100%);
+  }
+}

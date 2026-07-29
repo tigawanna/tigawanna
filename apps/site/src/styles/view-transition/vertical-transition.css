@@ -1,0 +1,32 @@
+/**
+ * Vertical — incoming page reveals from an edge.
+ * TEMP: flash-fix commented out so we can compare old behavior.
+ */
+[data-style="vertical"]::view-transition-old(root) {
+  /* display: none; — flash fix */
+  z-index: -1; /* original */
+  animation: none; /* original */
+}
+
+[data-style="vertical"]::view-transition-new(root) {
+  animation: vertical-reveal 1s ease;
+  animation-fill-mode: both;
+  clip-path: inset(0 0 0 0);
+  z-index: 2; /* original */
+}
+
+@keyframes vertical-reveal {
+  from {
+    clip-path: inset(var(--from, 0 0 100% 0));
+  }
+}
+
+/* Dark / wanna themes wipe up from the bottom */
+[data-theme="dark"],
+[data-theme="wanna"] {
+  --from: 0 0 100% 0;
+}
+
+[data-theme="light"] {
+  --from: 100% 0 0 0;
+}

@@ -3,7 +3,7 @@ import { rootServerMiddleware } from "@/middleware/root.server";
 import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
-import viewTransitionsCss from "../styles/view-transitions.css?url";
+import viewTransitionsCss from "../styles/view-transition/index.css?url";
 
 import { PostHogRoot } from "@/components/posthog/PostHogRoot";
 import { Toaster } from "@/components/ui/sonner";
