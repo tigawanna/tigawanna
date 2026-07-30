@@ -34,6 +34,8 @@ export type GithubRepoNode = {
   isArchived?: boolean;
   stargazerCount?: number;
   forkCount?: number;
+  /** Curated CMS category used by landing filters. */
+  category?: string | null;
   repositoryTopics: {
     nodes: RepositoryTopic[];
   };

@@ -283,7 +283,7 @@ export interface ContactMessage {
   createdAt: string;
 }
 /**
- * Open-source project cards. Use “Pull from GitHub” on this list to refresh the cache used when the live API is rate-limited.
+ * Open-source project cards served to the landing page. Refresh via “Pull from GitHub” or the daily cron — the site never queries GitHub at request time.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "repositories".
@@ -326,6 +326,12 @@ export interface Repository {
         tag: string;
         id?: string | null;
       }[]
+    | null;
+  /**
+   * Curated filter bucket. Inferred from GitHub topics on first sync; manual edits are kept on later pulls.
+   */
+  category?:
+    | ("frontend" | "backend" | "mobile" | "devtools" | "data" | "fullstack" | "other")
     | null;
   /**
    * Shown under the Featured filter (GitHub pinned repos).
@@ -631,6 +637,7 @@ export interface RepositoriesSelect<T extends boolean = true> {
         tag?: T;
         id?: T;
       };
+  category?: T;
   featured?: T;
   pushedAt?: T;
   isPrivate?: T;

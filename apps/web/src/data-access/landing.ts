@@ -19,7 +19,7 @@ export async function getLandingLessonPreviews(): Promise<JournalPreviewItem[]> 
 
 /**
  * Pinned GitHub repos for the projects section.
- * Served from the Payload repositories cache (synced via admin "Pull from GitHub").
+ * Served from the Payload repositories cache (synced via cron / admin pull).
  */
 export async function getPinnedRepos(): Promise<GithubRepoNode[]> {
   return getCachedPinnedRepos();
@@ -27,7 +27,7 @@ export async function getPinnedRepos(): Promise<GithubRepoNode[]> {
 
 /**
  * Recently pushed public repos for topic filter / search.
- * Served from the Payload repositories cache (synced via admin "Pull from GitHub").
+ * Served from the Payload repositories cache (synced via cron / admin pull).
  */
 export async function getRecentRepos(): Promise<GithubRepoNode[]> {
   return getCachedRecentRepos();

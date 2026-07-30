@@ -20,6 +20,7 @@
     "migrate:devto-article-id": "node --experimental-strip-types ./src/seed/migrate-add-devto-article-id.ts",
     "migrate:contact-messages": "node --experimental-strip-types ./src/seed/migrate-contact-messages.ts",
     "migrate:repositories": "node --experimental-strip-types ./src/seed/migrate-repositories.ts",
+    "migrate:repository-category": "node --experimental-strip-types ./src/seed/migrate-add-repository-category.ts",
     "sync:repositories": "cross-env NODE_OPTIONS=--no-deprecation payload run ./src/seed/sync-repositories.ts",
     "seed:all": "cross-env NODE_OPTIONS=--no-deprecation CI=1 payload run ./src/seed/seed-all.ts",
     "test:email": "cross-env NODE_OPTIONS=--no-deprecation payload run ./src/seed/test-email.ts",

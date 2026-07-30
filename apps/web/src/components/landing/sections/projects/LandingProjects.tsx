@@ -22,7 +22,8 @@ export function LandingProjectsShell({ children }: { children: ReactNode }) {
           <SectionEyebrow>Projects</SectionEyebrow>
           <h2 className="landing-section-heading">Open source projects</h2>
           <p className="landing-section-lead">
-            Pinned highlights, recently pushed repos, and topic filters — pulled live from GitHub.
+            Featured pins, recent pushes, and category filters — served from the site CMS and
+            refreshed from GitHub on a schedule.
           </p>
         </div>
 

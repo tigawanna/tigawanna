@@ -26,6 +26,7 @@ export function toGithubRepoNode(doc: Repository): GithubRepoNode {
     isArchived: Boolean(doc.isArchived),
     stargazerCount: doc.stargazerCount ?? undefined,
     forkCount: doc.forkCount ?? undefined,
+    category: doc.category ?? null,
     repositoryTopics: {
       nodes: (doc.topics ?? [])
         .map((row) => row.tag)

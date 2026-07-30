@@ -65,6 +65,7 @@ async function migrateRepositories() {
           \`open_graph_image_url\` text,
           \`description\` text,
           \`description_h_t_m_l\` text,
+          \`category\` text,
           \`featured\` integer DEFAULT false NOT NULL,
           \`pushed_at\` text NOT NULL,
           \`is_private\` integer DEFAULT false NOT NULL,

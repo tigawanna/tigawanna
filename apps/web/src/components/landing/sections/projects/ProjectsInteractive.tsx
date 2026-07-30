@@ -4,7 +4,15 @@ import { useState } from "react";
 import { renderProjectCard } from "../../cards/ProjectCard";
 import { orderReposByRelevance } from "../../modules/find-relevant-projects";
 import type { GithubRepoNode } from "../../types/github";
-import { filterReposByTopic, matchesProjectSearch } from "./-utils/project-search";
+import {
+  isRepositoryCategory,
+  type RepositoryCategory,
+} from "@/modules/github/repository-category";
+import {
+  filterReposByCategory,
+  filterReposByTopic,
+  matchesProjectSearch,
+} from "./-utils/project-search";
 import { ProjectsSearch } from "./ProjectsSearch";
 import { ProjectsTopicFilter, type ProjectView } from "./ProjectsTopicFilter";
 
@@ -23,6 +31,19 @@ function collectTopics(repos: GithubRepoNode[]) {
 }
 
 /**
+ * Collects curated categories present on the given repositories.
+ */
+function collectCategories(repos: GithubRepoNode[]): RepositoryCategory[] {
+  const categories = new Set<RepositoryCategory>();
+  for (const repo of repos) {
+    if (isRepositoryCategory(repo.category)) {
+      categories.add(repo.category);
+    }
+  }
+  return Array.from(categories);
+}
+
+/**
  * Interactive projects island — filters, search, and the resulting card grid.
  */
 export function ProjectsInteractive({
@@ -34,17 +55,19 @@ export function ProjectsInteractive({
 }) {
   const [activeView, setActiveView] = useState<ProjectView>("featured");
   const [activeTopic, setActiveTopic] = useState("all");
+  const [activeCategory, setActiveCategory] = useState("all");
   const [searchDraft, setSearchDraft] = useState("");
   const [appliedSearch, setAppliedSearch] = useState("");
 
   const topics = collectTopics(recentRepos);
+  const categories = collectCategories(recentRepos);
   const isSearching = appliedSearch.length > 0;
 
   let visibleRepos: GithubRepoNode[] = [];
   if (isSearching) {
     visibleRepos = orderReposByRelevance(
-      filterReposByTopic(recentRepos, activeTopic).filter((repo) =>
-        matchesProjectSearch(repo, appliedSearch),
+      filterReposByCategory(filterReposByTopic(recentRepos, activeTopic), activeCategory).filter(
+        (repo) => matchesProjectSearch(repo, appliedSearch),
       ),
       appliedSearch,
     );
@@ -53,7 +76,10 @@ export function ProjectsInteractive({
   } else if (activeView === "recent") {
     visibleRepos = recentRepos.slice(0, MAX_LANDING_PROJECTS);
   } else {
-    visibleRepos = filterReposByTopic(recentRepos, activeTopic).slice(0, MAX_LANDING_PROJECTS);
+    visibleRepos = filterReposByCategory(
+      filterReposByTopic(recentRepos, activeTopic),
+      activeCategory,
+    ).slice(0, MAX_LANDING_PROJECTS);
   }
 
   const showEmptySearchState = isSearching && visibleRepos.length === 0;
@@ -63,9 +89,12 @@ export function ProjectsInteractive({
       <div className="space-y-5">
         <ProjectsTopicFilter
           topics={topics}
+          categories={categories}
           activeTopic={activeTopic}
+          activeCategory={activeCategory}
           activeView={activeView}
           onTopicChange={setActiveTopic}
+          onCategoryChange={setActiveCategory}
           onViewChange={setActiveView}
         />
         <ProjectsSearch

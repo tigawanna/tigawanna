@@ -2,6 +2,12 @@ import type { Payload, TypedUser } from "payload";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { createGitHubClient, type GithubRepoNode } from "@repo/github";
 
+import {
+  inferRepositoryCategory,
+  isRepositoryCategory,
+  type RepositoryCategory,
+} from "./repository-category";
+
 export type SyncRepositoriesResult = {
   created: number;
   updated: number;
@@ -12,7 +18,7 @@ export type SyncRepositoriesResult = {
 
 type SyncOpOptions = {
   user?: TypedUser | null;
-  /** How many recent public repos to pull (default 50). */
+  /** How many recent public repos to pull (default 100). */
   recentLimit?: number;
 };
 
@@ -42,9 +48,36 @@ function bustRepositoryCaches() {
 }
 
 /**
+ * Topic names from a GitHub repo node.
+ */
+function topicNames(repo: GithubRepoNode): string[] {
+  return (repo.repositoryTopics?.nodes ?? [])
+    .map((node) => node.topic?.name)
+    .filter((tag): tag is string => Boolean(tag));
+}
+
+/**
+ * Resolves category for upsert: keep an existing manual value, otherwise infer from topics.
+ */
+function resolveCategory(
+  repo: GithubRepoNode,
+  existingCategory: string | null | undefined,
+): RepositoryCategory {
+  if (isRepositoryCategory(existingCategory)) {
+    return existingCategory;
+  }
+  return inferRepositoryCategory(topicNames(repo));
+}
+
+/**
  * Maps a GitHub repo node into Payload repository field data.
  */
-function toRepositoryData(repo: GithubRepoNode, featured: boolean, syncedAt: string) {
+function toRepositoryData(
+  repo: GithubRepoNode,
+  featured: boolean,
+  syncedAt: string,
+  category: RepositoryCategory,
+) {
   return {
     name: repo.name,
     nameWithOwner: repo.nameWithOwner,
@@ -53,10 +86,8 @@ function toRepositoryData(repo: GithubRepoNode, featured: boolean, syncedAt: str
     openGraphImageUrl: repo.openGraphImageUrl || "",
     description: repo.description || "",
     descriptionHTML: repo.descriptionHTML || "",
-    topics: (repo.repositoryTopics?.nodes ?? [])
-      .map((node) => node.topic?.name)
-      .filter((tag): tag is string => Boolean(tag))
-      .map((tag) => ({ tag })),
+    topics: topicNames(repo).map((tag) => ({ tag })),
+    category,
     featured,
     pushedAt: repo.pushedAt,
     isPrivate: Boolean(repo.isPrivate),
@@ -73,13 +104,16 @@ function toRepositoryData(repo: GithubRepoNode, featured: boolean, syncedAt: str
  *
  * Featured = currently pinned on GitHub. Existing rows not in this pull keep
  * their data but lose featured if they were only featured via a previous pin.
+ *
+ * Category is inferred from topics only when the row has no category yet —
+ * admin overrides are preserved across syncs.
  */
 export async function syncRepositoriesFromGithub(
   payload: Payload,
   options: SyncOpOptions = {},
 ): Promise<SyncRepositoriesResult> {
   const client = createGitHubClient(requireGithubPat());
-  const recentLimit = options.recentLimit ?? 50;
+  const recentLimit = options.recentLimit ?? 100;
   const access = {
     user: options.user ?? undefined,
     overrideAccess: !options.user,
@@ -109,7 +143,6 @@ export async function syncRepositoriesFromGithub(
   let updated = 0;
 
   for (const repo of byKey.values()) {
-    const data = toRepositoryData(repo, pinnedKeys.has(repo.nameWithOwner), syncedAt);
     const existing = await payload.find({
       collection: "repositories",
       where: { nameWithOwner: { equals: repo.nameWithOwner } },
@@ -119,6 +152,9 @@ export async function syncRepositoriesFromGithub(
     });
 
     const row = existing.docs[0];
+    const category = resolveCategory(repo, row?.category);
+    const data = toRepositoryData(repo, pinnedKeys.has(repo.nameWithOwner), syncedAt, category);
+
     if (row) {
       await payload.update({
         collection: "repositories",

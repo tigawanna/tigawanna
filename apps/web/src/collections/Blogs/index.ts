@@ -37,6 +37,9 @@ export const Blogs: CollectionConfig = {
   admin: {
     useAsTitle: "title",
     defaultColumns: ["title", "kind", "slug", "_status", "updatedAt"],
+    pagination: {
+      defaultLimit: 30,
+    },
     group: "Content",
     description:
       "All writing lives here. Mark an entry as Journal or Blog post — you can switch later if a short note grows into a full post.",

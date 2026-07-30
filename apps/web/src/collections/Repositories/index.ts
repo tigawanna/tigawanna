@@ -10,8 +10,8 @@ import {
 
 /**
  * Cached GitHub repository snapshots for the portfolio projects UI.
- * Synced from GitHub via "Pull from GitHub" so the site has a real fallback
- * when the live API is rate-limited or unavailable.
+ * Synced from GitHub via admin “Pull from GitHub” or the daily Vercel cron —
+ * the landing page always reads from this cache, never live GitHub.
  */
 export const Repositories: CollectionConfig = {
   slug: "repositories",
@@ -34,14 +34,18 @@ export const Repositories: CollectionConfig = {
     url: true,
     pushedAt: true,
     featured: true,
+    category: true,
     topics: true,
   },
   admin: {
     useAsTitle: "name",
-    defaultColumns: ["name", "nameWithOwner", "featured", "pushedAt", "updatedAt"],
+    defaultColumns: ["name", "nameWithOwner", "category", "featured", "pushedAt", "updatedAt"],
+    pagination: {
+      defaultLimit: 30,
+    },
     group: "Content",
     description:
-      "Open-source project cards. Use “Pull from GitHub” on this list to refresh the cache used when the live API is rate-limited.",
+      "Open-source project cards served to the landing page. Refresh via “Pull from GitHub” or the daily cron — the site never queries GitHub at request time.",
     components: {
       beforeList: [
         "/collections/Repositories/components/SyncFromGithubListAction#SyncFromGithubListAction",
@@ -126,6 +130,24 @@ export const Repositories: CollectionConfig = {
           required: true,
         },
       ],
+    },
+    {
+      name: "category",
+      type: "select",
+      options: [
+        { label: "Frontend", value: "frontend" },
+        { label: "Backend", value: "backend" },
+        { label: "Mobile", value: "mobile" },
+        { label: "DevTools", value: "devtools" },
+        { label: "Data", value: "data" },
+        { label: "Full-stack", value: "fullstack" },
+        { label: "Other", value: "other" },
+      ],
+      admin: {
+        position: "sidebar",
+        description:
+          "Curated filter bucket. Inferred from GitHub topics on first sync; manual edits are kept on later pulls.",
+      },
     },
     {
       name: "featured",
