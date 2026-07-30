@@ -38,19 +38,21 @@ node --experimental-strip-types ./src/seed/migrate-repositories.ts
 node --experimental-strip-types ./src/seed/migrate-add-repository-category.ts
 node --experimental-strip-types ./src/seed/migrate-add-repository-monorepo.ts
 node --experimental-strip-types ./src/seed/migrate-add-repository-last-enriched-at.ts
+node --experimental-strip-types ./src/seed/migrate-add-payload-jobs-workflow-slug.ts
 node --experimental-strip-types ./src/seed/migrate-journals-to-blogs.ts
 ```
 
-| File                                         | Purpose                           |
-| -------------------------------------------- | --------------------------------- |
-| `migrate-add-cover-url.ts`                   | `coverUrl` on blogs               |
-| `migrate-add-devto-article-id.ts`            | Dev.to article id column          |
-| `migrate-contact-messages.ts`                | Contact messages collection table |
-| `migrate-repositories.ts`                    | Repositories collection bootstrap |
-| `migrate-add-repository-category.ts`         | `category` on repositories        |
-| `migrate-add-repository-monorepo.ts`         | Monorepo / README cache columns   |
-| `migrate-add-repository-last-enriched-at.ts` | `lastEnrichedAt` for enrich skip  |
-| `migrate-journals-to-blogs.ts`               | One-time Journals → Blogs move    |
+| File                                         | Purpose                                     |
+| -------------------------------------------- | ------------------------------------------- |
+| `migrate-add-cover-url.ts`                   | `coverUrl` on blogs                         |
+| `migrate-add-devto-article-id.ts`            | Dev.to article id column                    |
+| `migrate-contact-messages.ts`                | Contact messages collection table           |
+| `migrate-repositories.ts`                    | Repositories collection bootstrap           |
+| `migrate-add-repository-category.ts`         | `category` on repositories                  |
+| `migrate-add-repository-monorepo.ts`         | Monorepo / README cache columns             |
+| `migrate-add-repository-last-enriched-at.ts` | `lastEnrichedAt` for enrich skip            |
+| `migrate-add-payload-jobs-workflow-slug.ts`  | `workflow_slug` on payload_jobs (workflows) |
+| `migrate-journals-to-blogs.ts`               | One-time Journals → Blogs move              |
 
 ### Seed / import / backfill (Payload `run`)
 

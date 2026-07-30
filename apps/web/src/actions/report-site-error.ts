@@ -18,6 +18,19 @@ const reportSiteErrorSchema = z.object({
 export type ReportSiteErrorInput = z.infer<typeof reportSiteErrorSchema>;
 
 /**
+ * True only for real production deploys — never local `next dev` / `next start` or Vercel previews.
+ */
+function shouldSendSiteErrorAlerts(): boolean {
+  if (process.env.NODE_ENV !== "production") return false;
+  if (process.env.VERCEL_ENV && process.env.VERCEL_ENV !== "production") return false;
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
+  if (/localhost|127\.0\.0\.1/i.test(siteUrl)) return false;
+
+  return true;
+}
+
+/**
  * Formats a critical frontend error for Telegram delivery.
  * Request metadata is limited to an approximate location (no IP).
  */
@@ -50,8 +63,13 @@ function formatSiteErrorTelegramMessage(
 
 /**
  * Sends a production critical-error alert to Telegram (best-effort; never throws to the client).
+ * No-ops in development, Vercel previews, and localhost production previews.
  */
 export async function reportSiteError(input: ReportSiteErrorInput) {
+  if (!shouldSendSiteErrorAlerts()) {
+    return { sent: false as const };
+  }
+
   const data = reportSiteErrorSchema.parse(input);
   const requestHeaders = await headers();
   const location = await resolveApproximateLocation(requestHeaders);

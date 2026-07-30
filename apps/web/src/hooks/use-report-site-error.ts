@@ -14,10 +14,14 @@ function buildSiteErrorFingerprint(pathname: string, error: Error) {
 
 /**
  * Reports a critical client error to Telegram in production (deduped via sessionStorage).
+ * Skips local hosts even when running a production build (`next start`).
  */
 export function useReportSiteError(error: Error) {
   useEffect(() => {
     if (process.env.NODE_ENV !== "production") {
+      return;
+    }
+    if (/localhost|127\.0\.0\.1/i.test(window.location.hostname)) {
       return;
     }
 
