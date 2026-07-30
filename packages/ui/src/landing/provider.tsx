@@ -1,12 +1,16 @@
+import type { QueryKey } from "@tanstack/react-query";
 import { createContext, useContext, type ReactNode } from "react";
 import type { ContactFormValues } from "./sections/contact/contact-schema";
 
 /**
  * Minimal query-options shape the landing package reads.
  * Host apps pass full `queryOptions(...)` objects — pick fields at the app boundary.
+ *
+ * Uses TanStack `QueryKey` (not `readonly unknown[]`) so host `Register` queryKey
+ * augmentations still type-check when the package source is checked through the app.
  */
 export type LandingQueryOptions = {
-  queryKey: readonly unknown[];
+  queryKey: QueryKey;
   /** Host staleTime may be a number or TanStack stale-time function. */
   staleTime?: unknown;
   /** Present on host `queryOptions(...)`; typed loosely so arity stays host-owned. */
