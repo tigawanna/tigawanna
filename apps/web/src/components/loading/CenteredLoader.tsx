@@ -34,7 +34,7 @@ export function CenteredLoader({
       aria-live="polite"
       aria-busy="true"
       className={twMerge(
-        "flex w-full flex-col items-center justify-center text-base-content/45",
+        "flex w-full flex-col items-center justify-center text-base-content/80",
         fullPage ? "min-h-svh px-6" : "min-h-48 py-16",
         className,
       )}
