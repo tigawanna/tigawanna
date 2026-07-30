@@ -4,18 +4,18 @@
 
 ## Everyday (`pnpm …`)
 
-| Script                          | When                                                            |
-| ------------------------------- | --------------------------------------------------------------- |
-| `dev`                           | Local Next + Payload on `:3055`                                 |
-| `devsafe`                       | Wipe `.next` then `dev`                                         |
-| `build` / `start`               | Production build / serve                                        |
-| `lint` / `check-types`          | CI-style checks                                                 |
-| `generate:types`                | After Payload schema / jobs / field changes                     |
-| `generate:importmap`            | After admin component path changes                              |
-| `payload`                       | Payload CLI passthrough (`pnpm payload …`)                      |
-| `seed`                          | Full local seed (`seed-all`: journals + Dev.to import + verify) |
-| `sync:repositories`             | Pull GitHub → Payload repositories (needs `GH_PAT`)             |
-| `test:e2e` / `test:e2e:install` | Playwright                                                      |
+| Script                          | When                                                               |
+| ------------------------------- | ------------------------------------------------------------------ |
+| `dev`                           | Local Next + Payload on `:3055`                                    |
+| `devsafe`                       | Wipe `.next` then `dev`                                            |
+| `build` / `start`               | Production build / serve                                           |
+| `lint` / `check-types`          | CI-style checks                                                    |
+| `generate:types`                | After Payload schema / jobs / field changes                        |
+| `generate:importmap`            | After admin component path changes                                 |
+| `payload`                       | Payload CLI passthrough (`pnpm payload …`)                         |
+| `seed`                          | Full local seed (`seed-all`: journals + Dev.to import + verify)    |
+| `sync:repositories`             | Queue + run GitHub metadata sync (enrich via jobs; needs `GH_PAT`) |
+| `test:e2e` / `test:e2e:install` | Playwright                                                         |
 
 Run from the app: `pnpm --filter web <script>` or `cd apps/web && pnpm <script>`.
 

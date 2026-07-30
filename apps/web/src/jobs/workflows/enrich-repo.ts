@@ -1,13 +1,16 @@
 import type { WorkflowConfig } from "payload";
 
+import { GITHUB_ENRICH_QUEUE } from "@/jobs/queues";
+import { parseEnrichmentFields } from "@/modules/github/map-enrichment-fields";
+
 /**
- * Stub: enrich one repo as fetch → write so write failures don’t re-hit GitHub.
- * Implemented in plan step 4 (`tasks.fetchArtifacts` → `tasks.writeEnrichment`).
+ * Enrich one repo: fetch GitHub artifacts → write Payload fields.
+ * Retries resume from the failed task (cached fetch output is reused).
  */
 export const enrichRepoWorkflow = {
   slug: "enrichRepo",
   label: "Enrich GitHub repository",
-  queue: "github-enrich",
+  queue: GITHUB_ENRICH_QUEUE,
   retries: 3,
   inputSchema: [
     {
@@ -16,8 +19,23 @@ export const enrichRepoWorkflow = {
       required: true,
     },
   ],
-  handler: async () => {
-    // No-op until step 4 wires fetchArtifacts → writeEnrichment.
+  handler: async ({ job, tasks }) => {
+    const nameWithOwner = job.input.nameWithOwner;
+
+    const fetched = await tasks.fetchArtifacts("fetch-artifacts", {
+      input: { nameWithOwner },
+    });
+
+    if (fetched.requeued || !fetched.enrichment) {
+      return;
+    }
+
+    await tasks.writeEnrichment("write-enrichment", {
+      input: {
+        nameWithOwner,
+        enrichment: parseEnrichmentFields(fetched.enrichment),
+      },
+    });
   },
 } as const satisfies WorkflowConfig<{
   nameWithOwner: string;

@@ -288,7 +288,7 @@ export interface ContactMessage {
   createdAt: string;
 }
 /**
- * Open-source project cards served to the landing page. Refresh via “Pull from GitHub” or the daily cron — the site never queries GitHub at request time.
+ * Open-source project cards served to the landing page. Refresh via “Pull from GitHub” or the weekly cron — enrichment runs on the jobs queue. The site never queries GitHub at request time.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "repositories".
@@ -802,10 +802,19 @@ export interface CollectionsWidget {
  * via the `definition` "TaskListAndUpsertRepos".
  */
 export interface TaskListAndUpsertRepos {
-  input?: unknown;
+  input: {
+    /**
+     * How many recent public repos to pull (default 100).
+     */
+    recentLimit?: number | null;
+  };
   output: {
     upserted: number;
+    created: number;
+    updated: number;
     queuedEnrich: number;
+    featured: number;
+    pulledAt: string;
   };
 }
 /**
@@ -817,7 +826,16 @@ export interface TaskFetchArtifacts {
     nameWithOwner: string;
   };
   output: {
-    ok: boolean;
+    requeued: boolean;
+    enrichment?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
   };
 }
 /**
@@ -827,6 +845,15 @@ export interface TaskFetchArtifacts {
 export interface TaskWriteEnrichment {
   input: {
     nameWithOwner: string;
+    enrichment:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
   };
   output: {
     ok: boolean;

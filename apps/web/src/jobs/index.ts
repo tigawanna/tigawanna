@@ -6,7 +6,7 @@ import { writeEnrichmentTask } from "./tasks/write-enrichment";
 import { enrichRepoWorkflow } from "./workflows/enrich-repo";
 
 /**
- * Payload Jobs config for GitHub sync (stubs until later plan steps).
+ * Payload Jobs config for GitHub sync.
  * No `autoRun` — serverless uses Vercel Cron → `/api/payload-jobs/run`.
  */
 export const jobsConfig = {

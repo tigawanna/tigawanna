@@ -1,15 +1,10 @@
 import {
   collectArtifacts,
   createGitHubClient,
-  type GithubRepoNode,
   type GithubRepoSnapshot,
   type MonorepoKind,
   type RepoPackageUnit,
 } from "@repo/github";
-import type { Payload } from "payload";
-
-import type { Repository } from "@/payload-types";
-import { topicNames, type RepoAccessOptions } from "./upsert-repo-metadata";
 
 /** Soft cap for Turso/libSQL row payloads — large READMEs were timing out inserts. */
 const MAX_STORED_README_CHARS = 6_000;
@@ -39,11 +34,10 @@ function truncateStoredReadme(markdown: string, maxChars = MAX_STORED_README_CHA
  * @param incoming - Fresh GitHub timestamps.
  */
 export function shouldEnrichRepo(
-  stored: { lastEnrichedAt?: string | null; pushedAt?: string | null } | null | undefined,
+  stored: { lastEnrichedAt?: string | null } | null | undefined,
   incoming: { pushedAt: string },
 ): boolean {
-  if (!stored) return true;
-  if (!stored.lastEnrichedAt) return true;
+  if (!stored?.lastEnrichedAt) return true;
 
   const incomingMs = Date.parse(incoming.pushedAt);
   const enrichedMs = Date.parse(stored.lastEnrichedAt);
@@ -52,7 +46,7 @@ export function shouldEnrichRepo(
   return incomingMs > enrichedMs;
 }
 
-/** Enrichment fields ready to write to Payload. */
+/** Enrichment fields ready to write to Payload (JSON-serializable for jobs). */
 export type EnrichmentFields = {
   defaultBranch: string;
   isMonorepo: boolean;
@@ -68,21 +62,112 @@ export type EnrichmentFields = {
   }>;
 };
 
+const PACKAGE_KINDS = new Set<RepoPackageUnit["kind"]>(["root", "app", "package", "other"]);
+const MONOREPO_KINDS = new Set<MonorepoKind>([
+  "turbo",
+  "pnpm",
+  "npm",
+  "yarn",
+  "lerna",
+  "nx",
+  "nested",
+]);
+
 /**
- * Maps a GitHub repo node into a spelunk snapshot (needs default branch).
+ * True when `value` is a known `RepoPackageUnit["kind"]`.
  *
- * @param repo - GitHub GraphQL node.
+ * @param value - Candidate kind string.
  */
-export function toRepoSnapshot(repo: GithubRepoNode): GithubRepoSnapshot {
+function isPackageKind(value: string): value is RepoPackageUnit["kind"] {
+  return PACKAGE_KINDS.has(value as RepoPackageUnit["kind"]);
+}
+
+/**
+ * True when `value` is a known `MonorepoKind`.
+ *
+ * @param value - Candidate kind string.
+ */
+function isMonorepoKind(value: string): value is MonorepoKind {
+  return MONOREPO_KINDS.has(value as MonorepoKind);
+}
+
+/**
+ * Narrows unknown job JSON into `EnrichmentFields`, or throws.
+ *
+ * @param value - Task/workflow JSON payload.
+ */
+export function parseEnrichmentFields(value: unknown): EnrichmentFields {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new Error("Invalid enrichment payload: expected an object");
+  }
+
+  const record = value as Record<string, unknown>;
+  const defaultBranch = record.defaultBranch;
+  const isMonorepo = record.isMonorepo;
+  const monorepoKind = record.monorepoKind;
+  const readmeMarkdown = record.readmeMarkdown;
+  const packages = record.packages;
+
+  if (typeof defaultBranch !== "string" || defaultBranch.trim().length === 0) {
+    throw new Error("Invalid enrichment payload: defaultBranch");
+  }
+  if (typeof isMonorepo !== "boolean") {
+    throw new Error("Invalid enrichment payload: isMonorepo");
+  }
+  if (monorepoKind !== null && monorepoKind !== undefined) {
+    if (typeof monorepoKind !== "string" || !isMonorepoKind(monorepoKind)) {
+      throw new Error("Invalid enrichment payload: monorepoKind");
+    }
+  }
+  if (typeof readmeMarkdown !== "string") {
+    throw new Error("Invalid enrichment payload: readmeMarkdown");
+  }
+  if (!Array.isArray(packages)) {
+    throw new Error("Invalid enrichment payload: packages");
+  }
+
+  const parsedPackages: EnrichmentFields["packages"] = packages.map((unit, index) => {
+    if (!unit || typeof unit !== "object" || Array.isArray(unit)) {
+      throw new Error(`Invalid enrichment payload: packages[${index}]`);
+    }
+    const row = unit as Record<string, unknown>;
+    const kind = row.kind;
+    if (typeof kind !== "string" || !isPackageKind(kind)) {
+      throw new Error(`Invalid enrichment payload: packages[${index}].kind`);
+    }
+    if (typeof row.name !== "string") {
+      throw new Error(`Invalid enrichment payload: packages[${index}].name`);
+    }
+    if (typeof row.path !== "string") {
+      throw new Error(`Invalid enrichment payload: packages[${index}].path`);
+    }
+    if (typeof row.description !== "string") {
+      throw new Error(`Invalid enrichment payload: packages[${index}].description`);
+    }
+    if (typeof row.readmePath !== "string") {
+      throw new Error(`Invalid enrichment payload: packages[${index}].readmePath`);
+    }
+    if (typeof row.readmeMarkdown !== "string") {
+      throw new Error(`Invalid enrichment payload: packages[${index}].readmeMarkdown`);
+    }
+
+    return {
+      name: row.name,
+      path: row.path,
+      kind,
+      description: row.description,
+      readmePath: row.readmePath,
+      readmeMarkdown: row.readmeMarkdown,
+    };
+  });
+
   return {
-    id: repo.nameWithOwner,
-    name: repo.name,
-    nameWithOwner: repo.nameWithOwner,
-    description: repo.description ?? null,
-    homepageUrl: repo.homepageUrl || null,
-    openGraphImageUrl: repo.openGraphImageUrl || null,
-    topics: topicNames(repo),
-    defaultBranch: repo.defaultBranchRef?.name?.trim() || "main",
+    defaultBranch,
+    isMonorepo,
+    monorepoKind:
+      typeof monorepoKind === "string" && isMonorepoKind(monorepoKind) ? monorepoKind : null,
+    readmeMarkdown,
+    packages: parsedPackages,
   };
 }
 
@@ -92,7 +177,7 @@ export function toRepoSnapshot(repo: GithubRepoNode): GithubRepoSnapshot {
  *
  * @param units - Spelunk package units.
  */
-export function toPackageRows(units: RepoPackageUnit[]) {
+function toPackageRows(units: RepoPackageUnit[]): EnrichmentFields["packages"] {
   return units.map((unit) => ({
     name: unit.name,
     path: unit.path,
@@ -110,13 +195,12 @@ export function toPackageRows(units: RepoPackageUnit[]) {
  * Runs `collectArtifacts` and maps the result into truncated Payload enrichment fields.
  *
  * @param client - Authenticated GitHub client.
- * @param repo - GitHub repo node (needs `defaultBranchRef` when available).
+ * @param snapshot - Repo snapshot (needs `defaultBranch` + `nameWithOwner`).
  */
 export async function mapEnrichmentFields(
   client: ReturnType<typeof createGitHubClient>,
-  repo: GithubRepoNode,
+  snapshot: GithubRepoSnapshot,
 ): Promise<EnrichmentFields> {
-  const snapshot = toRepoSnapshot(repo);
   const spelunk = await collectArtifacts(client, snapshot);
 
   return {
@@ -126,52 +210,4 @@ export async function mapEnrichmentFields(
     readmeMarkdown: truncateStoredReadme(spelunk.readme ?? ""),
     packages: toPackageRows(spelunk.packages),
   };
-}
-
-/**
- * Payload `data` patch for enrichment fields + `lastEnrichedAt`.
- *
- * @param fields - Mapped enrichment.
- * @param enrichedAt - ISO timestamp (defaults to now).
- */
-export function toEnrichmentPayloadData(
-  fields: EnrichmentFields,
-  enrichedAt: string = new Date().toISOString(),
-) {
-  return {
-    defaultBranch: fields.defaultBranch,
-    isMonorepo: fields.isMonorepo,
-    monorepoKind: fields.monorepoKind,
-    readmeMarkdown: fields.readmeMarkdown,
-    packages: fields.packages,
-    lastEnrichedAt: enrichedAt,
-  };
-}
-
-export type WriteRepoEnrichmentArgs = {
-  payload: Payload;
-  docId: number | string;
-  fields: EnrichmentFields;
-  enrichedAt?: string;
-  access?: RepoAccessOptions;
-};
-
-/**
- * Writes enrichment fields onto an existing repository document.
- *
- * @param args - Payload doc id + mapped enrichment.
- */
-export async function writeRepoEnrichment(args: WriteRepoEnrichmentArgs): Promise<Repository> {
-  const flags = {
-    user: args.access?.user ?? undefined,
-    overrideAccess: !args.access?.user,
-  };
-
-  return args.payload.update({
-    collection: "repositories",
-    id: args.docId,
-    data: toEnrichmentPayloadData(args.fields, args.enrichedAt),
-    context: { disableRevalidate: true },
-    ...flags,
-  });
 }

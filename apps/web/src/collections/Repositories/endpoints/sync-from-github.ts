@@ -1,10 +1,10 @@
 import type { Endpoint } from "payload";
 import { APIError } from "payload";
 
-import { syncRepositoriesFromGithub } from "@/modules/github/sync-repositories-from-github";
+import { queueAndRunGithubMetadataSync } from "@/jobs/queue-and-run-metadata-sync";
 
 /**
- * POST /api/repositories/sync-from-github — pull pinned + recent repos into Payload.
+ * POST /api/repositories/sync-from-github — queue + run GitHub metadata sync job.
  */
 export const syncFromGithubEndpoint: Endpoint = {
   path: "/sync-from-github",
@@ -15,8 +15,8 @@ export const syncFromGithubEndpoint: Endpoint = {
     }
 
     try {
-      const result = await syncRepositoriesFromGithub(req.payload, { user: req.user });
-      return Response.json(result);
+      const result = await queueAndRunGithubMetadataSync(req.payload);
+      return Response.json({ ok: true, ...result });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Failed to sync from GitHub";
       const status =

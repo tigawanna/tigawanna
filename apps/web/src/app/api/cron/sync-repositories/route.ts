@@ -1,7 +1,7 @@
 import { getPayload } from "payload";
 import config from "@payload-config";
 
-import { syncRepositoriesFromGithub } from "@/modules/github/sync-repositories-from-github";
+import { queueAndRunGithubMetadataSync } from "@/jobs/queue-and-run-metadata-sync";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -17,7 +17,10 @@ function isAuthorized(request: Request): boolean {
 }
 
 /**
- * Daily (and on-demand) GitHub → Payload repository sync.
+ * Weekly (and on-demand) GitHub → Payload metadata sync via Payload Jobs.
+ *
+ * Queues `listAndUpsertRepos` (which enqueues staggered enrich jobs). Enrichment
+ * is drained by `/api/payload-jobs/run?queue=github-enrich&limit=1`.
  *
  * Secured with `CRON_SECRET`. Vercel Cron sends `Authorization: Bearer <CRON_SECRET>`.
  */
@@ -28,7 +31,7 @@ async function handleSync(request: Request) {
 
   try {
     const payload = await getPayload({ config });
-    const result = await syncRepositoriesFromGithub(payload);
+    const result = await queueAndRunGithubMetadataSync(payload);
     return Response.json({ ok: true, ...result });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Repository sync failed";

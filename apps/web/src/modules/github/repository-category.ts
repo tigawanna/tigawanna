@@ -76,3 +76,19 @@ export function inferRepositoryCategory(topics: string[]): RepositoryCategory {
 
   return "other";
 }
+
+/**
+ * Keep an existing manual category, otherwise infer from GitHub topics.
+ *
+ * @param existingCategory - Stored category if any.
+ * @param topics - Incoming GitHub topic names.
+ */
+export function resolveRepositoryCategory(
+  existingCategory: string | null | undefined,
+  topics: string[],
+): RepositoryCategory {
+  if (isRepositoryCategory(existingCategory)) {
+    return existingCategory;
+  }
+  return inferRepositoryCategory(topics);
+}

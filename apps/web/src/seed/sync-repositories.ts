@@ -1,16 +1,16 @@
 import { getPayload } from "payload";
 import config from "@payload-config";
 
-import { syncRepositoriesFromGithub } from "@/modules/github/sync-repositories-from-github";
+import { queueAndRunGithubMetadataSync } from "@/jobs/queue-and-run-metadata-sync";
 
 /**
- * One-shot CLI sync: pull pinned + recent GitHub repos into Payload.
+ * One-shot CLI: queue + run GitHub metadata sync (enrich jobs follow on the enrich queue).
  *
- *   pnpm --filter web exec payload run ./src/seed/sync-repositories.ts
+ *   pnpm sync:repositories
  */
 async function main() {
   const payload = await getPayload({ config });
-  const result = await syncRepositoriesFromGithub(payload);
+  const result = await queueAndRunGithubMetadataSync(payload);
   console.log(JSON.stringify(result, null, 2));
   process.exit(0);
 }

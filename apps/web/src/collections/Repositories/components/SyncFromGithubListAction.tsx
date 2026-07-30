@@ -4,12 +4,14 @@ import { useState } from "react";
 import { Button, toast } from "@payloadcms/ui";
 
 type SyncResponse = {
+  ok: boolean;
+  jobId: number | string;
   created: number;
   updated: number;
+  upserted: number;
+  queuedEnrich: number;
   featured: number;
-  total: number;
   pulledAt: string;
-  spelunkFailures?: number;
 };
 
 /**
@@ -33,7 +35,7 @@ async function readErrorMessage(res: Response): Promise<string> {
 }
 
 /**
- * Repositories list toolbar: pull pinned + recent repos from GitHub into Payload.
+ * Repositories list toolbar: queue GitHub metadata sync (+ staggered enrich jobs).
  *
  * Rendered via `admin.components.beforeList` so it is always visible on the
  * collection list view (no DOM portal required).
@@ -59,8 +61,8 @@ export function SyncFromGithubListAction() {
       <div style={{ minWidth: 0, flex: "1 1 16rem" }}>
         <strong>GitHub cache</strong>
         <p style={{ margin: "0.25rem 0 0", opacity: 0.8, fontSize: "0.9rem" }}>
-          Pull pinned + recent public repos, detect monorepos, and cache root + nested READMEs. Safe
-          to run anytime — including production — when the live GitHub API is rate-limited.
+          Queue a metadata sync (pinned + recent). README / monorepo enrichment runs later via the
+          jobs queue — inspect progress under <strong>Payload Jobs</strong>. Safe to run anytime.
         </p>
       </div>
 
@@ -79,12 +81,8 @@ export function SyncFromGithubListAction() {
               throw new Error(await readErrorMessage(res));
             }
             const result = (await res.json()) as SyncResponse;
-            const spelunkNote =
-              result.spelunkFailures && result.spelunkFailures > 0
-                ? ` · ${result.spelunkFailures} README spelunk failure(s)`
-                : "";
             toast.success(
-              `Pulled ${result.total} repos (${result.created} new, ${result.updated} updated, ${result.featured} featured)${spelunkNote}`,
+              `Job ${result.jobId}: ${result.upserted} repos upserted (${result.created} new), ${result.queuedEnrich} enrich job(s) queued · ${result.featured} featured`,
             );
             window.location.reload();
           } catch (err: unknown) {
@@ -94,7 +92,7 @@ export function SyncFromGithubListAction() {
           }
         }}
       >
-        {busy ? "Pulling…" : "Pull from GitHub"}
+        {busy ? "Queuing…" : "Pull from GitHub"}
       </Button>
     </div>
   );
