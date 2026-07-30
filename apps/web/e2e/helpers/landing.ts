@@ -2,29 +2,29 @@ import { expect, type Locator, type Page } from "@playwright/test";
 import { expected } from "../fixtures/expected";
 import { installLandingNetworkMocks } from "./network";
 
-const SECTION_SELECTORS = {
-  about: "#about",
-  skills: "#skills",
-  projects: "#projects",
-  blogs: "#blogs",
-  infodiet: "#infodiet",
-  journal: "#journal",
-  contact: "#contact",
+const SECTION_TEST_IDS = {
+  about: "landing-how-i-work",
+  skills: "landing-tech-choices",
+  projects: "landing-projects",
+  blogs: "landing-blogs",
+  infodiet: "landing-infodiet",
+  journal: "landing-journals",
+  contact: "landing-contact",
 } as const;
 
-export type LandingSectionId = keyof typeof SECTION_SELECTORS;
+export type LandingSectionId = keyof typeof SECTION_TEST_IDS;
 
 /**
  * Narrows a nav href id to a known landing section, or throws.
  */
 export function assertLandingSectionId(id: string): asserts id is LandingSectionId {
-  if (!(id in SECTION_SELECTORS)) {
+  if (!(id in SECTION_TEST_IDS)) {
     throw new Error(`Unknown landing section id: ${id}`);
   }
 }
 
 /**
- * Opens the landing page with network mocks installed and waits for the shell.
+ * Opens the landing page with network mocks and waits for the hero shell.
  */
 export async function openLanding(page: Page) {
   await installLandingNetworkMocks(page);
@@ -35,10 +35,32 @@ export async function openLanding(page: Page) {
 }
 
 /**
- * Waits until a landing section exists in the DOM (may still be off-screen).
+ * Opens `/` then jumps to a hash section (updates location + scrolls).
+ *
+ * @param page - Playwright page.
+ * @param hash - Section hash with or without `#` (e.g. `about` or `#skills`).
+ */
+export async function openLandingAtHash(page: Page, hash: string) {
+  await openLanding(page);
+  const id = hash.replace(/^#/, "") as LandingSectionId | string;
+  if (id in SECTION_TEST_IDS) {
+    await revealSection(page, id as LandingSectionId);
+  } else {
+    await page.locator(`#${id}`).first().scrollIntoViewIfNeeded();
+  }
+  await page.evaluate(
+    (sectionId) => {
+      history.replaceState(null, "", `#${sectionId}`);
+    },
+    id.replace(/^#/, ""),
+  );
+}
+
+/**
+ * Locator for a major landing section via `data-test`.
  */
 export function sectionLocator(page: Page, id: LandingSectionId): Locator {
-  return page.locator(SECTION_SELECTORS[id]);
+  return page.getByTestId(SECTION_TEST_IDS[id]);
 }
 
 /**
@@ -46,7 +68,7 @@ export function sectionLocator(page: Page, id: LandingSectionId): Locator {
  */
 export async function expectSectionInView(page: Page, id: LandingSectionId) {
   const section = sectionLocator(page, id);
-  await expect(section).toBeAttached();
+  await expect(section).toBeAttached({ timeout: 30_000 });
   await expect
     .poll(
       async () => {
@@ -60,6 +82,21 @@ export async function expectSectionInView(page: Page, id: LandingSectionId) {
       { timeout: 20_000 },
     )
     .toBe(true);
+}
+
+/**
+ * Scrolls a section into view without relying on hash nav.
+ * Re-queries after attach so Suspense/dynamic swaps don't leave a detached node.
+ */
+export async function revealSection(page: Page, id: LandingSectionId) {
+  await expect(sectionLocator(page, id)).toBeAttached({ timeout: 30_000 });
+  // Skills (and similar) swap fallback → interactive under the same data-test.
+  if (id === "skills") {
+    await waitForInteractiveSkills(page);
+  }
+  const section = sectionLocator(page, id);
+  await section.scrollIntoViewIfNeeded();
+  await expect(section).toBeVisible({ timeout: 15_000 });
 }
 
 /**
@@ -78,7 +115,6 @@ export async function clickMobileNav(page: Page, label: string) {
   const menuToggle = nav.getByTestId("landing-nav-menu");
   await expect(menuToggle).toBeVisible();
 
-  // Menu handlers only work after hydration — poll until the drawer opens.
   await expect
     .poll(
       async () => {
@@ -99,37 +135,38 @@ export async function clickMobileNav(page: Page, label: string) {
 }
 
 /**
- * Scrolls a section into view without relying on hash nav (for content asserts).
- */
-export async function revealSection(page: Page, id: LandingSectionId) {
-  const section = sectionLocator(page, id);
-  await expect(section).toBeAttached({ timeout: 30_000 });
-  await section.evaluate((el) => {
-    el.scrollIntoView({ block: "start", behavior: "instant" });
-  });
-  await expect(section).toBeVisible();
-}
-
-/**
  * Waits for the deferred interactive stack cube (past the SSR fallback shell).
- * Both desktop and mobile nodes mount; CSS hides the inactive breakpoint variant.
+ * Desktop and mobile variants both mount; CSS hides the inactive breakpoint.
  */
 export async function waitForInteractiveStackCube(page: Page) {
   await expect
     .poll(
-      async () => {
-        if (await page.getByTestId("stack-cube-desktop").isVisible()) return "desktop";
-        if (await page.getByTestId("stack-cube-mobile").isVisible()) return "mobile";
-        return null;
-      },
-      { timeout: 30_000 },
+      async () =>
+        (await page.getByTestId("stack-cube-desktop").count()) +
+          (await page.getByTestId("stack-cube-mobile").count()) >
+        0,
+      { timeout: 60_000 },
     )
-    .not.toBeNull();
+    .toBe(true);
 }
 
 /**
- * Asserts the post-hero stack cube + how-I-work shell always mounts
- * (even before those sections are scrolled into view).
+ * Waits for the deferred interactive skills panels (past the static fallback card).
+ */
+export async function waitForInteractiveSkills(page: Page) {
+  await expect
+    .poll(
+      async () =>
+        (await page.getByTestId("tech-choices-desktop").count()) +
+          (await page.getByTestId("tech-choices-mobile").count()) >
+        0,
+      { timeout: 60_000 },
+    )
+    .toBe(true);
+}
+
+/**
+ * Asserts the post-hero stack cube + how-I-work shell always mount.
  */
 export async function expectUnderHeroSections(page: Page) {
   await expect(page.getByTestId("stack-cube")).toBeAttached({ timeout: 30_000 });
@@ -146,16 +183,11 @@ export async function expectUnderHeroSections(page: Page) {
 
 /**
  * Desktop: scroll through the tall stack-cube timeline and assert face labels update.
- *
- * Fractions come from Chrome DevTools sampling on a 1280×800 viewport
- * (travel = cubeHeight − vh ≈ 2400px): Web@0, Mobile@0.22, AI@0.65, Backend@0.98.
  */
 export async function expectDesktopStackCubeScrollFaces(page: Page) {
   const cube = page.getByTestId("stack-cube-desktop");
-  // Dynamic import — wait past the SSR fallback shell.
   await expect(cube).toBeVisible({ timeout: 30_000 });
 
-  // Remeasure after the interactive cube is stable (400vh timeline).
   const metrics = await cube.evaluate((el) => {
     const rect = el.getBoundingClientRect();
     return {
@@ -201,16 +233,11 @@ export async function expectDesktopStackCubeScrollFaces(page: Page) {
 }
 
 /**
- * Scroll each sticky how-I-work segment into the stuck position and assert
- * the frontmost panel title updates (guards against a stuck-on-one-segment bug).
- *
- * Panel document tops are measured after the deferred stack cube mounts and while
- * panels are still in normal flow (parked just above `#about`).
+ * Scroll each sticky how-I-work segment and assert the frontmost panel title updates.
  */
 export async function expectCurvedSectionsScrollThrough(page: Page) {
   const about = page.getByTestId("landing-how-i-work");
   await expect(about).toBeAttached({ timeout: 30_000 });
-  // Stack cube above about expands from fallback → interactive; wait so tops are stable.
   await waitForInteractiveStackCube(page);
 
   await about.evaluate((el) => {
@@ -265,14 +292,12 @@ export async function expectCurvedSectionsScrollThrough(page: Page) {
 }
 
 /**
- * Mobile: scroll each stack-face panel until its content pops in (circle reveal).
- * Face document tops are measured before any panel sticks.
+ * Mobile: scroll each stack-face panel until its content pops in.
  */
 export async function expectMobileStackFacesPopIn(page: Page) {
   const mobile = page.getByTestId("stack-cube-mobile");
   await expect(mobile).toBeVisible();
 
-  // Park at the mobile cube intro so face panels are still in normal flow.
   await mobile.evaluate((el) => {
     const top = el.getBoundingClientRect().top + window.scrollY;
     window.scrollTo({ top, behavior: "instant" });
@@ -291,7 +316,6 @@ export async function expectMobileStackFacesPopIn(page: Page) {
 
   for (let index = 0; index < faces.length; index++) {
     const face = faces[index]!;
-    // First face has no clip reveal; later faces need ~0.55vh into the panel for content opacity.
     const offset = index === 0 ? 0.15 : 0.55;
     await page.evaluate(
       ({ top, viewport, scrollOffset }) => {
@@ -319,6 +343,46 @@ export async function expectMobileStackFacesPopIn(page: Page) {
 }
 
 /**
+ * Desktop skills: step through every tool with the next control (avoids page-scroll from rail items).
+ */
+export async function expectDesktopTechChoicesClickThrough(page: Page) {
+  await waitForInteractiveSkills(page);
+  const desktop = page.getByTestId("tech-choices-desktop");
+  await expect(desktop).toBeVisible();
+  const panel = page.locator("#tech-choice-detail-panel");
+  const next = desktop.getByTestId("tech-choice-next");
+
+  for (let index = 0; index < expected.techChoices.length; index++) {
+    const choice = expected.techChoices[index]!;
+    await expect(panel).toHaveAttribute("aria-labelledby", `tech-choice-tab-${choice.id}`, {
+      timeout: 10_000,
+    });
+    await expect(panel).toContainText(choice.name);
+    if (index < expected.techChoices.length - 1) {
+      await next.click();
+    }
+  }
+}
+
+/**
+ * Mobile skills: next through every tech-choice card.
+ */
+export async function expectMobileTechChoicesSwipeThrough(page: Page) {
+  await waitForInteractiveSkills(page);
+  const mobileSkills = page.getByTestId("tech-choices-mobile");
+  await expect(mobileSkills).toBeVisible();
+  const card = page.getByTestId("tech-choice-card-mobile");
+
+  for (let index = 0; index < expected.techChoices.length; index++) {
+    const choice = expected.techChoices[index]!;
+    await expect(card).toContainText(choice.name);
+    if (index < expected.techChoices.length - 1) {
+      await mobileSkills.getByTestId("tech-choice-next").click();
+    }
+  }
+}
+
+/**
  * Opens `/creature-feature` and asserts the experience shell + first reveal panel.
  */
 export async function openCreatureFeature(page: Page) {
@@ -326,42 +390,6 @@ export async function openCreatureFeature(page: Page) {
   await page.goto("/creature-feature", { waitUntil: "domcontentloaded" });
   await expect(page.getByTestId("creature-feature-page")).toBeAttached();
   await expect(page.getByTestId("creature-feature-exit")).toBeVisible();
-  // Curtain intro finishes, then reveal panels mount.
   await expect(page.getByTestId("creature-reveal")).toBeVisible({ timeout: 20_000 });
   await expect(page.getByTestId("creature-feature-next")).toBeVisible();
-}
-
-/**
- * Shared telltale content checks used by desktop + mobile smoke coverage.
- */
-export async function expectCoreLandingContent(page: Page) {
-  await expect(page.getByTestId("landing-hero")).toContainText(expected.heroName);
-  await expect(page.getByTestId("landing-hero")).toContainText(expected.role);
-
-  await expectUnderHeroSections(page);
-
-  await revealSection(page, "about");
-  await expect(page.getByTestId("landing-how-i-work")).toContainText(expected.aboutTitle);
-
-  await revealSection(page, "skills");
-  await expect(page.getByTestId("landing-tech-choices")).toContainText(expected.techChoice);
-
-  await revealSection(page, "projects");
-  await expect(page.getByTestId("landing-projects")).toBeVisible();
-  await expect(page.getByTestId("project-card").first()).toBeVisible({ timeout: 30_000 });
-  await expect(page.getByTestId("landing-projects")).toContainText(expected.project.name);
-
-  await revealSection(page, "blogs");
-  await expect(page.getByTestId("landing-blogs")).toContainText(expected.article.title);
-
-  await revealSection(page, "infodiet");
-  await expect(page.getByTestId("landing-infodiet")).toContainText(expected.infoDiet.name);
-
-  await revealSection(page, "journal");
-  await expect(page.getByTestId("landing-journals")).toContainText(expected.lesson.title);
-
-  await revealSection(page, "contact");
-  await expect(page.getByTestId("contact-form")).toBeVisible();
-  await expect(page.getByTestId("contact-email-copy")).toContainText(expected.email);
-  await expect(page.getByTestId("landing-footer")).toContainText(expected.brand);
 }

@@ -43,6 +43,8 @@ export const expected = {
   stackFaceTestIds: stackCubeFaces.map((face) => `stack-face-${face.label.toLowerCase()}`),
   techChoice: techChoices[0].name,
   techSummarySnippet: techChoices[0].summary.slice(0, 40),
+  /** Full ordered list for skills click/swipe-through coverage. */
+  techChoices: techChoices.map((choice) => ({ id: choice.id, name: choice.name })),
   project: STATIC_PINNED_PROJECTS[0],
   article: STATIC_ARTICLES[0],
   infoDiet: infoDietSources[0],

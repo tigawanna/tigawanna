@@ -6,6 +6,19 @@ import { ProjectsSearchIsland } from "./ProjectsSearchIsland";
 
 const MAX_LANDING_PROJECTS = 6;
 
+function ProjectsHeader() {
+  return (
+    <div className="mx-auto mb-14 max-w-3xl text-center">
+      <SectionEyebrow>Projects</SectionEyebrow>
+      <h2 className="landing-section-heading">Open source projects</h2>
+      <p className="landing-section-lead">
+        Featured pins, recent pushes, and category filters — served from the site CMS and refreshed
+        from GitHub on a schedule.
+      </p>
+    </div>
+  );
+}
+
 export function LandingProjectsShell({ children }: { children: ReactNode }) {
   return (
     <LandingSection
@@ -18,15 +31,7 @@ export function LandingProjectsShell({ children }: { children: ReactNode }) {
       <OrganicDivider tone="darkMid" flip />
 
       <div className="container relative z-10">
-        <div className="mx-auto mb-14 max-w-3xl text-center">
-          <SectionEyebrow>Projects</SectionEyebrow>
-          <h2 className="landing-section-heading">Open source projects</h2>
-          <p className="landing-section-lead">
-            Featured pins, recent pushes, and category filters — served from the site CMS and
-            refreshed from GitHub on a schedule.
-          </p>
-        </div>
-
+        <ProjectsHeader />
         {children}
       </div>
     </LandingSection>
@@ -46,30 +51,20 @@ async function LandingProjectsContent() {
   );
 
   return (
-    <LandingProjectsShell>
-      <ProjectsSearchIsland
-        pinnedRepos={pinnedRepos}
-        recentRepos={recentRepos}
-        featured={featured}
-      />
-    </LandingProjectsShell>
+    <ProjectsSearchIsland pinnedRepos={pinnedRepos} recentRepos={recentRepos} featured={featured} />
   );
 }
 
 /**
- * Projects section — Suspense shell streams while cached repo fixtures resolve.
- * Featured cards SSR in the island fallback; search/filter code-splits after.
+ * Projects section — one stable `#projects` shell; only the grid streams under Suspense
+ * so fallback + content never duplicate the section id in the DOM.
  */
 export function LandingProjects() {
   return (
-    <Suspense
-      fallback={
-        <LandingProjectsShell>
-          <PortfolioGridSkeleton count={6} />
-        </LandingProjectsShell>
-      }
-    >
-      <LandingProjectsContent />
-    </Suspense>
+    <LandingProjectsShell>
+      <Suspense fallback={<PortfolioGridSkeleton count={6} />}>
+        <LandingProjectsContent />
+      </Suspense>
+    </LandingProjectsShell>
   );
 }
