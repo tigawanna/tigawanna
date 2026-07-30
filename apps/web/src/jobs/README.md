@@ -7,7 +7,7 @@ Payload Jobs drive GitHub → Payload repository sync. Inspect runs in Admin →
 | Queue           | Purpose                                                        | Runner                                                                                     |
 | --------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | `github-sync`   | `listAndUpsertRepos` — list + metadata upsert + enqueue enrich | Weekly cron `/api/cron/sync-repositories` or admin **Pull from GitHub** (queue + run once) |
-| `github-enrich` | `enrichRepo` workflow — fetch README/monorepo → write          | Vercel Cron every 5m: `/api/payload-jobs/run?queue=github-enrich&limit=1`                  |
+| `github-enrich` | `enrichRepo` workflow — fetch README/monorepo → write          | Vercel Cron daily (`0 7 * * *`): `/api/payload-jobs/run?queue=github-enrich&limit=1`       |
 
 ## Flow
 

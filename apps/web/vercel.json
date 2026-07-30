@@ -6,7 +6,7 @@
     },
     {
       "path": "/api/payload-jobs/run?queue=github-enrich&limit=1",
-      "schedule": "*/5 * * * *"
+      "schedule": "0 7 * * *"
     }
   ]
 }
