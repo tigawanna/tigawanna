@@ -3,9 +3,6 @@ import config from "@payload-config";
 
 import { queueAndRunGithubMetadataSync } from "@/jobs/queue-and-run-metadata-sync";
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
-
 /**
  * Returns whether the request carries a valid Vercel cron / manual bearer secret.
  */
