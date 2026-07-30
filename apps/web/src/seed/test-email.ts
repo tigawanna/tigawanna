@@ -17,9 +17,9 @@ loadEnv({ path: path.resolve(dirname, "../../.env") });
  * - `send` (default) — raw `payload.sendEmail`
  * - `forgot` — real forgot-password flow (`payload.forgotPassword`)
  *
- * Run from `apps/web`:
- *   pnpm test:email
- *   pnpm test:email:forgot
+ * Run from `apps/web` (see SCRIPTS.md):
+ *   payload run ./src/seed/test-email.ts
+ *   TEST_EMAIL_MODE=forgot payload run ./src/seed/test-email.ts
  */
 async function testEmail() {
   const mode = (process.env.TEST_EMAIL_MODE?.trim() || "send") as "send" | "forgot";

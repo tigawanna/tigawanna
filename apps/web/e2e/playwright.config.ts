@@ -12,7 +12,7 @@ const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:3055";
  *
  * Expects a production build (`pnpm build`) and serves it with `next start`
  * so the server cannot HMR / rewrite files mid-run. Pre-push builds first;
- * locally use `pnpm test:e2e:preview` or `pnpm build && pnpm test:e2e`.
+ * locally use `pnpm build && pnpm test:e2e` (see also `SCRIPTS.md`).
  */
 export default defineConfig({
   testDir: testsDir,

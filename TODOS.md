@@ -126,32 +126,36 @@ apps/web/src/
 - [x] Add `jobs` to `payload.config.ts`: `access.run` (user or `CRON_SECRET`), stub `tasks`/`workflows`, `jobsCollectionOverrides` (`hidden: false`).
 - [x] Point `vercel.json` enrich cron at `/api/payload-jobs/run?queue=github-enrich&limit=1` (legacy metadata cron kept until step 5).
 - [x] Remove Workflow SDK github-sync scaffold (`workflow` package, `withWorkflow`, `src/workflows/github-sync/*`, `/api/workflows/github-sync`, `.well-known/workflow`).
-- Keep legacy `/api/cron/sync-repositories` until cutover (step 5).
+- [x] Keep legacy `/api/cron/sync-repositories` until cutover (step 5).
 
 **Done when:** `payload-jobs` visible; cron/`curl` with `CRON_SECRET` can hit `run` without error; Workflow SDK github-sync scaffold gone.
 
-**Status:** skeleton landed — stubs only; handlers are no-ops until steps 3–4.
+**Status:** ✅ Done
 
 ### 2. Extract domain helpers (kill the mega-function)
 
-- Split `sync-repositories-from-github.ts` into:
-  - **list** → DTOs via `@repo/github`
-  - **upsert metadata** → Payload (no README)
-  - **enrich mapper** → `collectArtifacts` + truncate → Payload fields
-  - **`shouldEnrichRepo(stored, incoming)`** pure compare
-- Delete `withDbRetry` / monolithic sync once callers move.
+- [x] Split sync into helpers under `modules/github/`:
+  - `list-github-repos.ts` — GitHub list → DTOs
+  - `upsert-repo-metadata.ts` — Payload metadata (no README)
+  - `map-enrichment-fields.ts` — skip check, spelunk + truncate, Payload write
+- [x] Add `lastEnrichedAt` field + `src/seed/migrate-add-repository-last-enriched-at.ts` (see `apps/web/SCRIPTS.md`)
+- [x] Thin legacy `syncRepositoriesFromGithub` to call helpers (`withDbRetry` stays until step 6)
 - No Payload/Turso logic in `@repo/github`.
 
 **Done when:** helpers are small, testable, and importable from job handlers.
 
+**Status:** ✅ Done
+
 ### 3. Task: list + upsert metadata + enqueue enrich jobs
 
 - Implement `listAndUpsertRepos` task (`retries` low — mostly local/DB).
-- Persist `pushedAt`; add `lastEnrichedAt` if needed for skip.
+- Persist `pushedAt`; use `lastEnrichedAt` for skip.
 - After upsert, for each `toEnrich[i]`, `payload.jobs.queue({ workflow|task: 'enrichRepo', queue: 'github-enrich', waitUntil: now + i * 5m, input })`.
 - Trigger: admin button + weekly cron queue this task (then `run` default/github-sync queue).
 
 **Done when:** one metadata job seeds/updates repos and schedules enrich jobs without fetching READMEs inline.
+
+**Status:** Next up
 
 ### 4. Enrich as task or small workflow + rate limits
 
@@ -203,4 +207,4 @@ apps/web/src/
 
 ---
 
-**Status:** Step 1 skeleton done (Payload Jobs enabled, Workflow SDK github-sync torn down). Next: step 2 domain helpers.
+**Status:** Steps 1–2 done. Next: step 3 (`listAndUpsertRepos` task + staggered enrich enqueue).

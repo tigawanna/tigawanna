@@ -1,19 +1,14 @@
 import type { Payload, TypedUser } from "payload";
 import { revalidatePath, revalidateTag } from "next/cache";
-import {
-  collectArtifacts,
-  createGitHubClient,
-  type GithubRepoNode,
-  type GithubRepoSnapshot,
-  type MonorepoKind,
-  type RepoPackageUnit,
-} from "@repo/github";
+import { createGitHubClient } from "@repo/github";
 
+import { listGithubRepos, requireGithubPat } from "./list-github-repos";
 import {
-  inferRepositoryCategory,
-  isRepositoryCategory,
-  type RepositoryCategory,
-} from "./repository-category";
+  mapEnrichmentFields,
+  shouldEnrichRepo,
+  writeRepoEnrichment,
+} from "./map-enrichment-fields";
+import { clearStaleFeaturedFlags, resolveCategory, topicNames } from "./upsert-repo-metadata";
 
 export type SyncRepositoriesResult = {
   created: number;
@@ -32,38 +27,8 @@ type SyncOpOptions = {
   skipSpelunk?: boolean;
 };
 
-type SpelunkFields = {
-  defaultBranch: string;
-  isMonorepo: boolean;
-  monorepoKind: MonorepoKind | null;
-  readmeMarkdown: string;
-  packages: Array<{
-    name: string;
-    path: string;
-    kind: RepoPackageUnit["kind"];
-    description: string;
-    readmePath: string;
-    readmeMarkdown: string;
-  }>;
-};
-
-/** Soft cap for Turso/libSQL row payloads — large READMEs were timing out inserts. */
-const MAX_STORED_README_CHARS = 6_000;
-const MAX_NESTED_README_CHARS = 4_000;
 const DB_RETRY_ATTEMPTS = 4;
 const DB_RETRY_BASE_MS = 750;
-
-/**
- * Truncates README text for Payload storage (Turso-friendly payload size).
- *
- * @param markdown - Full README markdown.
- * @param maxChars - Maximum characters to keep.
- */
-function truncateStoredReadme(markdown: string, maxChars = MAX_STORED_README_CHARS): string {
-  const trimmed = markdown.trim();
-  if (trimmed.length <= maxChars) return trimmed;
-  return `${trimmed.slice(0, maxChars).trimEnd()}\n\n…(truncated)`;
-}
 
 /**
  * True when an error looks like a transient Turso / network failure.
@@ -99,6 +64,7 @@ function isTransientDbError(err: unknown): boolean {
 
 /**
  * Retries a DB operation on transient Turso/network errors.
+ * Temporary — removed when callers move to Payload Jobs (plan step 6).
  *
  * @param label - Log label for diagnostics.
  * @param run - Async operation to run.
@@ -124,17 +90,6 @@ async function withDbRetry<T>(label: string, run: () => Promise<T>): Promise<T> 
 }
 
 /**
- * Resolves a GitHub PAT from env (`GH_PAT`).
- */
-function requireGithubPat(): string {
-  const pat = process.env.GH_PAT?.trim();
-  if (!pat) {
-    throw new Error("Set GH_PAT to sync repositories from GitHub.");
-  }
-  return pat;
-}
-
-/**
  * Busts Next.js cache tags for landing project cards and detail routes.
  */
 function bustRepositoryCaches() {
@@ -148,312 +103,126 @@ function bustRepositoryCaches() {
 }
 
 /**
- * Topic names from a GitHub repo node.
- */
-function topicNames(repo: GithubRepoNode): string[] {
-  return (repo.repositoryTopics?.nodes ?? [])
-    .map((node) => node.topic?.name)
-    .filter((tag): tag is string => Boolean(tag));
-}
-
-/**
- * Resolves category for upsert: keep an existing manual value, otherwise infer from topics.
- */
-function resolveCategory(
-  repo: GithubRepoNode,
-  existingCategory: string | null | undefined,
-): RepositoryCategory {
-  if (isRepositoryCategory(existingCategory)) {
-    return existingCategory;
-  }
-  return inferRepositoryCategory(topicNames(repo));
-}
-
-/**
- * Maps a GitHub repo node into a spelunk snapshot (needs default branch).
- */
-function toRepoSnapshot(repo: GithubRepoNode): GithubRepoSnapshot {
-  return {
-    id: repo.nameWithOwner,
-    name: repo.name,
-    nameWithOwner: repo.nameWithOwner,
-    description: repo.description ?? null,
-    homepageUrl: repo.homepageUrl || null,
-    openGraphImageUrl: repo.openGraphImageUrl || null,
-    topics: topicNames(repo),
-    defaultBranch: repo.defaultBranchRef?.name?.trim() || "main",
-  };
-}
-
-/**
- * Maps spelunk package units into Payload array rows.
- * Root README lives on `readmeMarkdown` only — avoid duplicating huge blobs in the array.
- */
-function toPackageRows(units: RepoPackageUnit[]) {
-  return units.map((unit) => ({
-    name: unit.name,
-    path: unit.path,
-    kind: unit.kind,
-    description: (unit.description ?? "").slice(0, 500),
-    readmePath: unit.readmePath ?? "",
-    readmeMarkdown:
-      unit.path === "." || unit.kind === "root"
-        ? ""
-        : truncateStoredReadme(unit.readme ?? "", MAX_NESTED_README_CHARS),
-  }));
-}
-
-/**
- * Spelunks tree + nested READMEs for one repo (best-effort).
- */
-async function spelunkRepositoryFields(
-  client: ReturnType<typeof createGitHubClient>,
-  repo: GithubRepoNode,
-): Promise<SpelunkFields> {
-  const snapshot = toRepoSnapshot(repo);
-  const spelunk = await collectArtifacts(client, snapshot);
-
-  return {
-    defaultBranch: snapshot.defaultBranch,
-    isMonorepo: spelunk.monorepo.isMonorepo,
-    monorepoKind: spelunk.monorepo.kind,
-    readmeMarkdown: truncateStoredReadme(spelunk.readme ?? ""),
-    packages: toPackageRows(spelunk.packages),
-  };
-}
-
-/**
- * Maps a GitHub repo node into Payload repository field data.
- */
-function toRepositoryData(
-  repo: GithubRepoNode,
-  featured: boolean,
-  syncedAt: string,
-  category: RepositoryCategory,
-  spelunk: SpelunkFields | null,
-) {
-  return {
-    name: repo.name,
-    nameWithOwner: repo.nameWithOwner,
-    url: repo.url,
-    homepageUrl: repo.homepageUrl || "",
-    openGraphImageUrl: repo.openGraphImageUrl || "",
-    description: repo.description || "",
-    descriptionHTML: repo.descriptionHTML || "",
-    topics: topicNames(repo).map((tag) => ({ tag })),
-    category,
-    featured,
-    pushedAt: repo.pushedAt,
-    isPrivate: Boolean(repo.isPrivate),
-    isFork: Boolean(repo.isFork),
-    isArchived: Boolean(repo.isArchived),
-    stargazerCount: repo.stargazerCount ?? 0,
-    forkCount: repo.forkCount ?? 0,
-    lastSyncedAt: syncedAt,
-    ...(spelunk
-      ? {
-          defaultBranch: spelunk.defaultBranch,
-          isMonorepo: spelunk.isMonorepo,
-          monorepoKind: spelunk.monorepoKind,
-          readmeMarkdown: spelunk.readmeMarkdown,
-          packages: spelunk.packages,
-        }
-      : {}),
-  };
-}
-
-/**
  * Pulls pinned + recent public repos from GitHub and upserts them into Payload.
  *
- * Featured = currently pinned on GitHub. Existing rows not in this pull keep
- * their data but lose featured if they were only featured via a previous pin.
- *
- * Category is inferred from topics only when the row has no category yet —
- * admin overrides are preserved across syncs.
- *
- * Spelunk (tree + package.json + nested READMEs) runs per repo so the detail
- * page can render from Payload without live GitHub fetches.
+ * Legacy monolithic entry used by cron / admin / seed until Payload Jobs cutover.
+ * Domain work lives in list / upsert / enrich helpers.
  */
 export async function syncRepositoriesFromGithub(
   payload: Payload,
   options: SyncOpOptions = {},
 ): Promise<SyncRepositoriesResult> {
   const client = createGitHubClient(requireGithubPat());
-  const recentLimit = options.recentLimit ?? 100;
-  const access = {
-    user: options.user ?? undefined,
-    overrideAccess: !options.user,
+  const access = { user: options.user ?? null };
+  const flags = {
+    user: access.user ?? undefined,
+    overrideAccess: !access.user,
   };
 
-  const [pinned, recentResult] = await Promise.all([
-    client.getPinnedRepos(),
-    client.getRecentRepos({ first: recentLimit, isFork: false }),
-  ]);
+  const { repos, pinnedKeys, pulledAt } = await listGithubRepos({
+    recentLimit: options.recentLimit,
+  });
 
-  const recent = recentResult.data?.viewer.repositories.nodes ?? [];
-  const pinnedKeys = new Set(pinned.map((repo) => repo.nameWithOwner));
-
-  // Prefer the richer recent node when a repo appears in both lists.
-  const byKey = new Map<string, GithubRepoNode>();
-  for (const repo of recent) {
-    byKey.set(repo.nameWithOwner, repo);
-  }
-  for (const repo of pinned) {
-    if (!byKey.has(repo.nameWithOwner)) {
-      byKey.set(repo.nameWithOwner, repo);
-    }
-  }
-
-  const syncedAt = new Date().toISOString();
   let created = 0;
   let updated = 0;
   let spelunkFailures = 0;
 
-  for (const repo of byKey.values()) {
+  for (const { node: repo, featured } of repos) {
     try {
-      const existing = await withDbRetry(`find ${repo.nameWithOwner}`, () =>
-        payload.find({
+      const row = await withDbRetry(`find ${repo.nameWithOwner}`, async () => {
+        const existing = await payload.find({
           collection: "repositories",
           where: { nameWithOwner: { equals: repo.nameWithOwner } },
           limit: 1,
           depth: 0,
-          ...access,
-        }),
-      );
-
-      const row = existing.docs[0];
+          ...flags,
+        });
+        return existing.docs[0] ?? null;
+      });
       const category = resolveCategory(repo, row?.category);
+      const data = {
+        name: repo.name,
+        nameWithOwner: repo.nameWithOwner,
+        url: repo.url,
+        homepageUrl: repo.homepageUrl || "",
+        openGraphImageUrl: repo.openGraphImageUrl || "",
+        description: repo.description || "",
+        descriptionHTML: repo.descriptionHTML || "",
+        topics: topicNames(repo).map((tag) => ({ tag })),
+        category,
+        featured,
+        pushedAt: repo.pushedAt,
+        isPrivate: Boolean(repo.isPrivate),
+        isFork: Boolean(repo.isFork),
+        isArchived: Boolean(repo.isArchived),
+        stargazerCount: repo.stargazerCount ?? 0,
+        forkCount: repo.forkCount ?? 0,
+        lastSyncedAt: pulledAt,
+      };
 
-      let spelunk: SpelunkFields | null = null;
-      if (!options.skipSpelunk) {
-        try {
-          spelunk = await spelunkRepositoryFields(client, repo);
-        } catch (err: unknown) {
-          spelunkFailures += 1;
-          console.error(`[repositories] Spelunk failed for ${repo.nameWithOwner}`, err);
+      const doc = await withDbRetry(`upsert-meta ${repo.nameWithOwner}`, async () => {
+        if (row) {
+          return payload.update({
+            collection: "repositories",
+            id: row.id,
+            data,
+            context: { disableRevalidate: true },
+            ...flags,
+          });
         }
+        return payload.create({
+          collection: "repositories",
+          data: { ...data, isMonorepo: false },
+          context: { disableRevalidate: true },
+          ...flags,
+        });
+      });
+
+      if (row) updated += 1;
+      else created += 1;
+
+      if (options.skipSpelunk) continue;
+
+      if (
+        !shouldEnrichRepo(
+          {
+            lastEnrichedAt: doc.lastEnrichedAt,
+            pushedAt: doc.pushedAt,
+          },
+          { pushedAt: repo.pushedAt },
+        )
+      ) {
+        continue;
       }
 
-      const data = toRepositoryData(
-        repo,
-        pinnedKeys.has(repo.nameWithOwner),
-        syncedAt,
-        category,
-        spelunk,
-      );
-
       try {
-        if (row) {
-          await withDbRetry(`update ${repo.nameWithOwner}`, () =>
-            payload.update({
-              collection: "repositories",
-              id: row.id,
-              data,
-              context: { disableRevalidate: true },
-              ...access,
-            }),
-          );
-          updated += 1;
-        } else {
-          await withDbRetry(`create ${repo.nameWithOwner}`, () =>
-            payload.create({
-              collection: "repositories",
-              data: {
-                ...data,
-                isMonorepo: spelunk?.isMonorepo ?? false,
-              },
-              context: { disableRevalidate: true },
-              ...access,
-            }),
-          );
-          created += 1;
-        }
+        const fields = await mapEnrichmentFields(client, repo);
+        await withDbRetry(`enrich ${repo.nameWithOwner}`, () =>
+          writeRepoEnrichment({
+            payload,
+            docId: doc.id,
+            fields,
+            enrichedAt: pulledAt,
+            access,
+          }),
+        );
       } catch (err: unknown) {
-        // Large README / Turso timeouts — fall back to metadata-only so sync continues.
-        console.error(
-          `[repositories] Upsert with README failed for ${repo.nameWithOwner}; retrying metadata only`,
-          err,
-        );
         spelunkFailures += 1;
-
-        const metadataOnly = toRepositoryData(
-          repo,
-          pinnedKeys.has(repo.nameWithOwner),
-          syncedAt,
-          category,
-          null,
-        );
-
-        try {
-          if (row) {
-            await withDbRetry(`update-meta ${repo.nameWithOwner}`, () =>
-              payload.update({
-                collection: "repositories",
-                id: row.id,
-                data: metadataOnly,
-                context: { disableRevalidate: true },
-                ...access,
-              }),
-            );
-            updated += 1;
-          } else {
-            await withDbRetry(`create-meta ${repo.nameWithOwner}`, () =>
-              payload.create({
-                collection: "repositories",
-                data: { ...metadataOnly, isMonorepo: false },
-                context: { disableRevalidate: true },
-                ...access,
-              }),
-            );
-            created += 1;
-          }
-        } catch (retryErr: unknown) {
-          console.error(
-            `[repositories] Metadata upsert failed for ${repo.nameWithOwner}`,
-            retryErr,
-          );
-        }
+        console.error(`[repositories] Enrichment failed for ${repo.nameWithOwner}`, err);
       }
     } catch (err: unknown) {
       spelunkFailures += 1;
-      console.error(`[repositories] Skipping ${repo.nameWithOwner} after DB failures`, err);
+      console.error(`[repositories] Skipping ${repo.nameWithOwner} after failures`, err);
     }
   }
 
-  // Clear featured on rows that are no longer GitHub-pinned.
-  if (pinnedKeys.size > 0) {
-    try {
-      const previouslyFeatured = await withDbRetry("find previously featured", () =>
-        payload.find({
-          collection: "repositories",
-          where: {
-            and: [{ featured: { equals: true } }, { nameWithOwner: { not_in: [...pinnedKeys] } }],
-          },
-          limit: 100,
-          depth: 0,
-          ...access,
-        }),
-      );
-
-      for (const row of previouslyFeatured.docs) {
-        try {
-          await withDbRetry(`unfeature ${row.nameWithOwner}`, () =>
-            payload.update({
-              collection: "repositories",
-              id: row.id,
-              data: { featured: false },
-              context: { disableRevalidate: true },
-              ...access,
-            }),
-          );
-          updated += 1;
-        } catch (err: unknown) {
-          console.error(`[repositories] Failed to unfeature ${row.nameWithOwner}`, err);
-        }
-      }
-    } catch (err: unknown) {
-      console.error("[repositories] Failed to clear stale featured flags", err);
-    }
+  try {
+    const cleared = await withDbRetry("clear stale featured", () =>
+      clearStaleFeaturedFlags(payload, pinnedKeys, access),
+    );
+    updated += cleared;
+  } catch (err: unknown) {
+    console.error("[repositories] Failed to clear stale featured flags", err);
   }
 
   bustRepositoryCaches();
@@ -461,9 +230,9 @@ export async function syncRepositoriesFromGithub(
   return {
     created,
     updated,
-    featured: pinnedKeys.size,
-    total: byKey.size,
-    pulledAt: syncedAt,
+    featured: pinnedKeys.length,
+    total: repos.length,
+    pulledAt,
     spelunkFailures,
   };
 }

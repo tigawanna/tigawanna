@@ -10,8 +10,7 @@ export type { ImportFromDevtoResult as ImportDevtoResult };
 
 /**
  * CLI / seed wrapper — prefer the Blogs list “Import from Dev.to” button in admin.
- *
- *   pnpm import:devto
+ * See SCRIPTS.md for the one-off `payload run` command.
  */
 export async function importDevtoPosts(payload?: Payload): Promise<ImportFromDevtoResult> {
   const ownsPayload = !payload;

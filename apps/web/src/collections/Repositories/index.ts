@@ -228,6 +228,19 @@ export const Repositories: CollectionConfig = {
       },
     },
     {
+      name: "lastEnrichedAt",
+      type: "date",
+      admin: {
+        position: "sidebar",
+        readOnly: true,
+        date: {
+          pickerAppearance: "dayAndTime",
+        },
+        description:
+          "When README / monorepo enrichment last succeeded. Sync skips spelunk when GitHub pushedAt is not newer.",
+      },
+    },
+    {
       name: "defaultBranch",
       type: "text",
       admin: {

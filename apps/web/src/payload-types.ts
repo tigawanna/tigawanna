@@ -356,6 +356,10 @@ export interface Repository {
    */
   lastSyncedAt?: string | null;
   /**
+   * When README / monorepo enrichment last succeeded. Sync skips spelunk when GitHub pushedAt is not newer.
+   */
+  lastEnrichedAt?: string | null;
+  /**
    * Default branch used when resolving README asset URLs.
    */
   defaultBranch?: string | null;
@@ -692,6 +696,7 @@ export interface RepositoriesSelect<T extends boolean = true> {
   stargazerCount?: T;
   forkCount?: T;
   lastSyncedAt?: T;
+  lastEnrichedAt?: T;
   defaultBranch?: T;
   isMonorepo?: T;
   monorepoKind?: T;

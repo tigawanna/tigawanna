@@ -21,7 +21,7 @@ loadEnv({ path: path.resolve(dirname, "../../.env") });
  * Verifies published counts match expectations, then exits non-zero on mismatch.
  *
  * Run from `apps/web` (prefer stopping the Next/Payload server first):
- *   pnpm seed:all
+ *   pnpm seed
  */
 async function seedAll() {
   const payload = await getPayload({ config: payloadConfig });

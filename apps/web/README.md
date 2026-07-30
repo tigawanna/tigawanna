@@ -11,6 +11,9 @@ pnpm --filter web dev       # http://localhost:3055
 
 Admin: [http://localhost:3055/admin](http://localhost:3055/admin)
 
+Everyday scripts: `dev`, `build`, `seed`, `sync:repositories`, `generate:types`, …  
+One-off migrations / rare seed helpers: see **[SCRIPTS.md](./SCRIPTS.md)**.
+
 ## Stack
 
 - Next.js 16 (`cacheComponents`, experimental `viewTransition`)
@@ -26,12 +29,9 @@ Admin: [http://localhost:3055/admin](http://localhost:3055/admin)
 - Admin → **Blogs** — one collection; each entry is `Journal` or `Blog post` (`kind`). Switch later if a journal grows into a full post.
 - Public routes: `/journals` (journals), `/blogs` (posts), plus `[slug]` detail pages
 - Landing sections filter by `kind`
-- Seed fixtures: `pnpm seed:journals` (journals) · `pnpm seed:all` (journals + Dev.to import + verify)
+- Seed: `pnpm seed` (journals + Dev.to import + verify). Journals-only / Dev.to CLI / cover backfill: [SCRIPTS.md](./SCRIPTS.md)
 - Re-import published Dev.to posts anytime from Admin → **Blogs** → **Import from Dev.to** (optional `DEVTO_USERNAME`)
-- After adding `coverUrl`: `pnpm migrate:cover-url` then `pnpm backfill:covers` (or re-run Import from Dev.to)
-- One-time migrate from the old Journals collection: `pnpm migrate:journals-to-blogs`
-- Contact inbox table: `pnpm migrate:contact-messages` (then Admin → **Contact messages**)
-- Dev.to workflow (posts): ⋯ menu **Publish to Dev.to** / **Sync from Dev.to** (also under Meta → Dev.to). Seeds a Dev.to draft + canonical URL → edit images there → Sync back. Requires `DEV_TO_KEY` + site origin (`NEXT_PUBLIC_SITE_URL` or `VERCEL_URL`). After schema pull: `pnpm migrate:devto-article-id`
+- Dev.to workflow (posts): ⋯ menu **Publish to Dev.to** / **Sync from Dev.to** (also under Meta → Dev.to). Requires `DEV_TO_KEY` + site origin (`NEXT_PUBLIC_SITE_URL` or `VERCEL_URL`).
 
 ## Notes
 
