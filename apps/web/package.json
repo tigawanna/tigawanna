@@ -19,6 +19,8 @@
     "migrate:cover-url": "node --experimental-strip-types ./src/seed/migrate-add-cover-url.ts",
     "migrate:devto-article-id": "node --experimental-strip-types ./src/seed/migrate-add-devto-article-id.ts",
     "migrate:contact-messages": "node --experimental-strip-types ./src/seed/migrate-contact-messages.ts",
+    "migrate:repositories": "node --experimental-strip-types ./src/seed/migrate-repositories.ts",
+    "sync:repositories": "cross-env NODE_OPTIONS=--no-deprecation payload run ./src/seed/sync-repositories.ts",
     "seed:all": "cross-env NODE_OPTIONS=--no-deprecation CI=1 payload run ./src/seed/seed-all.ts",
     "test:email": "cross-env NODE_OPTIONS=--no-deprecation payload run ./src/seed/test-email.ts",
     "test:email:forgot": "cross-env NODE_OPTIONS=--no-deprecation TEST_EMAIL_MODE=forgot payload run ./src/seed/test-email.ts",
@@ -34,6 +36,7 @@
     "@payloadcms/next": "3.86.0",
     "@payloadcms/richtext-lexical": "3.86.0",
     "@payloadcms/ui": "3.86.0",
+    "@repo/github": "workspace:*",
     "@repo/site-constants": "workspace:*",
     "@repo/telegram": "workspace:*",
     "@tailwindcss/postcss": "^4.1.18",
@@ -59,6 +62,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@libsql/client": "0.14.0",
     "@playwright/test": "^1.57.0",
     "@types/node": "^24.12.3",
     "@types/react": "19.2.14",

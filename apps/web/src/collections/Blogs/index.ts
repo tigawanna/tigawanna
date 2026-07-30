@@ -10,7 +10,7 @@ import {
   aiDraftStatusEndpoint,
   aiRefineEndpoint,
 } from "./endpoints/ai-draft";
-import { openDevtoEndpoint, syncDevtoEndpoint } from "./endpoints/devto";
+import { openDevtoEndpoint, syncDevtoEndpoint, importFromDevtoEndpoint } from "./endpoints/devto";
 import { fromMarkdownEndpoint } from "./endpoints/from-markdown";
 import { toMarkdownEndpoint } from "./endpoints/to-markdown";
 import { revalidateBlog, revalidateBlogDelete } from "./hooks/revalidateBlog";
@@ -41,8 +41,7 @@ export const Blogs: CollectionConfig = {
     description:
       "All writing lives here. Mark an entry as Journal or Blog post — you can switch later if a short note grows into a full post.",
     components: {
-      // Mount only — button is portaled next to "Create New" in the list header.
-      beforeList: ["/collections/Blogs/components/AiDraftListAction#AiDraftListAction"],
+      beforeList: ["/collections/Blogs/components/BlogsListActions#BlogsListActions"],
       edit: {
         editMenuItems: ["/collections/Blogs/components/BlogEditMenuItems#BlogEditMenuItems"],
       },
@@ -55,6 +54,7 @@ export const Blogs: CollectionConfig = {
     aiRefineEndpoint,
     toMarkdownEndpoint,
     fromMarkdownEndpoint,
+    importFromDevtoEndpoint,
     openDevtoEndpoint,
     syncDevtoEndpoint,
   ],

@@ -8,6 +8,7 @@ import sharp from "sharp";
 import { Blogs } from "./collections/Blogs";
 import { ContactMessages } from "./collections/ContactMessages";
 import { Media } from "./collections/Media";
+import { Repositories } from "./collections/Repositories";
 import { Users } from "./collections/Users";
 import { getSiteUrl } from "./lib/site-url";
 import { telegramEmailAdapter } from "./lib/telegram/email-adapter";
@@ -63,7 +64,7 @@ export default buildConfig({
       },
     },
   },
-  collections: [Users, Media, Blogs, ContactMessages],
+  collections: [Users, Media, Blogs, ContactMessages, Repositories],
   // Auth / system mail (forgot password, etc.) → Telegram via @repo/telegram.
   email: telegramEmailAdapter,
   editor: lexicalEditor(),

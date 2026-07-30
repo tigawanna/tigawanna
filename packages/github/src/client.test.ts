@@ -62,6 +62,7 @@ function createRequestError(status: number, message: string) {
 describe("GitHubClient", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.unstubAllGlobals();
   });
 
   it("creates a client with the provided token", () => {
@@ -103,14 +104,23 @@ describe("GitHubClient", () => {
     });
   });
 
-  it("returns empty repos when org PAT policy blocks all repositories", async () => {
+  it("keeps partial recent repos when org PAT policy nulls individual nodes", async () => {
     const orgPolicyMessage =
       "The 'SpaceyaTech' organization forbids access via a personal access tokens (classic) if the token's lifetime is greater than 7 days.";
+    const recentRepo = createRepoNode({ name: "recent", nameWithOwner: "octocat/recent" });
 
-    octokitMocks.graphql.mockRejectedValue(
-      new Error(
-        `Request failed due to following response errors:\n - ${orgPolicyMessage}\n - ${orgPolicyMessage}`,
-      ),
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          data: {
+            viewer: { repositories: { nodes: [recentRepo, null] } },
+            rateLimit: null,
+          },
+          errors: [{ message: orgPolicyMessage }],
+        }),
+      }),
     );
 
     const client = createGitHubClient("ghp_test_token");
@@ -118,44 +128,61 @@ describe("GitHubClient", () => {
       data: {
         viewer: {
           pinnedItems: { nodes: [] },
-          repositories: { nodes: [] },
+          repositories: { nodes: [recentRepo] },
         },
       },
-      errors: [
-        expect.objectContaining({ message: orgPolicyMessage }),
-        expect.objectContaining({ message: orgPolicyMessage }),
-      ],
+      errors: [expect.objectContaining({ message: orgPolicyMessage })],
       rateLimit: null,
     });
+
+    vi.unstubAllGlobals();
   });
 
-  it("rethrows non-ignorable GraphQL aggregate failures", async () => {
-    octokitMocks.graphql.mockRejectedValue(
-      new Error(
-        "Request failed due to following response errors:\n - Resource not accessible by personal access token",
-      ),
+  it("returns null data when recent-repos GraphQL HTTP fails", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: false,
+        status: 401,
+        statusText: "Unauthorized",
+      }),
     );
 
     const client = createGitHubClient("ghp_test_token");
-    await expect(client.getRecentRepos()).rejects.toThrow(
-      "Resource not accessible by personal access token",
-    );
+    await expect(client.getRecentRepos()).resolves.toEqual({
+      data: null,
+      errors: [
+        expect.objectContaining({
+          message: "Unauthorized",
+          extensions: expect.objectContaining({ code: "HTTP_ERROR" }),
+        }),
+      ],
+      rateLimit: null,
+    });
+
+    vi.unstubAllGlobals();
   });
 
   it("returns recent repositories in the viewer response shape", async () => {
     const recentRepo = createRepoNode({ name: "recent", nameWithOwner: "octocat/recent" });
 
-    octokitMocks.graphql.mockResolvedValue({
-      viewer: { repositories: { nodes: [recentRepo] } },
-      errors: [{ message: "partial failure" }],
-      rateLimit: {
-        cost: 1,
-        limit: 5000,
-        remaining: 4999,
-        used: 1,
-        resetAt: "2026-01-01T01:00:00Z",
-      },
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        data: {
+          viewer: { repositories: { nodes: [recentRepo] } },
+          rateLimit: {
+            cost: 1,
+            limit: 5000,
+            remaining: 4999,
+            used: 1,
+            resetAt: "2026-01-01T01:00:00Z",
+          },
+        },
+        errors: [{ message: "partial failure" }],
+      }),
     });
+    vi.stubGlobal("fetch", fetchMock);
 
     const client = createGitHubClient("ghp_test_token");
     await expect(client.getRecentRepos({ first: 25 })).resolves.toEqual({
@@ -175,13 +202,15 @@ describe("GitHubClient", () => {
       },
     });
 
-    expect(octokitMocks.graphql).toHaveBeenCalledWith(RECENT_REPOS_QUERY, {
-      first: 25,
-      isFork: false,
-      orderField: "PUSHED_AT",
-      orderDirection: "DESC",
-      request: { cache: "no-store" },
-    });
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://api.github.com/graphql",
+      expect.objectContaining({
+        method: "POST",
+        cache: "no-store",
+      }),
+    );
+
+    vi.unstubAllGlobals();
   });
 
   it("excludes private repositories from pinned results", async () => {
@@ -216,10 +245,19 @@ describe("GitHubClient", () => {
       isPrivate: true,
     });
 
-    octokitMocks.graphql.mockResolvedValue({
-      viewer: { repositories: { nodes: [publicRepo, privateRepo] } },
-      errors: [],
-    });
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          data: {
+            viewer: { repositories: { nodes: [publicRepo, privateRepo] } },
+            rateLimit: null,
+          },
+          errors: [],
+        }),
+      }),
+    );
 
     const client = createGitHubClient("ghp_test_token");
     await expect(client.getRecentRepos()).resolves.toEqual({
@@ -232,6 +270,8 @@ describe("GitHubClient", () => {
       errors: [],
       rateLimit: null,
     });
+
+    vi.unstubAllGlobals();
   });
 
   it("excludes private repositories from indexing results", async () => {

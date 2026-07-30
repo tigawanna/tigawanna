@@ -1,7 +1,6 @@
 import "server-only";
 
-import { cacheLife, cacheTag } from "next/cache";
-import { STATIC_PINNED_PROJECTS, STATIC_RECENT_PROJECTS } from "@/components/landing/data/static";
+import { getCachedPinnedRepos, getCachedRecentRepos } from "./repositories";
 import type { GithubRepoNode } from "@/components/landing/types/github";
 import type { JournalPreviewItem } from "@/types/journals";
 import { getLandingTilPreviews } from "./journals";
@@ -20,21 +19,16 @@ export async function getLandingLessonPreviews(): Promise<JournalPreviewItem[]> 
 
 /**
  * Pinned GitHub repos for the projects section.
- * Live GitHub GraphQL can be wired later; fixtures keep the experiment offline-friendly.
+ * Served from the Payload repositories cache (synced via admin "Pull from GitHub").
  */
 export async function getPinnedRepos(): Promise<GithubRepoNode[]> {
-  "use cache";
-  cacheLife("hours");
-  cacheTag("landing-pinned-repos");
-  return STATIC_PINNED_PROJECTS;
+  return getCachedPinnedRepos();
 }
 
 /**
  * Recently pushed public repos for topic filter / search.
+ * Served from the Payload repositories cache (synced via admin "Pull from GitHub").
  */
 export async function getRecentRepos(): Promise<GithubRepoNode[]> {
-  "use cache";
-  cacheLife("hours");
-  cacheTag("landing-recent-repos");
-  return STATIC_RECENT_PROJECTS;
+  return getCachedRecentRepos();
 }

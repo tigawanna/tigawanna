@@ -8,6 +8,8 @@ const serverEnvSchema = z.object({
   DEV_TO_KEY: z.string().optional(),
   DATABASE_URL: z.string().default(DEFAULT_DATABASE_URL),
   DATABASE_AUTH_TOKEN: z.string().optional(),
+  /** Payload CMS origin for repository fallbacks (default: https://www.tigawanna.vip). */
+  PAYLOAD_CMS_URL: z.string().optional(),
   VITE_APP_URL: z.string().optional(),
   POSTHOG_API_KEY: z.string().optional(),
   POSTHOG_HOST: z.string().optional(),

@@ -71,6 +71,7 @@ export interface Config {
     media: Media;
     blogs: Blog;
     "contact-messages": ContactMessage;
+    repositories: Repository;
     "payload-kv": PayloadKv;
     "payload-jobs": PayloadJob;
     "payload-locked-documents": PayloadLockedDocument;
@@ -83,6 +84,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     blogs: BlogsSelect<false> | BlogsSelect<true>;
     "contact-messages": ContactMessagesSelect<false> | ContactMessagesSelect<true>;
+    repositories: RepositoriesSelect<false> | RepositoriesSelect<true>;
     "payload-kv": PayloadKvSelect<false> | PayloadKvSelect<true>;
     "payload-jobs": PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     "payload-locked-documents":
@@ -281,6 +283,71 @@ export interface ContactMessage {
   createdAt: string;
 }
 /**
+ * Open-source project cards. Pull from GitHub to refresh the cache used when the live API is rate-limited.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "repositories".
+ */
+export interface Repository {
+  id: number;
+  /**
+   * Repository name (card title).
+   */
+  name: string;
+  /**
+   * owner/repo — unique key for upserts and detail routes.
+   */
+  nameWithOwner: string;
+  /**
+   * GitHub repository URL (Source link).
+   */
+  url: string;
+  /**
+   * Optional project site URL.
+   */
+  homepageUrl?: string | null;
+  /**
+   * Cover image URL (GitHub open-graph image).
+   */
+  openGraphImageUrl?: string | null;
+  /**
+   * Short card description.
+   */
+  description?: string | null;
+  /**
+   * HTML description from GitHub (optional).
+   */
+  descriptionHTML?: string | null;
+  /**
+   * Repository topics / tech tags shown on cards.
+   */
+  topics?:
+    | {
+        tag: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Shown under the Featured filter (GitHub pinned repos).
+   */
+  featured: boolean;
+  /**
+   * Last push time from GitHub.
+   */
+  pushedAt: string;
+  isPrivate: boolean;
+  isFork?: boolean | null;
+  isArchived?: boolean | null;
+  stargazerCount?: number | null;
+  forkCount?: number | null;
+  /**
+   * When this row was last updated from GitHub.
+   */
+  lastSyncedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -411,6 +478,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: "contact-messages";
         value: number | ContactMessage;
+      } | null)
+    | ({
+        relationTo: "repositories";
+        value: number | Repository;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -539,6 +610,35 @@ export interface ContactMessagesSelect<T extends boolean = true> {
   message?: T;
   approximateLocation?: T;
   telegramSent?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "repositories_select".
+ */
+export interface RepositoriesSelect<T extends boolean = true> {
+  name?: T;
+  nameWithOwner?: T;
+  url?: T;
+  homepageUrl?: T;
+  openGraphImageUrl?: T;
+  description?: T;
+  descriptionHTML?: T;
+  topics?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  featured?: T;
+  pushedAt?: T;
+  isPrivate?: T;
+  isFork?: T;
+  isArchived?: T;
+  stargazerCount?: T;
+  forkCount?: T;
+  lastSyncedAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }

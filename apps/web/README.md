@@ -26,9 +26,9 @@ Admin: [http://localhost:3055/admin](http://localhost:3055/admin)
 - Admin → **Blogs** — one collection; each entry is `Journal` or `Blog post` (`kind`). Switch later if a journal grows into a full post.
 - Public routes: `/journals` (journals), `/blogs` (posts), plus `[slug]` detail pages
 - Landing sections filter by `kind`
-- Seed fixtures: `pnpm seed:journals` (journals) · `pnpm import:devto` (full Dev.to posts) · `pnpm seed:all` (both + verify)
-- Import live Dev.to posts: `pnpm import:devto` (optional `DEVTO_USERNAME`, `DEV_TO_KEY`)
-- After adding `coverUrl`: `pnpm migrate:cover-url` then `pnpm backfill:covers` (or re-run `import:devto`)
+- Seed fixtures: `pnpm seed:journals` (journals) · `pnpm seed:all` (journals + Dev.to import + verify)
+- Re-import published Dev.to posts anytime from Admin → **Blogs** → **Import from Dev.to** (optional `DEVTO_USERNAME`)
+- After adding `coverUrl`: `pnpm migrate:cover-url` then `pnpm backfill:covers` (or re-run Import from Dev.to)
 - One-time migrate from the old Journals collection: `pnpm migrate:journals-to-blogs`
 - Contact inbox table: `pnpm migrate:contact-messages` (then Admin → **Contact messages**)
 - Dev.to workflow (posts): ⋯ menu **Publish to Dev.to** / **Sync from Dev.to** (also under Meta → Dev.to). Seeds a Dev.to draft + canonical URL → edit images there → Sync back. Requires `DEV_TO_KEY` + site origin (`NEXT_PUBLIC_SITE_URL` or `VERCEL_URL`). After schema pull: `pnpm migrate:devto-article-id`

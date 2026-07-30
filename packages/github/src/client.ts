@@ -20,10 +20,6 @@ import type {
   GithubRepoSnapshot,
   GitTreeEntry,
 } from "./types.js";
-import {
-  isIgnorableGraphqlAggregateError,
-  parseGraphqlAggregateError,
-} from "./utils/graphql-errors.js";
 import { filterRepoNodes, mapEnrichmentRepoNode, splitRepoFullName } from "./utils/repo.js";
 
 type GraphqlResult<T> = T & {
@@ -47,8 +43,10 @@ export function createGitHubClient(token: string) {
  */
 export class GitHubClient {
   private readonly octokit: Octokit;
+  private readonly token: string;
 
   constructor(token: string) {
+    this.token = token;
     this.octokit = new Octokit({ auth: token });
   }
 
@@ -73,6 +71,9 @@ export class GitHubClient {
 
   /**
    * Fetches the viewer's recent public repositories with optional sort and cache controls.
+   *
+   * Uses raw GraphQL `fetch` (not Octokit) so org PAT policy errors on individual
+   * repos still return partial `data.viewer.repositories.nodes`.
    */
   async getRecentRepos(options: FetchRecentReposOptions = {}): Promise<FetchRecentReposResult> {
     const {
@@ -83,40 +84,55 @@ export class GitHubClient {
       cache = "no-store",
     } = options;
 
-    try {
-      const result = await this.graphql<RecentReposGraphqlResponse>(RECENT_REPOS_QUERY, {
-        cache,
+    const res = await fetch("https://api.github.com/graphql", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${this.token}`,
+      },
+      cache,
+      body: JSON.stringify({
+        query: RECENT_REPOS_QUERY,
         variables: { first, isFork, orderField, orderDirection },
-      });
+      }),
+    });
 
-      const nodes = filterRepoNodes(result.viewer.repositories.nodes, { excludePrivate: true });
-
+    if (!res.ok) {
       return {
-        data: {
-          viewer: {
-            pinnedItems: { nodes: [] },
-            repositories: { nodes },
+        data: null,
+        errors: [
+          {
+            message: res.statusText || `GitHub GraphQL HTTP ${res.status}`,
+            path: [],
+            extensions: { code: "HTTP_ERROR", typeName: "", fieldName: "" },
+            locations: [],
           },
-        },
-        errors: result.errors ?? [],
-        rateLimit: result.rateLimit ?? null,
+        ],
+        rateLimit: null,
       };
-    } catch (error: unknown) {
-      if (isIgnorableGraphqlAggregateError(error)) {
-        return {
-          data: {
+    }
+
+    const body = (await res.json()) as {
+      data?: RecentReposGraphqlResponse;
+      errors?: GithubGraphqlError[];
+    };
+
+    const nodes = filterRepoNodes(body.data?.viewer.repositories.nodes ?? [], {
+      excludePrivate: true,
+    });
+
+    return {
+      data: body.data
+        ? {
             viewer: {
               pinnedItems: { nodes: [] },
-              repositories: { nodes: [] },
+              repositories: { nodes },
             },
-          },
-          errors: parseGraphqlAggregateError(error) ?? [],
-          rateLimit: null,
-        };
-      }
-
-      throw error;
-    }
+          }
+        : null,
+      errors: body.errors ?? [],
+      rateLimit: body.data?.rateLimit ?? null,
+    };
   }
 
   /**
