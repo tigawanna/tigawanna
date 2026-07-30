@@ -352,3 +352,36 @@ body {
   font-size: 0.9em;
   background: color-mix(in oklab, var(--color-base-200) 90%, transparent);
 }
+
+/* GFM tables from README / blog markdown (Payload Lexical TableJSXConverter) */
+.payload-richtext .lexical-table-container {
+  margin-block: 1.5rem;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.payload-richtext .lexical-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95em;
+  line-height: 1.55;
+}
+
+.payload-richtext .lexical-table-cell {
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 14%, transparent) !important;
+  padding: 0.65rem 0.85rem !important;
+  background: transparent !important;
+  text-align: left;
+  vertical-align: top;
+  color: color-mix(in oklab, var(--color-base-content) 82%, transparent);
+}
+
+.payload-richtext th.lexical-table-cell {
+  font-weight: 600;
+  color: var(--color-base-content);
+  background: color-mix(in oklab, var(--color-base-content) 6%, transparent) !important;
+}
+
+.payload-richtext .lexical-table-row:nth-child(even) td.lexical-table-cell {
+  background: color-mix(in oklab, var(--color-base-content) 3%, transparent) !important;
+}

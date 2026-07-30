@@ -12,7 +12,11 @@ import { Code } from "@/blocks/Code/config";
 import { MediaBlock } from "@/blocks/MediaBlock/config";
 
 /**
- * Shared Lexical editor for blog content (headings, code, media, banners).
+ * Shared Lexical editor for blog / README content (headings, code, media, banners).
+ *
+ * GFM pipe tables are lifted in `markdownToLexicalWithCodeBlocks` — do not enable
+ * `EXPERIMENTAL_TableFeature` here; it pulls a second `lexical` copy under Next and
+ * breaks `convertMarkdownToLexical` with ListNode subclass errors.
  */
 export function contentLexicalEditor() {
   return lexicalEditor({

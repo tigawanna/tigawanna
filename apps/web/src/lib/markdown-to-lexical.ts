@@ -8,6 +8,10 @@ import { parseMarkdownImage } from "@/utils/media-url";
 const FENCE_RE = /```([\w+-]*)\r?\n([\s\S]*?)```/g;
 /** Standalone markdown image on its own line (optional surrounding whitespace). */
 const IMAGE_LINE_RE = /^[ \t]*!\[[^\]]*\]\([^)\s]+(?:\s+(?:"[^"]*"|'[^']*'))?\)[ \t]*$/gm;
+/** GFM table row (`| a | b |`). */
+const TABLE_ROW_RE = /^\|(.+)\|\s*$/;
+/** GFM header divider (`| --- | :---: |`). */
+const TABLE_DIVIDER_RE = /^(\| ?:?-*:? ?)+\|\s*$/;
 
 const ALLOWED_LANGUAGES = new Set<string>(CODE_BLOCK_LANGUAGES.map((item) => item.value));
 
@@ -23,6 +27,14 @@ const LANGUAGE_ALIASES: Record<string, CodeBlockLanguage> = {
   txt: "plaintext",
   "": "typescript",
 };
+
+/** Lexical table header flag for the first row (matches `@lexical/table` ROW). */
+const TABLE_HEADER_ROW = 1;
+
+type EditorConfig = Parameters<typeof convertMarkdownToLexical>[0]["editorConfig"];
+type LexicalChild = DefaultTypedEditorState["root"]["children"][number];
+
+type ProseOrTableSegment = { kind: "prose"; text: string } | { kind: "table"; rows: string[][] };
 
 /**
  * Maps a markdown fence language to a Code block select value.
@@ -91,15 +103,158 @@ function createMediaBlockNode(alt: string, url: string) {
   };
 }
 
-type LexicalChild = DefaultTypedEditorState["root"]["children"][number];
+/**
+ * Returns whether a line looks like a GFM table row.
+ */
+function isGfmTableRow(line: string): boolean {
+  return TABLE_ROW_RE.test(line.trim());
+}
 
 /**
- * Converts a markdown slice to Lexical children, lifting sole-line images into Media blocks.
+ * Returns whether a line is a GFM table header divider.
  */
-function proseToLexicalChildren(
-  prose: string,
-  editorConfig: Parameters<typeof convertMarkdownToLexical>[0]["editorConfig"],
-): LexicalChild[] {
+function isGfmTableDivider(line: string): boolean {
+  return TABLE_DIVIDER_RE.test(line.trim());
+}
+
+/**
+ * Splits a GFM table row into cell markdown strings.
+ *
+ * @param line - A `| cell | cell |` line.
+ */
+function parseGfmTableCells(line: string): string[] {
+  const trimmed = line.trim().replace(/^\|/, "").replace(/\|$/, "");
+  return trimmed.split("|").map((cell) => cell.trim());
+}
+
+/**
+ * Splits markdown into prose and GFM table segments.
+ *
+ * A table requires a contiguous run of pipe rows that includes a `| --- |` divider.
+ *
+ * @param markdown - Markdown that may contain GFM tables.
+ */
+export function splitGfmTables(markdown: string): ProseOrTableSegment[] {
+  const lines = markdown.split(/\r?\n/);
+  const segments: ProseOrTableSegment[] = [];
+  let proseLines: string[] = [];
+
+  const flushProse = () => {
+    if (proseLines.length === 0) return;
+    const text = proseLines.join("\n");
+    proseLines = [];
+    if (text.trim()) segments.push({ kind: "prose", text });
+  };
+
+  let index = 0;
+  while (index < lines.length) {
+    const line = lines[index] ?? "";
+    if (isGfmTableRow(line)) {
+      const tableLines: string[] = [];
+      let cursor = index;
+      while (cursor < lines.length && isGfmTableRow(lines[cursor] ?? "")) {
+        tableLines.push(lines[cursor] ?? "");
+        cursor += 1;
+      }
+
+      const hasDivider = tableLines.some(isGfmTableDivider);
+      if (hasDivider && tableLines.length >= 2) {
+        flushProse();
+        const rows = tableLines.filter((row) => !isGfmTableDivider(row)).map(parseGfmTableCells);
+        if (rows.length > 0) segments.push({ kind: "table", rows });
+        index = cursor;
+        continue;
+      }
+    }
+
+    proseLines.push(line);
+    index += 1;
+  }
+
+  flushProse();
+  return segments;
+}
+
+/**
+ * Converts a single table cell's markdown into Lexical paragraph children.
+ */
+function cellToLexicalChildren(cellMarkdown: string, editorConfig: EditorConfig): LexicalChild[] {
+  const markdown = cellMarkdown.trim() || " ";
+  const lexical = convertMarkdownToLexical({ editorConfig, markdown });
+  if (lexical.root.children.length > 0) return lexical.root.children;
+
+  return [
+    {
+      type: "paragraph",
+      version: 1,
+      direction: null,
+      format: "",
+      indent: 0,
+      children: [
+        {
+          type: "text",
+          version: 1,
+          detail: 0,
+          format: 0,
+          mode: "normal",
+          style: "",
+          text: cellMarkdown.trim(),
+        },
+      ],
+    } as unknown as LexicalChild,
+  ];
+}
+
+/**
+ * Builds a Lexical `table` node matching Payload's TableJSXConverter shape.
+ *
+ * @param rows - Cell markdown strings; the first row is treated as a header.
+ * @param editorConfig - Editor config used to convert inline cell markdown.
+ */
+function createTableNode(rows: string[][], editorConfig: EditorConfig): LexicalChild {
+  const columnCount = Math.max(...rows.map((row) => row.length), 1);
+
+  const tableRows = rows.map((row, rowIndex) => {
+    const cells = Array.from({ length: columnCount }, (_, colIndex) => {
+      const cellMarkdown = row[colIndex] ?? "";
+      return {
+        type: "tablecell" as const,
+        version: 1 as const,
+        headerState: rowIndex === 0 ? TABLE_HEADER_ROW : 0,
+        colSpan: 1,
+        rowSpan: 1,
+        backgroundColor: null,
+        direction: null,
+        format: "" as const,
+        indent: 0,
+        children: cellToLexicalChildren(cellMarkdown, editorConfig),
+      };
+    });
+
+    return {
+      type: "tablerow" as const,
+      version: 1 as const,
+      direction: null,
+      format: "" as const,
+      indent: 0,
+      children: cells,
+    };
+  });
+
+  return {
+    type: "table",
+    version: 1,
+    direction: null,
+    format: "",
+    indent: 0,
+    children: tableRows,
+  } as unknown as LexicalChild;
+}
+
+/**
+ * Converts a prose slice that may still contain images (no tables) to Lexical children.
+ */
+function imageAwareProseToLexical(prose: string, editorConfig: EditorConfig): LexicalChild[] {
   const trimmed = prose.trim();
   if (!trimmed) return [];
 
@@ -135,6 +290,25 @@ function proseToLexicalChildren(
   if (children.length === 0) {
     const lexical = convertMarkdownToLexical({ editorConfig, markdown: trimmed });
     return lexical.root.children;
+  }
+
+  return children;
+}
+
+/**
+ * Converts a markdown slice to Lexical children, lifting GFM tables and sole-line images.
+ */
+function proseToLexicalChildren(prose: string, editorConfig: EditorConfig): LexicalChild[] {
+  const trimmed = prose.trim();
+  if (!trimmed) return [];
+
+  const children: LexicalChild[] = [];
+  for (const segment of splitGfmTables(trimmed)) {
+    if (segment.kind === "table") {
+      children.push(createTableNode(segment.rows, editorConfig));
+      continue;
+    }
+    children.push(...imageAwareProseToLexical(segment.text, editorConfig));
   }
 
   return children;
@@ -179,16 +353,18 @@ export function hydrateMarkdownImageBlocks(
 }
 
 /**
- * Converts markdown to Lexical, lifting fenced code into Code blocks and
- * standalone images into Media blocks.
+ * Converts markdown to Lexical, lifting fenced code into Code blocks,
+ * GFM tables into Lexical table nodes, and standalone images into Media blocks.
  *
  * Default `convertMarkdownToLexical` leaves ``` fences as plain paragraph text
  * when CodeFeature isn't in the editor config — so we split fences ourselves.
- * Images are lifted the same way so remote URLs become Media blocks.
+ * Tables are lifted the same way: Payload's experimental table feature breaks
+ * under Next (duplicate `lexical` copies), so we emit table nodes manually for
+ * the frontend `TableJSXConverter`.
  */
 export function markdownToLexicalWithCodeBlocks(
   markdown: string,
-  editorConfig: Parameters<typeof convertMarkdownToLexical>[0]["editorConfig"],
+  editorConfig: EditorConfig,
 ): DefaultTypedEditorState {
   const normalized = normalizeMarkdownCallouts(markdown);
   const children: LexicalChild[] = [];
