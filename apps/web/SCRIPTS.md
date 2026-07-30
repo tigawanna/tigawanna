@@ -8,7 +8,8 @@
 | ------------------------------- | ------------------------------------------------------------------ |
 | `dev`                           | Local Next + Payload on `:3055`                                    |
 | `devsafe`                       | Wipe `.next` then `dev`                                            |
-| `build` / `start`               | Production build / serve                                           |
+| `build`                         | Production build                                                   |
+| `start` / `start:e2e`           | Serve production build (`:3055` / e2e `:4055`)                     |
 | `lint` / `check-types`          | CI-style checks                                                    |
 | `generate:types`                | After Payload schema / jobs / field changes                        |
 | `generate:importmap`            | After admin component path changes                                 |
@@ -74,6 +75,6 @@ cross-env NODE_OPTIONS=--no-deprecation TEST_EMAIL_MODE=forgot payload run ./src
 # Preview = start after build
 pnpm build && pnpm start
 
-# E2E against a fresh production build
+# E2E against a fresh production build (preview on :4055, not :3055)
 pnpm build && pnpm test:e2e
 ```

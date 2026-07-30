@@ -9,6 +9,7 @@
     "devsafe": "rm -rf .next && cross-env NODE_OPTIONS=--no-deprecation next dev --port 3055",
     "build": "cross-env NODE_OPTIONS=\"--no-deprecation --max-old-space-size=8000\" next build",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start --port 3055 --hostname 127.0.0.1",
+    "start:e2e": "cross-env NODE_OPTIONS=--no-deprecation next start --port 4055 --hostname 127.0.0.1",
     "preview": "npm run start",
     "lint": "cross-env NODE_OPTIONS=--no-deprecation eslint .",
     "check-types": "tsc --noEmit",

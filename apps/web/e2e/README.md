@@ -9,7 +9,7 @@ server cannot HMR or rewrite files mid-suite.
 # Build + e2e
 pnpm build && pnpm test:e2e
 
-# Reuse an already-running `pnpm start` on :3055
+# Reuse an already-running `pnpm start:e2e` on :4055
 PLAYWRIGHT_REUSE=1 pnpm test:e2e
 
 pnpm test:e2e:install

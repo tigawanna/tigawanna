@@ -5,7 +5,9 @@ import { fileURLToPath } from "node:url";
 const testsDir = path.dirname(fileURLToPath(import.meta.url));
 /** `e2e` → web app root. */
 const appRoot = path.resolve(testsDir, "../");
-const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:3055";
+/** Dedicated preview port — keeps e2e off the normal `:3055` dev/start server. */
+const e2ePort = process.env.PLAYWRIGHT_PORT ?? "4055";
+const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${e2ePort}`;
 
 /**
  * App-coupled Playwright config for the Next.js landing experiment.
@@ -37,8 +39,8 @@ export default defineConfig({
     video: "retain-on-failure",
   },
   webServer: {
-    // Production preview — no Fast Refresh / importMap rewrites mid-suite.
-    command: "pnpm start",
+    // Production preview on :4055 — no clash with `pnpm dev` / `pnpm start` on :3055.
+    command: "pnpm start:e2e",
     cwd: appRoot,
     url: baseURL,
     // Do not attach to a stray `next dev` on :3055; e2e needs the built preview.
