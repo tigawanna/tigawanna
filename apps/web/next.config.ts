@@ -28,6 +28,9 @@ const nextConfig: NextConfig = {
         pathname: "/opengraph-image.jpg",
       },
       {
+        pathname: "/fallback.png",
+      },
+      {
         pathname: "/icon.png",
       },
     ],

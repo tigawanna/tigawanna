@@ -8,8 +8,11 @@ import { projectImageVtName } from "@/components/view-transitions/names";
 import Image from "next/image";
 import Link from "next/link";
 import { Github, Globe, Lock } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
+
+/** Local fallback when a GitHub social-preview URL fails (expired signed URLs, etc.). */
+const PROJECT_IMAGE_FALLBACK = "/fallback.png";
 
 /**
  * Builds the project detail href for a `owner/repo` slug.
@@ -61,8 +64,11 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
   const cardRef = useRef<HTMLElement | null>(null);
   useLandingCardMotion(cardRef);
 
-  const imageUrl =
+  const remoteImageUrl =
     repo.openGraphImageUrl && repo.openGraphImageUrl.length > 0 ? repo.openGraphImageUrl : null;
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const imageSrc =
+    !remoteImageUrl || failedSrc === remoteImageUrl ? PROJECT_IMAGE_FALLBACK : remoteImageUrl;
 
   return (
     <article
@@ -72,25 +78,22 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
     >
       <ViewTransition name={projectImageVtName(repo.nameWithOwner)} share="morph" default="none">
         <div className="landing-card-media relative h-48 shrink-0 overflow-hidden">
-          {imageUrl ? (
-            <>
-              <Image
-                src={imageUrl}
-                alt={repo.name}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                // Signed GitHub social-preview URLs break when proxied through the optimizer
-                // (expiry + CDN rate limits). Load them directly in the browser.
-                unoptimized={imageUrl.includes("repository-images.githubusercontent.com")}
-                className="landing-card-media-image object-cover"
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-landing-panel via-landing-panel/10 to-transparent" />
-            </>
-          ) : (
-            <div className="flex h-full items-center justify-center bg-linear-to-br from-landing-gradient-mid-from to-landing-gradient-mid-to">
-              <Github className="size-8 text-landing-cream/15" />
-            </div>
-          )}
+          <Image
+            src={imageSrc}
+            alt={repo.name}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            // Signed GitHub social-preview URLs break when proxied through the optimizer
+            // (expiry + CDN rate limits). Load them directly in the browser.
+            unoptimized={imageSrc.includes("repository-images.githubusercontent.com")}
+            onError={() => {
+              if (remoteImageUrl && failedSrc !== remoteImageUrl) {
+                setFailedSrc(remoteImageUrl);
+              }
+            }}
+            className="landing-card-media-image object-cover"
+          />
+          <div className="absolute inset-0 bg-linear-to-t from-landing-panel via-landing-panel/10 to-transparent" />
         </div>
       </ViewTransition>
 
