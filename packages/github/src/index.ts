@@ -11,17 +11,27 @@ export {
 } from "./extraction";
 export {
   CURRENT_COLLECTOR_VERSION,
+  classifyPackageDir,
   collectArtifacts,
+  detectMonorepoKind,
   discoverManifestCandidates,
+  findReadmeInDir,
   findReadmePath,
+  isWorkspacePackageJson,
+  listPackageUnitDirs,
+  MONOREPO_PACKAGE_ROOTS,
+  packageUnitName,
   parseManifest,
   parsePackageJson,
   repoArtifactLanguages,
 } from "./spelunk/index";
 export type {
   ManifestCandidate,
+  MonorepoDetection,
+  MonorepoKind,
   RepoArtifact,
   RepoArtifactLanguage,
+  RepoPackageUnit,
   SpelunkPayload,
 } from "./spelunk/index";
 export type {

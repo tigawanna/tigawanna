@@ -24,6 +24,25 @@ const basePayload: SpelunkPayload = {
       parsed: { name: "web" },
     },
   ],
+  monorepo: { isMonorepo: true, kind: "nested" },
+  packages: [
+    {
+      name: "root",
+      path: ".",
+      kind: "root",
+      description: null,
+      readme: "# App\n\nA demo app.",
+      readmePath: "README.md",
+    },
+    {
+      name: "web",
+      path: "apps/web",
+      kind: "app",
+      description: null,
+      readme: null,
+      readmePath: null,
+    },
+  ],
 };
 
 describe("enrich-prompt", () => {

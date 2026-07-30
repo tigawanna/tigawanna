@@ -227,6 +227,110 @@ export const Repositories: CollectionConfig = {
         description: "When this row was last updated from GitHub.",
       },
     },
+    {
+      name: "defaultBranch",
+      type: "text",
+      admin: {
+        position: "sidebar",
+        readOnly: true,
+        description: "Default branch used when resolving README asset URLs.",
+      },
+    },
+    {
+      name: "isMonorepo",
+      type: "checkbox",
+      required: true,
+      defaultValue: false,
+      admin: {
+        position: "sidebar",
+        readOnly: true,
+        description: "Detected turbo / pnpm / workspace package.json layout.",
+      },
+    },
+    {
+      name: "monorepoKind",
+      type: "select",
+      options: [
+        { label: "Turborepo", value: "turbo" },
+        { label: "pnpm", value: "pnpm" },
+        { label: "npm workspaces", value: "npm" },
+        { label: "Yarn workspaces", value: "yarn" },
+        { label: "Lerna", value: "lerna" },
+        { label: "Nx", value: "nx" },
+        { label: "Nested packages", value: "nested" },
+      ],
+      admin: {
+        position: "sidebar",
+        readOnly: true,
+        condition: (_, siblingData) => Boolean(siblingData?.isMonorepo),
+      },
+    },
+    {
+      name: "readmeMarkdown",
+      type: "textarea",
+      admin: {
+        description: "Root README.md captured on sync (no live GitHub fetch on the site).",
+        rows: 8,
+      },
+    },
+    {
+      name: "packages",
+      type: "array",
+      labels: {
+        singular: "Package",
+        plural: "Packages",
+      },
+      admin: {
+        description:
+          "Root + workspace apps/packages discovered on sync (nested READMEs when present).",
+      },
+      fields: [
+        {
+          name: "name",
+          type: "text",
+          required: true,
+        },
+        {
+          name: "path",
+          type: "text",
+          required: true,
+          admin: {
+            description: 'Directory relative to repo root ("." for root).',
+          },
+        },
+        {
+          name: "kind",
+          type: "select",
+          required: true,
+          defaultValue: "other",
+          options: [
+            { label: "Root", value: "root" },
+            { label: "App", value: "app" },
+            { label: "Package", value: "package" },
+            { label: "Other", value: "other" },
+          ],
+        },
+        {
+          name: "description",
+          type: "text",
+        },
+        {
+          name: "readmePath",
+          type: "text",
+          admin: {
+            readOnly: true,
+          },
+        },
+        {
+          name: "readmeMarkdown",
+          type: "textarea",
+          admin: {
+            rows: 6,
+            description: "Empty when the package has no README — UI shows the name only.",
+          },
+        },
+      ],
+    },
   ],
   timestamps: true,
 };

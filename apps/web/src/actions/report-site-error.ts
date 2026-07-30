@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { siteConfig } from "@repo/site-constants";
 import { z } from "zod";
+import { resolveApproximateLocation } from "@/lib/geo/approximate-location";
 import { getTelegramClient } from "@/lib/telegram/client";
 import { truncateTelegramMessage } from "@/lib/telegram/format";
 
@@ -18,10 +19,11 @@ export type ReportSiteErrorInput = z.infer<typeof reportSiteErrorSchema>;
 
 /**
  * Formats a critical frontend error for Telegram delivery.
+ * Request metadata is limited to an approximate location (no IP).
  */
 function formatSiteErrorTelegramMessage(
   data: ReportSiteErrorInput,
-  meta: { ipAddress?: string; userAgent?: string },
+  meta: { approximateLocation?: string; userAgent?: string },
 ) {
   const lines = [
     "Site critical error (web)",
@@ -32,11 +34,8 @@ function formatSiteErrorTelegramMessage(
     "",
     `Error: ${data.name}`,
     `Message: ${data.message}`,
+    `Approx. location: ${meta.approximateLocation ?? "unknown"}`,
   ];
-
-  if (meta.ipAddress) {
-    lines.push(`IP: ${meta.ipAddress}`);
-  }
 
   if (meta.userAgent) {
     lines.push(`User-Agent: ${meta.userAgent}`);
@@ -55,8 +54,8 @@ function formatSiteErrorTelegramMessage(
 export async function reportSiteError(input: ReportSiteErrorInput) {
   const data = reportSiteErrorSchema.parse(input);
   const requestHeaders = await headers();
-  const ipAddress =
-    requestHeaders.get("cf-connecting-ip") ?? requestHeaders.get("x-forwarded-for") ?? undefined;
+  const location = await resolveApproximateLocation(requestHeaders);
+  const approximateLocation = location?.label;
   const userAgent = requestHeaders.get("user-agent") ?? undefined;
 
   const telegram = getTelegramClient();
@@ -66,7 +65,7 @@ export async function reportSiteError(input: ReportSiteErrorInput) {
 
   try {
     const result = await telegram.send(
-      formatSiteErrorTelegramMessage(data, { ipAddress, userAgent }),
+      formatSiteErrorTelegramMessage(data, { approximateLocation, userAgent }),
     );
     return { sent: result.success };
   } catch {

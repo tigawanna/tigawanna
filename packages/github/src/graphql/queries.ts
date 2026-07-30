@@ -25,6 +25,7 @@ export const RECENT_REPOS_QUERY = `query getViewerRecentlyPushedRepos(
           isArchived
           stargazerCount
           forkCount
+          defaultBranchRef { name }
           repositoryTopics(first: 10) {
             nodes {
               topic { name }
@@ -57,6 +58,7 @@ export const PINNED_REPOS_QUERY = `query getViewerPinnedRepos {
           nameWithOwner
           pushedAt
           isPrivate
+          defaultBranchRef { name }
           repositoryTopics(first: 10) {
             nodes {
               topic { name }

@@ -1,14 +1,16 @@
 import type { GitHubClient } from "../client";
 import type { GitTreeEntry, GithubRepoSnapshot } from "../types";
+import { detectMonorepoKind } from "./detect-monorepo";
 import { discoverManifestCandidates } from "./manifest-paths";
+import { listPackageUnitDirs } from "./package-units";
 import { parseManifest } from "./parse-manifest";
-import type { RepoArtifact, SpelunkPayload } from "./types";
+import type { RepoArtifact, RepoPackageUnit, SpelunkPayload } from "./types";
 
-const MAX_README_CHARS = 12_000;
+const MAX_README_CHARS = 8_000;
 const MAX_FILE_PATHS = 500;
 
 /**
- * Collects tree paths, README, and parsed language manifests for a repo.
+ * Collects tree paths, README(s), parsed language manifests, and monorepo package units.
  * GitHub API only — no DB writes.
  */
 export async function collectArtifacts(
@@ -56,7 +58,78 @@ export async function collectArtifacts(
     }
   }
 
-  return { filePaths, readme, readmePath, artifacts };
+  const monorepo = detectMonorepoKind(filePaths, artifacts);
+  const packages = await collectPackageUnits(
+    client,
+    owner,
+    repoName,
+    repo.defaultBranch,
+    filePaths,
+    artifacts,
+    readme,
+    readmePath,
+  );
+
+  return { filePaths, readme, readmePath, artifacts, monorepo, packages };
+}
+
+/**
+ * Fetches nested package READMEs and builds {@link RepoPackageUnit} rows.
+ */
+async function collectPackageUnits(
+  client: GitHubClient,
+  owner: string,
+  repoName: string,
+  branch: string,
+  filePaths: string[],
+  artifacts: RepoArtifact[],
+  rootReadme: string | null,
+  rootReadmePath: string | null,
+): Promise<RepoPackageUnit[]> {
+  const dirs = listPackageUnitDirs(artifacts, filePaths);
+
+  // Non-monorepo / no package.json: still surface the root README as a single unit.
+  if (dirs.length === 0) {
+    if (!rootReadme && !rootReadmePath) return [];
+    return [
+      {
+        name: repoName,
+        path: ".",
+        kind: "root",
+        description: null,
+        readme: rootReadme,
+        readmePath: rootReadmePath,
+      },
+    ];
+  }
+
+  const units: RepoPackageUnit[] = [];
+
+  for (const entry of dirs) {
+    let readme: string | null = null;
+    let readmePath = entry.readmePath;
+
+    if (entry.dir === "." && rootReadme) {
+      readme = rootReadme;
+      readmePath = rootReadmePath;
+    } else if (readmePath) {
+      const content = await client.getRepoFileContent(owner, repoName, readmePath, branch);
+      if (content) {
+        readme = content.slice(0, MAX_README_CHARS);
+      }
+    }
+
+    units.push({
+      name: entry.dir === "." ? entry.name || repoName : entry.name,
+      path: entry.dir,
+      kind: entry.kind,
+      description: entry.description,
+      readme,
+      readmePath,
+    });
+  }
+
+  return units;
 }
 
 /**

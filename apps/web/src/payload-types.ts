@@ -350,6 +350,39 @@ export interface Repository {
    * When this row was last updated from GitHub.
    */
   lastSyncedAt?: string | null;
+  /**
+   * Default branch used when resolving README asset URLs.
+   */
+  defaultBranch?: string | null;
+  /**
+   * Detected turbo / pnpm / workspace package.json layout.
+   */
+  isMonorepo: boolean;
+  monorepoKind?: ("turbo" | "pnpm" | "npm" | "yarn" | "lerna" | "nx" | "nested") | null;
+  /**
+   * Root README.md captured on sync (no live GitHub fetch on the site).
+   */
+  readmeMarkdown?: string | null;
+  /**
+   * Root + workspace apps/packages discovered on sync (nested READMEs when present).
+   */
+  packages?:
+    | {
+        name: string;
+        /**
+         * Directory relative to repo root ("." for root).
+         */
+        path: string;
+        kind: "root" | "app" | "package" | "other";
+        description?: string | null;
+        readmePath?: string | null;
+        /**
+         * Empty when the package has no README — UI shows the name only.
+         */
+        readmeMarkdown?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -646,6 +679,21 @@ export interface RepositoriesSelect<T extends boolean = true> {
   stargazerCount?: T;
   forkCount?: T;
   lastSyncedAt?: T;
+  defaultBranch?: T;
+  isMonorepo?: T;
+  monorepoKind?: T;
+  readmeMarkdown?: T;
+  packages?:
+    | T
+    | {
+        name?: T;
+        path?: T;
+        kind?: T;
+        description?: T;
+        readmePath?: T;
+        readmeMarkdown?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }

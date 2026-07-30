@@ -1,6 +1,6 @@
+import { isWorkspacePackageJson } from "./package-units";
 import type { ManifestCandidate } from "./types";
 
-const MONOREPO_PACKAGE_ROOTS = ["apps", "packages", "libs", "tools"] as const;
 const MAX_MANIFESTS = 20;
 
 /**
@@ -66,10 +66,4 @@ export function discoverManifestCandidates(filePaths: string[]): ManifestCandida
   }
 
   return candidates;
-}
-
-function isWorkspacePackageJson(path: string) {
-  return MONOREPO_PACKAGE_ROOTS.some((root) =>
-    new RegExp(`^${root}/[^/]+/package\\.json$`).test(path),
-  );
 }

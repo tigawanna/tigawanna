@@ -39,6 +39,8 @@ export type GithubRepoNode = {
   isArchived?: boolean;
   stargazerCount?: number;
   forkCount?: number;
+  /** Default branch name when returned by GraphQL (`defaultBranchRef.name`). */
+  defaultBranchRef?: { name: string } | null;
   repositoryTopics: {
     nodes: RepositoryTopic[];
   };

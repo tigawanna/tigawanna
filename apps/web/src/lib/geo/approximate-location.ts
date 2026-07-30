@@ -151,8 +151,9 @@ async function locationFromIpLookup(ip: string): Promise<ApproximateLocation | u
 }
 
 /**
- * Resolves an approximate visitor location for contact/inbox metadata.
+ * Resolves an approximate visitor location for request metadata (contact, error alerts, etc.).
  * Prefers platform geo headers; falls back to a transient IP lookup that is discarded afterward.
+ * Never returns or persists the IP itself.
  */
 export async function resolveApproximateLocation(
   headers: RequestHeadersLike,

@@ -1,28 +1,54 @@
 import { Suspense, ViewTransition } from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Github, Globe } from "lucide-react";
-import { STATIC_PINNED_PROJECTS, STATIC_RECENT_PROJECTS } from "@/components/landing/data/static";
+import {
+  getCachedProjectDetail,
+  getCachedRepositoryByName,
+  getRepositoryStaticParams,
+} from "@/data-access/repositories";
 import { LandingFooter } from "@/components/landing/layout/LandingFooter";
 import { LandingNavbar } from "@/components/landing/layout/LandingNavbar";
-import type { GithubRepoNode } from "@/components/landing/types/github";
+import { ProjectReadmeTabs } from "@/components/projects/ProjectReadmeTabs";
+import { RichText } from "@/components/richtext/RichText";
 import { DirectionalPageTransition } from "@/components/view-transitions/DirectionalPageTransition";
 import { projectImageVtName } from "@/components/view-transitions/names";
 
-/**
- * Resolves owner/repo path segments to a static fixture.
- */
-function findStaticRepo(owner: string, repo: string): GithubRepoNode | null {
-  const nameWithOwner = `${decodeURIComponent(owner)}/${decodeURIComponent(repo)}`;
-  const all = [...STATIC_PINNED_PROJECTS, ...STATIC_RECENT_PROJECTS];
-  return all.find((item) => item.nameWithOwner === nameWithOwner || item.name === repo) ?? null;
+type Args = {
+  params: Promise<{ owner: string; repo: string }>;
+};
+
+export async function generateStaticParams() {
+  return getRepositoryStaticParams();
 }
 
-async function ProjectDetail({ params }: { params: Promise<{ owner: string; repo: string }> }) {
+export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { owner, repo } = await params;
-  const project = findStaticRepo(owner, repo);
-  if (!project) notFound();
+  const decodedOwner = decodeURIComponent(owner);
+  const decodedRepo = decodeURIComponent(repo);
+  const project = await getCachedRepositoryByName(decodedOwner, decodedRepo);
+  if (!project) {
+    return { title: "Project" };
+  }
 
+  return {
+    title: project.name,
+    description: project.description,
+    alternates: {
+      canonical: `/project/${encodeURIComponent(decodedOwner)}/${encodeURIComponent(decodedRepo)}`,
+    },
+  };
+}
+
+async function ProjectDetail({ params }: Args) {
+  const { owner, repo } = await params;
+  const decodedOwner = decodeURIComponent(owner);
+  const decodedRepo = decodeURIComponent(repo);
+  const detail = await getCachedProjectDetail(decodedOwner, decodedRepo);
+  if (!detail) notFound();
+
+  const { project, isMonorepo, packages, readme } = detail;
   const topics = project.repositoryTopics?.nodes?.map((node) => node.topic.name) ?? [];
 
   return (
@@ -108,6 +134,22 @@ async function ProjectDetail({ params }: { params: Promise<{ owner: string; repo
                 ) : null}
               </div>
             </div>
+
+            {isMonorepo && packages.length > 0 ? (
+              <section
+                className="rounded-none border border-base-content/10 bg-base-300/40 p-6 md:p-10"
+                data-test="project-detail-readme"
+              >
+                <ProjectReadmeTabs packages={packages} />
+              </section>
+            ) : readme ? (
+              <section
+                className="rounded-none border border-base-content/10 bg-base-300/40 p-6 md:p-10"
+                data-test="project-detail-readme"
+              >
+                <RichText data={readme} enableGutter={false} />
+              </section>
+            ) : null}
           </article>
         </main>
         <LandingFooter />
@@ -117,13 +159,9 @@ async function ProjectDetail({ params }: { params: Promise<{ owner: string; repo
 }
 
 /**
- * Project detail from static fixtures — enough for landing card → detail e2e.
+ * Project detail page — Payload CMS cache with static fixture fallback.
  */
-export default function ProjectDetailPage({
-  params,
-}: {
-  params: Promise<{ owner: string; repo: string }>;
-}) {
+export default function ProjectDetailPage({ params }: Args) {
   return (
     <DirectionalPageTransition>
       <Suspense

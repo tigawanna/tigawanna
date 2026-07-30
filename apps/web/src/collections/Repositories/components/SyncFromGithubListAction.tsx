@@ -9,6 +9,7 @@ type SyncResponse = {
   featured: number;
   total: number;
   pulledAt: string;
+  spelunkFailures?: number;
 };
 
 /**
@@ -58,8 +59,8 @@ export function SyncFromGithubListAction() {
       <div style={{ minWidth: 0, flex: "1 1 16rem" }}>
         <strong>GitHub cache</strong>
         <p style={{ margin: "0.25rem 0 0", opacity: 0.8, fontSize: "0.9rem" }}>
-          Pull pinned + recent public repos into this collection. Safe to run anytime — including
-          production — when the live GitHub API is rate-limited.
+          Pull pinned + recent public repos, detect monorepos, and cache root + nested READMEs. Safe
+          to run anytime — including production — when the live GitHub API is rate-limited.
         </p>
       </div>
 
@@ -78,8 +79,12 @@ export function SyncFromGithubListAction() {
               throw new Error(await readErrorMessage(res));
             }
             const result = (await res.json()) as SyncResponse;
+            const spelunkNote =
+              result.spelunkFailures && result.spelunkFailures > 0
+                ? ` · ${result.spelunkFailures} README spelunk failure(s)`
+                : "";
             toast.success(
-              `Pulled ${result.total} repos (${result.created} new, ${result.updated} updated, ${result.featured} featured)`,
+              `Pulled ${result.total} repos (${result.created} new, ${result.updated} updated, ${result.featured} featured)${spelunkNote}`,
             );
             window.location.reload();
           } catch (err: unknown) {
