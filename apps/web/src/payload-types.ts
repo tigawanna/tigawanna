@@ -106,13 +106,18 @@ export interface Config {
   user: User;
   jobs: {
     tasks: {
+      listAndUpsertRepos: TaskListAndUpsertRepos;
+      fetchArtifacts: TaskFetchArtifacts;
+      writeEnrichment: TaskWriteEnrichment;
       schedulePublish: TaskSchedulePublish;
       inline: {
         input: unknown;
         output: unknown;
       };
     };
-    workflows: unknown;
+    workflows: {
+      enrichRepo: WorkflowEnrichRepo;
+    };
   };
 }
 export interface UserAuthOperations {
@@ -455,7 +460,12 @@ export interface PayloadJob {
     | {
         executedAt: string;
         completedAt: string;
-        taskSlug: "inline" | "schedulePublish";
+        taskSlug:
+          | "inline"
+          | "listAndUpsertRepos"
+          | "fetchArtifacts"
+          | "writeEnrichment"
+          | "schedulePublish";
         taskID: string;
         input?:
           | {
@@ -488,7 +498,10 @@ export interface PayloadJob {
         id?: string | null;
       }[]
     | null;
-  taskSlug?: ("inline" | "schedulePublish") | null;
+  workflowSlug?: "enrichRepo" | null;
+  taskSlug?:
+    | ("inline" | "listAndUpsertRepos" | "fetchArtifacts" | "writeEnrichment" | "schedulePublish")
+    | null;
   queue?: string | null;
   waitUntil?: string | null;
   processing?: boolean | null;
@@ -729,6 +742,7 @@ export interface PayloadJobsSelect<T extends boolean = true> {
         error?: T;
         id?: T;
       };
+  workflowSlug?: T;
   taskSlug?: T;
   queue?: T;
   waitUntil?: T;
@@ -780,6 +794,41 @@ export interface CollectionsWidget {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskListAndUpsertRepos".
+ */
+export interface TaskListAndUpsertRepos {
+  input?: unknown;
+  output: {
+    upserted: number;
+    queuedEnrich: number;
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskFetchArtifacts".
+ */
+export interface TaskFetchArtifacts {
+  input: {
+    nameWithOwner: string;
+  };
+  output: {
+    ok: boolean;
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskWriteEnrichment".
+ */
+export interface TaskWriteEnrichment {
+  input: {
+    nameWithOwner: string;
+  };
+  output: {
+    ok: boolean;
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "TaskSchedulePublish".
  */
 export interface TaskSchedulePublish {
@@ -794,6 +843,15 @@ export interface TaskSchedulePublish {
     user?: (number | null) | User;
   };
   output?: unknown;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "WorkflowEnrichRepo".
+ */
+export interface WorkflowEnrichRepo {
+  input: {
+    nameWithOwner: string;
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

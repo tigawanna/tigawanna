@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/sync-repositories",
       "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/payload-jobs/run?queue=github-enrich&limit=1",
+      "schedule": "*/5 * * * *"
     }
   ]
 }
