@@ -1,13 +1,6 @@
 #!/usr/bin/env sh
 # Vite+ has no vite.config `prePush` block — hooks live here (.vite-hooks/<hook-name>).
-# Run web Playwright e2e when pushing commits to main.
-#
-# Skip with: VITE_GIT_HOOKS=0 git push   or   SKIP_E2E=1 git push
-
-if [ "${SKIP_E2E-}" = "1" ]; then
-  echo "VITE+ - skipping web e2e (SKIP_E2E=1)"
-  exit 0
-fi
+# Run web Playwright e2e when pushing commits to main. Do not skip — fix failures.
 
 run_e2e=0
 
