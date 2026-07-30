@@ -40,7 +40,7 @@ export function buildRepoSearchText(repo: GithubRepoNode) {
 /**
  * Returns whether a repository has a custom GitHub social preview image.
  */
-export function hasCustomSocialPreview(url: string | null) {
+export function hasCustomSocialPreview(url: string | null | undefined) {
   return Boolean(url?.includes("repository-images.githubusercontent.com"));
 }
 

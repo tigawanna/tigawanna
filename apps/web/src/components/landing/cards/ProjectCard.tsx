@@ -79,6 +79,9 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
                 alt={repo.name}
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                // Signed GitHub social-preview URLs break when proxied through the optimizer
+                // (expiry + CDN rate limits). Load them directly in the browser.
+                unoptimized={imageUrl.includes("repository-images.githubusercontent.com")}
                 className="landing-card-media-image object-cover"
               />
               <div className="absolute inset-0 bg-linear-to-t from-landing-panel via-landing-panel/10 to-transparent" />
