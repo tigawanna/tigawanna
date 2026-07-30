@@ -12,6 +12,7 @@ import { LandingFooter } from "@/components/landing/layout/LandingFooter";
 import { LandingNavbar } from "@/components/landing/layout/LandingNavbar";
 import { ProjectReadmeTabs } from "@/components/projects/ProjectReadmeTabs";
 import { RichText } from "@/components/richtext/RichText";
+import { CenteredLoader } from "@/components/loading/CenteredLoader";
 import { DirectionalPageTransition } from "@/components/view-transitions/DirectionalPageTransition";
 
 type Args = {
@@ -150,9 +151,7 @@ export default function ProjectDetailPage({ params }: Args) {
       <Suspense
         fallback={
           <ViewTransition exit="slide-down" default="none">
-            <main className="mx-auto flex min-h-svh max-w-2xl flex-col justify-center px-6 py-24">
-              <p className="text-sm text-base-content/60">Loading project…</p>
-            </main>
+            <CenteredLoader label="Loading project…" fullPage size="lg" />
           </ViewTransition>
         }
       >

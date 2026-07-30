@@ -1,8 +1,8 @@
 import { Suspense } from "react";
+import { CenteredLoader } from "@/components/loading/CenteredLoader";
 import { RelatedPosts } from "@/components/blogs/RelatedPosts";
 import { getRelatedBlogs } from "@/data-access/blogs";
 import type { ContentKind } from "@/types/journals";
-import { Skeleton } from "@/components/landing/stubs/skeleton";
 
 type RelatedBlogsSectionProps = {
   slug: string;
@@ -17,12 +17,7 @@ type RelatedBlogsSectionProps = {
 function RelatedPostsSkeleton() {
   return (
     <section className="mt-16 border-t border-base-content/10 pt-12" aria-hidden="true">
-      <Skeleton className="h-8 w-48 bg-base-content/10" />
-      <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <Skeleton key={i} className="h-56 w-full bg-base-content/6" />
-        ))}
-      </div>
+      <CenteredLoader label="Loading related posts…" size="sm" className="min-h-40 py-10" />
     </section>
   );
 }

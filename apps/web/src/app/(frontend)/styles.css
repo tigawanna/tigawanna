@@ -114,6 +114,25 @@ body {
   }
 }
 
+@keyframes loader-mark {
+  0% {
+    opacity: 0.35;
+    transform: rotate(0deg);
+  }
+  50% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 0.35;
+    transform: rotate(360deg);
+  }
+}
+
+.loader-mark {
+  animation: loader-mark 2.8s linear infinite;
+  transform-origin: center;
+}
+
 /* Live root: unnamed chrome stays interactive; named groups still animate. */
 ::view-transition-old(root) {
   display: none;
