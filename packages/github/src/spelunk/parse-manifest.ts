@@ -1,14 +1,14 @@
-import type { ManifestCandidate, RepoArtifact } from "./types.js";
-import { parseCargoToml } from "./parsers/cargo.js";
-import { parseComposerJson } from "./parsers/composer.js";
-import { parseCsproj } from "./parsers/dotnet.js";
-import { parseGemfile } from "./parsers/gemfile.js";
-import { parseGoMod } from "./parsers/go-mod.js";
-import { parseGradle } from "./parsers/gradle.js";
-import { parseMavenPom } from "./parsers/maven.js";
-import { parsePackageJson } from "./parsers/package-json.js";
-import { parsePythonManifest } from "./parsers/python.js";
-import { parseSwiftPackage } from "./parsers/swift-pm.js";
+import type { ManifestCandidate, RepoArtifact } from "./types";
+import { parseCargoToml } from "./parsers/cargo";
+import { parseComposerJson } from "./parsers/composer";
+import { parseCsproj } from "./parsers/dotnet";
+import { parseGemfile } from "./parsers/gemfile";
+import { parseGoMod } from "./parsers/go-mod";
+import { parseGradle } from "./parsers/gradle";
+import { parseMavenPom } from "./parsers/maven";
+import { parsePackageJson } from "./parsers/package-json";
+import { parsePythonManifest } from "./parsers/python";
+import { parseSwiftPackage } from "./parsers/swift-pm";
 
 /**
  * Runs the matching language parser for a discovered manifest candidate.

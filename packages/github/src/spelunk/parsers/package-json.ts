@@ -1,4 +1,4 @@
-import type { RepoArtifact } from "../types.js";
+import type { RepoArtifact } from "../types";
 
 const MAX_PACKAGE_JSON_CHARS = 6_000;
 

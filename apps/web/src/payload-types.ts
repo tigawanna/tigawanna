@@ -283,7 +283,7 @@ export interface ContactMessage {
   createdAt: string;
 }
 /**
- * Open-source project cards. Pull from GitHub to refresh the cache used when the live API is rate-limited.
+ * Open-source project cards. Use “Pull from GitHub” on this list to refresh the cache used when the live API is rate-limited.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "repositories".

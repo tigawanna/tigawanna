@@ -1,4 +1,4 @@
-import type { RepoArtifact } from "../types.js";
+import type { RepoArtifact } from "../types";
 
 /**
  * Parses a .csproj file into a RepoArtifact.

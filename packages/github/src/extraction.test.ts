@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { GitHubClient } from "./client.js";
+import type { GitHubClient } from "./client";
 import {
   fetchRepoAnalysis,
   fetchRepoExtraction,
@@ -9,8 +9,8 @@ import {
   readmeHasDescription,
   readmeHasTags,
   summarizePackageJson,
-} from "./extraction.js";
-import { createRepoSnapshot, createTreeEntry, toGithubBase64 } from "./test/fixtures.js";
+} from "./extraction";
+import { createRepoSnapshot, createTreeEntry, toGithubBase64 } from "./test/fixtures";
 
 function createMockClient() {
   const getRepoTree = vi.fn<GitHubClient["getRepoTree"]>();

@@ -1,4 +1,4 @@
-import type { RepoArtifact } from "../types.js";
+import type { RepoArtifact } from "../types";
 
 /**
  * Parses a composer.json file into a RepoArtifact.

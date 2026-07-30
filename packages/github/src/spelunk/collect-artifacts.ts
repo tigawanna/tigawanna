@@ -1,8 +1,8 @@
-import type { GitHubClient } from "../client.js";
-import type { GitTreeEntry, GithubRepoSnapshot } from "../types.js";
-import { discoverManifestCandidates } from "./manifest-paths.js";
-import { parseManifest } from "./parse-manifest.js";
-import type { RepoArtifact, SpelunkPayload } from "./types.js";
+import type { GitHubClient } from "../client";
+import type { GitTreeEntry, GithubRepoSnapshot } from "../types";
+import { discoverManifestCandidates } from "./manifest-paths";
+import { parseManifest } from "./parse-manifest";
+import type { RepoArtifact, SpelunkPayload } from "./types";
 
 const MAX_README_CHARS = 12_000;
 const MAX_FILE_PATHS = 500;

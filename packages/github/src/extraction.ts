@@ -1,7 +1,7 @@
-import type { GithubRepoSnapshot, PackageJsonChunk, RepoExtraction } from "./types.js";
-import type { GitHubClient } from "./client.js";
-import { collectArtifacts } from "./spelunk/collect-artifacts.js";
-import { summarizePackageJson } from "./spelunk/parsers/package-json.js";
+import type { GithubRepoSnapshot, PackageJsonChunk, RepoExtraction } from "./types";
+import type { GitHubClient } from "./client";
+import { collectArtifacts } from "./spelunk/collect-artifacts";
+import { summarizePackageJson } from "./spelunk/parsers/package-json";
 
 export { summarizePackageJson };
 

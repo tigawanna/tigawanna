@@ -1,4 +1,4 @@
-import type { GithubGraphqlRateLimit, GithubRepoDetail, GithubRepoNode } from "../types.js";
+import type { GithubGraphqlRateLimit, GithubRepoDetail, GithubRepoNode } from "../types";
 
 export type RecentReposGraphqlResponse = {
   viewer: {

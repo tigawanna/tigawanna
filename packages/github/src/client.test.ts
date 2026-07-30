@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { createRepoNode } from "./test/fixtures.js";
+import { createRepoNode } from "./test/fixtures";
 
 const octokitMocks = vi.hoisted(() => ({
   graphql: vi.fn(),
@@ -40,14 +40,14 @@ vi.mock("octokit", () => {
   };
 });
 
-import { createGitHubClient, RequestError } from "./client.js";
+import { createGitHubClient, RequestError } from "./client";
 import {
   ENRICHMENT_RECENT_REPOS_QUERY,
   ONE_REPO_QUERY,
   PINNED_REPOS_QUERY,
   RECENT_REPOS_QUERY,
   REPO_BY_NAME_QUERY,
-} from "./graphql/queries.js";
+} from "./graphql/queries";
 
 function createRequestError(status: number, message: string) {
   return new RequestError(message, status, {

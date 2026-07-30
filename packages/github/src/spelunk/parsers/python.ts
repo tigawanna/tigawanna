@@ -1,4 +1,4 @@
-import type { RepoArtifact } from "../types.js";
+import type { RepoArtifact } from "../types";
 
 /**
  * Parses pyproject.toml, requirements.txt, or setup.py into a RepoArtifact.

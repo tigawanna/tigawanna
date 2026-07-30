@@ -1,4 +1,4 @@
-import type { GithubGraphqlError } from "../types.js";
+import type { GithubGraphqlError } from "../types";
 
 const ORG_PAT_POLICY_MARKERS = [
   "forbids access via a personal access token",

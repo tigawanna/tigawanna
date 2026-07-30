@@ -1,4 +1,4 @@
-import type { ManifestCandidate } from "./types.js";
+import type { ManifestCandidate } from "./types";
 
 const MONOREPO_PACKAGE_ROOTS = ["apps", "packages", "libs", "tools"] as const;
 const MAX_MANIFESTS = 20;

@@ -1,4 +1,4 @@
-import type { GithubRepoNode, GithubRepoSnapshot } from "../types.js";
+import type { GithubRepoNode, GithubRepoSnapshot } from "../types";
 
 /**
  * Splits a `owner/repo` full name into its parts.

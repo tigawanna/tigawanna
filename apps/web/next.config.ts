@@ -12,7 +12,7 @@ const monorepoRoot = path.resolve(dirname, "../..");
 const nextConfig: NextConfig = {
   /** Cache Components: static shell + selective `use cache` / PPR-style streaming. */
   cacheComponents: true,
-  transpilePackages: ["@repo/site-constants", "@repo/telegram"],
+  transpilePackages: ["@repo/github", "@repo/site-constants", "@repo/telegram"],
   /** Trace files from workspace packages during `next build`. */
   outputFileTracingRoot: monorepoRoot,
   experimental: {

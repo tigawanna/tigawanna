@@ -1,4 +1,4 @@
-import type { GitTreeEntry, GithubRepoNode, GithubRepoSnapshot } from "../types.js";
+import type { GitTreeEntry, GithubRepoNode, GithubRepoSnapshot } from "../types";
 
 export function createRepoNode(
   overrides: Partial<GithubRepoNode> & Pick<GithubRepoNode, "name" | "nameWithOwner">,

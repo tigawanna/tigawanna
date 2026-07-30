@@ -1,4 +1,4 @@
-import type { RepoArtifact } from "../types.js";
+import type { RepoArtifact } from "../types";
 
 /**
  * Parses build.gradle / build.gradle.kts into a RepoArtifact (Kotlin/Java).

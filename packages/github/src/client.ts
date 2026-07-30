@@ -5,22 +5,22 @@ import {
   PINNED_REPOS_QUERY,
   RECENT_REPOS_QUERY,
   REPO_BY_NAME_QUERY,
-} from "./graphql/queries.js";
+} from "./graphql/queries";
 import type {
   EnrichmentRecentReposGraphqlResponse,
   OneRepoGraphqlResponse,
   PinnedReposGraphqlResponse,
   RecentReposGraphqlResponse,
   RepoByNameGraphqlResponse,
-} from "./graphql/response-types.js";
+} from "./graphql/response-types";
 import type {
   FetchRecentReposOptions,
   FetchRecentReposResult,
   GithubGraphqlError,
   GithubRepoSnapshot,
   GitTreeEntry,
-} from "./types.js";
-import { filterRepoNodes, mapEnrichmentRepoNode, splitRepoFullName } from "./utils/repo.js";
+} from "./types";
+import { filterRepoNodes, mapEnrichmentRepoNode, splitRepoFullName } from "./utils/repo";
 
 type GraphqlResult<T> = T & {
   errors?: GithubGraphqlError[];

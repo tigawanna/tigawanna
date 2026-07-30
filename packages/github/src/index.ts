@@ -1,4 +1,4 @@
-export { createGitHubClient, GitHubClient, RequestError } from "./client.js";
+export { createGitHubClient, GitHubClient, RequestError } from "./client";
 export {
   fetchRepoAnalysis,
   fetchRepoExtraction,
@@ -8,7 +8,7 @@ export {
   readmeHasDescription,
   readmeHasTags,
   summarizePackageJson,
-} from "./extraction.js";
+} from "./extraction";
 export {
   CURRENT_COLLECTOR_VERSION,
   collectArtifacts,
@@ -17,13 +17,13 @@ export {
   parseManifest,
   parsePackageJson,
   repoArtifactLanguages,
-} from "./spelunk/index.js";
+} from "./spelunk/index";
 export type {
   ManifestCandidate,
   RepoArtifact,
   RepoArtifactLanguage,
   SpelunkPayload,
-} from "./spelunk/index.js";
+} from "./spelunk/index";
 export type {
   FetchRecentReposOptions,
   FetchRecentReposResult,
@@ -43,7 +43,7 @@ export type {
   ViewerPinnedRepo,
   ViewerPinnedRepoData,
   ViewerPinnedRepoError,
-} from "./types.js";
+} from "./types";
 export {
   buildRepoSearchText,
   extractRepoTags,
@@ -52,4 +52,4 @@ export {
   isRepoMetadataComplete,
   mapEnrichmentRepoNode,
   splitRepoFullName,
-} from "./utils/repo.js";
+} from "./utils/repo";

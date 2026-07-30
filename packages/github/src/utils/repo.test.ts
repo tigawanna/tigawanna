@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createRepoNode } from "../test/fixtures.js";
+import { createRepoNode } from "../test/fixtures";
 import {
   buildRepoSearchText,
   extractRepoTags,
@@ -8,7 +8,7 @@ import {
   isRepoMetadataComplete,
   mapEnrichmentRepoNode,
   splitRepoFullName,
-} from "./repo.js";
+} from "./repo";
 
 describe("splitRepoFullName", () => {
   it("splits owner and repo from a full name", () => {

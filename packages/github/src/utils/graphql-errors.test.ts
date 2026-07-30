@@ -3,7 +3,7 @@ import {
   isIgnorableGraphqlAggregateError,
   isOrgPatPolicyError,
   parseGraphqlAggregateError,
-} from "./graphql-errors.js";
+} from "./graphql-errors";
 
 const orgPolicyMessage =
   "The 'SpaceyaTech' organization forbids access via a personal access tokens (classic) if the token's lifetime is greater than 7 days. Please adjust your token's lifetime at the following URL: https://github.com/settings/tokens/4801076191";
