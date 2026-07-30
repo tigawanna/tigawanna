@@ -69,8 +69,7 @@ async function findCachedRepositories(): Promise<Repository[]> {
  */
 export async function getCachedPinnedRepos(): Promise<GithubRepoNode[]> {
   "use cache";
-  // GitHub custom social-preview URLs are signed and expire in ~5 minutes.
-  cacheLife("minutes");
+  cacheLife("hours");
   cacheTag("landing-pinned-repos");
 
   try {
@@ -89,8 +88,7 @@ export async function getCachedPinnedRepos(): Promise<GithubRepoNode[]> {
  */
 export async function getCachedRecentRepos(): Promise<GithubRepoNode[]> {
   "use cache";
-  // GitHub custom social-preview URLs are signed and expire in ~5 minutes.
-  cacheLife("minutes");
+  cacheLife("hours");
   cacheTag("landing-recent-repos");
 
   try {
@@ -120,7 +118,7 @@ export async function getCachedRepositoryByName(
   repo: string,
 ): Promise<GithubRepoNode | null> {
   "use cache";
-  cacheLife("minutes");
+  cacheLife("hours");
   cacheTag("landing-recent-repos");
   cacheTag("landing-pinned-repos");
 

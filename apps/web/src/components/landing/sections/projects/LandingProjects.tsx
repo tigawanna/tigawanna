@@ -1,5 +1,5 @@
-import { Suspense, type ReactNode } from "react";
 import { getPinnedRepos, getRecentRepos } from "@/data-access/landing";
+import { Suspense, type ReactNode } from "react";
 import { PortfolioGridSkeleton } from "../../cards/PortfolioGridSkeleton";
 import { LandingSection, OrganicDivider, SectionEyebrow } from "../../primitives";
 import { ProjectsSearchIsland } from "./ProjectsSearchIsland";

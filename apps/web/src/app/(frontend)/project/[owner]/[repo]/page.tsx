@@ -13,7 +13,6 @@ import { LandingNavbar } from "@/components/landing/layout/LandingNavbar";
 import { ProjectReadmeTabs } from "@/components/projects/ProjectReadmeTabs";
 import { RichText } from "@/components/richtext/RichText";
 import { DirectionalPageTransition } from "@/components/view-transitions/DirectionalPageTransition";
-import { projectImageVtName } from "@/components/view-transitions/names";
 
 type Args = {
   params: Promise<{ owner: string; repo: string }>;
@@ -66,28 +65,10 @@ async function ProjectDetail({ params }: Args) {
             </Link>
 
             <div className="overflow-hidden rounded-none border border-base-content/10 bg-base-300/40">
-              <ViewTransition
-                name={projectImageVtName(project.nameWithOwner)}
-                share="morph"
-                default="none"
-              >
-                {project.openGraphImageUrl ? (
-                  <img
-                    src={project.openGraphImageUrl}
-                    alt={project.name}
-                    className="h-56 w-full object-cover md:h-72"
-                  />
-                ) : (
-                  <div className="flex h-56 items-center justify-center bg-base-200 md:h-72">
-                    <Github className="size-10 text-base-content/20" />
-                  </div>
-                )}
-              </ViewTransition>
-
               <div className="space-y-6 p-6 md:p-10">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
-                    <h1 className="font-serif text-5xl font-semibold tracking-[-0.04em]">
+                    <h1 className="font-serif text-5xl font-semibold tracking-[-0.04em] md:text-6xl">
                       {project.name}
                     </h1>
                     <p className="mt-2 text-base-content/70">{project.nameWithOwner}</p>
@@ -117,7 +98,9 @@ async function ProjectDetail({ params }: Args) {
                 </div>
 
                 {project.description ? (
-                  <p className="text-lg leading-8 text-base-content/80">{project.description}</p>
+                  <p className="text-lg leading-8 text-base-content/80 md:text-xl md:leading-9">
+                    {project.description}
+                  </p>
                 ) : null}
 
                 {topics.length ? (

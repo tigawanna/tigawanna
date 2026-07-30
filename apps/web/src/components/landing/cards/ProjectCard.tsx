@@ -1,18 +1,12 @@
 "use client";
 
-import { ViewTransition } from "react";
 import { TimeCompponent } from "../stubs/time";
 import { useLandingCardMotion } from "../hooks/use-landing-card-motion";
 import type { GithubRepoNode } from "../types/github";
-import { projectImageVtName } from "@/components/view-transitions/names";
-import Image from "next/image";
 import Link from "next/link";
 import { Github, Globe, Lock } from "lucide-react";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { twMerge } from "tailwind-merge";
-
-/** Local fallback when a GitHub social-preview URL fails (expired signed URLs, etc.). */
-const PROJECT_IMAGE_FALLBACK = "/fallback.png";
 
 /**
  * Builds the project detail href for a `owner/repo` slug.
@@ -64,42 +58,17 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
   const cardRef = useRef<HTMLElement | null>(null);
   useLandingCardMotion(cardRef);
 
-  const remoteImageUrl =
-    repo.openGraphImageUrl && repo.openGraphImageUrl.length > 0 ? repo.openGraphImageUrl : null;
-  const [failedSrc, setFailedSrc] = useState<string | null>(null);
-  const imageSrc =
-    !remoteImageUrl || failedSrc === remoteImageUrl ? PROJECT_IMAGE_FALLBACK : remoteImageUrl;
-
   return (
     <article
       ref={cardRef}
       data-test="project-card"
       className={twMerge("landing-card group relative flex flex-col overflow-hidden", className)}
     >
-      <ViewTransition name={projectImageVtName(repo.nameWithOwner)} share="morph" default="none">
-        <div className="landing-card-media relative h-48 shrink-0 overflow-hidden">
-          <Image
-            src={imageSrc}
-            alt={repo.name}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            // Signed GitHub social-preview URLs break when proxied through the optimizer
-            // (expiry + CDN rate limits). Load them directly in the browser.
-            unoptimized={imageSrc.includes("repository-images.githubusercontent.com")}
-            onError={() => {
-              if (remoteImageUrl && failedSrc !== remoteImageUrl) {
-                setFailedSrc(remoteImageUrl);
-              }
-            }}
-            className="landing-card-media-image object-cover"
-          />
-          <div className="absolute inset-0 bg-linear-to-t from-landing-panel via-landing-panel/10 to-transparent" />
-        </div>
-      </ViewTransition>
-
-      <div className="flex flex-1 flex-col gap-3 p-6 pt-4">
+      <div className="flex flex-1 flex-col gap-4 p-7">
         <div className="flex flex-wrap items-start justify-between gap-2">
-          <h3 className="font-serif text-xl leading-snug text-landing-cream">{repo.name}</h3>
+          <h3 className="font-serif text-3xl leading-tight tracking-[-0.03em] text-landing-cream md:text-4xl">
+            {repo.name}
+          </h3>
           <TimeCompponent
             time={repo.pushedAt}
             relative
@@ -108,7 +77,9 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
         </div>
 
         {repo.description ? (
-          <p className="line-clamp-2 text-sm leading-6 text-landing-sage/80">{repo.description}</p>
+          <p className="line-clamp-4 text-base leading-7 text-landing-sage/80">
+            {repo.description}
+          </p>
         ) : null}
 
         {repo.repositoryTopics?.nodes?.length ? (
