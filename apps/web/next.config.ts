@@ -56,6 +56,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "avatars.githubusercontent.com",
       },
+      {
+        protocol: "https",
+        hostname: "repository-images.githubusercontent.com",
+      },
     ],
   },
   webpack: (webpackConfig) => {
