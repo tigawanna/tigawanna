@@ -177,7 +177,7 @@ function toLandingRepo(node: GithubRepoNodeSource): GithubRepoNode {
  * Body only runs on cache miss — that is the audit signal for a real GraphQL fetch.
  */
 async function loadGithubLandingReposCached(): Promise<GithubLandingRepos> {
-  "use cache";
+  "use cache: remote";
   cacheLife(GITHUB_LIVE_CACHE_LIFE);
   cacheTag("landing-github-live-repos");
 
@@ -240,7 +240,7 @@ function staticLandingRepos(): GithubLandingRepos {
 /**
  * Live GitHub pinned + recent repos for the landing projects section.
  *
- * 1. ~15m cached GitHub GraphQL (skipped during `next build`; throws on failure → miss not cached)
+ * 1. ~15m **remote**-cached GitHub GraphQL (shared across Vercel instances; skipped at build)
  * 2. Hour-cached Payload backup (throws on empty/unavailable → miss not cached)
  * 3. Static fixtures (keeps `#projects` / e2e working offline)
  */
@@ -276,7 +276,7 @@ export async function getCachedGithubLandingRepos(): Promise<GithubLandingRepos>
  * Body only runs on cache miss — that is the audit signal for a real GraphQL fetch.
  */
 async function loadGithubRepoDetailCached(owner: string, repo: string): Promise<GithubRepoNode> {
-  "use cache";
+  "use cache: remote";
   cacheLife(GITHUB_LIVE_CACHE_LIFE);
   cacheTag(`github-repo_${owner}/${repo}`);
 

@@ -73,7 +73,7 @@ export async function loadPayloadLandingReposCached(): Promise<{
   pinnedRepos: GithubRepoNode[];
   recentRepos: GithubRepoNode[];
 }> {
-  "use cache";
+  "use cache: remote";
   cacheLife("hours");
   cacheTag("landing-pinned-repos");
   cacheTag("landing-recent-repos");
