@@ -28,15 +28,6 @@ const GITHUB_LIVE_CACHE_LIFE = {
 } as const;
 
 /**
- * Milliseconds since `startedAt` (from `Date.now()`).
- *
- * @param startedAt - Start timestamp.
- */
-function msSince(startedAt: number): number {
-  return Date.now() - startedAt;
-}
-
-/**
  * Compact error text for logs (avoids dumping full GraphQL request payloads).
  *
  * @param err - Unknown catch value.
@@ -198,13 +189,14 @@ async function loadGithubLandingReposCached(): Promise<GithubLandingRepos> {
   console.warn(
     `${LOG_PREFIX} LIST cache miss → starting live GitHub fetch (revalidate=${GITHUB_LIVE_CACHE_LIFE.revalidate}s)`,
   );
+  // Timing is safe inside `"use cache"` (Cache Component); do not use Date.now() in outer RSC helpers.
   const startedAt = Date.now();
 
   let listed;
   try {
     listed = await listGithubRepos({ recentLimit: 100 });
   } catch (err: unknown) {
-    warnGithubFetchFailure(`LIST fetch failed after ${msSince(startedAt)}ms`, err);
+    warnGithubFetchFailure(`LIST fetch failed after ${Date.now() - startedAt}ms`, err);
     throw err;
   }
 
@@ -229,7 +221,7 @@ async function loadGithubLandingReposCached(): Promise<GithubLandingRepos> {
   }
 
   console.warn(
-    `${LOG_PREFIX} LIST cache miss → live GitHub ok in ${msSince(startedAt)}ms · pinned=${pinnedRepos.length} recent=${recentRepos.length} total=${listed.repos.length}`,
+    `${LOG_PREFIX} LIST cache miss → live GitHub ok in ${Date.now() - startedAt}ms · pinned=${pinnedRepos.length} recent=${recentRepos.length} total=${listed.repos.length}`,
   );
 
   return { pinnedRepos, recentRepos };
@@ -263,17 +255,14 @@ export async function getCachedGithubLandingRepos(): Promise<GithubLandingRepos>
     console.warn(`${LOG_PREFIX} LIST skipped live GitHub during next build → Payload`);
   }
 
-  const fallbackStartedAt = Date.now();
   try {
     const payloadRepos = await loadPayloadLandingReposCached();
     console.warn(
-      `${LOG_PREFIX} LIST using Payload backup in ${msSince(fallbackStartedAt)}ms · pinned=${payloadRepos.pinnedRepos.length} recent=${payloadRepos.recentRepos.length}`,
+      `${LOG_PREFIX} LIST using Payload backup · pinned=${payloadRepos.pinnedRepos.length} recent=${payloadRepos.recentRepos.length}`,
     );
     return payloadRepos;
   } catch (err: unknown) {
-    console.warn(
-      `${LOG_PREFIX} LIST Payload backup failed in ${msSince(fallbackStartedAt)}ms → static fixtures · ${shortErr(err)}`,
-    );
+    console.warn(`${LOG_PREFIX} LIST Payload backup failed → static fixtures · ${shortErr(err)}`);
     const fixtures = staticLandingRepos();
     console.warn(
       `${LOG_PREFIX} LIST using static fixtures · pinned=${fixtures.pinnedRepos.length} recent=${fixtures.recentRepos.length}`,
@@ -305,7 +294,7 @@ async function loadGithubRepoDetailCached(owner: string, repo: string): Promise<
     detail = await createGitHubClient(pat).getRepoDetail(owner, repo);
   } catch (err: unknown) {
     warnGithubFetchFailure(
-      `DETAIL fetch failed after ${msSince(startedAt)}ms · ${owner}/${repo}`,
+      `DETAIL fetch failed after ${Date.now() - startedAt}ms · ${owner}/${repo}`,
       err,
     );
     throw err;
@@ -323,7 +312,7 @@ async function loadGithubRepoDetailCached(owner: string, repo: string): Promise<
     detail.repositoryTopics?.edges?.map((edge) => edge.node.topic.name).filter(Boolean) ?? [];
 
   console.warn(
-    `${LOG_PREFIX} DETAIL cache miss → live GitHub ok in ${msSince(startedAt)}ms · ${owner}/${repo} · topics=${topics.length} · og=${detail.openGraphImageUrl ? "yes" : "no"}`,
+    `${LOG_PREFIX} DETAIL cache miss → live GitHub ok in ${Date.now() - startedAt}ms · ${owner}/${repo} · topics=${topics.length} · og=${detail.openGraphImageUrl ? "yes" : "no"}`,
   );
 
   return {
@@ -378,16 +367,13 @@ export async function getCachedGithubRepoByName(
   repo: string,
 ): Promise<GithubRepoNode | null> {
   const nameWithOwner = `${owner}/${repo}`;
-  const startedAt = Date.now();
 
   const landing = await getCachedGithubLandingRepos();
   const fromLanding =
     landing.recentRepos.find((entry) => entry.nameWithOwner === nameWithOwner) ??
     landing.pinnedRepos.find((entry) => entry.nameWithOwner === nameWithOwner);
   if (fromLanding) {
-    console.warn(
-      `${LOG_PREFIX} DETAIL media source=landing-list · ${nameWithOwner} · ${msSince(startedAt)}ms`,
-    );
+    console.warn(`${LOG_PREFIX} DETAIL media source=landing-list · ${nameWithOwner}`);
     return fromLanding;
   }
 
@@ -396,7 +382,7 @@ export async function getCachedGithubRepoByName(
   );
   const detail = await getCachedGithubRepoDetail(owner, repo);
   console.warn(
-    `${LOG_PREFIX} DETAIL media source=${detail ? "single-repo" : "none"} · ${nameWithOwner} · ${msSince(startedAt)}ms`,
+    `${LOG_PREFIX} DETAIL media source=${detail ? "single-repo" : "none"} · ${nameWithOwner}`,
   );
   return detail;
 }
