@@ -67,6 +67,7 @@ async function findCachedRepositories(): Promise<Repository[]> {
 /**
  * Payload repositories as a landing fallback when live GitHub fails.
  * Throws on empty/unavailable so the miss is not stored as a successful cache entry.
+ * Body only runs on cache miss — log counts for audit (not the docs themselves).
  */
 export async function loadPayloadLandingReposCached(): Promise<{
   pinnedRepos: GithubRepoNode[];
@@ -90,6 +91,10 @@ export async function loadPayloadLandingReposCached(): Promise<{
   if (pinnedRepos.length === 0 && recentRepos.length === 0) {
     throw new Error("Payload has no public repositories for landing fallback.");
   }
+
+  console.warn(
+    `[github-landing-repos] PAYLOAD backup cache miss → DB read · pinned=${pinnedRepos.length} recent=${recentRepos.length} docs=${docs.length}`,
+  );
 
   return { pinnedRepos, recentRepos };
 }
