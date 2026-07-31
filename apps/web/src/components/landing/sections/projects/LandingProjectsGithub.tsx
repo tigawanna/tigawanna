@@ -67,11 +67,11 @@ async function LandingProjectsGithubContent() {
 }
 
 /**
- * Landing projects section fed by a day-cached GitHub GraphQL list
- * (`listGithubRepos`) instead of the Payload repositories collection.
+ * Landing projects section fed by day-cached GitHub GraphQL (`listGithubRepos`),
+ * with Payload repositories as backup when GitHub fails.
  *
  * No Suspense skeleton: the section only mounts once data is available.
- * On 4xx/5xx / missing token / empty list, the section is omitted entirely.
+ * Only when both GitHub and Payload fail is the section omitted entirely.
  */
 export function LandingProjectsGithub() {
   return (

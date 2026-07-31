@@ -65,6 +65,36 @@ async function findCachedRepositories(): Promise<Repository[]> {
 }
 
 /**
+ * Payload repositories as a landing fallback when live GitHub fails.
+ * Throws on empty/unavailable so the miss is not stored as a successful cache entry.
+ */
+export async function loadPayloadLandingReposCached(): Promise<{
+  pinnedRepos: GithubRepoNode[];
+  recentRepos: GithubRepoNode[];
+}> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("landing-pinned-repos");
+  cacheTag("landing-recent-repos");
+
+  const docs = await findCachedRepositories();
+  if (docs.length === 0) {
+    throw new Error("Payload repositories collection is empty.");
+  }
+
+  const recentRepos = docs.filter((doc) => !doc.isPrivate).map(toGithubRepoNode);
+  const pinnedRepos = docs
+    .filter((doc) => Boolean(doc.featured) && !doc.isPrivate)
+    .map(toGithubRepoNode);
+
+  if (pinnedRepos.length === 0 && recentRepos.length === 0) {
+    throw new Error("Payload has no public repositories for landing fallback.");
+  }
+
+  return { pinnedRepos, recentRepos };
+}
+
+/**
  * Featured (pinned) repos from the CMS cache.
  */
 export async function getCachedPinnedRepos(): Promise<GithubRepoNode[]> {

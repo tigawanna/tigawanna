@@ -144,6 +144,9 @@ export function ProjectOgPlaceholder({
   );
 }
 
+/** Static card media when GitHub OG is missing/expired — keeps card height stable. */
+const PROJECT_CARD_IMAGE_FALLBACK = "/fallback.png";
+
 type ProjectMediaProps = {
   name: string;
   nameWithOwner: string;
@@ -157,8 +160,9 @@ type ProjectMediaProps = {
 };
 
 /**
- * Remote GitHub OG image when available; otherwise a themed default-OG mock.
- * Failed / expired signed URLs swap to the placeholder without a static asset.
+ * Remote GitHub OG image when available.
+ * Cards fall back to a static image (stable height / no CLS).
+ * Detail heroes use the themed OG mock when remote media is missing.
  */
 export function ProjectMedia({
   name,
@@ -182,6 +186,21 @@ export function ProjectMedia({
   );
 
   if (!showRemote || !remoteImageUrl) {
+    if (size === "card") {
+      return (
+        <div className={frameClassName}>
+          <Image
+            src={PROJECT_CARD_IMAGE_FALLBACK}
+            alt={name}
+            fill
+            sizes={MEDIA_SIZES.card}
+            className="landing-card-media-image object-cover"
+          />
+          <div className="absolute inset-0 bg-linear-to-t from-landing-panel via-landing-panel/10 to-transparent" />
+        </div>
+      );
+    }
+
     return (
       <div className={frameClassName}>
         <ProjectOgPlaceholder
