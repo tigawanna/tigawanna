@@ -7,7 +7,6 @@ import type { GithubRepoNode } from "../types/github";
 import { ProjectMedia } from "@/components/projects/ProjectMedia";
 import { projectImageVtName } from "@/components/view-transitions/names";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Github, Globe, Lock } from "lucide-react";
 import { useRef } from "react";
 import { twMerge } from "tailwind-merge";
@@ -20,9 +19,6 @@ function projectDetailHref(nameWithOwner: string) {
   if (!owner || !repo) return "/";
   return `/project/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`;
 }
-
-/** Hrefs already warmed this session — avoids repeat prefetch spam on hover jitter. */
-const prefetchedProjectHrefs = new Set<string>();
 
 interface ProjectCardProps {
   repo: GithubRepoNode;
@@ -62,28 +58,14 @@ export function PrivateProjectCard({ repo, className }: ProjectCardProps) {
 }
 
 export function ProjectCard({ repo, className }: ProjectCardProps) {
-  const router = useRouter();
   const cardRef = useRef<HTMLElement | null>(null);
   useLandingCardMotion(cardRef);
-  const href = projectDetailHref(repo.nameWithOwner);
-
-  /**
-   * Warms the project detail RSC payload before click (viewport prefetch is often shell-only with PPR).
-   */
-  function preloadDetail() {
-    if (!href || href === "/" || prefetchedProjectHrefs.has(href)) return;
-    prefetchedProjectHrefs.add(href);
-    router.prefetch(href);
-  }
 
   return (
     <article
       ref={cardRef}
       data-test="project-card"
       className={twMerge("landing-card group relative flex flex-col overflow-hidden", className)}
-      onMouseEnter={preloadDetail}
-      onFocus={preloadDetail}
-      onTouchStart={preloadDetail}
     >
       <ViewTransition name={projectImageVtName(repo.nameWithOwner)} share="morph" default="none">
         <ProjectMedia
@@ -146,11 +128,9 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
           </div>
 
           <Link
-            href={href}
+            href={projectDetailHref(repo.nameWithOwner)}
             prefetch
             transitionTypes={["nav-forward"]}
-            onMouseEnter={preloadDetail}
-            onFocus={preloadDetail}
             className="rounded-none border border-landing-cream/15 px-3.5 py-1.5 text-xs font-medium text-landing-sage/75 transition-all hover:border-landing-cream/30 hover:bg-landing-cream/5 hover:text-landing-cream"
           >
             Details
