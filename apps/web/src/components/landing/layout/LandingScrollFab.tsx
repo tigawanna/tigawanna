@@ -246,7 +246,7 @@ export function LandingScrollFab() {
             data-test="landing-scroll-fab-up"
             aria-label="Scroll to top"
             className={twMerge(glassIconClass, "-translate-y-(--fab-travel)")}
-            onClick={smoothScrollToLandingTop}
+            onClick={() => smoothScrollToLandingTop()}
           >
             <ArrowUp className="size-4.5 stroke-[2.25]" aria-hidden="true" />
           </button>
@@ -268,7 +268,7 @@ export function LandingScrollFab() {
               opacity: downOpacity,
               pointerEvents: showDown ? "auto" : "none",
             }}
-            onClick={smoothScrollToLandingBottom}
+            onClick={() => smoothScrollToLandingBottom()}
           >
             <ArrowDown className="size-4.5 stroke-[2.25]" aria-hidden="true" />
           </button>

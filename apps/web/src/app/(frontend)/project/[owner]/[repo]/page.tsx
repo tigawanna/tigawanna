@@ -2,6 +2,7 @@ import { Suspense, ViewTransition } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Github, Globe } from "lucide-react";
+import { getCachedGithubRepoByName } from "@/data-access/github-landing-repos";
 import {
   getCachedProjectDetail,
   getCachedRepositoryByName,
@@ -17,10 +18,34 @@ import { CenteredLoader } from "@/components/loading/CenteredLoader";
 import { DirectionalPageTransition } from "@/components/view-transitions/DirectionalPageTransition";
 import { projectImageVtName } from "@/components/view-transitions/names";
 import { ProjectMedia } from "@/components/projects/ProjectMedia";
+import type { GithubRepoNode } from "@/components/landing/types/github";
 
 type Args = {
   params: Promise<{ owner: string; repo: string }>;
 };
+
+/**
+ * Prefers live/day-cached GitHub fields (especially OG image) over Payload so
+ * detail media matches the landing card that just transitioned in.
+ */
+function mergeProjectWithGithubLive(
+  project: GithubRepoNode,
+  live: GithubRepoNode | null,
+): GithubRepoNode {
+  if (!live) return project;
+  return {
+    ...project,
+    openGraphImageUrl: live.openGraphImageUrl || project.openGraphImageUrl,
+    description: live.description ?? project.description,
+    descriptionHTML: live.descriptionHTML || project.descriptionHTML,
+    homepageUrl: live.homepageUrl || project.homepageUrl,
+    stargazerCount: live.stargazerCount ?? project.stargazerCount,
+    forkCount: live.forkCount ?? project.forkCount,
+    pushedAt: live.pushedAt || project.pushedAt,
+    repositoryTopics:
+      live.repositoryTopics.nodes.length > 0 ? live.repositoryTopics : project.repositoryTopics,
+  };
+}
 
 export async function generateStaticParams() {
   return getRepositoryStaticParams();
@@ -48,10 +73,14 @@ async function ProjectDetail({ params }: Args) {
   const { owner, repo } = await params;
   const decodedOwner = decodeURIComponent(owner);
   const decodedRepo = decodeURIComponent(repo);
-  const detail = await getCachedProjectDetail(decodedOwner, decodedRepo);
+  const [detail, liveGithub] = await Promise.all([
+    getCachedProjectDetail(decodedOwner, decodedRepo),
+    getCachedGithubRepoByName(decodedOwner, decodedRepo),
+  ]);
   if (!detail) notFound();
 
-  const { project, isMonorepo, packages, readme } = detail;
+  const project = mergeProjectWithGithubLive(detail.project, liveGithub);
+  const { isMonorepo, packages, readme } = detail;
   const topics = project.repositoryTopics?.nodes?.map((node) => node.topic.name) ?? [];
 
   return (
@@ -156,7 +185,7 @@ async function ProjectDetail({ params }: Args) {
 }
 
 /**
- * Project detail page — Payload CMS cache with static fixture fallback.
+ * Project detail — Payload for READMEs; day-cached GitHub for card/hero media.
  */
 export default function ProjectDetailPage({ params }: Args) {
   return (

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { LandingBackFab } from "@/components/landing/layout/LandingBackFab";
 import { LandingFooter } from "@/components/landing/layout/LandingFooter";
 import { LandingNavbar } from "@/components/landing/layout/LandingNavbar";
 import { LandingScrollFabDeferred } from "@/components/landing/layout/LandingScrollFabDeferred";
@@ -38,13 +39,7 @@ export function ContentArticle({
       <LandingNavbar />
       <main className="min-h-screen pt-20 pb-24">
         <article data-test={dataTest}>
-          <PostHero
-            doc={doc}
-            backHref={backHref}
-            backLabel={backLabel}
-            asideHref={asideHref}
-            asideLabel={asideLabel}
-          />
+          <PostHero doc={doc} asideHref={asideHref} asideLabel={asideLabel} />
 
           <div className="container pt-10">
             <div className="mx-auto max-w-3xl">
@@ -56,6 +51,7 @@ export function ContentArticle({
         </article>
       </main>
       <LandingFooter />
+      <LandingBackFab href={backHref} label={backLabel} />
       <LandingScrollFabDeferred />
     </div>
   );

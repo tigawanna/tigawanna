@@ -33,7 +33,7 @@ export function ProjectsSearch({
         aria-hidden="true"
       />
       <Input
-        type="search"
+        type="text"
         value={value}
         onChange={(event) => onChange(event.target.value)}
         onKeyDown={(event) => {
@@ -42,6 +42,7 @@ export function ProjectsSearch({
           }
         }}
         placeholder="Search by tag, tech, or description — press Enter"
+        autoComplete="off"
         className={twMerge(
           "h-10 rounded-full border-landing-cream/10 bg-landing-cream/5 pr-10 pl-10 text-sm text-landing-cream shadow-none placeholder:text-landing-sage/40",
           "focus-visible:border-landing-cream/25 focus-visible:ring-landing-cream/15",

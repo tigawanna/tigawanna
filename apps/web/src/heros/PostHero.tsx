@@ -1,15 +1,12 @@
 import { ViewTransition } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { journalTitleVtName } from "@/components/view-transitions/names";
 import type { ContentKind, JournalDetail } from "@/types/journals";
 import { cn } from "@/lib/cn";
 
 type PostHeroProps = {
   doc: JournalDetail;
-  backHref: "/blogs" | "/journals";
-  backLabel: string;
   /** Extra link (e.g. GitHub Gist) shown in the meta row. */
   asideHref?: string | null;
   asideLabel?: string;
@@ -35,15 +32,9 @@ function kindLabel(kind: ContentKind): string {
 
 /**
  * Post / journal hero — cover image on top, then copy below.
- * Back control lives in the meta row (with date), under title + excerpt.
+ * Back navigation lives in the floating glass FAB (`LandingBackFab`).
  */
-export function PostHero({
-  doc,
-  backHref,
-  backLabel,
-  asideHref,
-  asideLabel = "Gist",
-}: PostHeroProps) {
+export function PostHero({ doc, asideHref, asideLabel = "Gist" }: PostHeroProps) {
   const published = doc.publishedAt ?? doc.created;
   const hasHero = Boolean(doc.heroImageUrl);
   const tags = doc.tags.filter(Boolean);
@@ -120,16 +111,6 @@ export function PostHero({
                 </div>
               ) : null}
             </div>
-
-            <Link
-              href={backHref}
-              transitionTypes={["nav-back"]}
-              data-test="post-hero-back"
-              className="btn btn-ghost btn-sm w-fit gap-2 rounded-full border border-base-content/12 px-4 font-normal text-base-content/70 hover:border-base-content/20 hover:bg-base-200/60 hover:text-base-content"
-            >
-              <ArrowLeft className="size-3.5 opacity-70" aria-hidden="true" />
-              {backLabel}
-            </Link>
           </div>
         </div>
       </div>
