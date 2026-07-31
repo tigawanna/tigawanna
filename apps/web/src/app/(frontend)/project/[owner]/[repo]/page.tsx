@@ -25,7 +25,7 @@ type Args = {
 };
 
 /**
- * Prefers live/day-cached GitHub fields (especially OG image) over Payload so
+ * Prefers live/~15m-cached GitHub fields (especially OG image) over Payload so
  * detail media matches the landing card that just transitioned in.
  */
 function mergeProjectWithGithubLive(
@@ -185,7 +185,7 @@ async function ProjectDetail({ params }: Args) {
 }
 
 /**
- * Project detail — Payload for READMEs; day-cached GitHub for card/hero media.
+ * Project detail — Payload for READMEs; short-lived GitHub cache for card/hero media.
  */
 export default function ProjectDetailPage({ params }: Args) {
   return (

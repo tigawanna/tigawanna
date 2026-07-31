@@ -13,7 +13,7 @@ function ProjectsHeader() {
       <h2 className="landing-section-heading">Open source projects</h2>
       <p className="landing-section-lead">
         Featured pins, recent pushes, and category filters — fetched live from GitHub and cached for
-        a day.
+        about 15 minutes.
       </p>
     </div>
   );
@@ -65,7 +65,7 @@ async function LandingProjectsGithubContent() {
 }
 
 /**
- * Landing projects section: day-cached GitHub GraphQL, Payload backup, then static fixtures.
+ * Landing projects section: ~15m cached GitHub GraphQL, Payload backup, then static fixtures.
  * No Suspense skeleton — section mounts once data resolves (fixtures guarantee content for e2e).
  */
 export function LandingProjectsGithub() {

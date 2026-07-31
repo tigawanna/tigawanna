@@ -20,6 +20,38 @@ export type GithubLandingRepos = {
 
 const LOG_PREFIX = "[github-landing-repos]";
 
+/** ~15m server cache for live GitHub GraphQL (`expire` must be > `revalidate`). */
+const GITHUB_LIVE_CACHE_LIFE = {
+  stale: 5 * 60,
+  revalidate: 15 * 60,
+  expire: 20 * 60,
+} as const;
+
+/**
+ * Milliseconds since `startedAt` (from `Date.now()`).
+ *
+ * @param startedAt - Start timestamp.
+ */
+function msSince(startedAt: number): number {
+  return Date.now() - startedAt;
+}
+
+/**
+ * Compact error text for logs (avoids dumping full GraphQL request payloads).
+ *
+ * @param err - Unknown catch value.
+ */
+function shortErr(err: unknown): string {
+  if (err instanceof RequestError) {
+    return `RequestError status=${err.status} ${err.message}`;
+  }
+  if (err instanceof Error) {
+    const name = err.name !== "Error" ? `${err.name}: ` : "";
+    return `${name}${err.message}`;
+  }
+  return String(err);
+}
+
 /**
  * True while `next build` is prerendering pages.
  * Live GitHub is skipped so flaky outbound TLS cannot fail the build.
@@ -48,6 +80,42 @@ function isGithubAuthError(err: unknown): boolean {
 }
 
 /**
+ * Whether an error looks like a missing GitHub repo (deleted / renamed / private).
+ *
+ * @param err - Unknown catch value.
+ */
+function isGithubNotFoundError(err: unknown): boolean {
+  if (err instanceof RequestError && err.status === 404) return true;
+  if (!(err instanceof Error)) return false;
+  const message = err.message.toLowerCase();
+  return (
+    message.includes("could not resolve to a repository") ||
+    message.includes("not found") ||
+    message.includes("404")
+  );
+}
+
+/**
+ * Whether an error looks like a network / connect timeout to GitHub.
+ *
+ * @param err - Unknown catch value.
+ */
+function isGithubNetworkError(err: unknown): boolean {
+  if (!(err instanceof Error)) return false;
+  const message = err.message.toLowerCase();
+  const cause = "cause" in err && err.cause instanceof Error ? err.cause.message.toLowerCase() : "";
+  const haystack = `${message} ${cause}`;
+  return (
+    haystack.includes("fetch failed") ||
+    haystack.includes("connect timeout") ||
+    haystack.includes("timeout") ||
+    haystack.includes("econnreset") ||
+    haystack.includes("enotfound") ||
+    haystack.includes("network")
+  );
+}
+
+/**
  * Logs token problems loudly for Vercel / runtime audits.
  *
  * @param context - Short label (`list` / `detail:owner/repo`).
@@ -59,9 +127,30 @@ function logGithubTokenProblem(context: string, err?: unknown) {
     return;
   }
   if (isGithubAuthError(err)) {
-    console.error(`${LOG_PREFIX} GH_PAT is invalid or unauthorized (${context})`, err);
+    console.error(`${LOG_PREFIX} GH_PAT is invalid or unauthorized (${context})`, shortErr(err));
+  }
+}
+
+/**
+ * Classifies a live-GitHub failure for audit logs.
+ *
+ * @param context - Short label.
+ * @param err - Failure reason.
+ */
+function warnGithubFetchFailure(context: string, err: unknown) {
+  if (isGithubAuthError(err)) {
+    logGithubTokenProblem(context, err);
     return;
   }
+  if (isGithubNotFoundError(err)) {
+    console.warn(`${LOG_PREFIX} ${context} · repo not found on GitHub · ${shortErr(err)}`);
+    return;
+  }
+  if (isGithubNetworkError(err)) {
+    console.warn(`${LOG_PREFIX} ${context} · network/timeout talking to GitHub · ${shortErr(err)}`);
+    return;
+  }
+  console.warn(`${LOG_PREFIX} ${context} · ${shortErr(err)}`);
 }
 
 /**
@@ -93,12 +182,12 @@ function toLandingRepo(node: GithubRepoNodeSource): GithubRepoNode {
 }
 
 /**
- * Day-cached GitHub list. Throws on failure so Next does not cache empty/error results.
+ * Short-lived cached GitHub list. Throws on failure so Next does not cache empty/error results.
  * Body only runs on cache miss — that is the audit signal for a real GraphQL fetch.
  */
 async function loadGithubLandingReposCached(): Promise<GithubLandingRepos> {
   "use cache";
-  cacheLife("days");
+  cacheLife(GITHUB_LIVE_CACHE_LIFE);
   cacheTag("landing-github-live-repos");
 
   if (!process.env.GH_PAT?.trim()) {
@@ -106,11 +195,16 @@ async function loadGithubLandingReposCached(): Promise<GithubLandingRepos> {
     throw new Error("GH_PAT is not set; cannot load landing GitHub repos.");
   }
 
+  console.warn(
+    `${LOG_PREFIX} LIST cache miss → starting live GitHub fetch (revalidate=${GITHUB_LIVE_CACHE_LIFE.revalidate}s)`,
+  );
+  const startedAt = Date.now();
+
   let listed;
   try {
     listed = await listGithubRepos({ recentLimit: 100 });
   } catch (err: unknown) {
-    logGithubTokenProblem("list", err);
+    warnGithubFetchFailure(`LIST fetch failed after ${msSince(startedAt)}ms`, err);
     throw err;
   }
 
@@ -135,7 +229,7 @@ async function loadGithubLandingReposCached(): Promise<GithubLandingRepos> {
   }
 
   console.warn(
-    `${LOG_PREFIX} LIST cache miss → live GitHub fetch · pinned=${pinnedRepos.length} recent=${recentRepos.length} total=${listed.repos.length}`,
+    `${LOG_PREFIX} LIST cache miss → live GitHub ok in ${msSince(startedAt)}ms · pinned=${pinnedRepos.length} recent=${recentRepos.length} total=${listed.repos.length}`,
   );
 
   return { pinnedRepos, recentRepos };
@@ -154,7 +248,7 @@ function staticLandingRepos(): GithubLandingRepos {
 /**
  * Live GitHub pinned + recent repos for the landing projects section.
  *
- * 1. Day-cached GitHub GraphQL (skipped during `next build`; throws on failure → miss not cached)
+ * 1. ~15m cached GitHub GraphQL (skipped during `next build`; throws on failure → miss not cached)
  * 2. Hour-cached Payload backup (throws on empty/unavailable → miss not cached)
  * 3. Static fixtures (keeps `#projects` / e2e working offline)
  */
@@ -163,20 +257,23 @@ export async function getCachedGithubLandingRepos(): Promise<GithubLandingRepos>
     try {
       return await loadGithubLandingReposCached();
     } catch (err: unknown) {
-      console.warn(`${LOG_PREFIX} LIST live GitHub failed → falling back to Payload`, err);
+      warnGithubFetchFailure("LIST live GitHub failed → falling back to Payload", err);
     }
   } else {
     console.warn(`${LOG_PREFIX} LIST skipped live GitHub during next build → Payload`);
   }
 
+  const fallbackStartedAt = Date.now();
   try {
     const payloadRepos = await loadPayloadLandingReposCached();
     console.warn(
-      `${LOG_PREFIX} LIST using Payload backup · pinned=${payloadRepos.pinnedRepos.length} recent=${payloadRepos.recentRepos.length}`,
+      `${LOG_PREFIX} LIST using Payload backup in ${msSince(fallbackStartedAt)}ms · pinned=${payloadRepos.pinnedRepos.length} recent=${payloadRepos.recentRepos.length}`,
     );
     return payloadRepos;
   } catch (err: unknown) {
-    console.warn(`${LOG_PREFIX} LIST Payload backup failed → static fixtures`, err);
+    console.warn(
+      `${LOG_PREFIX} LIST Payload backup failed in ${msSince(fallbackStartedAt)}ms → static fixtures · ${shortErr(err)}`,
+    );
     const fixtures = staticLandingRepos();
     console.warn(
       `${LOG_PREFIX} LIST using static fixtures · pinned=${fixtures.pinnedRepos.length} recent=${fixtures.recentRepos.length}`,
@@ -186,12 +283,12 @@ export async function getCachedGithubLandingRepos(): Promise<GithubLandingRepos>
 }
 
 /**
- * Day-cached single-repo GraphQL fetch. Throws on failure so errors are not cached.
+ * Short-lived single-repo GraphQL fetch. Throws on failure so errors are not cached.
  * Body only runs on cache miss — that is the audit signal for a real GraphQL fetch.
  */
 async function loadGithubRepoDetailCached(owner: string, repo: string): Promise<GithubRepoNode> {
   "use cache";
-  cacheLife("days");
+  cacheLife(GITHUB_LIVE_CACHE_LIFE);
   cacheTag(`github-repo_${owner}/${repo}`);
 
   const pat = process.env.GH_PAT?.trim();
@@ -200,11 +297,17 @@ async function loadGithubRepoDetailCached(owner: string, repo: string): Promise<
     throw new Error(`GH_PAT is not set; cannot load ${owner}/${repo}.`);
   }
 
+  console.warn(`${LOG_PREFIX} DETAIL cache miss → starting live GitHub fetch · ${owner}/${repo}`);
+  const startedAt = Date.now();
+
   let detail;
   try {
     detail = await createGitHubClient(pat).getRepoDetail(owner, repo);
   } catch (err: unknown) {
-    logGithubTokenProblem(`detail:${owner}/${repo}`, err);
+    warnGithubFetchFailure(
+      `DETAIL fetch failed after ${msSince(startedAt)}ms · ${owner}/${repo}`,
+      err,
+    );
     throw err;
   }
 
@@ -212,6 +315,7 @@ async function loadGithubRepoDetailCached(owner: string, repo: string): Promise<
     throw new Error(`GitHub returned no repository for ${owner}/${repo}.`);
   }
   if (detail.isPrivate) {
+    console.warn(`${LOG_PREFIX} DETAIL ${owner}/${repo} is private — refusing`);
     throw new Error(`Repository ${owner}/${repo} is private.`);
   }
 
@@ -219,7 +323,7 @@ async function loadGithubRepoDetailCached(owner: string, repo: string): Promise<
     detail.repositoryTopics?.edges?.map((edge) => edge.node.topic.name).filter(Boolean) ?? [];
 
   console.warn(
-    `${LOG_PREFIX} DETAIL cache miss → live GitHub fetch · ${owner}/${repo} · topics=${topics.length}`,
+    `${LOG_PREFIX} DETAIL cache miss → live GitHub ok in ${msSince(startedAt)}ms · ${owner}/${repo} · topics=${topics.length} · og=${detail.openGraphImageUrl ? "yes" : "no"}`,
   );
 
   return {
@@ -257,7 +361,7 @@ async function getCachedGithubRepoDetail(
   try {
     return await loadGithubRepoDetailCached(owner, repo);
   } catch (err: unknown) {
-    console.warn(`${LOG_PREFIX} DETAIL live GitHub failed · ${owner}/${repo}`, err);
+    warnGithubFetchFailure(`DETAIL live GitHub failed · ${owner}/${repo}`, err);
     return null;
   }
 }
@@ -265,8 +369,8 @@ async function getCachedGithubRepoDetail(
 /**
  * Resolves one public repo for project detail media.
  *
- * Prefers the day-cached landing list (same source as project cards) so the
- * View Transition morph keeps the same OG URL. Falls back to a day-cached
+ * Prefers the short-lived landing list (same source as project cards) so the
+ * View Transition morph keeps the same OG URL. Falls back to a short-lived
  * single-repo GraphQL fetch when the repo is outside that list.
  */
 export async function getCachedGithubRepoByName(
@@ -274,15 +378,25 @@ export async function getCachedGithubRepoByName(
   repo: string,
 ): Promise<GithubRepoNode | null> {
   const nameWithOwner = `${owner}/${repo}`;
+  const startedAt = Date.now();
 
   const landing = await getCachedGithubLandingRepos();
   const fromLanding =
     landing.recentRepos.find((entry) => entry.nameWithOwner === nameWithOwner) ??
     landing.pinnedRepos.find((entry) => entry.nameWithOwner === nameWithOwner);
-  if (fromLanding) return fromLanding;
+  if (fromLanding) {
+    console.warn(
+      `${LOG_PREFIX} DETAIL media source=landing-list · ${nameWithOwner} · ${msSince(startedAt)}ms`,
+    );
+    return fromLanding;
+  }
 
   console.warn(
-    `${LOG_PREFIX} DETAIL ${nameWithOwner} not in landing list → single-repo GitHub fetch`,
+    `${LOG_PREFIX} DETAIL ${nameWithOwner} not in landing list (${landing.recentRepos.length} recent / ${landing.pinnedRepos.length} pinned) → single-repo GitHub fetch`,
   );
-  return getCachedGithubRepoDetail(owner, repo);
+  const detail = await getCachedGithubRepoDetail(owner, repo);
+  console.warn(
+    `${LOG_PREFIX} DETAIL media source=${detail ? "single-repo" : "none"} · ${nameWithOwner} · ${msSince(startedAt)}ms`,
+  );
+  return detail;
 }

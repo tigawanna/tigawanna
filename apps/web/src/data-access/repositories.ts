@@ -78,6 +78,7 @@ export async function loadPayloadLandingReposCached(): Promise<{
   cacheTag("landing-pinned-repos");
   cacheTag("landing-recent-repos");
 
+  const startedAt = Date.now();
   const docs = await findCachedRepositories();
   if (docs.length === 0) {
     throw new Error("Payload repositories collection is empty.");
@@ -93,7 +94,7 @@ export async function loadPayloadLandingReposCached(): Promise<{
   }
 
   console.warn(
-    `[github-landing-repos] PAYLOAD backup cache miss → DB read · pinned=${pinnedRepos.length} recent=${recentRepos.length} docs=${docs.length}`,
+    `[github-landing-repos] PAYLOAD backup cache miss → DB read in ${Date.now() - startedAt}ms · pinned=${pinnedRepos.length} recent=${recentRepos.length} docs=${docs.length}`,
   );
 
   return { pinnedRepos, recentRepos };
