@@ -1,8 +1,11 @@
 "use client";
 
+import { ViewTransition } from "react";
 import { TimeCompponent } from "../stubs/time";
 import { useLandingCardMotion } from "../hooks/use-landing-card-motion";
 import type { GithubRepoNode } from "../types/github";
+import { ProjectMedia } from "@/components/projects/ProjectMedia";
+import { projectImageVtName } from "@/components/view-transitions/names";
 import Link from "next/link";
 import { Github, Globe, Lock } from "lucide-react";
 import { useRef } from "react";
@@ -64,11 +67,18 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
       data-test="project-card"
       className={twMerge("landing-card group relative flex flex-col overflow-hidden", className)}
     >
-      <div className="flex flex-1 flex-col gap-4 p-7">
+      <ViewTransition name={projectImageVtName(repo.nameWithOwner)} share="morph" default="none">
+        <ProjectMedia
+          name={repo.name}
+          nameWithOwner={repo.nameWithOwner}
+          openGraphImageUrl={repo.openGraphImageUrl}
+          size="card"
+        />
+      </ViewTransition>
+
+      <div className="flex flex-1 flex-col gap-3 p-6 pt-4">
         <div className="flex flex-wrap items-start justify-between gap-2">
-          <h3 className="font-serif text-3xl leading-tight tracking-[-0.03em] text-landing-cream md:text-4xl">
-            {repo.name}
-          </h3>
+          <h3 className="font-serif text-xl leading-snug text-landing-cream">{repo.name}</h3>
           <TimeCompponent
             time={repo.pushedAt}
             relative
@@ -77,9 +87,7 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
         </div>
 
         {repo.description ? (
-          <p className="line-clamp-4 text-base leading-7 text-landing-sage/80">
-            {repo.description}
-          </p>
+          <p className="line-clamp-2 text-sm leading-6 text-landing-sage/80">{repo.description}</p>
         ) : null}
 
         {repo.repositoryTopics?.nodes?.length ? (

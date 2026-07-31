@@ -8,7 +8,7 @@ import { LandingFeaturesDeferred } from "./sections/features/LandingFeaturesDefe
 import { LandingHero } from "./sections/hero/LandingHero";
 import { LandingInfodiet } from "./sections/infodiet/LandingInfodiet";
 import { LandingJournalsDeferred } from "./sections/journals/LandingJournalsDeferred";
-import { LandingProjects } from "./sections/projects/LandingProjects";
+import { LandingProjectsGithub } from "./sections/projects/LandingProjectsGithub";
 import { StackCubeDeferred } from "./sections/stack-cube/StackCubeDeferred";
 
 /**
@@ -27,7 +27,7 @@ export function LandingPage() {
         <StackCubeDeferred />
         <LandingHowIWork />
         <LandingFeaturesDeferred />
-        <LandingProjects />
+        <LandingProjectsGithub />
         <LandingArticles />
         <LandingInfodiet />
         <LandingJournalsDeferred />

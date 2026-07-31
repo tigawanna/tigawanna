@@ -14,6 +14,8 @@ import { ProjectReadmeTabs } from "@/components/projects/ProjectReadmeTabs";
 import { RichText } from "@/components/richtext/RichText";
 import { CenteredLoader } from "@/components/loading/CenteredLoader";
 import { DirectionalPageTransition } from "@/components/view-transitions/DirectionalPageTransition";
+import { projectImageVtName } from "@/components/view-transitions/names";
+import { ProjectMedia } from "@/components/projects/ProjectMedia";
 
 type Args = {
   params: Promise<{ owner: string; repo: string }>;
@@ -66,6 +68,19 @@ async function ProjectDetail({ params }: Args) {
             </Link>
 
             <div className="overflow-hidden rounded-none border border-base-content/10 bg-base-300/40">
+              <ViewTransition
+                name={projectImageVtName(project.nameWithOwner)}
+                share="morph"
+                default="none"
+              >
+                <ProjectMedia
+                  name={project.name}
+                  nameWithOwner={project.nameWithOwner}
+                  openGraphImageUrl={project.openGraphImageUrl}
+                  size="hero"
+                />
+              </ViewTransition>
+
               <div className="space-y-6 p-6 md:p-10">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
