@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  scrollLandingFromLocationHash,
   smoothScrollToLandingHash,
   smoothScrollToLandingTop,
 } from "../utils/scroll-to-landing-hash";
@@ -8,7 +9,7 @@ import { AppConfig } from "../config/system";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
-import { useState, type MouseEvent } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 
 const navLinkClass =
   "text-sm tracking-wide text-landing-sage/70 transition-colors hover:text-landing-sage";
@@ -20,8 +21,28 @@ export function LandingNavbar() {
   const pathname = usePathname();
   const isLandingRoute = pathname === "/";
 
+  // Cold load / client nav to `/#section`, plus Back/Forward between sections.
+  useEffect(() => {
+    if (!isLandingRoute) return;
+
+    scrollLandingFromLocationHash({ behavior: "instant" });
+
+    const onPopState = () => {
+      if (window.location.hash) {
+        smoothScrollToLandingHash(window.location.hash, { syncUrl: false });
+        return;
+      }
+      smoothScrollToLandingTop({ syncUrl: false });
+    };
+
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, [isLandingRoute]);
+
   function handleHashClick(event: MouseEvent<HTMLAnchorElement>, href: string) {
     if (!href.startsWith("#")) return;
+    // Prevent the native jump so we keep navbar offset + layout-settle scroll,
+    // then push the hash ourselves (smoothScrollToLandingHash syncs the URL).
     event.preventDefault();
     setMobileOpen(false);
     smoothScrollToLandingHash(href);

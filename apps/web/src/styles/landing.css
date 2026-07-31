@@ -1,5 +1,6 @@
 /* Workspace packages resolve under node_modules and are ignored by Tailwind by default */
 @source "../components/landing";
+@source "../components/projects";
 
 @theme {
   --color-landing-void: #1a1a15;

@@ -10,6 +10,55 @@ type ScrollToLandingHashOptions = {
   layoutSettleMs?: number;
 };
 
+type SmoothScrollToLandingHashOptions = {
+  /**
+   * When true (default), writes the hash into the URL via `history.pushState`
+   * so section links are shareable. Set false for `popstate` / initial-load
+   * scrolls where the hash is already correct.
+   */
+  syncUrl?: boolean;
+};
+
+/**
+ * Normalizes a section hash to `#id`, or `""` when empty / top-of-page.
+ *
+ * @param hash - Target section hash, with or without a leading "#".
+ */
+export function normalizeLandingHash(hash: string): string {
+  const id = hash.replace(/^#/, "").trim();
+  return id ? `#${id}` : "";
+}
+
+/**
+ * Writes a landing section hash into the URL without triggering navigation.
+ * Uses `pushState` so Back returns to the previous section.
+ *
+ * @param hash - Target section hash, with or without a leading "#".
+ */
+export function setLandingHash(hash: string) {
+  const normalized = normalizeLandingHash(hash);
+  if (!normalized) {
+    clearLandingHash();
+    return;
+  }
+  if (window.location.hash === normalized) {
+    return;
+  }
+  const url = `${window.location.pathname}${window.location.search}${normalized}`;
+  window.history.pushState(null, "", url);
+}
+
+/**
+ * Removes the landing hash from the URL (hero / top-of-page).
+ */
+export function clearLandingHash() {
+  if (!window.location.hash) {
+    return;
+  }
+  const url = `${window.location.pathname}${window.location.search}`;
+  window.history.pushState(null, "", url);
+}
+
 /**
  * Scrolls to a landing-page section id, retrying until the target exists and
  * briefly correcting for layout shifts from below-the-fold hydration.
@@ -114,12 +163,19 @@ let cancelActiveLandingScroll: (() => void) | undefined;
  *
  * Cancels any scroll still in flight (e.g. rapid clicks) before starting a new
  * one, and drives the scroll from JS so it bypasses the browser's native anchor
- * jump. This avoids TanStack Router's scroll restoration overriding the target
- * on the first click, and keeps correcting for below-the-fold hydration shifts.
+ * jump (navbar offset + deferred-section layout settle). Syncs the hash into the
+ * URL by default so copied / shared links point at the section.
  *
  * @param hash - Target section hash, with or without a leading "#".
+ * @param options - Optional URL sync control for popstate / cold-load handlers.
  */
-export function smoothScrollToLandingHash(hash: string) {
+export function smoothScrollToLandingHash(
+  hash: string,
+  { syncUrl = true }: SmoothScrollToLandingHashOptions = {},
+) {
+  if (syncUrl) {
+    setLandingHash(hash);
+  }
   cancelActiveLandingScroll?.();
   cancelActiveLandingScroll = scrollToLandingHashWhenReady(hash, { behavior: "smooth" });
 }
@@ -127,8 +183,16 @@ export function smoothScrollToLandingHash(hash: string) {
 /**
  * Smoothly scrolls to the landing hero (page top). Used by the brand mark when
  * already on the landing route — a plain `/` Link is a no-op mid-page.
+ *
+ * @param options - Pass `{ syncUrl: false }` when the URL is already hash-free
+ *   (e.g. browser Back to top).
  */
-export function smoothScrollToLandingTop() {
+export function smoothScrollToLandingTop({
+  syncUrl = true,
+}: SmoothScrollToLandingHashOptions = {}) {
+  if (syncUrl) {
+    clearLandingHash();
+  }
   cancelActiveLandingScroll?.();
   cancelActiveLandingScroll = undefined;
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -142,4 +206,19 @@ export function smoothScrollToLandingBottom() {
   cancelActiveLandingScroll = undefined;
   const top = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
   window.scrollTo({ top, behavior: "smooth" });
+}
+
+/**
+ * Honors the current `location.hash` with offset-aware scroll (cold load,
+ * client navigations to `/#section`, and browser Back/Forward).
+ */
+export function scrollLandingFromLocationHash({
+  behavior = "instant",
+}: Pick<ScrollToLandingHashOptions, "behavior"> = {}) {
+  const hash = window.location.hash;
+  if (!hash) {
+    return;
+  }
+  cancelActiveLandingScroll?.();
+  cancelActiveLandingScroll = scrollToLandingHashWhenReady(hash, { behavior });
 }

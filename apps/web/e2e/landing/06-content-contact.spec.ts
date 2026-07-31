@@ -99,6 +99,7 @@ test.describe("06 navbar hash navigation @desktop", () => {
       assertLandingSectionId(sectionId);
       await clickDesktopNav(page, label);
       await expectSectionInView(page, sectionId);
+      await expect(page).toHaveURL(new RegExp(`#${sectionId}$`));
     }
   });
 
@@ -109,6 +110,7 @@ test.describe("06 navbar hash navigation @desktop", () => {
       .getByRole("link", { name: /get in touch/i })
       .click({ timeout: 15_000 });
     await expectSectionInView(page, "contact");
+    await expect(page).toHaveURL(/#contact$/);
   });
 });
 
@@ -119,8 +121,10 @@ test.describe("06 navbar hash navigation @mobile", () => {
     await openLanding(page);
     await clickMobileNav(page, "Projects");
     await expectSectionInView(page, "projects");
+    await expect(page).toHaveURL(/#projects$/);
     await clickMobileNav(page, "Contact");
     await expectSectionInView(page, "contact");
+    await expect(page).toHaveURL(/#contact$/);
   });
 });
 

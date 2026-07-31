@@ -71,6 +71,9 @@ export function ProjectCard({ repo, className }: ProjectCardProps) {
         <ProjectMedia
           name={repo.name}
           nameWithOwner={repo.nameWithOwner}
+          description={repo.description}
+          stargazerCount={repo.stargazerCount}
+          forkCount={repo.forkCount}
           openGraphImageUrl={repo.openGraphImageUrl}
           size="card"
         />

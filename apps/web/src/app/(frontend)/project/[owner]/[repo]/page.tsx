@@ -1,6 +1,5 @@
 import { Suspense, ViewTransition } from "react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Github, Globe } from "lucide-react";
 import {
@@ -10,6 +9,8 @@ import {
 } from "@/data-access/repositories";
 import { LandingFooter } from "@/components/landing/layout/LandingFooter";
 import { LandingNavbar } from "@/components/landing/layout/LandingNavbar";
+import { LandingBackFab } from "@/components/landing/layout/LandingBackFab";
+import { LandingScrollFabDeferred } from "@/components/landing/layout/LandingScrollFabDeferred";
 import { ProjectReadmeTabs } from "@/components/projects/ProjectReadmeTabs";
 import { RichText } from "@/components/richtext/RichText";
 import { CenteredLoader } from "@/components/loading/CenteredLoader";
@@ -59,14 +60,6 @@ async function ProjectDetail({ params }: Args) {
         <LandingNavbar />
         <main className="min-h-screen py-24">
           <article className="mx-auto max-w-5xl space-y-8 px-6" data-test="project-detail">
-            <Link
-              href="/#projects"
-              transitionTypes={["nav-back"]}
-              className="inline-flex text-sm text-primary hover:underline"
-            >
-              Back to projects
-            </Link>
-
             <div className="overflow-hidden rounded-none border border-base-content/10 bg-base-300/40">
               <ViewTransition
                 name={projectImageVtName(project.nameWithOwner)}
@@ -76,18 +69,21 @@ async function ProjectDetail({ params }: Args) {
                 <ProjectMedia
                   name={project.name}
                   nameWithOwner={project.nameWithOwner}
+                  description={project.description}
+                  stargazerCount={project.stargazerCount}
+                  forkCount={project.forkCount}
                   openGraphImageUrl={project.openGraphImageUrl}
                   size="hero"
                 />
               </ViewTransition>
 
-              <div className="space-y-6 p-6 md:p-10">
+              <div className="space-y-5 p-6 md:p-8">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
-                    <h1 className="font-serif text-5xl font-semibold tracking-[-0.04em] md:text-6xl">
+                    <h1 className="font-serif text-3xl font-semibold tracking-[-0.03em] md:text-4xl">
                       {project.name}
                     </h1>
-                    <p className="mt-2 text-base-content/70">{project.nameWithOwner}</p>
+                    <p className="mt-1.5 text-sm text-base-content/65">{project.nameWithOwner}</p>
                   </div>
                   <div className="flex flex-wrap gap-3 text-sm">
                     {project.homepageUrl ? (
@@ -152,6 +148,8 @@ async function ProjectDetail({ params }: Args) {
           </article>
         </main>
         <LandingFooter />
+        <LandingBackFab href="/#projects" label="Back to projects" />
+        <LandingScrollFabDeferred />
       </div>
     </ViewTransition>
   );
