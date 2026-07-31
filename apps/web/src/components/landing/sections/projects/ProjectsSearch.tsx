@@ -56,16 +56,18 @@ export function ProjectsSearch({
       />
       <div className="absolute inset-y-0 right-3 flex items-center gap-1.5">
         {showEnterHint ? (
-          <span
+          <button
+            type="submit"
             id="projects-search-enter-hint"
             data-test="projects-search-enter-hint"
-            className="pointer-events-none inline-flex items-center gap-1 text-[10px] tracking-wide text-landing-sage/45 uppercase"
+            className="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] tracking-wide text-landing-sage/45 uppercase transition-colors hover:bg-landing-cream/10 hover:text-landing-sage/70"
+            aria-label="Apply search"
           >
             Press
             <kbd className="rounded border border-landing-cream/15 bg-landing-cream/8 px-1.5 py-0.5 font-mono text-[10px] text-landing-sage/70 normal-case">
               Enter
             </kbd>
-          </span>
+          </button>
         ) : null}
         {showClear ? (
           <button
