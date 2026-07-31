@@ -9,7 +9,7 @@ type SyncResponse = {
   created: number;
   updated: number;
   upserted: number;
-  queuedEnrich: number;
+  skipped: number;
   featured: number;
   pulledAt: string;
 };
@@ -35,7 +35,7 @@ async function readErrorMessage(res: Response): Promise<string> {
 }
 
 /**
- * Repositories list toolbar: queue GitHub metadata sync (+ staggered enrich jobs).
+ * Repositories list toolbar: queue GitHub metadata sync (no enrichment).
  *
  * Rendered via `admin.components.beforeList` so it is always visible on the
  * collection list view (no DOM portal required).
@@ -63,8 +63,7 @@ export function SyncFromGithubListAction() {
       <div style={{ minWidth: 0, flex: "1 1 16rem" }}>
         <strong>GitHub cache</strong>
         <p style={{ margin: "0.25rem 0 0", opacity: 0.8, fontSize: "0.9rem" }}>
-          Queue a metadata sync (pinned + recent). README / monorepo enrichment runs later via the
-          jobs queue — inspect progress under{" "}
+          Upsert metadata for pinned repos and anything pushed in the last 2 days. Progress under{" "}
           <Link href={jobsProgressHref} prefetch={false}>
             Jobs progress
           </Link>
@@ -92,7 +91,7 @@ export function SyncFromGithubListAction() {
               }
               const result = (await res.json()) as SyncResponse;
               toast.success(
-                `Job ${result.jobId}: ${result.upserted} repos upserted (${result.created} new), ${result.queuedEnrich} enrich job(s) queued · ${result.featured} featured`,
+                `Job ${result.jobId}: ${result.upserted} upserted (${result.created} new), ${result.skipped} skipped · ${result.featured} featured`,
               );
               window.location.reload();
             } catch (err: unknown) {

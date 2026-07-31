@@ -49,9 +49,6 @@ async function loadGithubLandingReposCached(): Promise<GithubLandingRepos> {
   cacheLife("days");
   cacheTag("landing-github-live-repos");
 
-  // TEMP: force Payload fallback — delete this line to restore live GitHub.
-  throw new Error("[debug] Live GitHub landing fetch disabled to test Payload backup.");
-
   if (!process.env.GH_PAT?.trim()) {
     throw new Error("GH_PAT is not set; cannot load landing GitHub repos.");
   }

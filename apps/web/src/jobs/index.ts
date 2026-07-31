@@ -1,13 +1,16 @@
 import type { JobsConfig } from "payload";
 
-import { fetchArtifactsTask } from "./tasks/fetch-artifacts";
 import { listAndUpsertReposTask } from "./tasks/list-and-upsert-repos";
+import { fetchArtifactsTask } from "./tasks/fetch-artifacts";
 import { writeEnrichmentTask } from "./tasks/write-enrichment";
 import { enrichRepoWorkflow } from "./workflows/enrich-repo";
 
 /**
  * Payload Jobs config for GitHub sync.
- * No `autoRun` — serverless uses Vercel Cron → `/api/payload-jobs/run`.
+ *
+ * Automated path: `listAndUpsertRepos` on `github-sync` only.
+ * Enrichment tasks/workflow remain registered for rare manual runs (not cron'd / not bulk-enqueued).
+ * No `autoRun` — serverless uses Vercel Cron → `/api/cron/sync-repositories`.
  */
 export const jobsConfig = {
   // Default is true — successful jobs are deleted after run, which breaks

@@ -68,7 +68,7 @@ export default buildConfig({
           path: "/jobs-progress",
           meta: {
             title: "Jobs progress",
-            description: "Watch GitHub sync and enrich job queues",
+            description: "Watch GitHub metadata sync jobs",
           },
         },
       },

@@ -1,12 +1,10 @@
 import { queueAndRunGithubMetadataSync } from "@/jobs/queue-and-run-metadata-sync";
-import { GITHUB_ENRICH_QUEUE } from "@/jobs/queues";
 import { requirePayloadUser } from "@/jobs/require-payload-user";
 
 /**
  * Admin controls for GitHub job queues.
  * Body:
  * - `{ "action": "sync" }` — queue + run metadata sync
- * - `{ "action": "enrich-run" }` — drain one due job from `github-enrich`
  * - `{ "action": "run-job", "jobId": 123 }` — run one specific job by id (ignores waitUntil)
  */
 export async function POST(request: Request) {
@@ -44,19 +42,6 @@ export async function POST(request: Request) {
       return Response.json({ ok: true, action, ...result });
     }
 
-    if (action === "enrich-run") {
-      const runResult = await payload.jobs.run({
-        queue: GITHUB_ENRICH_QUEUE,
-        limit: 1,
-      });
-      return Response.json({
-        ok: true,
-        action,
-        queue: GITHUB_ENRICH_QUEUE,
-        runResult,
-      });
-    }
-
     if (action === "run-job") {
       if (jobId == null || !Number.isFinite(jobId)) {
         return Response.json({ error: "jobId is required" }, { status: 400 });
@@ -79,10 +64,7 @@ export async function POST(request: Request) {
       return Response.json({ ok: true, action, jobId, runResult });
     }
 
-    return Response.json(
-      { error: 'action must be "sync", "enrich-run", or "run-job"' },
-      { status: 400 },
-    );
+    return Response.json({ error: 'action must be "sync" or "run-job"' }, { status: 400 });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "GitHub jobs action failed";
     return Response.json({ ok: false, error: message }, { status: 500 });

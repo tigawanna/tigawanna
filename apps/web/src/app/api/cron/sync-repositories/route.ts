@@ -14,10 +14,9 @@ function isAuthorized(request: Request): boolean {
 }
 
 /**
- * Weekly (and on-demand) GitHub → Payload metadata sync via Payload Jobs.
+ * Daily (and on-demand) GitHub → Payload metadata sync via Payload Jobs.
  *
- * Queues `listAndUpsertRepos` (which enqueues staggered enrich jobs). Enrichment
- * is drained by `/api/payload-jobs/run?queue=github-enrich&limit=1`.
+ * Queues + runs `listAndUpsertRepos` only (no enrichment enqueue).
  *
  * Secured with `CRON_SECRET`. Vercel Cron sends `Authorization: Bearer <CRON_SECRET>`.
  */

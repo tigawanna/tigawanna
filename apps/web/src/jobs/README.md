@@ -1,6 +1,6 @@
 # GitHub sync jobs
 
-Payload Jobs drive GitHub → Payload repository sync.
+Payload Jobs drive GitHub → Payload repository **metadata** sync (backup for the live landing fetch).
 
 - Admin UI: **Jobs progress** (`/admin/jobs-progress`) — live queue table + per-row **Run**
 - Collection list: Repositories → **Pull from GitHub** / **Jobs progress**
@@ -8,18 +8,16 @@ Payload Jobs drive GitHub → Payload repository sync.
 
 ## Queues
 
-| Queue           | Purpose                                                        | Runner                                                                                     |
-| --------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| `github-sync`   | `listAndUpsertRepos` — list + metadata upsert + enqueue enrich | Weekly cron `/api/cron/sync-repositories` or admin **Pull from GitHub** (queue + run once) |
-| `github-enrich` | `enrichRepo` workflow — fetch README/monorepo → write          | Vercel Cron daily (`0 7 * * *`): `/api/payload-jobs/run?queue=github-enrich&limit=1`       |
+| Queue           | Purpose                                            | Runner                                                                                    |
+| --------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `github-sync`   | `listAndUpsertRepos` — list + metadata upsert only | Daily cron `/api/cron/sync-repositories` or admin **Pull from GitHub** (queue + run once) |
+| `github-enrich` | `enrichRepo` workflow — README / monorepo (manual) | Not cron'd. Queue a job yourself, then **Run** that row on Jobs progress                  |
 
 ## Flow
 
-1. Metadata job upserts pinned + recent repos (no READMEs).
-2. For each repo needing enrich (`pushedAt` newer than `lastEnrichedAt`), queue `enrichRepo` with `waitUntil` staggered by **+5m × index**.
-3. Enrich runner picks **one** due job at a time (`limit: 1`), or run a specific job from **Jobs progress**.
-4. Workflow: `fetchArtifacts` → `writeEnrichment` (write failures do not re-hit GitHub).
-5. GitHub **429**: re-queue same enrich with `waitUntil + 20m` (no stampede).
+1. Metadata job lists pinned + recent repos from GitHub.
+2. Upserts only repos with `pushedAt` within the last **2 days** (pinned repos always upsert so `featured` stays correct). Older repos are skipped with **no** DB read/write.
+3. Enrichment is **not** auto-enqueued. Use a per-row **Run** on Jobs progress if you manually queue an `enrichRepo` job.
 
 ## Auth
 
@@ -28,7 +26,7 @@ Admin Jobs progress APIs require a logged-in Payload session.
 
 ```bash
 curl -H "Authorization: Bearer $CRON_SECRET" \
-  "http://localhost:3055/api/payload-jobs/run?queue=github-enrich&limit=1"
+  "http://localhost:3055/api/cron/sync-repositories"
 ```
 
 ## CLI

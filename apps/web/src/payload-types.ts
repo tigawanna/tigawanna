@@ -288,7 +288,7 @@ export interface ContactMessage {
   createdAt: string;
 }
 /**
- * Open-source project cards served to the landing page. Refresh via “Pull from GitHub” or the weekly cron — enrichment runs on the jobs queue. The site never queries GitHub at request time.
+ * Backup snapshots for project cards. Refresh via “Pull from GitHub” or the daily cron (metadata only; skips repos not pushed in 2 days).
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "repositories".
@@ -812,7 +812,7 @@ export interface TaskListAndUpsertRepos {
     upserted: number;
     created: number;
     updated: number;
-    queuedEnrich: number;
+    skipped: number;
     featured: number;
     pulledAt: string;
   };

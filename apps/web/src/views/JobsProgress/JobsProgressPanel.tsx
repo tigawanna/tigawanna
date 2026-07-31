@@ -123,24 +123,19 @@ export function JobsProgressPanel() {
     };
   }, [queue, page]);
 
-  async function runGithubAction(action: "sync" | "enrich-run") {
-    setActionBusy(action);
+  async function runMetadataSync() {
+    setActionBusy("sync");
     try {
       const res = await fetch("/api/jobs/github", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action }),
+        body: JSON.stringify({ action: "sync" }),
       });
       if (!res.ok) throw new Error(await readErrorMessage(res));
       const data: unknown = await res.json();
-      if (action === "sync") {
-        const jobId =
-          typeof data === "object" && data !== null && "jobId" in data ? data.jobId : "?";
-        toast.success(`Metadata sync job ${String(jobId)} finished`);
-      } else {
-        toast.success("Enrich runner finished one due job (or none were due)");
-      }
+      const jobId = typeof data === "object" && data !== null && "jobId" in data ? data.jobId : "?";
+      toast.success(`Metadata sync job ${String(jobId)} finished`);
       setPage(1);
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : "Action failed");
@@ -181,8 +176,9 @@ export function JobsProgressPanel() {
               <h1 className="list-header__title">Jobs progress</h1>
             </div>
             <p style={{ margin: "0.35rem 0 0", opacity: 0.75, maxWidth: "42rem" }}>
-              GitHub sync / enrich queues. Polls every 2s ({PAGE_SIZE}/page). Processing jobs sort
-              first. Use <strong>Run</strong> on a row to execute that one job immediately.
+              GitHub metadata sync queue (enrich jobs only if you queued them manually). Polls every
+              2s ({PAGE_SIZE}/page). Use <strong>Run</strong> on a row to execute that one job
+              immediately.
             </p>
           </div>
         </header>
@@ -230,17 +226,9 @@ export function JobsProgressPanel() {
               buttonStyle="primary"
               size="small"
               disabled={actionBusy != null}
-              onClick={() => void runGithubAction("sync")}
+              onClick={() => void runMetadataSync()}
             >
               {actionBusy === "sync" ? "Syncing…" : "Run metadata sync"}
-            </Button>
-            <Button
-              buttonStyle="secondary"
-              size="small"
-              disabled={actionBusy != null}
-              onClick={() => void runGithubAction("enrich-run")}
-            >
-              {actionBusy === "enrich-run" ? "Running…" : "Run enrich once"}
             </Button>
           </div>
         </div>

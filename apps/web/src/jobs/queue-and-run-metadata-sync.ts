@@ -7,7 +7,7 @@ export type QueueGithubMetadataSyncResult = {
   created: number;
   updated: number;
   upserted: number;
-  queuedEnrich: number;
+  skipped: number;
   featured: number;
   pulledAt: string;
 };
@@ -30,7 +30,6 @@ function num(
 
 /**
  * Queues `listAndUpsertRepos` and runs the `github-sync` queue once (limit 1).
- * Enrich jobs are staggered onto `github-enrich` for the periodic runner.
  *
  * @param payload - Payload instance.
  * @param input - Optional task input (e.g. `recentLimit`).
@@ -78,7 +77,7 @@ export async function queueAndRunGithubMetadataSync(
     created: num(output, "created"),
     updated: num(output, "updated"),
     upserted: num(output, "upserted"),
-    queuedEnrich: num(output, "queuedEnrich"),
+    skipped: num(output, "skipped"),
     featured: num(output, "featured"),
     pulledAt: typeof output?.pulledAt === "string" ? output.pulledAt : new Date().toISOString(),
   };

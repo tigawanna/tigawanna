@@ -9,10 +9,9 @@ import {
 } from "./hooks/revalidateRepositories";
 
 /**
- * Cached GitHub repository snapshots for the portfolio projects UI.
- * Synced from GitHub via admin “Pull from GitHub” or the weekly Vercel cron —
- * metadata first, then paced enrichment jobs. The landing page always reads
- * from this cache, never live GitHub.
+ * Cached GitHub repository snapshots (backup when the live landing fetch fails).
+ * Synced from GitHub via admin “Pull from GitHub” or the daily Vercel cron —
+ * metadata only. README / monorepo enrichment is manual cherry-pick.
  */
 export const Repositories: CollectionConfig = {
   slug: "repositories",
@@ -46,7 +45,7 @@ export const Repositories: CollectionConfig = {
     },
     group: "Content",
     description:
-      "Open-source project cards served to the landing page. Refresh via “Pull from GitHub” or the weekly cron — enrichment runs on the jobs queue. The site never queries GitHub at request time.",
+      "Backup snapshots for project cards. Refresh via “Pull from GitHub” or the daily cron (metadata only; skips repos not pushed in 2 days).",
     components: {
       beforeList: [
         "/collections/Repositories/components/SyncFromGithubListAction#SyncFromGithubListAction",

@@ -4,9 +4,10 @@ import { extractRepoTags, type GithubRepoNode } from "@repo/github";
 import type { TaskConfig } from "payload";
 
 import { listGithubRepos, requireGithubPat } from "@/modules/github/list-github-repos";
-import { shouldEnrichRepo } from "@/modules/github/map-enrichment-fields";
 import { resolveRepositoryCategory } from "@/modules/github/repository-category";
-import { ENRICH_STAGGER_MS, GITHUB_ENRICH_QUEUE } from "@/jobs/queues";
+
+/** Only upsert repos whose GitHub `pushedAt` is within this window (no DB touch otherwise). */
+const RECENT_PUSH_WINDOW_MS = 2 * 24 * 60 * 60 * 1000;
 
 /**
  * Busts Next.js cache tags for landing project cards (no-op outside a Next request).
@@ -15,10 +16,22 @@ function bustRepositoryCaches() {
   try {
     revalidateTag("landing-pinned-repos", "max");
     revalidateTag("landing-recent-repos", "max");
+    revalidateTag("landing-github-live-repos", "max");
     revalidatePath("/");
   } catch {
     // Outside of a Next.js request (e.g. payload run) — ignore.
   }
+}
+
+/**
+ * Whether GitHub reports activity within the recent-push window.
+ *
+ * @param pushedAt - ISO timestamp from GraphQL.
+ */
+function wasPushedRecently(pushedAt: string): boolean {
+  const pushedMs = Date.parse(pushedAt);
+  if (Number.isNaN(pushedMs)) return true;
+  return Date.now() - pushedMs <= RECENT_PUSH_WINDOW_MS;
 }
 
 /**
@@ -121,8 +134,8 @@ async function upsertRepoMetadataRow(
 }
 
 /**
- * Lists GitHub repos, upserts Payload metadata, enqueues staggered `enrichRepo` jobs.
- * Does not fetch READMEs inline — enrichment is a separate queue.
+ * Lists GitHub repos and upserts Payload metadata for recently pushed / pinned repos only.
+ * Skips DB reads/writes when `pushedAt` is older than two days (unless featured/pinned).
  */
 export const listAndUpsertReposTask = {
   slug: "listAndUpsertRepos",
@@ -141,7 +154,7 @@ export const listAndUpsertReposTask = {
     { name: "upserted", type: "number", required: true },
     { name: "created", type: "number", required: true },
     { name: "updated", type: "number", required: true },
-    { name: "queuedEnrich", type: "number", required: true },
+    { name: "skipped", type: "number", required: true },
     { name: "featured", type: "number", required: true },
     { name: "pulledAt", type: "text", required: true },
   ],
@@ -155,11 +168,17 @@ export const listAndUpsertReposTask = {
 
     let created = 0;
     let updated = 0;
-    const toEnrich: string[] = [];
+    let skipped = 0;
 
     for (const { node: repo, featured } of repos) {
+      // Pinned repos always sync so featured flags stay correct; others only if recently pushed.
+      if (!featured && !wasPushedRecently(repo.pushedAt)) {
+        skipped += 1;
+        continue;
+      }
+
       try {
-        const { doc, created: wasCreated } = await upsertRepoMetadataRow(
+        const { created: wasCreated } = await upsertRepoMetadataRow(
           payload,
           repo,
           featured,
@@ -167,41 +186,18 @@ export const listAndUpsertReposTask = {
         );
         if (wasCreated) created += 1;
         else updated += 1;
-
-        if (shouldEnrichRepo({ lastEnrichedAt: doc.lastEnrichedAt }, { pushedAt: repo.pushedAt })) {
-          toEnrich.push(repo.nameWithOwner);
-        }
       } catch (err: unknown) {
         console.error(`[repositories] Metadata upsert failed for ${repo.nameWithOwner}`, err);
       }
     }
 
     await clearStaleFeaturedFlags(payload, pinnedKeys);
-
-    const now = Date.now();
-    console.log("[listAndUpsertRepos] queue enrich", {
-      count: toEnrich.length,
-      repos: toEnrich,
-      staggerMs: ENRICH_STAGGER_MS,
-    });
-    for (let i = 0; i < toEnrich.length; i += 1) {
-      const nameWithOwner = toEnrich[i];
-      if (!nameWithOwner) continue;
-
-      await payload.jobs.queue({
-        workflow: "enrichRepo",
-        queue: GITHUB_ENRICH_QUEUE,
-        input: { nameWithOwner },
-        waitUntil: new Date(now + i * ENRICH_STAGGER_MS),
-      });
-    }
-
     bustRepositoryCaches();
 
     console.log("[listAndUpsertRepos] done", {
       created,
       updated,
-      queuedEnrich: toEnrich.length,
+      skipped,
       featured: pinnedKeys.length,
     });
 
@@ -210,7 +206,7 @@ export const listAndUpsertReposTask = {
         upserted: created + updated,
         created,
         updated,
-        queuedEnrich: toEnrich.length,
+        skipped,
         featured: pinnedKeys.length,
         pulledAt,
       },
@@ -222,7 +218,7 @@ export const listAndUpsertReposTask = {
     upserted: number;
     created: number;
     updated: number;
-    queuedEnrich: number;
+    skipped: number;
     featured: number;
     pulledAt: string;
   };
