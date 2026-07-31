@@ -28,7 +28,9 @@ import { SlugField as SlugField_2b8867833a34864a02ddf429b0728a40 } from "@payloa
 import { BlogsListActions as BlogsListActions_82626b0405a640e2550779db15313dc7 } from "../../../collections/Blogs/components/BlogsListActions";
 import { BlogEditMenuItems as BlogEditMenuItems_72740095a05eec8474bff06f651be8c4 } from "../../../collections/Blogs/components/BlogEditMenuItems";
 import { SyncFromGithubListAction as SyncFromGithubListAction_2345ab92bd7a5d3cbd7b9b944046ff78 } from "../../../collections/Repositories/components/SyncFromGithubListAction";
+import { JobsProgressNavLink as JobsProgressNavLink_65502696a786db1e6c9bd12f8d7f0fd4 } from "../../../components/admin/JobsProgressNavLink";
 import { AiDraftView as AiDraftView_d401f7b5270960408bcbb467cb0957b5 } from "../../../views/AiDraft";
+import { JobsProgressView as JobsProgressView_a005223bfd5e955f72530f2a94e0d171 } from "../../../views/JobsProgress";
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from "@payloadcms/next/rsc";
 
 /** @type import('payload').ImportMap */
@@ -92,6 +94,9 @@ export const importMap = {
     BlogEditMenuItems_72740095a05eec8474bff06f651be8c4,
   "/collections/Repositories/components/SyncFromGithubListAction#SyncFromGithubListAction":
     SyncFromGithubListAction_2345ab92bd7a5d3cbd7b9b944046ff78,
+  "/components/admin/JobsProgressNavLink#JobsProgressNavLink":
+    JobsProgressNavLink_65502696a786db1e6c9bd12f8d7f0fd4,
   "/views/AiDraft#AiDraftView": AiDraftView_d401f7b5270960408bcbb467cb0957b5,
+  "/views/JobsProgress#JobsProgressView": JobsProgressView_a005223bfd5e955f72530f2a94e0d171,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
 };

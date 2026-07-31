@@ -53,6 +53,7 @@ export default buildConfig({
       titleSuffix: " · Tigawanna",
     },
     components: {
+      afterNavLinks: ["/components/admin/JobsProgressNavLink#JobsProgressNavLink"],
       views: {
         smartDraft: {
           Component: "/views/AiDraft#AiDraftView",
@@ -60,6 +61,14 @@ export default buildConfig({
           meta: {
             title: "Smart draft",
             description: "Generate a blog draft from notes via OpenRouter",
+          },
+        },
+        jobsProgress: {
+          Component: "/views/JobsProgress#JobsProgressView",
+          path: "/jobs-progress",
+          meta: {
+            title: "Jobs progress",
+            description: "Watch GitHub sync and enrich job queues",
           },
         },
       },

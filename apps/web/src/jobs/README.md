@@ -1,6 +1,10 @@
 # GitHub sync jobs
 
-Payload Jobs drive GitHub → Payload repository sync. Inspect runs in Admin → **Payload Jobs**.
+Payload Jobs drive GitHub → Payload repository sync.
+
+- Admin UI: **Jobs progress** (`/admin/jobs-progress`) — live queue table + per-row **Run**
+- Collection list: Repositories → **Pull from GitHub** / **Jobs progress**
+- Inspect raw docs: Admin → **Payload Jobs**
 
 ## Queues
 
@@ -13,13 +17,14 @@ Payload Jobs drive GitHub → Payload repository sync. Inspect runs in Admin →
 
 1. Metadata job upserts pinned + recent repos (no READMEs).
 2. For each repo needing enrich (`pushedAt` newer than `lastEnrichedAt`), queue `enrichRepo` with `waitUntil` staggered by **+5m × index**.
-3. Enrich runner picks **one** due job at a time (`limit: 1`).
+3. Enrich runner picks **one** due job at a time (`limit: 1`), or run a specific job from **Jobs progress**.
 4. Workflow: `fetchArtifacts` → `writeEnrichment` (write failures do not re-hit GitHub).
 5. GitHub **429**: re-queue same enrich with `waitUntil + 20m` (no stampede).
 
 ## Auth
 
 `jobs.access.run` allows logged-in users **or** `Authorization: Bearer $CRON_SECRET`.
+Admin Jobs progress APIs require a logged-in Payload session.
 
 ```bash
 curl -H "Authorization: Bearer $CRON_SECRET" \

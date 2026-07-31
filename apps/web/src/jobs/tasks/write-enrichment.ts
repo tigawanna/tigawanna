@@ -33,6 +33,7 @@ export const writeEnrichmentTask = {
   ],
   handler: async ({ input, req }) => {
     const nameWithOwner = input.nameWithOwner.trim();
+    console.log("[writeEnrichment] start", nameWithOwner);
     const enrichment = parseEnrichmentFields(input.enrichment);
 
     const existing = await req.payload.find({
@@ -62,6 +63,13 @@ export const writeEnrichmentTask = {
       overrideAccess: true,
     });
 
+    console.log("[writeEnrichment] ok", {
+      nameWithOwner,
+      id: row.id,
+      isMonorepo: enrichment.isMonorepo,
+      packages: enrichment.packages?.length ?? 0,
+      readmeChars: enrichment.readmeMarkdown?.length ?? 0,
+    });
     return { output: { ok: true } };
   },
 } as const satisfies TaskConfig<{

@@ -21,12 +21,18 @@ export const enrichRepoWorkflow = {
   ],
   handler: async ({ job, tasks }) => {
     const nameWithOwner = job.input.nameWithOwner;
+    console.log("[enrichRepo] start", nameWithOwner);
 
     const fetched = await tasks.fetchArtifacts("fetch-artifacts", {
       input: { nameWithOwner },
     });
 
     if (fetched.requeued || !fetched.enrichment) {
+      console.log("[enrichRepo] stop early", {
+        nameWithOwner,
+        requeued: fetched.requeued,
+        hasEnrichment: Boolean(fetched.enrichment),
+      });
       return;
     }
 
@@ -36,6 +42,8 @@ export const enrichRepoWorkflow = {
         enrichment: parseEnrichmentFields(fetched.enrichment),
       },
     });
+
+    console.log("[enrichRepo] done", nameWithOwner);
   },
 } as const satisfies WorkflowConfig<{
   nameWithOwner: string;

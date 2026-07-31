@@ -10,6 +10,9 @@ import { enrichRepoWorkflow } from "./workflows/enrich-repo";
  * No `autoRun` — serverless uses Vercel Cron → `/api/payload-jobs/run`.
  */
 export const jobsConfig = {
+  // Default is true — successful jobs are deleted after run, which breaks
+  // status polling and admin inspection of history.
+  deleteJobOnComplete: false,
   access: {
     run: ({ req }) => {
       if (req.user) return true;

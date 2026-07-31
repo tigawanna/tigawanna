@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, toast } from "@payloadcms/ui";
+import { Button, Link, toast, useConfig } from "@payloadcms/ui";
 
 type SyncResponse = {
   ok: boolean;
@@ -41,7 +41,9 @@ async function readErrorMessage(res: Response): Promise<string> {
  * collection list view (no DOM portal required).
  */
 export function SyncFromGithubListAction() {
+  const { config } = useConfig();
   const [busy, setBusy] = useState(false);
+  const jobsProgressHref = `${config.routes.admin}/jobs-progress`;
 
   return (
     <div
@@ -62,38 +64,47 @@ export function SyncFromGithubListAction() {
         <strong>GitHub cache</strong>
         <p style={{ margin: "0.25rem 0 0", opacity: 0.8, fontSize: "0.9rem" }}>
           Queue a metadata sync (pinned + recent). README / monorepo enrichment runs later via the
-          jobs queue — inspect progress under <strong>Payload Jobs</strong>. Safe to run anytime.
+          jobs queue — inspect progress under{" "}
+          <Link href={jobsProgressHref} prefetch={false}>
+            Jobs progress
+          </Link>
+          . Safe to run anytime.
         </p>
       </div>
 
-      <Button
-        buttonStyle="primary"
-        disabled={busy}
-        onClick={async () => {
-          setBusy(true);
-          try {
-            const res = await fetch("/api/repositories/sync-from-github", {
-              method: "POST",
-              credentials: "include",
-              headers: { "Content-Type": "application/json" },
-            });
-            if (!res.ok) {
-              throw new Error(await readErrorMessage(res));
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+        <Button buttonStyle="secondary" el="link" url={jobsProgressHref}>
+          Jobs progress
+        </Button>
+        <Button
+          buttonStyle="primary"
+          disabled={busy}
+          onClick={async () => {
+            setBusy(true);
+            try {
+              const res = await fetch("/api/repositories/sync-from-github", {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+              });
+              if (!res.ok) {
+                throw new Error(await readErrorMessage(res));
+              }
+              const result = (await res.json()) as SyncResponse;
+              toast.success(
+                `Job ${result.jobId}: ${result.upserted} repos upserted (${result.created} new), ${result.queuedEnrich} enrich job(s) queued · ${result.featured} featured`,
+              );
+              window.location.reload();
+            } catch (err: unknown) {
+              toast.error(err instanceof Error ? err.message : "Pull from GitHub failed");
+            } finally {
+              setBusy(false);
             }
-            const result = (await res.json()) as SyncResponse;
-            toast.success(
-              `Job ${result.jobId}: ${result.upserted} repos upserted (${result.created} new), ${result.queuedEnrich} enrich job(s) queued · ${result.featured} featured`,
-            );
-            window.location.reload();
-          } catch (err: unknown) {
-            toast.error(err instanceof Error ? err.message : "Pull from GitHub failed");
-          } finally {
-            setBusy(false);
-          }
-        }}
-      >
-        {busy ? "Queuing…" : "Pull from GitHub"}
-      </Button>
+          }}
+        >
+          {busy ? "Queuing…" : "Pull from GitHub"}
+        </Button>
+      </div>
     </div>
   );
 }

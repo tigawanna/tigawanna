@@ -179,6 +179,11 @@ export const listAndUpsertReposTask = {
     await clearStaleFeaturedFlags(payload, pinnedKeys);
 
     const now = Date.now();
+    console.log("[listAndUpsertRepos] queue enrich", {
+      count: toEnrich.length,
+      repos: toEnrich,
+      staggerMs: ENRICH_STAGGER_MS,
+    });
     for (let i = 0; i < toEnrich.length; i += 1) {
       const nameWithOwner = toEnrich[i];
       if (!nameWithOwner) continue;
@@ -192,6 +197,13 @@ export const listAndUpsertReposTask = {
     }
 
     bustRepositoryCaches();
+
+    console.log("[listAndUpsertRepos] done", {
+      created,
+      updated,
+      queuedEnrich: toEnrich.length,
+      featured: pinnedKeys.length,
+    });
 
     return {
       output: {

@@ -33,6 +33,7 @@ export const fetchArtifactsTask = {
   ],
   handler: async ({ input, req }) => {
     const nameWithOwner = input.nameWithOwner.trim();
+    console.log("[fetchArtifacts] start", nameWithOwner);
     const client = createGitHubClient(requireGithubPat());
 
     try {
@@ -43,6 +44,14 @@ export const fetchArtifactsTask = {
       }
 
       const enrichment = await mapEnrichmentFields(client, snapshot);
+      console.log("[fetchArtifacts] ok", {
+        nameWithOwner,
+        defaultBranch: enrichment.defaultBranch,
+        isMonorepo: enrichment.isMonorepo,
+        monorepoKind: enrichment.monorepoKind,
+        packages: enrichment.packages?.length ?? 0,
+        readmeChars: enrichment.readmeMarkdown?.length ?? 0,
+      });
       return {
         output: {
           requeued: false,
@@ -51,6 +60,7 @@ export const fetchArtifactsTask = {
       };
     } catch (err: unknown) {
       if (err instanceof RequestError && err.status === 429) {
+        console.log("[fetchArtifacts] 429 — requeue in 20m", nameWithOwner);
         await req.payload.jobs.queue({
           workflow: "enrichRepo",
           queue: GITHUB_ENRICH_QUEUE,
@@ -64,6 +74,7 @@ export const fetchArtifactsTask = {
           },
         };
       }
+      console.error("[fetchArtifacts] failed", nameWithOwner, err);
       throw err;
     }
   },
