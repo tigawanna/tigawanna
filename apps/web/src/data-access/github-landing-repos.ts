@@ -3,6 +3,7 @@ import "server-only";
 import { cacheLife, cacheTag } from "next/cache";
 import { createGitHubClient, type GithubRepoNode as GithubRepoNodeSource } from "@repo/github";
 
+import { STATIC_PINNED_PROJECTS, STATIC_RECENT_PROJECTS } from "@/components/landing/data/static";
 import type { GithubRepoNode } from "@/components/landing/types/github";
 import { listGithubRepos } from "@/modules/github/list-github-repos";
 import { resolveRepositoryCategory } from "@/modules/github/repository-category";
@@ -12,6 +13,14 @@ export type GithubLandingRepos = {
   pinnedRepos: GithubRepoNode[];
   recentRepos: GithubRepoNode[];
 };
+
+/**
+ * True while `next build` is prerendering pages.
+ * Live GitHub is skipped so flaky outbound TLS cannot fail the build.
+ */
+function isNextProductionBuild(): boolean {
+  return process.env.NEXT_PHASE === "phase-production-build";
+}
 
 /**
  * Maps a GraphQL repo node into the landing card shape, inferring category from topics.
@@ -78,27 +87,36 @@ async function loadGithubLandingReposCached(): Promise<GithubLandingRepos> {
 }
 
 /**
+ * Offline / e2e fixture list used when live GitHub and Payload both fail.
+ */
+function staticLandingRepos(): GithubLandingRepos {
+  return {
+    pinnedRepos: STATIC_PINNED_PROJECTS,
+    recentRepos: STATIC_RECENT_PROJECTS,
+  };
+}
+
+/**
  * Live GitHub pinned + recent repos for the landing projects section.
  *
- * 1. Day-cached GitHub GraphQL (throws on failure → miss not cached)
+ * 1. Day-cached GitHub GraphQL (skipped during `next build`; throws on failure → miss not cached)
  * 2. Hour-cached Payload backup (throws on empty/unavailable → miss not cached)
- * 3. `null` — hide the projects section; never cached as a success
+ * 3. Static fixtures (keeps `#projects` / e2e working offline)
  */
-export async function getCachedGithubLandingRepos(): Promise<GithubLandingRepos | null> {
-  try {
-    return await loadGithubLandingReposCached();
-  } catch (err: unknown) {
-    console.error("[github-landing-repos] GitHub live fetch failed; trying Payload backup", err);
+export async function getCachedGithubLandingRepos(): Promise<GithubLandingRepos> {
+  if (!isNextProductionBuild()) {
+    try {
+      return await loadGithubLandingReposCached();
+    } catch (err: unknown) {
+      console.error("[github-landing-repos] GitHub live fetch failed; trying Payload backup", err);
+    }
   }
 
   try {
     return await loadPayloadLandingReposCached();
   } catch (err: unknown) {
-    console.error(
-      "[github-landing-repos] Payload backup also failed; hiding projects section",
-      err,
-    );
-    return null;
+    console.error("[github-landing-repos] Payload backup also failed; using static fixtures", err);
+    return staticLandingRepos();
   }
 }
 
@@ -153,6 +171,10 @@ async function getCachedGithubRepoDetail(
   owner: string,
   repo: string,
 ): Promise<GithubRepoNode | null> {
+  if (isNextProductionBuild()) {
+    return null;
+  }
+
   try {
     return await loadGithubRepoDetailCached(owner, repo);
   } catch (err: unknown) {
@@ -175,12 +197,10 @@ export async function getCachedGithubRepoByName(
   const nameWithOwner = `${owner}/${repo}`;
 
   const landing = await getCachedGithubLandingRepos();
-  if (landing) {
-    const fromLanding =
-      landing.recentRepos.find((entry) => entry.nameWithOwner === nameWithOwner) ??
-      landing.pinnedRepos.find((entry) => entry.nameWithOwner === nameWithOwner);
-    if (fromLanding) return fromLanding;
-  }
+  const fromLanding =
+    landing.recentRepos.find((entry) => entry.nameWithOwner === nameWithOwner) ??
+    landing.pinnedRepos.find((entry) => entry.nameWithOwner === nameWithOwner);
+  if (fromLanding) return fromLanding;
 
   return getCachedGithubRepoDetail(owner, repo);
 }

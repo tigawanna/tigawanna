@@ -25,7 +25,7 @@ function LandingProjectsGithubShell({ children }: { children: ReactNode }) {
       id="projects"
       tone="darkMid"
       className="text-landing-cream"
-      dataTest="landing-projects-github"
+      dataTest="landing-projects"
     >
       <OrganicDivider tone="darkMid" />
       <OrganicDivider tone="darkMid" flip />
@@ -39,21 +39,19 @@ function LandingProjectsGithubShell({ children }: { children: ReactNode }) {
 }
 
 /**
- * Streams the live GitHub projects grid. Returns nothing when the fetch fails
- * or yields no repos so the whole section stays off the page.
+ * Streams the projects grid (GitHub → Payload → static fixtures).
  */
 async function LandingProjectsGithubContent() {
-  const data = await getCachedGithubLandingRepos();
+  const { pinnedRepos, recentRepos } = await getCachedGithubLandingRepos();
 
-  if (!data) {
-    return null;
-  }
-
-  const { pinnedRepos, recentRepos } = data;
   const featured = (pinnedRepos.length > 0 ? pinnedRepos : recentRepos).slice(
     0,
     MAX_LANDING_PROJECTS,
   );
+
+  if (featured.length === 0) {
+    return null;
+  }
 
   return (
     <LandingProjectsGithubShell>
@@ -67,11 +65,8 @@ async function LandingProjectsGithubContent() {
 }
 
 /**
- * Landing projects section fed by day-cached GitHub GraphQL (`listGithubRepos`),
- * with Payload repositories as backup when GitHub fails.
- *
- * No Suspense skeleton: the section only mounts once data is available.
- * Only when both GitHub and Payload fail is the section omitted entirely.
+ * Landing projects section: day-cached GitHub GraphQL, Payload backup, then static fixtures.
+ * No Suspense skeleton — section mounts once data resolves (fixtures guarantee content for e2e).
  */
 export function LandingProjectsGithub() {
   return (
