@@ -19,6 +19,9 @@ export function ProjectsSearch({
   onClear,
   hasPendingSearch,
 }: ProjectsSearchProps) {
+  const showClear = value.length > 0;
+  const showEnterHint = showClear && hasPendingSearch;
+
   return (
     <form
       className="relative mx-auto w-full max-w-md"
@@ -41,16 +44,30 @@ export function ProjectsSearch({
             onClear();
           }
         }}
-        placeholder="Search by tag, tech, or description — press Enter"
+        placeholder="Search by tag, tech, or description"
         autoComplete="off"
+        aria-describedby={showEnterHint ? "projects-search-enter-hint" : undefined}
         className={twMerge(
-          "h-10 rounded-full border-landing-cream/10 bg-landing-cream/5 pr-10 pl-10 text-sm text-landing-cream shadow-none placeholder:text-landing-sage/40",
+          "h-10 rounded-full border-landing-cream/10 bg-landing-cream/5 pl-10 text-sm text-landing-cream shadow-none placeholder:text-landing-sage/40",
+          showEnterHint ? "pr-28" : showClear ? "pr-10" : "pr-4",
           "focus-visible:border-landing-cream/25 focus-visible:ring-landing-cream/15",
           hasPendingSearch && "border-landing-cream/20",
         )}
       />
       <div className="absolute inset-y-0 right-3 flex items-center gap-1.5">
-        {value.length > 0 ? (
+        {showEnterHint ? (
+          <span
+            id="projects-search-enter-hint"
+            data-test="projects-search-enter-hint"
+            className="pointer-events-none inline-flex items-center gap-1 text-[10px] tracking-wide text-landing-sage/45 uppercase"
+          >
+            Press
+            <kbd className="rounded border border-landing-cream/15 bg-landing-cream/8 px-1.5 py-0.5 font-mono text-[10px] text-landing-sage/70 normal-case">
+              Enter
+            </kbd>
+          </span>
+        ) : null}
+        {showClear ? (
           <button
             type="button"
             onClick={onClear}
