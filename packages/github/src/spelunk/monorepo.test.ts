@@ -59,15 +59,18 @@ describe("detectMonorepoKind", () => {
 
   it("returns false for single-package repos", () => {
     expect(
-      detectMonorepoKind(["package.json", "README.md"], [
-        {
-          language: "javascript",
-          kind: "package.json",
-          path: "package.json",
-          summary: "",
-          parsed: { name: "solo" },
-        },
-      ]),
+      detectMonorepoKind(
+        ["package.json", "README.md"],
+        [
+          {
+            language: "javascript",
+            kind: "package.json",
+            path: "package.json",
+            summary: "",
+            parsed: { name: "solo" },
+          },
+        ],
+      ),
     ).toEqual({ isMonorepo: false, kind: null });
   });
 });
