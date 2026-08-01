@@ -42,7 +42,7 @@ export async function openLanding(page: Page) {
  */
 export async function openLandingAtHash(page: Page, hash: string) {
   await openLanding(page);
-  const id = hash.replace(/^#/, "") as LandingSectionId | string;
+  const id = hash.replace(/^#/, "");
   if (id in SECTION_TEST_IDS) {
     await revealSection(page, id as LandingSectionId);
   } else {

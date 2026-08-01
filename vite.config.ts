@@ -1,12 +1,7 @@
 import { configDefaults, defineConfig } from "vite-plus";
 
 /** Parked / non-active apps — skip fmt, lint, and root Vitest. */
-const ignoredApps = [
-  "apps/legacy-next/**",
-  "apps/site/**",
-  "apps/portfolio/**",
-  "apps/dashboard/**",
-] as const;
+const ignoredApps = ["apps/site/**"] as const;
 
 export default defineConfig({
   fmt: {

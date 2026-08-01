@@ -1,4 +1,4 @@
-import { Fraunces, Space_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
 import { Toaster } from "sonner";
 import {
   siteConfig,
@@ -9,16 +9,18 @@ import {
 import { getSiteUrl } from "@/lib/site-url";
 import "./styles.css";
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
+const spaceGrotesk = localFont({
+  src: "./fonts/space-grotesk-latin-wght.woff2",
   variable: "--font-sans-loaded",
   display: "swap",
+  weight: "300 700",
 });
 
-const fraunces = Fraunces({
-  subsets: ["latin"],
+const fraunces = localFont({
+  src: "./fonts/fraunces-latin-wght.woff2",
   variable: "--font-serif-loaded",
   display: "swap",
+  weight: "400 700",
 });
 
 export const metadata = {

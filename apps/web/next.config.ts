@@ -88,7 +88,6 @@ const nextConfig: NextConfig = {
   },
   turbopack: {
     // Must include apps/web (where next@16 lives) and packages/* (linked @repo deps).
-    // Do NOT leave a second Next app + lockfile under this root (see apps/legacy-next).
     root: monorepoRoot,
   },
 };
