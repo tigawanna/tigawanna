@@ -40,7 +40,7 @@ function LessonDetailContent({ lessonId }: { lessonId: string }) {
   });
 
   return (
-    <article className="mx-auto max-w-4xl h-ful min-h-screen" data-test="lesson-detail">
+    <article className="mx-auto min-h-screen w-full min-w-0 max-w-4xl" data-test="lesson-detail">
       <div className="mb-8 flex items-center justify-between gap-3">
         <Link
           to="/lessons"
@@ -79,7 +79,7 @@ function LessonDetailContent({ lessonId }: { lessonId: string }) {
 
       {html ? (
         <div
-          className="markdown markdown-lesson mt-10"
+          className="markdown markdown-lesson mt-10 min-w-0"
           dangerouslySetInnerHTML={{ __html: html }}
         />
       ) : null}
@@ -91,9 +91,9 @@ function LessonDetailPage() {
   const { lessonId } = Route.useParams();
 
   return (
-    <div data-test="lesson-detail-page" className="min-h-screen bg-base-100 text-base-content">
+    <div data-test="lesson-detail-page" className="min-h-screen overflow-x-clip bg-base-100 text-base-content">
       <LandingNavbar />
-      <main className="min-h-screen py-24">
+      <main className="container min-h-screen py-24">
         <Suspense
           fallback={
             <div className="mx-auto max-w-4xl animate-pulse space-y-4">

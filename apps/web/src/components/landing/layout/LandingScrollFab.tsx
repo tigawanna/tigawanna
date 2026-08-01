@@ -18,8 +18,17 @@ const SPLIT_VIEWPORT_RATIO = 0.5;
 const MAX_SEPARATION_PX = 26;
 /** Split amount at which the bottom target becomes interactive. */
 const SPLIT_INTERACTIVE_AT = 0.35;
-/** Hide the FAB after this long with no scroll (ms). */
+/** Hide the FAB after this long with no scroll on hover-capable devices (ms). */
 const IDLE_HIDE_MS = 5000;
+
+/**
+ * True when the primary pointer can't hover — touch phones/tablets.
+ * Idle-hide is a desktop pattern (hover keeps the FAB up); on touch it
+ * just makes the control disappear before you can tap it.
+ */
+function isTouchPrimaryDevice() {
+  return window.matchMedia("(hover: none), (pointer: coarse)").matches;
+}
 
 const glassSurfaceClass = twMerge(
   "rounded-full border border-landing-cream/30 bg-landing-cream/20",
@@ -78,6 +87,7 @@ export function LandingScrollFab() {
   const [scrollActive, setScrollActive] = useState(false);
   const [nearBottom, setNearBottom] = useState(false);
   const [split, setSplit] = useState(0);
+  const [touchPrimary, setTouchPrimary] = useState(false);
   const nearBottomRef = useRef(false);
   const pastThresholdRef = useRef(false);
   const splitRef = useRef(0);
@@ -88,8 +98,10 @@ export function LandingScrollFab() {
 
   /**
    * Keeps the FAB visible briefly after scroll; clears when idle unless the pointer is over it.
+   * No-op on touch — those devices keep the FAB up while past the scroll threshold.
    */
   const scheduleIdleHide = () => {
+    if (isTouchPrimaryDevice()) return;
     if (idleTimerRef.current !== null) {
       window.clearTimeout(idleTimerRef.current);
       idleTimerRef.current = null;
@@ -102,17 +114,25 @@ export function LandingScrollFab() {
   };
 
   useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const syncPreference = () => setPrefersReducedMotion(media.matches);
+    const motionMedia = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const touchMedia = window.matchMedia("(hover: none), (pointer: coarse)");
+    const syncPreference = () => setPrefersReducedMotion(motionMedia.matches);
+    const syncTouch = () => setTouchPrimary(touchMedia.matches);
     syncPreference();
-    media.addEventListener("change", syncPreference);
-    return () => media.removeEventListener("change", syncPreference);
+    syncTouch();
+    motionMedia.addEventListener("change", syncPreference);
+    touchMedia.addEventListener("change", syncTouch);
+    return () => {
+      motionMedia.removeEventListener("change", syncPreference);
+      touchMedia.removeEventListener("change", syncTouch);
+    };
   }, []);
 
   useEffect(() => {
     const unsubscribe = subscribeScroll((scrollY) => {
       const state = readFabVisualState(scrollY);
       const nextSplit = state.visible ? (prefersReducedMotion ? 1 : state.split) : 0;
+      const touch = isTouchPrimaryDevice();
 
       if (state.nearBottom !== nearBottomRef.current) {
         nearBottomRef.current = state.nearBottom;
@@ -135,6 +155,10 @@ export function LandingScrollFab() {
       // subscribeScroll fires once on subscribe — ignore that so we only appear on real scroll.
       if (skipInitialScrollRef.current) {
         skipInitialScrollRef.current = false;
+        // Touch: if the page restored mid-scroll, show immediately without waiting for a gesture.
+        if (touch && state.visible) {
+          setScrollActive(true);
+        }
         return;
       }
 
@@ -159,7 +183,8 @@ export function LandingScrollFab() {
     };
   }, [prefersReducedMotion]);
 
-  const visible = pastThreshold && scrollActive;
+  // Touch: stay up while scrolled past the threshold. Desktop: pulse on scroll, idle-hide.
+  const visible = pastThreshold && (touchPrimary || scrollActive);
   const splitReady = split > SPLIT_INTERACTIVE_AT;
   const showDown = splitReady && !nearBottom;
   const visualSplit = nearBottom ? 0 : split;

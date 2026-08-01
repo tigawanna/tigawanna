@@ -218,8 +218,32 @@
   @apply text-landing-cream/80;
 }
 
+/* Contain wide code/media so markdown never expands the page on mobile */
+.markdown {
+  @apply min-w-0 max-w-full;
+  overflow-wrap: anywhere;
+}
+
+.markdown pre {
+  @apply max-w-full overflow-x-auto;
+}
+
+.markdown :not(pre) > code {
+  @apply break-all;
+}
+
+.markdown img,
+.markdown video,
+.markdown iframe {
+  @apply h-auto max-w-full;
+}
+
+.markdown table {
+  @apply block w-full max-w-full overflow-x-auto;
+}
+
 .markdown pre.shiki {
-  @apply overflow-x-auto rounded-none bg-transparent p-0 text-sm;
+  @apply max-w-full overflow-x-auto rounded-none bg-transparent p-0 text-sm;
 }
 
 .markdown pre.shiki.github-dark {
@@ -228,7 +252,7 @@
 }
 
 .markdown pre.shiki code {
-  @apply block bg-transparent p-3 font-mono text-sm leading-relaxed;
+  @apply block w-max min-w-full bg-transparent p-3 font-mono text-sm leading-relaxed;
 }
 
 .markdown pre.shiki .line {

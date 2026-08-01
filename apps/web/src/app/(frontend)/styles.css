@@ -230,6 +230,8 @@ body {
 .payload-richtext {
   color: var(--color-base-content);
   max-width: 48rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .payload-richtext h1,
@@ -375,6 +377,9 @@ body {
   padding: 0.1em 0.35em;
   font-size: 0.9em;
   background: color-mix(in oklab, var(--color-base-200) 90%, transparent);
+  /* Long paths / package ids must wrap instead of widening the page */
+  overflow-wrap: anywhere;
+  word-break: break-all;
 }
 
 /* GFM tables from README / blog markdown (Payload Lexical TableJSXConverter) */

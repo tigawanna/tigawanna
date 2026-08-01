@@ -6,6 +6,7 @@ import {
   smoothScrollToLandingTop,
 } from "../utils/scroll-to-landing-hash";
 import { AppConfig } from "../config/system";
+import { LandingBackFab } from "./LandingBackFab";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
@@ -16,10 +17,17 @@ const navLinkClass =
 const ctaClass =
   "rounded-full border border-landing-sage/20 bg-landing-sage/8 px-5 py-2.5 text-sm text-landing-sage transition-colors hover:bg-landing-sage/14";
 
-export function LandingNavbar() {
+type LandingNavbarProps = {
+  /** When set, shows a compact back control in the empty top-right (article pages). */
+  backHref?: string;
+  backLabel?: string;
+};
+
+export function LandingNavbar({ backHref, backLabel }: LandingNavbarProps = {}) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const isLandingRoute = pathname === "/";
+  const showBack = Boolean(backHref);
 
   // Cold load / client nav to `/#section`, plus Back/Forward between sections.
   useEffect(() => {
@@ -91,7 +99,7 @@ export function LandingNavbar() {
           <div className="hidden flex-1 lg:block" />
         )}
 
-        <div className="hidden items-center gap-6 md:flex">
+        <div className="flex items-center gap-3 md:gap-6">
           <div className="hidden text-center xl:block">
             <p className="text-[10px] tracking-[0.32em] text-landing-sage/65 uppercase">
               {AppConfig.locationLabel}
@@ -102,24 +110,26 @@ export function LandingNavbar() {
             <a
               href="#contact"
               onClick={(event) => handleHashClick(event, "#contact")}
-              className={ctaClass}
+              className={`hidden md:inline-flex ${ctaClass}`}
             >
               Get in touch
             </a>
           ) : null}
+          {showBack && backHref ? (
+            <LandingBackFab href={backHref} label={backLabel ?? "Back"} />
+          ) : null}
+          {isLandingRoute ? (
+            <button
+              type="button"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="text-landing-sage md:hidden"
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              data-test="landing-nav-menu"
+            >
+              {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+            </button>
+          ) : null}
         </div>
-
-        {isLandingRoute ? (
-          <button
-            type="button"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="text-landing-sage md:hidden"
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
-            data-test="landing-nav-menu"
-          >
-            {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-          </button>
-        ) : null}
       </div>
 
       {isLandingRoute && mobileOpen ? (

@@ -10,7 +10,6 @@ import {
 } from "@/data-access/repositories";
 import { LandingFooter } from "@/components/landing/layout/LandingFooter";
 import { LandingNavbar } from "@/components/landing/layout/LandingNavbar";
-import { LandingBackFab } from "@/components/landing/layout/LandingBackFab";
 import { LandingScrollFabDeferred } from "@/components/landing/layout/LandingScrollFabDeferred";
 import { ProjectReadmeTabs } from "@/components/projects/ProjectReadmeTabs";
 import { RichText } from "@/components/richtext/RichText";
@@ -86,7 +85,7 @@ async function ProjectDetail({ params }: Args) {
   return (
     <ViewTransition enter="slide-up" default="none">
       <div data-test="project-detail-page" className="min-h-screen bg-base-100 text-base-content">
-        <LandingNavbar />
+        <LandingNavbar backHref="/#projects" backLabel="Back to projects" />
         <main className="min-h-screen py-24">
           <article className="mx-auto max-w-5xl space-y-8 px-6" data-test="project-detail">
             <div className="overflow-hidden rounded-none border border-base-content/10 bg-base-300/40">
@@ -177,7 +176,6 @@ async function ProjectDetail({ params }: Args) {
           </article>
         </main>
         <LandingFooter />
-        <LandingBackFab href="/#projects" label="Back to projects" />
         <LandingScrollFabDeferred />
       </div>
     </ViewTransition>

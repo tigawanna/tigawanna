@@ -32,7 +32,7 @@ function kindLabel(kind: ContentKind): string {
 
 /**
  * Post / journal hero — cover image on top, then copy below.
- * Back navigation lives in the floating glass FAB (`LandingBackFab`).
+ * Back navigation lives in the navbar (`LandingNavbar` + `LandingBackFab`).
  */
 export function PostHero({ doc, asideHref, asideLabel = "Gist" }: PostHeroProps) {
   const published = doc.publishedAt ?? doc.created;

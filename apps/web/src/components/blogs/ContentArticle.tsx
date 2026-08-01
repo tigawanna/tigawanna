@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { LandingBackFab } from "@/components/landing/layout/LandingBackFab";
 import { LandingFooter } from "@/components/landing/layout/LandingFooter";
 import { LandingNavbar } from "@/components/landing/layout/LandingNavbar";
 import { LandingScrollFabDeferred } from "@/components/landing/layout/LandingScrollFabDeferred";
@@ -36,13 +35,13 @@ export function ContentArticle({
 }: ContentArticleProps) {
   return (
     <div className="min-h-screen bg-base-100 text-base-content">
-      <LandingNavbar />
+      <LandingNavbar backHref={backHref} backLabel={backLabel} />
       <main className="min-h-screen pt-20 pb-24">
         <article data-test={dataTest}>
           <PostHero doc={doc} asideHref={asideHref} asideLabel={asideLabel} />
 
           <div className="container pt-10">
-            <div className="mx-auto max-w-3xl">
+            <div className="mx-auto min-w-0 max-w-3xl overflow-x-clip">
               {doc.content ? <RichText data={doc.content} enableGutter={false} /> : fallbackBody}
 
               {related}
@@ -51,7 +50,6 @@ export function ContentArticle({
         </article>
       </main>
       <LandingFooter />
-      <LandingBackFab href={backHref} label={backLabel} />
       <LandingScrollFabDeferred />
     </div>
   );
