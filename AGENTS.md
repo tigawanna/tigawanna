@@ -1,9 +1,4 @@
-# Apps
-
-- `apps/web` — Next.js + Payload. See `apps/web/AGENTS.md`.
-- `apps/site`, `apps/github` — TanStack Start. See that app’s `AGENTS.md`.
-
-Payload details: `.agents/skills/payload/SKILL.md`.
+Next.js + Payload. App details: `apps/web/AGENTS.md`. Payload: `.agents/skills/payload/SKILL.md`.
 
 <!--VITE PLUS START-->
 
@@ -38,4 +33,4 @@ Pre-commit already formats and lints. After big changes: `pnpm quality && pnpm c
 
 **UI:** shadcn. DaisyUI only for theme tokens, `btn` classes, or tiny standalone bits. Theme tokens, no hardcoded colors. Responsive (`md:`, `lg:`). `data-test` on interactive UI.
 
-**Files:** Thin route/page files. Route-only UI next to the route, not in global `components/`, not inline. `components/ui/` is shadcn codegen only.
+**Files:** Thin `page.tsx`. Route UI in `_components/` next to the page — not global `components/`, not inline. `components/ui/` is shadcn codegen only.

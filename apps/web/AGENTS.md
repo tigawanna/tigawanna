@@ -6,4 +6,4 @@ Next.js App Router + Payload. Shared rules: root `AGENTS.md`. Payload: `../../.a
 
 **Do:** Await `searchParams` under a Suspense boundary. Keep collections/fields/hooks in `collections/`. Jobs in `jobs/`. Infer types from Payload / query results.
 
-**Don't:** Dump page UI into `src/components/` or inline a whole screen in `page.tsx`. Put CMS fields outside `collections/`. Invent a TanStack `src/routes/` tree here. Cast Payload types to homemade shapes.
+**Don't:** Dump page UI into `src/components/` or inline a whole screen in `page.tsx`. Put CMS fields outside `collections/`. Cast Payload types to homemade shapes.
