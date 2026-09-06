@@ -21,7 +21,6 @@ export type CompactSiteProfile = {
     github: string;
     linkedin: string;
     devto: string;
-    twitter: string;
   };
   keywords: string;
 };
@@ -53,7 +52,6 @@ export function getCompactSiteProfile(): CompactSiteProfile {
       github: siteConfig.links.github,
       linkedin: siteConfig.links.linkedin,
       devto: siteConfig.links.devto,
-      twitter: siteConfig.links.twitter,
     },
     keywords: siteSeoKeywords,
   };

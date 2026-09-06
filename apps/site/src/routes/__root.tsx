@@ -48,8 +48,6 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       },
       { property: "og:image:alt", content: AppConfig.seo.ogImageAlt },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@tigawanna" },
-      { name: "twitter:creator", content: "@tigawanna" },
       { name: "twitter:title", content: AppConfig.seo.title },
       { name: "twitter:description", content: AppConfig.seo.description },
       {

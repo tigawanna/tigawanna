@@ -1,6 +1,6 @@
 import { AppConfig } from "@/utils/system";
 import { Link } from "@tanstack/react-router";
-import { Github, Mail, Twitter } from "lucide-react";
+import { Github, Mail } from "lucide-react";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -32,15 +32,6 @@ export function Footer() {
                 aria-label="GitHub"
               >
                 <Github className="size-5" />
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-ghost btn-square btn-sm md:btn-md"
-                aria-label="Twitter"
-              >
-                <Twitter className="size-5" />
               </a>
               <a
                 href={AppConfig.links.emailTo}

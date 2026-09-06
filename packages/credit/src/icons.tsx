@@ -46,14 +46,6 @@ export function LinkedInIcon(props: SvgProps): ReactElement {
   );
 }
 
-export function XIcon(props: SvgProps): ReactElement {
-  return (
-    <svg viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" aria-hidden="true" {...props}>
-      <path d="M18.9 2H22l-6.78 7.75L23.1 22h-6.3l-4.93-6.45L5.7 22H2.58l7.25-8.28L.9 2h6.46l4.45 5.9L18.9 2Zm-1.1 18h1.72L6.3 3.94H4.46L17.8 20Z" />
-    </svg>
-  );
-}
-
 export function MailIcon(props: SvgProps): ReactElement {
   return (
     <BaseIcon {...props}>
