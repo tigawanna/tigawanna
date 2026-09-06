@@ -1,0 +1,8 @@
+@import "@astryxdesign/core/reset.css";
+@import "@astryxdesign/core/astryx.css";
+
+/*
+ * Component styles live in @layer astryx-base.
+ * Tokens come from <Theme theme={creditTheme} />, which prefers host shadcn
+ * variables (--primary, --background, --card, …) with local fallbacks.
+ */

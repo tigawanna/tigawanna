@@ -1,0 +1,58 @@
+{
+  "name": "@tigawanna/credit",
+  "version": "0.1.0",
+  "description": "Minimal \"made by tigawanna\" credit badge for project landing pages.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "astryx": "node node_modules/@astryxdesign/cli/clients/cli/bin/astryx.mjs",
+    "build": "rolldown -c && node ./scripts/build-css.mjs && tsc -p tsconfig.build.json --emitDeclarationOnly",
+    "check-types": "tsc --noEmit",
+    "dev": "ladle serve",
+    "ladle:build": "ladle build",
+    "ladle:preview": "ladle preview",
+    "prepublishOnly": "pnpm run build"
+  },
+  "dependencies": {
+    "@astryxdesign/core": "^0.5.2",
+    "@stylexjs/stylex": "^0.19.0"
+  },
+  "devDependencies": {
+    "@astryxdesign/cli": "^0.5.2",
+    "@ladle/react": "^5.1.1",
+    "@repo/site-constants": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "^22.15.3",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "rolldown": "^1.0.0",
+    "typescript": "catalog:",
+    "unplugin-stylex": "^0.6.3"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}
