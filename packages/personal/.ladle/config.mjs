@@ -1,7 +1,7 @@
 /** @type {import('@ladle/react').UserConfig} */
 export default {
   stories: "src/**/*.stories.{js,jsx,ts,tsx,mdx}",
-  defaultStory: "tigawanna-credit--default",
+  defaultStory: "tigawanna-credit--open-by-default",
   addons: {
     theme: {
       enabled: true,

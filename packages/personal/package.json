@@ -28,9 +28,9 @@
     "astryx": "node node_modules/@astryxdesign/cli/clients/cli/bin/astryx.mjs",
     "build": "rolldown -c && node ./scripts/build-css.mjs && tsc -p tsconfig.build.json --emitDeclarationOnly",
     "check-types": "tsc --noEmit",
-    "dev": "ladle serve",
-    "ladle:build": "ladle build",
-    "ladle:preview": "ladle preview",
+    "dev": "node ./scripts/build-css.mjs && ladle serve",
+    "ladle:build": "node ./scripts/build-css.mjs && ladle build",
+    "ladle:preview": "pnpm run ladle:build && ladle preview",
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {

@@ -1,5 +1,6 @@
 import type { Story, StoryDefault } from "@ladle/react";
 import type { CSSProperties, ReactNode } from "react";
+import "./astryx-styles";
 import { TigawannaCredit, type CreditPosition } from "./TigawannaCredit";
 
 export default {
@@ -40,6 +41,12 @@ export const Default: Story = () => (
   </ShadcnHost>
 );
 
+export const CustomLabel: Story = () => (
+  <ShadcnHost>
+    <TigawannaCredit label="Crafted with care by tigawanna" />
+  </ShadcnHost>
+);
+
 export const BottomLeft: Story = () => (
   <ShadcnHost>
     <TigawannaCredit position="bottom-left" />
@@ -55,6 +62,13 @@ export const TopRight: Story = () => (
 export const OpenByDefault: Story = () => (
   <ShadcnHost>
     <TigawannaCredit defaultOpen />
+  </ShadcnHost>
+);
+
+/** Force the mobile bottom-sheet path. */
+export const MobileSheet: Story = () => (
+  <ShadcnHost>
+    <TigawannaCredit defaultOpen surface="sheet" />
   </ShadcnHost>
 );
 

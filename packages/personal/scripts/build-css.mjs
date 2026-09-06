@@ -46,4 +46,10 @@ const parts = [
 ];
 
 writeFileSync(join(dist, "styles.css"), parts.join("\n\n"));
-console.log("wrote dist/styles.css");
+
+/** Ladle serves `public/` in both serve + preview builds. */
+const publicDir = join(root, "public");
+mkdirSync(publicDir, { recursive: true });
+writeFileSync(join(publicDir, "credit.css"), parts.join("\n\n"));
+
+console.log("wrote dist/styles.css + public/credit.css");
