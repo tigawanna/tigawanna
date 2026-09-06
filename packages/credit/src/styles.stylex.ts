@@ -1,22 +1,44 @@
 import * as stylex from "@stylexjs/stylex";
 
 /**
- * Embed-safe StyleX styles.
- * Uses host tokens (shadcn / Tailwind v4) when present, with literal fallbacks.
- * Compiled with `classNamePrefix: "twc"` so atomics never collide with host StyleX.
+ * Host tokens first (shadcn / Tailwind v4), then `light-dark()` so embeds
+ * follow system/host color-scheme when those vars are missing.
+ * `classNamePrefix: "twc"` keeps atomics from colliding with host StyleX.
  */
+const fg = "var(--foreground, var(--color-foreground, light-dark(#0a0a0a, #fafaf9)))";
+const card = "var(--card, var(--color-card, light-dark(#ffffff, #1c1917)))";
+const cardFg =
+  "var(--card-foreground, var(--color-card-foreground, light-dark(#0a0a0a, #fafaf9)))";
+const muted = "var(--muted, var(--color-muted, light-dark(#f5f5f5, #292524)))";
+const mutedFg =
+  "var(--muted-foreground, var(--color-muted-foreground, light-dark(#737373, #a8a29e)))";
+const border = "var(--border, var(--color-border, light-dark(#e5e5e5, #44403c)))";
+const primary = "var(--primary, var(--color-primary, light-dark(#171717, #fafaf9)))";
+const primaryFg =
+  "var(--primary-foreground, var(--color-primary-foreground, light-dark(#fafafa, #171717)))";
+const radiusMd = "var(--radius, var(--radius-md, 0.5rem))";
+const radiusLg = "var(--radius, var(--radius-lg, 0.75rem))";
+
 export const styles = stylex.create({
   root: {
+    // Inherit host dark/light so `light-dark()` fallbacks resolve correctly.
+    colorScheme: "inherit",
     fontFamily:
       'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     lineHeight: 1.5,
     boxSizing: "border-box",
-    color: "var(--foreground, var(--color-foreground, #0a0a0a))",
+    color: fg,
   },
 
   anchor: {
     position: "fixed",
     zIndex: 2147483000,
+  },
+  /** Normal document flow — e.g. footer; only visible when that section is on screen. */
+  inline: {
+    position: "static",
+    zIndex: "auto",
+    display: "inline-flex",
   },
   bottomRight: {
     bottom: "1.25rem",
@@ -44,19 +66,20 @@ export const styles = stylex.create({
     paddingInline: "0.75rem",
     borderWidth: 1,
     borderStyle: "solid",
-    borderColor: "var(--border, var(--color-border, #e5e5e5))",
-    borderRadius: "var(--radius, var(--radius-md, 0.5rem))",
-    backgroundColor: "var(--card, var(--color-card, #ffffff))",
-    color: "var(--card-foreground, var(--color-card-foreground, #0a0a0a))",
+    borderColor: border,
+    borderRadius: radiusMd,
+    backgroundColor: card,
+    color: cardFg,
     fontSize: "0.8125rem",
     fontWeight: 500,
     lineHeight: 1.25,
     cursor: "pointer",
     boxShadow: "0 1px 2px rgb(0 0 0 / 6%), 0 4px 12px rgb(0 0 0 / 8%)",
+    backdropFilter: "blur(8px)",
   },
   triggerHover: {
     ":hover": {
-      backgroundColor: "var(--muted, var(--color-muted, #f5f5f5))",
+      backgroundColor: muted,
     },
   },
 
@@ -80,9 +103,9 @@ export const styles = stylex.create({
     padding: "1.25rem",
     borderWidth: 1,
     borderStyle: "solid",
-    borderColor: "var(--border, var(--color-border, #e5e5e5))",
-    backgroundColor: "var(--card, var(--color-card, #ffffff))",
-    color: "var(--card-foreground, var(--color-card-foreground, #0a0a0a))",
+    borderColor: border,
+    backgroundColor: card,
+    color: cardFg,
     boxShadow: "0 16px 48px rgb(0 0 0 / 18%)",
     boxSizing: "border-box",
   },
@@ -92,7 +115,7 @@ export const styles = stylex.create({
     transform: "translate(-50%, -50%)",
     width: "min(24rem, calc(100vw - 2rem))",
     maxHeight: "min(32rem, calc(100vh - 2rem))",
-    borderRadius: "var(--radius, var(--radius-lg, 0.75rem))",
+    borderRadius: radiusLg,
     overflowY: "auto",
   },
   panelSheet: {
@@ -101,8 +124,8 @@ export const styles = stylex.create({
     bottom: 0,
     width: "100%",
     maxHeight: "min(70vh, 32rem)",
-    borderTopLeftRadius: "var(--radius, var(--radius-lg, 0.75rem))",
-    borderTopRightRadius: "var(--radius, var(--radius-lg, 0.75rem))",
+    borderTopLeftRadius: radiusLg,
+    borderTopRightRadius: radiusLg,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
     overflowY: "auto",
@@ -130,7 +153,7 @@ export const styles = stylex.create({
   subtitle: {
     margin: 0,
     fontSize: "0.875rem",
-    color: "var(--muted-foreground, var(--color-muted-foreground, #737373))",
+    color: mutedFg,
   },
   close: {
     display: "inline-flex",
@@ -142,7 +165,7 @@ export const styles = stylex.create({
     margin: 0,
     padding: 0,
     borderWidth: 0,
-    borderRadius: "var(--radius, var(--radius-md, 0.5rem))",
+    borderRadius: radiusMd,
     backgroundColor: "transparent",
     color: "inherit",
     cursor: "pointer",
@@ -156,7 +179,7 @@ export const styles = stylex.create({
     fontWeight: 600,
     letterSpacing: "0.04em",
     textTransform: "uppercase",
-    color: "var(--primary, var(--color-primary, #171717))",
+    color: primary,
   },
   body: {
     margin: 0,
@@ -165,7 +188,7 @@ export const styles = stylex.create({
   meta: {
     margin: 0,
     fontSize: "0.8125rem",
-    color: "var(--muted-foreground, var(--color-muted-foreground, #737373))",
+    color: mutedFg,
   },
 
   socialRow: {
@@ -181,9 +204,9 @@ export const styles = stylex.create({
     height: "2.25rem",
     borderWidth: 1,
     borderStyle: "solid",
-    borderColor: "var(--border, var(--color-border, #e5e5e5))",
-    borderRadius: "var(--radius, var(--radius-md, 0.5rem))",
-    backgroundColor: "var(--muted, var(--color-muted, #f5f5f5))",
+    borderColor: border,
+    borderRadius: radiusMd,
+    backgroundColor: muted,
     color: "inherit",
     textDecoration: "none",
   },
@@ -199,9 +222,9 @@ export const styles = stylex.create({
     paddingBlock: "0.65rem",
     paddingInline: "1rem",
     borderWidth: 0,
-    borderRadius: "var(--radius, var(--radius-md, 0.5rem))",
-    backgroundColor: "var(--primary, var(--color-primary, #171717))",
-    color: "var(--primary-foreground, var(--color-primary-foreground, #fafafa))",
+    borderRadius: radiusMd,
+    backgroundColor: primary,
+    color: primaryFg,
     fontSize: "0.875rem",
     fontWeight: 600,
     textDecoration: "none",

@@ -71,7 +71,52 @@ export const MobileSheet: Story = () => (
   </ShadcnHost>
 );
 
+/** In-flow (e.g. footer) — not fixed to the viewport. */
+export const InlineInFooter: Story = () => (
+  <ShadcnHost>
+    <div style={{ minHeight: "120vh", padding: "2rem" }}>
+      <p>Scroll down to the footer credit…</p>
+    </div>
+    <footer
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        padding: "2rem",
+        borderTop: "1px solid var(--border)",
+      }}
+    >
+      <TigawannaCredit position="inline" />
+    </footer>
+  </ShadcnHost>
+);
+
 export const WithoutHostTokens: Story = () => <TigawannaCredit defaultOpen />;
+
+/** System/host dark — badge should not stay stuck on white fallbacks. */
+export const DarkMode: Story = () => (
+  <div
+    style={
+      {
+        minHeight: "100vh",
+        colorScheme: "dark",
+        background: "#1c1917",
+        color: "#fafaf9",
+        "--background": "#1c1917",
+        "--foreground": "#fafaf9",
+        "--card": "#292524",
+        "--card-foreground": "#fafaf9",
+        "--primary": "#fb923c",
+        "--primary-foreground": "#1c1917",
+        "--muted": "#44403c",
+        "--muted-foreground": "#a8a29e",
+        "--border": "#57534e",
+        "--radius": "0.75rem",
+      } as CSSProperties
+    }
+  >
+    <TigawannaCredit defaultOpen />
+  </div>
+);
 
 type ControlsArgs = {
   position: CreditPosition;
@@ -92,7 +137,7 @@ WithControls.args = {
 WithControls.argTypes = {
   position: {
     control: { type: "select" },
-    options: ["bottom-right", "bottom-left", "top-right", "top-left"],
+    options: ["bottom-right", "bottom-left", "top-right", "top-left", "inline"],
   },
   defaultOpen: {
     control: { type: "boolean" },

@@ -37,7 +37,7 @@ In Next.js App Router, put it in a client layout/page (the component is `"use cl
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `position` | `"bottom-right" \| "bottom-left" \| "top-right" \| "top-left"` | `"bottom-right"` | Corner for the floating trigger |
+| `position` | `"bottom-right" \| "bottom-left" \| "top-right" \| "top-left" \| "inline"` | `"bottom-right"` | Corner (fixed) or `"inline"` for normal document flow |
 | `label` | `string` | `Built with ❤️ by tigawanna` | Trigger text |
 | `defaultOpen` | `boolean` | `false` | Start with the profile surface open |
 | `surface` | `"auto" \| "dialog" \| "sheet"` | `"auto"` | Overlay mode (`auto` → sheet ≤768px, dialog above) |
@@ -50,15 +50,22 @@ In Next.js App Router, put it in a client layout/page (the component is `"use cl
 />
 ```
 
+Footer / in-flow (only visible when that section is on screen):
+
+```tsx
+<footer>
+  <TigawannaCredit position="inline" />
+</footer>
+```
+
 ### Theming
 
-The badge reads host CSS variables when present (shadcn / Tailwind v4 style), with built-in fallbacks:
+The badge reads host CSS variables when present (shadcn / Tailwind v4 style). Fallbacks use CSS `light-dark()` so dark mode doesn’t stay stuck on a white pill:
 
 - `--primary` / `--color-primary`
-- `--background` / `--card` / `--foreground`
-- `--muted` / `--border` / `--radius`
+- `--card` / `--foreground` / `--muted` / `--border` / `--radius`
 
-No extra theme setup is required for a basic embed.
+For class-based dark mode (`.dark`), set those variables on the themed root (or on `:root` / `html`) so the fixed badge can see them. The badge uses `color-scheme: inherit` so it follows the host.
 
 ### Other exports
 

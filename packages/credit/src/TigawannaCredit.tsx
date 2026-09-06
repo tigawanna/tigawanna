@@ -15,13 +15,23 @@ import {
 import { TigawannaMark } from "./mark";
 import { styles } from "./styles.stylex";
 
-export type CreditPosition = "bottom-right" | "bottom-left" | "top-right" | "top-left";
+export type CreditPosition =
+  | "bottom-right"
+  | "bottom-left"
+  | "top-right"
+  | "top-left"
+  /** In-flow (footer-friendly); not fixed to the viewport. */
+  | "inline";
 
 /** Default floating trigger copy. */
 export const DEFAULT_CREDIT_LABEL: string = `Built with ❤️ by ${creditProfile.brand}`;
 
 export type TigawannaCreditProps = {
-  /** Corner placement for the floating badge. */
+  /**
+   * Where the trigger lives.
+   * Corner values are fixed to the viewport; `"inline"` uses normal document flow
+   * (put it in a footer and it only shows when that section is scrolled into view).
+   */
   position?: CreditPosition;
   /** Override the trigger text (defaults to “Built with ❤️ by tigawanna”). */
   label?: string;
@@ -41,6 +51,7 @@ const positionStyles = {
   "bottom-left": styles.bottomLeft,
   "top-right": styles.topRight,
   "top-left": styles.topLeft,
+  inline: styles.inline,
 } as const;
 
 type SocialIcon = ComponentType<SVGProps<SVGSVGElement>>;
@@ -150,9 +161,15 @@ export function TigawannaCredit({
     };
   }, [isOpen]);
 
+  const isInline = position === "inline";
+
   return (
     <div data-tigawanna-credit="" data-test="tigawanna-credit" {...stylex.props(styles.root)}>
-      <div {...stylex.props(styles.anchor, positionStyles[position])}>
+      <div
+        {...(isInline
+          ? stylex.props(styles.inline)
+          : stylex.props(styles.anchor, positionStyles[position]))}
+      >
         <button
           type="button"
           data-test="tigawanna-credit-trigger"

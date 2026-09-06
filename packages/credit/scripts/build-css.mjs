@@ -1,4 +1,4 @@
-import { copyFileSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
+import { copyFileSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -6,14 +6,26 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = join(root, "dist");
 
 /**
- * Publish StyleX output as `styles.css` (and mirror into Ladle `public/`).
- * No design-system reset — only the compiled `twc*` atomics for this package.
+ * When hosts use class-based dark mode (`.dark` / `data-theme`) without
+ * setting `color-scheme`, force it on the badge so `light-dark()` fallbacks work.
  */
-function findStylexCss() {
+const DARK_SCHEME_BRIDGE = `
+/* Class-based dark mode → color-scheme so light-dark() fallbacks resolve */
+:is(.dark, [data-theme="dark"], [data-mode="dark"]) [data-tigawanna-credit] {
+  color-scheme: dark;
+}
+:is(.light, [data-theme="light"], [data-mode="light"]) [data-tigawanna-credit] {
+  color-scheme: light;
+}
+`.trim();
+
+/**
+ * Publish StyleX output as `styles.css` (and mirror into Ladle `public/`).
+ */
+function readStylexCss() {
   const direct = join(dist, "stylex.css");
   try {
-    copyFileSync(direct, join(dist, "styles.css"));
-    return direct;
+    return readFileSync(direct, "utf8");
   } catch {
     // unplugin-stylex may emit under dist/assets
   }
@@ -24,28 +36,21 @@ function findStylexCss() {
       (name) => name.endsWith("stylex.css") || name.endsWith(".css"),
     );
     if (match) {
-      const source = join(assets, match);
-      copyFileSync(source, join(dist, "styles.css"));
-      return source;
+      return readFileSync(join(assets, match), "utf8");
     }
   } catch {
     // no assets dir
   }
 
-  const fallback = "/* @tigawanna/credit — no StyleX output */\n";
-  writeFileSync(join(dist, "styles.css"), fallback);
-  return null;
+  return "/* @tigawanna/credit — no StyleX output */\n";
 }
 
 mkdirSync(dist, { recursive: true });
-const source = findStylexCss();
+const bundle = `${readStylexCss().trim()}\n\n${DARK_SCHEME_BRIDGE}\n`;
+writeFileSync(join(dist, "styles.css"), bundle);
 
 const publicDir = join(root, "public");
 mkdirSync(publicDir, { recursive: true });
 copyFileSync(join(dist, "styles.css"), join(publicDir, "credit.css"));
 
-console.log(
-  source
-    ? "wrote dist/styles.css + public/credit.css (StyleX only)"
-    : "wrote empty dist/styles.css + public/credit.css",
-);
+console.log("wrote dist/styles.css + public/credit.css (StyleX + dark-scheme bridge)");
