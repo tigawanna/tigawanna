@@ -2,12 +2,18 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "noEmit": false,
-    "emitDeclarationOnly": true,
     "declaration": true,
     "declarationMap": true,
+    "isolatedDeclarations": true,
     "outDir": "dist",
     "rootDir": "src"
   },
   "include": ["src"],
-  "exclude": ["node_modules", "dist", "src/**/*.stories.tsx", "src/ladle-styles.ts"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "src/**/*.stories.tsx",
+    "src/ladle-styles.ts",
+    "src/astryx-styles.ts"
+  ]
 }

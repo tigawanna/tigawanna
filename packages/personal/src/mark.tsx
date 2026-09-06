@@ -1,4 +1,4 @@
-import type { ComponentProps } from "react";
+import type { ComponentProps, ReactElement } from "react";
 
 type MarkProps = ComponentProps<"svg"> & {
   size?: number;
@@ -7,7 +7,7 @@ type MarkProps = ComponentProps<"svg"> & {
 /**
  * Compact brand mark for the credit badge.
  */
-export function TigawannaMark({ size = 18, ...props }: MarkProps) {
+export function TigawannaMark({ size = 18, ...props }: MarkProps): ReactElement {
   return (
     <svg
       viewBox="0 0 220 140"

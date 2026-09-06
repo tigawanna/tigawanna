@@ -1,10 +1,10 @@
-import { defineTheme } from "@astryxdesign/core/theme";
+import { defineTheme, type DefinedTheme } from "@astryxdesign/core/theme";
 
 /**
  * Nested `var()` chain: prefer host tokens, then a literal fallback.
  * Supports classic shadcn (`--primary`) and Tailwind v4 (`--color-primary`).
  */
-function token(...parts: string[]) {
+function token(...parts: string[]): string {
   if (parts.length < 2) {
     throw new Error("token() requires at least one CSS variable and a fallback");
   }
@@ -16,7 +16,7 @@ function token(...parts: string[]) {
  * Astryx theme that reads shadcn / host CSS variables when present,
  * with self-contained fallbacks for embeds that have no design tokens yet.
  */
-export const creditTheme = defineTheme({
+export const creditTheme: DefinedTheme = defineTheme({
   name: "tigawanna-credit",
   tokens: {
     "--color-accent": token("--primary", "--color-primary", "#171717"),

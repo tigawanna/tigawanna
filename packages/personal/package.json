@@ -2,34 +2,47 @@
   "name": "@tigawanna/credit",
   "version": "0.1.0",
   "description": "Minimal \"made by tigawanna\" credit badge for project landing pages.",
+  "keywords": [
+    "credit",
+    "badge",
+    "tigawanna",
+    "react",
+    "stylex"
+  ],
+  "bugs": {
+    "url": "https://github.com/tigawanna/tigawanna/issues"
+  },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tigawanna/tigawanna.git",
+    "directory": "packages/personal"
+  },
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "sideEffects": [
     "**/*.css"
   ],
-  "files": [
-    "dist"
-  ],
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.mts",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    },
+    ".": "./dist/index.mjs",
+    "./package.json": "./package.json",
     "./styles.css": "./dist/styles.css"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
     "astryx": "node node_modules/@astryxdesign/cli/clients/cli/bin/astryx.mjs",
-    "build": "rolldown -c && tsc -p tsconfig.build.json --emitDeclarationOnly",
+    "build": "tsdown",
+    "postbuild": "pnpm run check-exports",
+    "check-exports": "attw --pack . --profile node16 --exclude-entrypoints ./styles.css --ignore-rules cjs-resolves-to-esm",
     "check-types": "tsc --noEmit",
-    "dev": "concurrently -k -n rolldown,ladle -c cyan,magenta \"pnpm dev:lib\" \"pnpm dev:ladle\"",
-    "dev:lib": "rolldown -c -w",
+    "dev": "concurrently -k -n tsdown,ladle -c cyan,magenta \"pnpm dev:lib\" \"pnpm dev:ladle\"",
+    "dev:lib": "tsdown --watch",
     "dev:ladle": "node ./scripts/build-css.mjs && ladle serve",
     "ladle:build": "node ./scripts/build-css.mjs && ladle build",
     "ladle:preview": "pnpm run ladle:build && ladle preview",
@@ -40,6 +53,7 @@
     "@stylexjs/stylex": "^0.19.0"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.4",
     "@astryxdesign/cli": "^0.5.2",
     "@ladle/react": "^5.1.1",
     "@repo/site-constants": "workspace:*",
@@ -50,12 +64,15 @@
     "concurrently": "^9.2.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "rolldown": "^1.0.0",
+    "tsdown": "^0.22.14",
     "typescript": "catalog:",
     "unplugin-stylex": "^0.6.3"
   },
   "peerDependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

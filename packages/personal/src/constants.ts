@@ -1,10 +1,31 @@
-import { siteConfig } from "@repo/site-constants/site";
-
 /**
  * Slim profile snapshot baked from `@repo/site-constants` at build time.
  * Consumers of the published package do not depend on the private workspace package.
  */
-export const creditProfile = {
+import { siteConfig } from "@repo/site-constants/site";
+
+export type CreditProfile = {
+  name: string;
+  title: string;
+  brand: string;
+  role: string;
+  description: string;
+  locationLabel: string;
+  location: string;
+  tagline: string;
+  contactBlurb: string;
+  links: {
+    github: string;
+    linkedin: string;
+    twitter: string;
+    website: string;
+    email: string;
+    emailTo: string;
+    devto: string;
+  };
+};
+
+export const creditProfile: CreditProfile = {
   name: siteConfig.name,
   title: siteConfig.title,
   brand: siteConfig.brand,
@@ -23,8 +44,6 @@ export const creditProfile = {
     emailTo: siteConfig.links.emailTo,
     devto: siteConfig.links.devto,
   },
-} as const;
+};
 
-export type CreditProfile = typeof creditProfile;
-
-export type CreditLinkKey = keyof typeof creditProfile.links;
+export type CreditLinkKey = keyof CreditProfile["links"];

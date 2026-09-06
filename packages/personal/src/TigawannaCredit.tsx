@@ -10,7 +10,7 @@ import { Stack } from "@astryxdesign/core/Stack";
 import { Text } from "@astryxdesign/core/Text";
 import { useMediaQuery } from "@astryxdesign/core/hooks";
 import { Theme } from "@astryxdesign/core/theme";
-import type { ComponentType, SVGProps } from "react";
+import type { ComponentType, ReactElement, SVGProps } from "react";
 import { useState } from "react";
 import { creditProfile } from "./constants";
 import {
@@ -28,7 +28,7 @@ import { creditTheme } from "./theme";
 export type CreditPosition = "bottom-right" | "bottom-left" | "top-right" | "top-left";
 
 /** Default floating trigger copy. */
-export const DEFAULT_CREDIT_LABEL = `Built with ❤️ by ${creditProfile.brand}`;
+export const DEFAULT_CREDIT_LABEL: string = `Built with ❤️ by ${creditProfile.brand}`;
 
 export type TigawannaCreditProps = {
   /** Corner placement for the floating badge. */
@@ -70,7 +70,7 @@ const socialLinks: readonly {
   { key: "email", label: "Email", href: creditProfile.links.emailTo, external: false, Icon: MailIcon },
 ];
 
-function CreditBody() {
+function CreditBody(): ReactElement {
   return (
     <Stack direction="vertical" gap={3}>
       <Text type="label" color="accent" display="block">
@@ -123,7 +123,7 @@ export function TigawannaCredit({
   label = DEFAULT_CREDIT_LABEL,
   defaultOpen = false,
   surface = "auto",
-}: TigawannaCreditProps) {
+}: TigawannaCreditProps): ReactElement {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const isMobileViewport = useMediaQuery(MOBILE_QUERY);
   const useSheet = surface === "sheet" || (surface === "auto" && isMobileViewport);
