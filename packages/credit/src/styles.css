@@ -1,8 +1,4 @@
 /*
  * Published stylesheet is assembled by scripts/build-css.mjs
- * (Astryx reset + astryx.css + StyleX).
- *
- * Ladle loads styles via src/ladle-styles.ts instead of this file,
- * because Vite production builds do not reliably inline CSS `@import`s
- * from node_modules into the story bundle.
+ * from the StyleX build output (`twc*` atomics only — no design-system reset).
  */

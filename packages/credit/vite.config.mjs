@@ -10,6 +10,7 @@ export default {
     stylexPlugin({
       stylex: {
         filename: "stylex.css",
+        classNamePrefix: "twc",
         useCSSLayers: true,
         treeshakeCompensation: true,
       },

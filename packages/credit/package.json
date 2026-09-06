@@ -16,10 +16,11 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/tigawanna/tigawanna.git",
-    "directory": "packages/personal"
+    "directory": "packages/credit"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "type": "module",
   "sideEffects": [
@@ -36,7 +37,6 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "astryx": "node node_modules/@astryxdesign/cli/clients/cli/bin/astryx.mjs",
     "build": "tsdown",
     "postbuild": "pnpm run check-exports",
     "check-exports": "attw --pack . --profile node16 --exclude-entrypoints ./styles.css --ignore-rules cjs-resolves-to-esm",
@@ -49,12 +49,10 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@astryxdesign/core": "^0.5.2",
     "@stylexjs/stylex": "^0.19.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.4",
-    "@astryxdesign/cli": "^0.5.2",
     "@ladle/react": "^5.1.1",
     "@repo/site-constants": "workspace:*",
     "@repo/typescript-config": "workspace:*",

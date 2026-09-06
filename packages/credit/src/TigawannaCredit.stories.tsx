@@ -1,6 +1,5 @@
 import type { Story, StoryDefault } from "@ladle/react";
 import type { CSSProperties, ReactNode } from "react";
-import "./astryx-styles";
 import { TigawannaCredit, type CreditPosition } from "./TigawannaCredit";
 
 export default {

@@ -1,17 +1,8 @@
 "use client";
 
-import { BottomSheet } from "@astryxdesign/core/BottomSheet";
-import { Button } from "@astryxdesign/core/Button";
-import { Dialog, DialogHeader } from "@astryxdesign/core/Dialog";
-import { Heading } from "@astryxdesign/core/Heading";
-import { Icon } from "@astryxdesign/core/Icon";
-import { Layout, LayoutContent } from "@astryxdesign/core/Layout";
-import { Stack } from "@astryxdesign/core/Stack";
-import { Text } from "@astryxdesign/core/Text";
-import { useMediaQuery } from "@astryxdesign/core/hooks";
-import { Theme } from "@astryxdesign/core/theme";
+import * as stylex from "@stylexjs/stylex";
 import type { ComponentType, ReactElement, SVGProps } from "react";
-import { useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { creditProfile } from "./constants";
 import {
   DevtoIcon,
@@ -23,7 +14,6 @@ import {
 } from "./icons";
 import { TigawannaMark } from "./mark";
 import { styles } from "./styles.stylex";
-import { creditTheme } from "./theme";
 
 export type CreditPosition = "bottom-right" | "bottom-left" | "top-right" | "top-left";
 
@@ -70,47 +60,63 @@ const socialLinks: readonly {
   { key: "email", label: "Email", href: creditProfile.links.emailTo, external: false, Icon: MailIcon },
 ];
 
+/**
+ * Subscribe to a media query. SSR-safe (starts `false` until mount).
+ */
+function useMediaQuery(query: string): boolean {
+  const [matches, setMatches] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    const onChange = () => {
+      setMatches(media.matches);
+    };
+    onChange();
+    media.addEventListener("change", onChange);
+    return () => {
+      media.removeEventListener("change", onChange);
+    };
+  }, [query]);
+
+  return matches;
+}
+
 function CreditBody(): ReactElement {
   return (
-    <Stack direction="vertical" gap={3}>
-      <Text type="label" color="accent" display="block">
-        {creditProfile.brand}
-      </Text>
-      <Text type="body" display="block">
-        {creditProfile.description}
-      </Text>
-      <Text type="supporting" color="secondary" display="block">
+    <>
+      <p {...stylex.props(styles.brand)}>{creditProfile.brand}</p>
+      <p {...stylex.props(styles.body)}>{creditProfile.description}</p>
+      <p {...stylex.props(styles.meta)}>
         {creditProfile.locationLabel} {creditProfile.location}
-      </Text>
+      </p>
 
-      <Stack direction="horizontal" gap={1} wrap="wrap" hAlign="start">
+      <div {...stylex.props(styles.socialRow)}>
         {socialLinks.map((link) => (
-          <Button
+          <a
             key={link.key}
-            label={link.label}
-            tooltip={link.label}
-            variant="secondary"
-            size="sm"
-            isIconOnly
-            icon={<Icon icon={link.Icon} />}
             href={link.href}
+            title={link.label}
+            aria-label={link.label}
             target={link.external ? "_blank" : undefined}
             rel={link.external ? "noopener noreferrer" : undefined}
             data-test={`tigawanna-credit-link-${link.key}`}
-          />
+            {...stylex.props(styles.socialLink)}
+          >
+            <link.Icon width={16} height={16} />
+          </a>
         ))}
-      </Stack>
+      </div>
 
-      <Button
-        label="Visit portfolio"
-        variant="primary"
-        width="100%"
+      <a
         href={creditProfile.links.website}
         target="_blank"
         rel="noopener noreferrer"
         data-test="tigawanna-credit-cta"
-      />
-    </Stack>
+        {...stylex.props(styles.cta)}
+      >
+        Visit portfolio
+      </a>
+    </>
   );
 }
 
@@ -124,70 +130,85 @@ export function TigawannaCredit({
   defaultOpen = false,
   surface = "auto",
 }: TigawannaCreditProps): ReactElement {
+  const titleId = useId();
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const isMobileViewport = useMediaQuery(MOBILE_QUERY);
   const useSheet = surface === "sheet" || (surface === "auto" && isMobileViewport);
 
-  return (
-    <Theme theme={creditTheme} mode="system">
-      <Stack
-        direction="horizontal"
-        xstyle={[styles.anchor, positionStyles[position]]}
-        data-test="tigawanna-credit"
-      >
-        <Button
-          label={label}
-          tooltip={label}
-          variant="secondary"
-          size="sm"
-          elevation="high"
-          icon={<TigawannaMark size={16} />}
-          data-test="tigawanna-credit-trigger"
-          onClick={() => setIsOpen(true)}
-        />
-      </Stack>
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [isOpen]);
 
-      {useSheet ? (
-        <BottomSheet
-          isOpen={isOpen}
-          onOpenChange={setIsOpen}
-          label={creditProfile.name}
-          purpose="info"
-          height="hug"
-          data-test="tigawanna-credit-sheet"
+  return (
+    <div data-tigawanna-credit="" data-test="tigawanna-credit" {...stylex.props(styles.root)}>
+      <div {...stylex.props(styles.anchor, positionStyles[position])}>
+        <button
+          type="button"
+          data-test="tigawanna-credit-trigger"
+          aria-haspopup="dialog"
+          aria-expanded={isOpen}
+          onClick={() => {
+            setIsOpen(true);
+          }}
+          {...stylex.props(styles.trigger, styles.triggerHover)}
         >
-          <Stack direction="vertical" gap={3} padding={4}>
-            <Heading level={3}>{creditProfile.name}</Heading>
-            <Text type="supporting" color="secondary" display="block">
-              {creditProfile.role}
-            </Text>
-            <CreditBody />
-          </Stack>
-        </BottomSheet>
-      ) : (
-        <Dialog
-          isOpen={isOpen}
-          onOpenChange={setIsOpen}
-          purpose="info"
-          width={400}
-          data-test="tigawanna-credit-dialog"
-        >
-          <Layout
-            header={
-              <DialogHeader
-                title={creditProfile.name}
-                subtitle={creditProfile.role}
-                onOpenChange={setIsOpen}
-              />
-            }
-            content={
-              <LayoutContent>
-                <CreditBody />
-              </LayoutContent>
-            }
+          <TigawannaMark size={16} />
+          <span>{label}</span>
+        </button>
+      </div>
+
+      {isOpen ? (
+        <>
+          <button
+            type="button"
+            aria-label="Close credit panel"
+            data-test="tigawanna-credit-backdrop"
+            onClick={() => {
+              setIsOpen(false);
+            }}
+            {...stylex.props(styles.backdrop)}
           />
-        </Dialog>
-      )}
-    </Theme>
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={titleId}
+            data-test={useSheet ? "tigawanna-credit-sheet" : "tigawanna-credit-dialog"}
+            {...stylex.props(styles.panel, useSheet ? styles.panelSheet : styles.panelDialog)}
+          >
+            <div {...stylex.props(styles.header)}>
+              <div {...stylex.props(styles.headerText)}>
+                <h2 id={titleId} {...stylex.props(styles.title)}>
+                  {creditProfile.name}
+                </h2>
+                <p {...stylex.props(styles.subtitle)}>{creditProfile.role}</p>
+              </div>
+              <button
+                type="button"
+                aria-label="Close"
+                data-test="tigawanna-credit-close"
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+                {...stylex.props(styles.close)}
+              >
+                ×
+              </button>
+            </div>
+            <CreditBody />
+          </div>
+        </>
+      ) : null}
+    </div>
   );
 }

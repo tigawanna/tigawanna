@@ -7,7 +7,7 @@ import { defineConfig } from "tsdown";
 const root = dirname(fileURLToPath(import.meta.url));
 
 /**
- * Refresh concatenated CSS (dist + Ladle public) after each emit.
+ * Copy StyleX CSS to the published `styles.css` export after each emit.
  * @see https://tsdown.dev/options/dts
  * @see https://tsdown.dev/advanced/plugins
  */
@@ -41,12 +41,13 @@ export default defineConfig({
     },
   },
   deps: {
-    neverBundle: ["react", "react-dom", "react/jsx-runtime", "@stylexjs/stylex", /@astryxdesign\//],
+    neverBundle: ["react", "react-dom", "react/jsx-runtime", "@stylexjs/stylex"],
   },
   plugins: [
     stylexPlugin({
       stylex: {
         filename: "stylex.css",
+        classNamePrefix: "twc",
         useCSSLayers: true,
         treeshakeCompensation: true,
         runtimeInjection: false,

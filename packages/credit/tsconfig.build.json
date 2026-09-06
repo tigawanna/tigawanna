@@ -9,11 +9,5 @@
     "rootDir": "src"
   },
   "include": ["src"],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "src/**/*.stories.tsx",
-    "src/ladle-styles.ts",
-    "src/astryx-styles.ts"
-  ]
+  "exclude": ["node_modules", "dist", "src/**/*.stories.tsx"]
 }
