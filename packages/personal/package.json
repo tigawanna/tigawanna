@@ -26,9 +26,11 @@
   },
   "scripts": {
     "astryx": "node node_modules/@astryxdesign/cli/clients/cli/bin/astryx.mjs",
-    "build": "rolldown -c && node ./scripts/build-css.mjs && tsc -p tsconfig.build.json --emitDeclarationOnly",
+    "build": "rolldown -c && tsc -p tsconfig.build.json --emitDeclarationOnly",
     "check-types": "tsc --noEmit",
-    "dev": "node ./scripts/build-css.mjs && ladle serve",
+    "dev": "concurrently -k -n rolldown,ladle -c cyan,magenta \"pnpm dev:lib\" \"pnpm dev:ladle\"",
+    "dev:lib": "rolldown -c -w",
+    "dev:ladle": "node ./scripts/build-css.mjs && ladle serve",
     "ladle:build": "node ./scripts/build-css.mjs && ladle build",
     "ladle:preview": "pnpm run ladle:build && ladle preview",
     "prepublishOnly": "pnpm run build"
@@ -45,6 +47,7 @@
     "@types/node": "^22.15.3",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "concurrently": "^9.2.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "rolldown": "^1.0.0",

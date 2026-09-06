@@ -1,5 +1,25 @@
 import stylexPlugin from "unplugin-stylex/rolldown";
+import { spawnSync } from "node:child_process";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "rolldown";
+
+const root = dirname(fileURLToPath(import.meta.url));
+
+/**
+ * Refresh concatenated CSS (dist + Ladle public) after each Rolldown emit.
+ */
+function rebuildCss() {
+  return {
+    name: "rebuild-credit-css",
+    writeBundle() {
+      spawnSync(process.execPath, [join(root, "scripts/build-css.mjs")], {
+        cwd: root,
+        stdio: "inherit",
+      });
+    },
+  };
+}
 
 /**
  * Library build via Rolldown + unplugin-stylex (native Rolldown adapter).
@@ -39,5 +59,6 @@ export default defineConfig({
         runtimeInjection: false,
       },
     }),
+    rebuildCss(),
   ],
 });
