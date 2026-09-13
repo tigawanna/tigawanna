@@ -2,7 +2,7 @@
   "name": "tigawanna",
   "private": true,
   "scripts": {
-    "build": "turbo run build --filter=!site",
+    "build": "turbo run build",
     "dev": "turbo run dev --filter=!site",
     "lint": "vp lint .",
     "lint:fix": "vp lint --fix .",
