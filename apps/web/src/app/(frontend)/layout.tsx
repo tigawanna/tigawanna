@@ -1,4 +1,6 @@
 import localFont from "next/font/local";
+import { Analytics } from '@vercel/analytics/next'
+
 import { Toaster } from "sonner";
 import {
   siteConfig,
@@ -46,8 +48,9 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
     <html lang="en" data-theme="wanna" className={`${spaceGrotesk.variable} ${fraunces.variable}`}>
       <body className="font-sans antialiased">
         {children}
+        <Analytics />
         <Toaster position="bottom-right" richColors closeButton />
       </body>
     </html>
-  );
+  )
 }
