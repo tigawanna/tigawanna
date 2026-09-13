@@ -10,6 +10,7 @@ import {
   GlobeIcon,
   LinkedInIcon,
   MailIcon,
+  XIcon,
 } from "./icons";
 import { TigawannaMark } from "./mark";
 import { styles } from "./styles.stylex";
@@ -64,6 +65,7 @@ const socialLinks: readonly {
 }[] = [
   { key: "website", label: "Website", href: creditProfile.links.website, external: true, Icon: GlobeIcon },
   { key: "github", label: "GitHub", href: creditProfile.links.github, external: true, Icon: GitHubIcon },
+  { key: "x", label: "X", href: creditProfile.links.x, external: true, Icon: XIcon },
   { key: "linkedin", label: "LinkedIn", href: creditProfile.links.linkedin, external: true, Icon: LinkedInIcon },
   { key: "devto", label: "Dev.to", href: creditProfile.links.devto, external: true, Icon: DevtoIcon },
   { key: "email", label: "Email", href: creditProfile.links.emailTo, external: false, Icon: MailIcon },

@@ -19,6 +19,7 @@ export type CompactSiteProfile = {
   contact: {
     email: string;
     github: string;
+    x: string;
     linkedin: string;
     devto: string;
   };
@@ -50,6 +51,7 @@ export function getCompactSiteProfile(): CompactSiteProfile {
     contact: {
       email: siteConfig.links.email,
       github: siteConfig.links.github,
+      x: siteConfig.links.x,
       linkedin: siteConfig.links.linkedin,
       devto: siteConfig.links.devto,
     },

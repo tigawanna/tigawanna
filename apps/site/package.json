@@ -27,6 +27,7 @@
     "@repo/site-constants": "workspace:*",
     "@repo/telegram": "workspace:*",
     "@repo/ui": "workspace:*",
+    "@tigawanna/credit": "workspace:*",
     "@shikijs/langs": "^3.23.0",
     "@shikijs/themes": "^3.23.0",
     "@tailwindcss/vite": "^4.1.18",

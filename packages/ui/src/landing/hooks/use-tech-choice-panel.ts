@@ -41,7 +41,13 @@ export function useTechChoicePanel(count: number, options: { enableWheelNav?: bo
   const visitedCount = visitedIndices.size;
 
   useEffect(() => {
-    detailRef.current?.scrollTo({ top: 0 });
+    const detail = detailRef.current;
+    if (!detail) return;
+    if (typeof detail.scrollTo === "function") {
+      detail.scrollTo({ top: 0 });
+      return;
+    }
+    detail.scrollTop = 0;
   }, [activeIndex]);
 
   useEffect(() => {

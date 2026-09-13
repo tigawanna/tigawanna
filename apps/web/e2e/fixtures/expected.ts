@@ -24,6 +24,7 @@ export const expected = {
   description: siteConfig.description,
   email: siteConfig.links.email,
   github: siteConfig.links.github,
+  x: siteConfig.links.x,
   linkedin: siteConfig.links.linkedin,
   devto: siteConfig.links.devto,
   // Match the web navbar (`AppConfig`), not parked site `#articles` nav.

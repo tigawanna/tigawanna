@@ -13,53 +13,53 @@
  * via the `definition` "supportedTimezones".
  */
 export type SupportedTimezones =
-  | "Pacific/Midway"
-  | "Pacific/Niue"
-  | "Pacific/Honolulu"
-  | "Pacific/Rarotonga"
-  | "America/Anchorage"
-  | "Pacific/Gambier"
-  | "America/Los_Angeles"
-  | "America/Tijuana"
-  | "America/Denver"
-  | "America/Phoenix"
-  | "America/Chicago"
-  | "America/Guatemala"
-  | "America/New_York"
-  | "America/Bogota"
-  | "America/Caracas"
-  | "America/Santiago"
-  | "America/Buenos_Aires"
-  | "America/Sao_Paulo"
-  | "Atlantic/South_Georgia"
-  | "Atlantic/Azores"
-  | "Atlantic/Cape_Verde"
-  | "Europe/London"
-  | "Europe/Berlin"
-  | "Africa/Lagos"
-  | "Europe/Athens"
-  | "Africa/Cairo"
-  | "Europe/Moscow"
-  | "Asia/Riyadh"
-  | "Asia/Dubai"
-  | "Asia/Baku"
-  | "Asia/Karachi"
-  | "Asia/Tashkent"
-  | "Asia/Calcutta"
-  | "Asia/Dhaka"
-  | "Asia/Almaty"
-  | "Asia/Jakarta"
-  | "Asia/Bangkok"
-  | "Asia/Shanghai"
-  | "Asia/Singapore"
-  | "Asia/Tokyo"
-  | "Asia/Seoul"
-  | "Australia/Brisbane"
-  | "Australia/Sydney"
-  | "Pacific/Guam"
-  | "Pacific/Noumea"
-  | "Pacific/Auckland"
-  | "Pacific/Fiji";
+  | 'Pacific/Midway'
+  | 'Pacific/Niue'
+  | 'Pacific/Honolulu'
+  | 'Pacific/Rarotonga'
+  | 'America/Anchorage'
+  | 'Pacific/Gambier'
+  | 'America/Los_Angeles'
+  | 'America/Tijuana'
+  | 'America/Denver'
+  | 'America/Phoenix'
+  | 'America/Chicago'
+  | 'America/Guatemala'
+  | 'America/New_York'
+  | 'America/Bogota'
+  | 'America/Caracas'
+  | 'America/Santiago'
+  | 'America/Buenos_Aires'
+  | 'America/Sao_Paulo'
+  | 'Atlantic/South_Georgia'
+  | 'Atlantic/Azores'
+  | 'Atlantic/Cape_Verde'
+  | 'Europe/London'
+  | 'Europe/Berlin'
+  | 'Africa/Lagos'
+  | 'Europe/Athens'
+  | 'Africa/Cairo'
+  | 'Europe/Moscow'
+  | 'Asia/Riyadh'
+  | 'Asia/Dubai'
+  | 'Asia/Baku'
+  | 'Asia/Karachi'
+  | 'Asia/Tashkent'
+  | 'Asia/Calcutta'
+  | 'Asia/Dhaka'
+  | 'Asia/Almaty'
+  | 'Asia/Jakarta'
+  | 'Asia/Bangkok'
+  | 'Asia/Shanghai'
+  | 'Asia/Singapore'
+  | 'Asia/Tokyo'
+  | 'Asia/Seoul'
+  | 'Australia/Brisbane'
+  | 'Australia/Sydney'
+  | 'Pacific/Guam'
+  | 'Pacific/Noumea'
+  | 'Pacific/Auckland'
+  | 'Pacific/Fiji';
 
 export interface Config {
   auth: {
@@ -70,28 +70,26 @@ export interface Config {
     users: User;
     media: Media;
     blogs: Blog;
-    "contact-messages": ContactMessage;
+    'contact-messages': ContactMessage;
     repositories: Repository;
-    "payload-kv": PayloadKv;
-    "payload-jobs": PayloadJob;
-    "payload-locked-documents": PayloadLockedDocument;
-    "payload-preferences": PayloadPreference;
-    "payload-migrations": PayloadMigration;
+    'payload-kv': PayloadKv;
+    'payload-jobs': PayloadJob;
+    'payload-locked-documents': PayloadLockedDocument;
+    'payload-preferences': PayloadPreference;
+    'payload-migrations': PayloadMigration;
   };
   collectionsJoins: {};
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     blogs: BlogsSelect<false> | BlogsSelect<true>;
-    "contact-messages": ContactMessagesSelect<false> | ContactMessagesSelect<true>;
+    'contact-messages': ContactMessagesSelect<false> | ContactMessagesSelect<true>;
     repositories: RepositoriesSelect<false> | RepositoriesSelect<true>;
-    "payload-kv": PayloadKvSelect<false> | PayloadKvSelect<true>;
-    "payload-jobs": PayloadJobsSelect<false> | PayloadJobsSelect<true>;
-    "payload-locked-documents":
-      | PayloadLockedDocumentsSelect<false>
-      | PayloadLockedDocumentsSelect<true>;
-    "payload-preferences": PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
-    "payload-migrations": PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
+    'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
+    'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
+    'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
+    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
+    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
     defaultIDType: number;
@@ -162,7 +160,7 @@ export interface User {
       }[]
     | null;
   password?: string | null;
-  collection: "users";
+  collection: 'users';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -195,7 +193,7 @@ export interface Blog {
   /**
    * Journals are short TILs/snippets. Blog posts are longer pieces. Switch anytime.
    */
-  kind: "journal" | "post";
+  kind: 'journal' | 'post';
   /**
    * Short summary shown on cards and SEO previews.
    */
@@ -216,8 +214,8 @@ export interface Blog {
         version: number;
         [k: string]: unknown;
       }[];
-      direction: ("ltr" | "rtl") | null;
-      format: "left" | "start" | "center" | "right" | "end" | "justify" | "";
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
       indent: number;
       version: number;
     };
@@ -241,7 +239,7 @@ export interface Blog {
      * Set automatically when you Open or Sync.
      */
     enabled?: boolean | null;
-    status?: ("idle" | "pending" | "published" | "failed") | null;
+    status?: ('idle' | 'pending' | 'published' | 'failed') | null;
     /**
      * Numeric Forem id — used for Sync / Update.
      */
@@ -260,7 +258,7 @@ export interface Blog {
   slug: string;
   updatedAt: string;
   createdAt: string;
-  _status?: ("draft" | "published") | null;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * Messages from the landing contact form. Telegram delivery status is recorded on each row.
@@ -335,9 +333,7 @@ export interface Repository {
   /**
    * Curated filter bucket. Inferred from GitHub topics on first sync; manual edits are kept on later pulls.
    */
-  category?:
-    | ("frontend" | "backend" | "mobile" | "devtools" | "data" | "fullstack" | "other")
-    | null;
+  category?: ('frontend' | 'backend' | 'mobile' | 'devtools' | 'data' | 'fullstack' | 'other') | null;
   /**
    * Shown under the Featured filter (GitHub pinned repos).
    */
@@ -367,7 +363,7 @@ export interface Repository {
    * Detected turbo / pnpm / workspace package.json layout.
    */
   isMonorepo: boolean;
-  monorepoKind?: ("turbo" | "pnpm" | "npm" | "yarn" | "lerna" | "nx" | "nested") | null;
+  monorepoKind?: ('turbo' | 'pnpm' | 'npm' | 'yarn' | 'lerna' | 'nx' | 'nested') | null;
   /**
    * Root README.md captured on sync (no live GitHub fetch on the site).
    */
@@ -382,7 +378,7 @@ export interface Repository {
          * Directory relative to repo root ("." for root).
          */
         path: string;
-        kind: "root" | "app" | "package" | "other";
+        kind: 'root' | 'app' | 'package' | 'other';
         description?: string | null;
         readmePath?: string | null;
         /**
@@ -464,12 +460,7 @@ export interface PayloadJob {
     | {
         executedAt: string;
         completedAt: string;
-        taskSlug:
-          | "inline"
-          | "listAndUpsertRepos"
-          | "fetchArtifacts"
-          | "writeEnrichment"
-          | "schedulePublish";
+        taskSlug: 'inline' | 'listAndUpsertRepos' | 'fetchArtifacts' | 'writeEnrichment' | 'schedulePublish';
         taskID: string;
         input?:
           | {
@@ -489,7 +480,7 @@ export interface PayloadJob {
           | number
           | boolean
           | null;
-        state: "failed" | "succeeded";
+        state: 'failed' | 'succeeded';
         error?:
           | {
               [k: string]: unknown;
@@ -502,10 +493,8 @@ export interface PayloadJob {
         id?: string | null;
       }[]
     | null;
-  workflowSlug?: "enrichRepo" | null;
-  taskSlug?:
-    | ("inline" | "listAndUpsertRepos" | "fetchArtifacts" | "writeEnrichment" | "schedulePublish")
-    | null;
+  workflowSlug?: 'enrichRepo' | null;
+  taskSlug?: ('inline' | 'listAndUpsertRepos' | 'fetchArtifacts' | 'writeEnrichment' | 'schedulePublish') | null;
   queue?: string | null;
   waitUntil?: string | null;
   processing?: boolean | null;
@@ -520,28 +509,28 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
-        relationTo: "users";
+        relationTo: 'users';
         value: number | User;
       } | null)
     | ({
-        relationTo: "media";
+        relationTo: 'media';
         value: number | Media;
       } | null)
     | ({
-        relationTo: "blogs";
+        relationTo: 'blogs';
         value: number | Blog;
       } | null)
     | ({
-        relationTo: "contact-messages";
+        relationTo: 'contact-messages';
         value: number | ContactMessage;
       } | null)
     | ({
-        relationTo: "repositories";
+        relationTo: 'repositories';
         value: number | Repository;
       } | null);
   globalSlug?: string | null;
   user: {
-    relationTo: "users";
+    relationTo: 'users';
     value: number | User;
   };
   updatedAt: string;
@@ -554,7 +543,7 @@ export interface PayloadLockedDocument {
 export interface PayloadPreference {
   id: number;
   user: {
-    relationTo: "users";
+    relationTo: 'users';
     value: number | User;
   };
   key?: string | null;
@@ -795,7 +784,7 @@ export interface CollectionsWidget {
   data?: {
     [k: string]: unknown;
   };
-  width: "full";
+  width: 'full';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -865,10 +854,10 @@ export interface TaskWriteEnrichment {
  */
 export interface TaskSchedulePublish {
   input: {
-    type?: ("publish" | "unpublish") | null;
+    type?: ('publish' | 'unpublish') | null;
     locale?: string | null;
     doc?: {
-      relationTo: "blogs";
+      relationTo: 'blogs';
       value: number | Blog;
     } | null;
     global?: string | null;
@@ -890,7 +879,7 @@ export interface WorkflowEnrichRepo {
  * via the `definition` "BannerBlock".
  */
 export interface BannerBlock {
-  style: "info" | "warning" | "error" | "success";
+  style: 'info' | 'warning' | 'error' | 'success';
   content: {
     root: {
       type: string;
@@ -899,8 +888,8 @@ export interface BannerBlock {
         version: number;
         [k: string]: unknown;
       }[];
-      direction: ("ltr" | "rtl") | null;
-      format: "left" | "start" | "center" | "right" | "end" | "justify" | "";
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
       indent: number;
       version: number;
     };
@@ -908,7 +897,7 @@ export interface BannerBlock {
   };
   id?: string | null;
   blockName?: string | null;
-  blockType: "banner";
+  blockType: 'banner';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -917,31 +906,31 @@ export interface BannerBlock {
 export interface CodeBlock {
   language?:
     | (
-        | "typescript"
-        | "javascript"
-        | "tsx"
-        | "jsx"
-        | "css"
-        | "html"
-        | "json"
-        | "bash"
-        | "shell"
-        | "sql"
-        | "graphql"
-        | "yaml"
-        | "markdown"
-        | "kotlin"
-        | "java"
-        | "xml"
-        | "diff"
-        | "dockerfile"
-        | "plaintext"
+        | 'typescript'
+        | 'javascript'
+        | 'tsx'
+        | 'jsx'
+        | 'css'
+        | 'html'
+        | 'json'
+        | 'bash'
+        | 'shell'
+        | 'sql'
+        | 'graphql'
+        | 'yaml'
+        | 'markdown'
+        | 'kotlin'
+        | 'java'
+        | 'xml'
+        | 'diff'
+        | 'dockerfile'
+        | 'plaintext'
       )
     | null;
   code: string;
   id?: string | null;
   blockName?: string | null;
-  blockType: "code";
+  blockType: 'code';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -962,7 +951,7 @@ export interface MediaBlock {
   alt?: string | null;
   id?: string | null;
   blockName?: string | null;
-  blockType: "mediaBlock";
+  blockType: 'mediaBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -972,6 +961,7 @@ export interface Auth {
   [k: string]: unknown;
 }
 
-declare module "payload" {
+
+declare module 'payload' {
   export interface GeneratedTypes extends Config {}
 }

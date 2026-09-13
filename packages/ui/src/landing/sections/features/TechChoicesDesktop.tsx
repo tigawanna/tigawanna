@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight, Keyboard, MousePointerClick } from "lucide-r
 import { useEffect, useRef, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { SectionEyebrow } from "../../primitives";
+import { scrollOverflowBy } from "../../utils/landing-scroll";
 import { TechChoiceDetailPanel, TechChoiceRailItem } from "./TechChoicePanels";
 
 export function TechChoicesDesktop() {
@@ -78,10 +79,7 @@ export function TechChoicesDesktop() {
     const itemRect = activeItem.getBoundingClientRect();
     const delta = itemRect.top - railRect.top + activeItem.clientHeight / 2 - rail.clientHeight / 2;
 
-    rail.scrollBy({
-      top: delta,
-      behavior: prefersReducedMotion ? "instant" : "smooth",
-    });
+    scrollOverflowBy(rail, delta, prefersReducedMotion ? "instant" : "smooth");
   }, [activeIndex]);
 
   const activeChoice = techChoices[activeIndex];

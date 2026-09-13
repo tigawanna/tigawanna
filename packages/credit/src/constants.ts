@@ -17,6 +17,7 @@ export type CreditProfile = {
   links: {
     github: string;
     linkedin: string;
+    x: string;
     website: string;
     email: string;
     emailTo: string;
@@ -37,6 +38,7 @@ export const creditProfile: CreditProfile = {
   links: {
     github: siteConfig.links.github,
     linkedin: siteConfig.links.linkedin,
+    x: siteConfig.links.x,
     website: siteConfig.links.website,
     email: siteConfig.links.email,
     emailTo: siteConfig.links.emailTo,

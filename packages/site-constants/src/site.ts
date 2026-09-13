@@ -26,6 +26,7 @@ export const siteConfig = {
   links: {
     github: "https://github.com/tigawanna",
     linkedin: "https://linkedin.com/in/dennis-kinuthia-waweru",
+    x: "https://x.com/tigawanna",
     devto: "https://dev.to/tigawanna",
     email: "denniskinuthiawaweru@gmail.com",
     emailTo: "mailto:denniskinuthiawaweru@gmail.com",

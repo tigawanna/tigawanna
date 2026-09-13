@@ -76,6 +76,10 @@ test.describe("06 blogs through contact", () => {
       "href",
       expected.github,
     );
+    await expect(footer.getByTestId("footer-contact-x").getByRole("link")).toHaveAttribute(
+      "href",
+      expected.x,
+    );
     await expect(footer.getByTestId("footer-contact-linkedin").getByRole("link")).toHaveAttribute(
       "href",
       expected.linkedin,

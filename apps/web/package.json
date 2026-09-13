@@ -30,6 +30,8 @@
     "@repo/site-constants": "workspace:*",
     "@repo/telegram": "workspace:*",
     "@tailwindcss/postcss": "^4.1.18",
+    "@tigawanna/credit": "workspace:*",
+    "@vercel/analytics": "^2.0.1",
     "animejs": "^4.5.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
