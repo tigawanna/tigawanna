@@ -51,9 +51,11 @@ export const siteConfig = {
   ],
   assets: {
     favicon: "/favicon.ico",
-    appleTouchIcon: "/apple-touch-icon.png",
-    icon: "/icon.png",
-    ogImage: "/opengraph-image.jpg",
+    appleTouchIcon: "/apple-icon.png",
+    icon: "/icon.svg",
+    /** Circular avatar (credit badge, OG, etc.). */
+    avatar: "/me-circle.png",
+    ogImage: "/opengraph-image.png",
     ogImageAlt: "image of dennis kinuthia, a fullstack software developer",
   },
 } as const;

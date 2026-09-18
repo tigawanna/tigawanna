@@ -14,6 +14,8 @@ export type CreditProfile = {
   location: string;
   tagline: string;
   contactBlurb: string;
+  /** Absolute avatar URL so embeds on other origins still resolve. */
+  avatarUrl: string;
   links: {
     github: string;
     linkedin: string;
@@ -35,6 +37,7 @@ export const creditProfile: CreditProfile = {
   location: siteConfig.location,
   tagline: siteConfig.tagline,
   contactBlurb: siteConfig.contactBlurb,
+  avatarUrl: new URL(siteConfig.assets.avatar, `${siteConfig.links.website}/`).href,
   links: {
     github: siteConfig.links.github,
     linkedin: siteConfig.links.linkedin,

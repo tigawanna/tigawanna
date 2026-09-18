@@ -204,11 +204,22 @@ export function TigawannaCredit({
             {...stylex.props(styles.panel, useSheet ? styles.panelSheet : styles.panelDialog)}
           >
             <div {...stylex.props(styles.header)}>
-              <div {...stylex.props(styles.headerText)}>
-                <h2 id={titleId} {...stylex.props(styles.title)}>
-                  {creditProfile.name}
-                </h2>
-                <p {...stylex.props(styles.subtitle)}>{creditProfile.role}</p>
+              <div {...stylex.props(styles.headerMain)}>
+                <img
+                  src={creditProfile.avatarUrl}
+                  alt=""
+                  width={44}
+                  height={44}
+                  decoding="async"
+                  data-test="tigawanna-credit-avatar"
+                  {...stylex.props(styles.avatar)}
+                />
+                <div {...stylex.props(styles.headerText)}>
+                  <h2 id={titleId} {...stylex.props(styles.title)}>
+                    {creditProfile.name}
+                  </h2>
+                  <p {...stylex.props(styles.subtitle)}>{creditProfile.role}</p>
+                </div>
               </div>
               <button
                 type="button"

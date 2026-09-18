@@ -9,7 +9,7 @@ function repo(
 ): GithubRepoNode {
   return {
     url: `https://github.com/${overrides.nameWithOwner}`,
-    openGraphImageUrl: "/opengraph-image.jpg",
+    openGraphImageUrl: "/opengraph-image.png",
     descriptionHTML: "",
     homepageUrl: "",
     pushedAt: "2026-03-01T10:00:00Z",

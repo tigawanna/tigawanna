@@ -25,13 +25,13 @@ const nextConfig: NextConfig = {
         pathname: "/api/media/file/**",
       },
       {
-        pathname: "/opengraph-image.jpg",
+        pathname: "/opengraph-image.png",
       },
       {
         pathname: "/fallback.png",
       },
       {
-        pathname: "/icon.png",
+        pathname: "/icon.svg",
       },
     ],
     remotePatterns: [

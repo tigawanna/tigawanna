@@ -3,7 +3,6 @@ import { Analytics } from '@vercel/analytics/next'
 
 import { Toaster } from "sonner";
 import {
-  siteConfig,
   siteSeoDescription,
   siteSeoKeywords,
   siteSeoTitle,
@@ -30,14 +29,10 @@ export const metadata = {
   title: siteSeoTitle,
   description: siteSeoDescription,
   keywords: siteSeoKeywords,
-  icons: {
-    icon: [{ url: siteConfig.assets.favicon }, { url: siteConfig.assets.icon, type: "image/png" }],
-    apple: [{ url: siteConfig.assets.appleTouchIcon }],
-  },
+  // favicon.ico, icon.svg, apple-icon.png, opengraph-image.png — file conventions in app/
   openGraph: {
     title: siteSeoTitle,
     description: siteSeoDescription,
-    images: [{ url: siteConfig.assets.ogImage, alt: siteConfig.assets.ogImageAlt }],
   },
 };
 

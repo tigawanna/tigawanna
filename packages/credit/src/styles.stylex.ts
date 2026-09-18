@@ -138,6 +138,22 @@ export const styles = stylex.create({
     justifyContent: "space-between",
     gap: "0.75rem",
   },
+  headerMain: {
+    display: "flex",
+    alignItems: "center",
+    gap: "0.75rem",
+    minWidth: 0,
+    flex: "1 1 auto",
+  },
+  avatar: {
+    flexShrink: 0,
+    width: "2.75rem",
+    height: "2.75rem",
+    borderRadius: "9999px",
+    objectFit: "cover",
+    display: "block",
+    backgroundColor: muted,
+  },
   headerText: {
     display: "flex",
     flexDirection: "column",
