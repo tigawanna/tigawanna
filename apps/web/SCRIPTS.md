@@ -39,6 +39,7 @@ node --experimental-strip-types ./src/seed/migrate-add-repository-category.ts
 node --experimental-strip-types ./src/seed/migrate-add-repository-monorepo.ts
 node --experimental-strip-types ./src/seed/migrate-add-repository-last-enriched-at.ts
 node --experimental-strip-types ./src/seed/migrate-add-payload-jobs-workflow-slug.ts
+node --experimental-strip-types ./src/seed/migrate-add-reset-password-requested-at.ts
 node --experimental-strip-types ./src/seed/migrate-journals-to-blogs.ts
 ```
 
@@ -52,6 +53,7 @@ node --experimental-strip-types ./src/seed/migrate-journals-to-blogs.ts
 | `migrate-add-repository-monorepo.ts`         | Monorepo / README cache columns             |
 | `migrate-add-repository-last-enriched-at.ts` | `lastEnrichedAt` for enrich skip            |
 | `migrate-add-payload-jobs-workflow-slug.ts`  | `workflow_slug` on payload_jobs (workflows) |
+| `migrate-add-reset-password-requested-at.ts` | Payload 3.90 forgot-password throttle field |
 | `migrate-journals-to-blogs.ts`               | One-time Journals → Blogs move              |
 
 ### Seed / import / backfill (Payload `run`)

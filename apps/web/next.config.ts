@@ -15,10 +15,6 @@ const nextConfig: NextConfig = {
   transpilePackages: ["@repo/github", "@repo/site-constants", "@repo/telegram"],
   /** Trace files from workspace packages during `next build`. */
   outputFileTracingRoot: monorepoRoot,
-  experimental: {
-    /** React View Transitions for App Router navigations. */
-    viewTransition: true,
-  },
   images: {
     localPatterns: [
       {

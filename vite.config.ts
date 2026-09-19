@@ -5,7 +5,12 @@ const ignoredApps = ["apps/site/**"] as const;
 
 export default defineConfig({
   fmt: {
-    ignorePatterns: ["**/routeTree.gen.ts", ...ignoredApps],
+    ignorePatterns: [
+      "**/routeTree.gen.ts",
+      "**/payload-types.ts",
+      "**/payload-generated-schema.ts",
+      ...ignoredApps,
+    ],
   },
   lint: {
     ignorePatterns: [...ignoredApps],
