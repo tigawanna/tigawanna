@@ -1,5 +1,6 @@
 import type { Endpoint } from "payload";
 import { APIError } from "payload";
+import { z } from "zod";
 
 import { importPostsFromDevto } from "@/modules/devto/import-from-devto";
 import { openBlogOnDevto } from "@/modules/devto/open-on-devto";
@@ -14,8 +15,21 @@ function requireRouteId(routeParams: Record<string, unknown> | undefined): strin
   throw new APIError("Missing blog id", 400);
 }
 
+/** Leaves headroom for in-flight articles under the Vercel function timeout. */
+const IMPORT_TIME_BUDGET_MS = 6_000;
+
+const importBodySchema = z
+  .object({
+    force: z.boolean().optional(),
+    since: z.iso.datetime().optional(),
+  })
+  .catch({});
+
 /**
- * POST /api/blogs/import-from-devto — re-import all published Dev.to posts.
+ * POST /api/blogs/import-from-devto — import new / edited published Dev.to posts.
+ *
+ * Body: `{ force?: boolean; since?: string }`. Time-boxed; call again while
+ * `remaining > 0` (pass back `since` when forcing).
  */
 export const importFromDevtoEndpoint: Endpoint = {
   path: "/import-from-devto",
@@ -25,8 +39,16 @@ export const importFromDevtoEndpoint: Endpoint = {
       throw new APIError("Unauthorized", 401);
     }
 
+    const body: unknown = await req.json?.().catch(() => ({}));
+    const { force, since } = importBodySchema.parse(body ?? {});
+
     try {
-      const result = await importPostsFromDevto(req.payload, { user: req.user });
+      const result = await importPostsFromDevto(req.payload, {
+        user: req.user,
+        force,
+        since,
+        timeBudgetMs: IMPORT_TIME_BUDGET_MS,
+      });
       return Response.json(result);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Failed to import from Dev.to";

@@ -60,12 +60,14 @@ async function seedAll() {
       `journals: cms=${journalCount} expected=${expectedJournals} (created=${journals.created} updated=${journals.updated})`,
     );
     payload.logger.info(
-      `posts:    cms=${postCount} expected=${expectedPosts} (created=${posts.created} updated=${posts.updated} failed=${posts.failed})`,
+      `posts:    cms=${postCount} expected=${expectedPosts} (created=${posts.created} updated=${posts.updated} skipped=${posts.skipped} failed=${posts.failed.length})`,
     );
     payload.logger.info(`total published blogs: ${journalCount + postCount}`);
 
     const journalsOk = journalCount >= expectedJournals;
-    const postsOk = postCount >= expectedPosts && posts.failed === 0;
+    const postsOk =
+      postCount >= expectedPosts &&
+      posts.failed.filter((f) => !f.error.startsWith("canonical_url:")).length === 0;
 
     if (!journalsOk || !postsOk) {
       throw new Error(
@@ -73,7 +75,7 @@ async function seedAll() {
           "Seed verification failed.",
           `journals ${journalCount}/${expectedJournals}`,
           `posts ${postCount}/${expectedPosts}`,
-          `failed imports ${posts.failed}`,
+          `failed imports ${posts.failed.map((f) => f.slug).join(", ") || 0}`,
         ].join(" "),
       );
     }

@@ -165,6 +165,21 @@ export async function updateDevtoArticle(
 }
 
 /**
+ * Sets only `canonical_url` on an existing Dev.to article (body/publish state untouched).
+ */
+export async function setDevtoCanonicalUrl(
+  apiKey: string,
+  articleId: number,
+  canonicalUrl: string,
+): Promise<DevtoArticle> {
+  return devtoRequest<DevtoArticle>(`/articles/${articleId}`, {
+    apiKey,
+    method: "PUT",
+    body: { article: { canonical_url: canonicalUrl } },
+  });
+}
+
+/**
  * Fetches a full article (including `body_markdown`) by id.
  * Requires an API key for unpublished drafts owned by the authenticated user.
  */

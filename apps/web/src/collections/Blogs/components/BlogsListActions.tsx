@@ -1,15 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button, toast, useConfig } from "@payloadcms/ui";
 
-type ImportResponse = {
-  username: string;
-  expected: number;
-  created: number;
-  updated: number;
-  failed: number;
-};
+import type { ImportFromDevtoResult } from "@/modules/devto/import-from-devto";
+
+/** Safety cap on chained import calls (each is time-boxed server-side). */
+const MAX_IMPORT_RUNS = 20;
 
 /**
  * Reads a JSON error body from a failed Payload API response.
@@ -32,15 +30,105 @@ async function readErrorMessage(res: Response): Promise<string> {
 }
 
 /**
- * Blogs list toolbar: Smart draft + re-import published posts from Dev.to.
+ * Runs one time-boxed import batch against the Blogs endpoint.
+ */
+async function requestImportBatch(body: {
+  force: boolean;
+  since?: string;
+}): Promise<ImportFromDevtoResult> {
+  const res = await fetch("/api/blogs/import-from-devto", {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    throw new Error(await readErrorMessage(res));
+  }
+  return (await res.json()) as ImportFromDevtoResult;
+}
+
+/**
+ * Chains import batches until nothing remains or a batch makes no progress.
+ * Returns totals plus the failures from the final batch (the ones still failing).
+ */
+async function importAllFromDevto(
+  force: boolean,
+  onProgress: (imported: number, remaining: number) => void,
+) {
+  let since: string | undefined;
+  let created = 0;
+  let updated = 0;
+  let canonicalUpdated = 0;
+
+  for (let run = 0; run < MAX_IMPORT_RUNS; run += 1) {
+    const batch = await requestImportBatch({ force, since });
+    since = batch.since;
+    created += batch.created;
+    updated += batch.updated;
+    canonicalUpdated += batch.canonicalUpdated;
+    onProgress(created + updated, batch.remaining);
+
+    const madeProgress = batch.created + batch.updated > 0;
+    if (batch.remaining === 0 || !madeProgress) {
+      return { ...batch, created, updated, canonicalUpdated };
+    }
+  }
+
+  throw new Error(`Dev.to import still incomplete after ${MAX_IMPORT_RUNS} runs — try again.`);
+}
+
+/**
+ * Blogs list toolbar: Smart draft + import published posts from Dev.to.
  *
  * Rendered via `admin.components.beforeList` so actions stay visible on the
  * collection list (including production).
  */
 export function BlogsListActions() {
   const { config } = useConfig();
+  const router = useRouter();
   const smartDraftHref = `${config.routes.admin}/smart-draft`;
-  const [busy, setBusy] = useState(false);
+  const [progress, setProgress] = useState<string | null>(null);
+  const busy = progress !== null;
+
+  const runImport = async (force: boolean) => {
+    setProgress("Importing…");
+    try {
+      const result = await importAllFromDevto(force, (imported, remaining) => {
+        setProgress(`Importing… ${imported} done, ${remaining} left`);
+      });
+
+      const parts = [
+        `${result.created} new`,
+        `${result.updated} updated`,
+        `${result.skipped} unchanged`,
+      ];
+      if (result.canonicalUpdated > 0) {
+        parts.push(`${result.canonicalUpdated} Dev.to canonical URLs set`);
+      }
+      if (result.remaining > 0) parts.push(`${result.remaining} not reached`);
+      if (result.failed.length > 0) parts.push(`${result.failed.length} failed`);
+      const summary = `Dev.to @${result.username}: ${parts.join(", ")}`;
+
+      if (result.failed.length > 0 || result.remaining > 0) {
+        const failedSlugs = result.failed.map((f) => f.slug).join(", ");
+        toast.error(failedSlugs ? `${summary} (${failedSlugs}) — re-run to retry` : summary);
+      } else {
+        toast.success(summary);
+      }
+      if (result.duplicates.length > 0) {
+        const list = result.duplicates
+          .map((d) => `${d.duplicates.join(", ")} (duplicate of ${d.slug})`)
+          .join("; ");
+        toast.warning(`Duplicate blogs found — safe to delete: ${list}`);
+      }
+      if (result.created + result.updated > 0) router.refresh();
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Import from Dev.to failed");
+    } finally {
+      setProgress(null);
+    }
+  };
 
   return (
     <div
@@ -60,9 +148,9 @@ export function BlogsListActions() {
       <div style={{ minWidth: 0, flex: "1 1 16rem" }}>
         <strong>Blog tools</strong>
         <p style={{ margin: "0.25rem 0 0", opacity: 0.8, fontSize: "0.9rem" }}>
-          <strong>Import from Dev.to</strong> pulls all published articles into this collection
-          (create or update by slug). Safe to re-run anytime. <strong>Smart draft</strong> generates
-          a new post from notes.
+          <strong>Import from Dev.to</strong> pulls new and edited published articles (create or
+          update by slug); failures retry on the next run. <strong>Force re-import</strong> refreshes
+          every article. <strong>Smart draft</strong> generates a new post from notes.
         </p>
       </div>
 
@@ -70,38 +158,26 @@ export function BlogsListActions() {
         <Button
           buttonStyle="primary"
           disabled={busy}
-          onClick={async () => {
-            setBusy(true);
-            try {
-              const res = await fetch("/api/blogs/import-from-devto", {
-                method: "POST",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
-              });
-              if (!res.ok) {
-                throw new Error(await readErrorMessage(res));
-              }
-              const result = (await res.json()) as ImportResponse;
-              const summary = `Imported @${result.username}: ${result.created} new, ${result.updated} updated${
-                result.failed > 0 ? `, ${result.failed} failed` : ""
-              }`;
-              if (result.failed > 0) {
-                toast.error(summary);
-              } else {
-                toast.success(summary);
-              }
-              window.location.reload();
-            } catch (err: unknown) {
-              toast.error(err instanceof Error ? err.message : "Import from Dev.to failed");
-            } finally {
-              setBusy(false);
-            }
-          }}
+          onClick={() => runImport(false)}
+          extraButtonProps={{ "data-test": "blogs-import-devto" }}
         >
-          {busy ? "Importing…" : "Import from Dev.to"}
+          {progress ?? "Import from Dev.to"}
         </Button>
 
-        <a href={smartDraftHref} className="btn btn--style-secondary btn--size-medium">
+        <Button
+          buttonStyle="secondary"
+          disabled={busy}
+          onClick={() => runImport(true)}
+          extraButtonProps={{ "data-test": "blogs-import-devto-force" }}
+        >
+          Force re-import
+        </Button>
+
+        <a
+          href={smartDraftHref}
+          className="btn btn--style-secondary btn--size-medium"
+          data-test="blogs-smart-draft"
+        >
           Smart draft
         </a>
       </div>

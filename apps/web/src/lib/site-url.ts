@@ -46,6 +46,27 @@ export function getSiteUrl(): string {
 }
 
 /**
+ * Public origin safe to write into third-party canonical URLs (e.g. Dev.to).
+ *
+ * Only an explicit https `NEXT_PUBLIC_SITE_URL` — never a preview `VERCEL_URL`
+ * or localhost, so imports run from dev/preview can't point Dev.to at them.
+ *
+ * @returns Origin without trailing slash, or `undefined` when not configured.
+ */
+export function getCanonicalSiteUrl(): string | undefined {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (!explicit?.startsWith("https://")) return undefined;
+  const origin = stripTrailingSlash(explicit);
+  try {
+    const { hostname } = new URL(origin);
+    if (hostname === "localhost" || hostname === "127.0.0.1") return undefined;
+  } catch {
+    return undefined;
+  }
+  return origin;
+}
+
+/**
  * Absolute public URL for a blog post on this site.
  *
  * @param slug - Blog slug (without leading slash).
