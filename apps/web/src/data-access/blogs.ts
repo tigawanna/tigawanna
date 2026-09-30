@@ -13,6 +13,7 @@ import { formatDisplayDate } from "@/components/landing/utils/date-helpers";
 import { hydrateMarkdownImageBlocks } from "@/lib/markdown-to-lexical";
 import type { Blog } from "@/payload-types";
 import type {
+  BlogSeriesNav,
   ContentKind,
   JournalDetail,
   JournalPreviewItem,
@@ -380,6 +381,60 @@ export async function getRelatedBlogs(options: {
   } catch (err: unknown) {
     console.error(`[blogs] Related blogs query failed for "${options.slug}"`, err);
     return [];
+  }
+}
+
+/**
+ * Series a published post belongs to, with every published part in publish order.
+ * `null` when the post isn't in a series or the series has a single published part.
+ */
+export async function getBlogSeriesNav(slug: string): Promise<BlogSeriesNav | null> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("blogs");
+  cacheTag("series");
+  cacheTag(`blog_${slug}`);
+
+  try {
+    const payload = await getPayload({ config });
+    const current = await payload.find({
+      collection: "blogs",
+      draft: false,
+      depth: 1,
+      limit: 1,
+      overrideAccess: false,
+      pagination: false,
+      select: { series: true },
+      where: { and: [{ slug: { equals: slug } }, { kind: { equals: "post" } }] },
+    });
+
+    const series = current.docs[0]?.series;
+    if (!series || typeof series !== "object") return null;
+
+    const parts = await payload.find({
+      collection: "blogs",
+      draft: false,
+      depth: 0,
+      limit: 100,
+      overrideAccess: false,
+      pagination: false,
+      select: { slug: true, title: true },
+      sort: "publishedAt",
+      where: { and: [{ series: { equals: series.id } }, { kind: { equals: "post" } }] },
+    });
+
+    const currentIndex = parts.docs.findIndex((doc) => doc.slug === slug);
+    if (parts.docs.length < 2 || currentIndex === -1) return null;
+
+    return {
+      title: series.title,
+      description: series.description ?? null,
+      parts: parts.docs.map((doc) => ({ slug: doc.slug, title: doc.title })),
+      currentIndex,
+    };
+  } catch (err: unknown) {
+    console.error(`[blogs] Series lookup failed for "${slug}"`, err);
+    return null;
   }
 }
 

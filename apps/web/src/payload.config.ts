@@ -9,6 +9,7 @@ import { Blogs } from "./collections/Blogs";
 import { ContactMessages } from "./collections/ContactMessages";
 import { Media } from "./collections/Media";
 import { Repositories } from "./collections/Repositories";
+import { Series } from "./collections/Series";
 import { Users } from "./collections/Users";
 import { jobsConfig } from "./jobs";
 import { getSiteUrl } from "./lib/site-url";
@@ -74,7 +75,7 @@ export default buildConfig({
       },
     },
   },
-  collections: [Users, Media, Blogs, ContactMessages, Repositories],
+  collections: [Users, Media, Blogs, Series, ContactMessages, Repositories],
   // GitHub sync jobs — run via `/api/payload-jobs/run` (no autoRun on Vercel).
   jobs: jobsConfig,
   // Auth / system mail (forgot password, etc.) → Telegram via @repo/telegram.

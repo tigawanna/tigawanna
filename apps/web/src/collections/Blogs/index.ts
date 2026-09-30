@@ -246,6 +246,16 @@ export const Blogs: CollectionConfig = {
         ],
       },
     },
+    {
+      name: "series",
+      type: "relationship",
+      relationTo: "series",
+      admin: {
+        position: "sidebar",
+        condition: (_, siblingData) => siblingData?.kind === "post",
+        description: "Multi-part post — parts are ordered by publish date.",
+      },
+    },
     slugField(),
   ],
   hooks: {

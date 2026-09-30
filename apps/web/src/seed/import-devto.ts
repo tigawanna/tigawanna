@@ -23,7 +23,8 @@ export async function importDevtoPosts(payload?: Payload): Promise<ImportFromDev
   }
 }
 
-const isDirectRun = process.argv[1]?.includes("import-devto");
+// `payload run <file>` puts the script path after the CLI entry, not at argv[1].
+const isDirectRun = process.argv.slice(1).some((arg) => arg.includes("import-devto"));
 if (isDirectRun) {
   await importDevtoPosts();
 }

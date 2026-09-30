@@ -1,4 +1,5 @@
 import type { Payload, TypedUser } from "payload";
+import { slugify } from "payload/shared";
 import { revalidatePath, revalidateTag } from "next/cache";
 
 import { getContentEditorConfig } from "@/lib/content-editor-config";
@@ -9,7 +10,7 @@ import {
 } from "@/lib/devto/client";
 import { markdownToLexicalWithCodeBlocks } from "@/lib/markdown-to-lexical";
 import { getCanonicalSiteUrl, getSiteUrl } from "@/lib/site-url";
-import type { Blog } from "@/payload-types";
+import type { Blog, Series as SeriesDoc } from "@/payload-types";
 
 /** Forem's max page size — one request covers most accounts. */
 const PER_PAGE = 1000;
@@ -39,6 +40,8 @@ export type ImportFromDevtoResult = {
   updated: number;
   /** Dev.to articles whose `canonical_url` was pointed at this site. */
   canonicalUpdated: number;
+  /** Series created (or linked by title) from Dev.to `collection_id`s. */
+  seriesCreated: number;
   /** Failed this run — retried automatically on the next run. */
   failed: ImportFromDevtoFailure[];
   /** Pending articles not started before the time budget ran out. */
@@ -58,6 +61,8 @@ type DevtoListArticle = {
   published_at: string;
   edited_at: string | null;
   canonical_url: string | null;
+  /** Dev.to series id (the public API exposes no series name). */
+  collection_id: number | null;
   tag_list: string[] | string;
   cover_image: string | null;
 };
@@ -88,11 +93,19 @@ type ExistingBlog = {
   slug: string;
   articleId: number | null;
   lastSyncedAt: string | null;
+  seriesId: SeriesDoc["id"] | null;
+};
+
+type ExistingSeries = {
+  id: SeriesDoc["id"];
+  title: string;
+  devtoCollectionId: number | null;
 };
 
 type BlogIndex = {
   bySlug: Map<string, ExistingBlog>;
   byArticleId: Map<number, ExistingBlog[]>;
+  series: ExistingSeries[];
 };
 
 type ImportPlan = {
@@ -103,6 +116,8 @@ type ImportPlan = {
   slug: string;
   /** Desired Dev.to `canonical_url`, or `null` when we shouldn't manage it. */
   canonicalUrl: string | null;
+  /** Existing blog isn't linked to the article's Dev.to series yet. */
+  seriesOutdated: boolean;
   duplicates: string[];
 };
 
@@ -167,23 +182,41 @@ async function listPublishedArticles(
  * Uses `draft: true` because "Open on Dev.to" stores `devto.articleId` as a draft save.
  */
 async function loadBlogIndex(payload: Payload): Promise<BlogIndex> {
-  const { docs } = await payload.find({
-    collection: "blogs",
-    depth: 0,
-    draft: true,
-    pagination: false,
-    overrideAccess: true,
-    select: { slug: true, devto: { articleId: true, lastSyncedAt: true } },
-  });
+  const [blogs, series] = await Promise.all([
+    payload.find({
+      collection: "blogs",
+      depth: 0,
+      draft: true,
+      pagination: false,
+      overrideAccess: true,
+      select: { slug: true, series: true, devto: { articleId: true, lastSyncedAt: true } },
+    }),
+    payload.find({
+      collection: "series",
+      depth: 0,
+      pagination: false,
+      overrideAccess: true,
+      select: { title: true, devtoCollectionId: true },
+    }),
+  ]);
 
-  const index: BlogIndex = { bySlug: new Map(), byArticleId: new Map() };
-  for (const doc of docs) {
+  const index: BlogIndex = {
+    bySlug: new Map(),
+    byArticleId: new Map(),
+    series: series.docs.map((doc) => ({
+      id: doc.id,
+      title: doc.title,
+      devtoCollectionId: doc.devtoCollectionId ?? null,
+    })),
+  };
+  for (const doc of blogs.docs) {
     if (!doc.slug) continue;
     const blog: ExistingBlog = {
       id: doc.id,
       slug: doc.slug,
       articleId: doc.devto?.articleId ?? null,
       lastSyncedAt: doc.devto?.lastSyncedAt ?? null,
+      seriesId: typeof doc.series === "object" && doc.series ? doc.series.id : (doc.series ?? null),
     };
     index.bySlug.set(blog.slug, blog);
     if (blog.articleId !== null) {
@@ -259,14 +292,112 @@ function planArticle(
     canonicalOrigin && ownsCanonical(article.canonical_url, siteHost)
       ? `${canonicalOrigin}/blogs/${slug}`
       : null;
+  const linkedSeries = index.series.find((series) => series.id === existing?.seriesId);
 
   return {
     article,
     existing,
     slug,
     canonicalUrl,
+    seriesOutdated:
+      article.collection_id !== null &&
+      linkedSeries?.devtoCollectionId !== article.collection_id,
     duplicates: candidates.filter((blog) => blog !== existing).map((blog) => blog.slug),
   };
+}
+
+/**
+ * Decodes the HTML entities Dev.to emits in `<title>`.
+ */
+function decodeHtmlEntities(text: string): string {
+  const named: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'" };
+  return text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (entity, code: string) => {
+    if (code.startsWith("#x") || code.startsWith("#X")) {
+      return String.fromCodePoint(Number.parseInt(code.slice(2), 16));
+    }
+    if (code.startsWith("#")) return String.fromCodePoint(Number(code.slice(1)));
+    return named[code.toLowerCase()] ?? entity;
+  });
+}
+
+/**
+ * Reads a series name from its public page — the Forem API only exposes `collection_id`.
+ */
+async function fetchDevtoSeriesTitle(username: string, collectionId: number): Promise<string> {
+  const fallback = `Dev.to series ${collectionId}`;
+  const res = await fetch(`https://dev.to/${encodeURIComponent(username)}/series/${collectionId}`, {
+    headers: { Accept: "text/html", "User-Agent": "tigawanna-web-importer" },
+  });
+  if (!res.ok) return fallback;
+
+  const title = (await res.text()).match(/<title>([\s\S]*?)<\/title>/i)?.[1];
+  if (!title) return fallback;
+  const name = decodeHtmlEntities(title)
+    .replace(/\s*-\s*DEV Community\s*$/i, "")
+    .replace(/\s*Series'\s*Articles\s*$/i, "")
+    .trim();
+  return name || fallback;
+}
+
+/**
+ * Maps Dev.to series ids → local series, creating missing ones. A local series with
+ * the same title but no Dev.to id (made here, then published) is linked instead.
+ *
+ * @returns Number of series created or newly linked.
+ */
+async function ensureSeries(
+  payload: Payload,
+  username: string,
+  collectionIds: number[],
+  series: ExistingSeries[],
+): Promise<number> {
+  const missing = [...new Set(collectionIds)].filter(
+    (id) => !series.some((row) => row.devtoCollectionId === id),
+  );
+
+  const results = await Promise.all(
+    missing.map(async (collectionId) => {
+      try {
+        const title = await fetchDevtoSeriesTitle(username, collectionId);
+        const unlinked = series.find(
+          (row) =>
+            row.devtoCollectionId === null && row.title.toLowerCase() === title.toLowerCase(),
+        );
+        const doc = unlinked
+          ? await payload.update({
+              collection: "series",
+              id: unlinked.id,
+              data: { devtoCollectionId: collectionId },
+              context: { disableRevalidate: true },
+              overrideAccess: true,
+            })
+          : await payload.create({
+              collection: "series",
+              data: {
+                title,
+                slug: slugify(title)?.replace(/-{2,}/g, "-") || `devto-series-${collectionId}`,
+                devtoCollectionId: collectionId,
+              },
+              context: { disableRevalidate: true },
+              overrideAccess: true,
+            });
+        payload.logger.info(`  series ${unlinked ? "linked" : "created"}: ${title}`);
+        return { id: doc.id, title: doc.title, devtoCollectionId: collectionId };
+      } catch (err: unknown) {
+        const error = err instanceof Error ? err.message : String(err);
+        payload.logger.error(`  series ${collectionId} failed: ${error}`);
+        return null;
+      }
+    }),
+  );
+
+  for (const row of results) {
+    if (!row) continue;
+    const at = series.findIndex((existing) => existing.id === row.id);
+    if (at === -1) series.push(row);
+    else series[at] = row;
+  }
+  return results.filter(Boolean).length;
 }
 
 /**
@@ -283,7 +414,7 @@ function needsImport(plan: ImportPlan, since: number, force: boolean): boolean {
   const synced = Date.parse(plan.existing?.lastSyncedAt ?? "");
   if (Number.isNaN(synced)) return true;
   if (synced >= since) return false;
-  if (force) return true;
+  if (force || plan.seriesOutdated) return true;
   if (canonicalOutdated(plan.article.canonical_url, plan.canonicalUrl)) return true;
   return synced < Date.parse(plan.article.edited_at ?? plan.article.published_at);
 }
@@ -294,6 +425,7 @@ function needsImport(plan: ImportPlan, since: number, force: boolean): boolean {
 function bustBlogCaches() {
   try {
     revalidateTag("blogs", "max");
+    revalidateTag("series", "max");
     revalidateTag("landing-posts", "max");
     revalidatePath("/blogs");
     revalidatePath("/");
@@ -340,6 +472,16 @@ export async function importPostsFromDevto(
     `Dev.to @${username}: ${listed.length} listed, ${pending.length} to import${options.force ? " (forced)" : ""}.`,
   );
 
+  const seriesCreated = await ensureSeries(
+    payload,
+    username,
+    pending.flatMap((plan) => (plan.article.collection_id ? [plan.article.collection_id] : [])),
+    index.series,
+  );
+  const seriesIdFor = (collectionId: number | null) =>
+    index.series.find((row) => collectionId !== null && row.devtoCollectionId === collectionId)
+      ?.id;
+
   let created = 0;
   let updated = 0;
   let canonicalUpdated = 0;
@@ -376,8 +518,11 @@ export async function importPostsFromDevto(
       const markdown = detail.body_markdown?.trim()
         ? stripDevtoFrontmatter(detail.body_markdown)
         : `${detail.description}\n\n[Read on Dev.to](${detail.url})`;
+      const seriesId = seriesIdFor(summary.collection_id);
 
       const data = {
+        // No Dev.to series → leave any locally assigned series alone.
+        ...(seriesId !== undefined ? { series: seriesId } : {}),
         title: detail.title,
         kind: "post" as const,
         description: detail.description || detail.title,
@@ -433,7 +578,7 @@ export async function importPostsFromDevto(
 
   await Promise.all(Array.from({ length: Math.min(concurrency, pending.length) }, worker));
 
-  if (created + updated > 0) bustBlogCaches();
+  if (created + updated + seriesCreated > 0) bustBlogCaches();
 
   const result = {
     username,
@@ -442,6 +587,7 @@ export async function importPostsFromDevto(
     created,
     updated,
     canonicalUpdated,
+    seriesCreated,
     failed,
     remaining: pending.length - next,
     duplicates: plans

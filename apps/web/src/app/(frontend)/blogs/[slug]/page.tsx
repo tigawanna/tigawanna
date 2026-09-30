@@ -6,6 +6,7 @@ import { ContentArticle } from "@/components/blogs/ContentArticle";
 import { ContentArticleSkeleton } from "@/components/blogs/ContentArticleSkeleton";
 import { RelatedBlogsSection } from "@/components/blogs/RelatedBlogsSection";
 import { DirectionalPageTransition } from "@/components/view-transitions/DirectionalPageTransition";
+import { BlogSeriesNav } from "./_components/BlogSeriesNav";
 
 type Args = {
   params: Promise<{ slug: string }>;
@@ -58,6 +59,7 @@ async function BlogDetail({ params }: Args) {
           backHref="/blogs"
           backLabel="Back to blogs"
           dataTest="blog-detail"
+          afterContent={<BlogSeriesNav slug={blog.slug} />}
           related={
             <RelatedBlogsSection
               slug={blog.slug}

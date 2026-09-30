@@ -11,6 +11,8 @@ type ContentArticleProps = {
   backHref: "/blogs" | "/journals";
   backLabel: string;
   dataTest: string;
+  /** Right after the body, before related posts (e.g. series navigation). */
+  afterContent?: ReactNode;
   /** Related posts (often a Suspense-wrapped section). */
   related?: ReactNode;
   asideHref?: string | null;
@@ -28,6 +30,7 @@ export function ContentArticle({
   backHref,
   backLabel,
   dataTest,
+  afterContent,
   related,
   asideHref,
   asideLabel,
@@ -44,6 +47,7 @@ export function ContentArticle({
             <div className="mx-auto min-w-0 max-w-3xl overflow-x-clip">
               {doc.content ? <RichText data={doc.content} enableGutter={false} /> : fallbackBody}
 
+              {afterContent}
               {related}
             </div>
           </div>

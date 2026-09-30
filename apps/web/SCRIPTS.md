@@ -41,6 +41,7 @@ node --experimental-strip-types ./src/seed/migrate-add-repository-last-enriched-
 node --experimental-strip-types ./src/seed/migrate-add-payload-jobs-workflow-slug.ts
 node --experimental-strip-types ./src/seed/migrate-add-reset-password-requested-at.ts
 node --experimental-strip-types ./src/seed/migrate-journals-to-blogs.ts
+node --experimental-strip-types ./src/seed/migrate-add-series.ts   # file: or Turso (uses DATABASE_URL)
 ```
 
 | File                                         | Purpose                                     |
@@ -55,6 +56,7 @@ node --experimental-strip-types ./src/seed/migrate-journals-to-blogs.ts
 | `migrate-add-payload-jobs-workflow-slug.ts`  | `workflow_slug` on payload_jobs (workflows) |
 | `migrate-add-reset-password-requested-at.ts` | Payload 3.90 forgot-password throttle field |
 | `migrate-journals-to-blogs.ts`               | One-time Journals → Blogs move              |
+| `migrate-add-series.ts`                      | `series` collection + `blogs.series` link   |
 
 ### Seed / import / backfill (Payload `run`)
 

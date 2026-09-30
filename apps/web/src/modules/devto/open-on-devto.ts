@@ -96,6 +96,7 @@ export async function openBlogOnDevto(
     canonicalUrl: getBlogCanonicalUrl(blog.slug),
     published: false as boolean,
     mainImage: resolveCoverForDevto(blog),
+    series: typeof blog.series === "object" && blog.series ? blog.series.title : undefined,
   };
 
   const existingId = typeof blog.devto?.articleId === "number" ? blog.devto.articleId : null;
@@ -113,6 +114,7 @@ export async function openBlogOnDevto(
         tags: writeInput.tags,
         canonicalUrl: writeInput.canonicalUrl,
         mainImage: writeInput.mainImage,
+        series: writeInput.series,
       });
     } else {
       article = await createDevtoArticle(apiKey, writeInput);

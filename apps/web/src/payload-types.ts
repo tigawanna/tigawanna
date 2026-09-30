@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     blogs: Blog;
+    series: Series;
     'contact-messages': ContactMessage;
     repositories: Repository;
     'payload-kv': PayloadKv;
@@ -78,11 +79,16 @@ export interface Config {
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    series: {
+      posts: 'blogs';
+    };
+  };
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     blogs: BlogsSelect<false> | BlogsSelect<true>;
+    series: SeriesSelect<false> | SeriesSelect<true>;
     'contact-messages': ContactMessagesSelect<false> | ContactMessagesSelect<true>;
     repositories: RepositoriesSelect<false> | RepositoriesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -253,6 +259,10 @@ export interface Blog {
   };
   publishedAt?: string | null;
   /**
+   * Multi-part post — parts are ordered by publish date.
+   */
+  series?: (number | null) | Series;
+  /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
   generateSlug?: boolean | null;
@@ -260,6 +270,36 @@ export interface Blog {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * Multi-part blog posts. Dev.to import creates these automatically; parts are ordered by publish date. Title is sent to Dev.to as the series name.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "series".
+ */
+export interface Series {
+  id: number;
+  /**
+   * Also the Dev.to series name — keep them in sync when renaming.
+   */
+  title: string;
+  description?: string | null;
+  posts?: {
+    docs?: (number | Blog)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  /**
+   * Set by Dev.to import (`collection_id`).
+   */
+  devtoCollectionId?: number | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * Messages from the landing contact form. Telegram delivery status is recorded on each row.
@@ -522,6 +562,10 @@ export interface PayloadLockedDocument {
         value: number | Blog;
       } | null)
     | ({
+        relationTo: 'series';
+        value: number | Series;
+      } | null)
+    | ({
         relationTo: 'contact-messages';
         value: number | ContactMessage;
       } | null)
@@ -641,11 +685,26 @@ export interface BlogsSelect<T extends boolean = true> {
         lastSyncedAt?: T;
       };
   publishedAt?: T;
+  series?: T;
   generateSlug?: T;
   slug?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "series_select".
+ */
+export interface SeriesSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  posts?: T;
+  devtoCollectionId?: T;
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

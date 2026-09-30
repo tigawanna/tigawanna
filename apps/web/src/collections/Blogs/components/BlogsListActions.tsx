@@ -60,6 +60,7 @@ async function importAllFromDevto(
   let created = 0;
   let updated = 0;
   let canonicalUpdated = 0;
+  let seriesCreated = 0;
 
   for (let run = 0; run < MAX_IMPORT_RUNS; run += 1) {
     const batch = await requestImportBatch({ force, since });
@@ -67,11 +68,12 @@ async function importAllFromDevto(
     created += batch.created;
     updated += batch.updated;
     canonicalUpdated += batch.canonicalUpdated;
+    seriesCreated += batch.seriesCreated;
     onProgress(created + updated, batch.remaining);
 
     const madeProgress = batch.created + batch.updated > 0;
     if (batch.remaining === 0 || !madeProgress) {
-      return { ...batch, created, updated, canonicalUpdated };
+      return { ...batch, created, updated, canonicalUpdated, seriesCreated };
     }
   }
 
@@ -103,6 +105,7 @@ export function BlogsListActions() {
         `${result.updated} updated`,
         `${result.skipped} unchanged`,
       ];
+      if (result.seriesCreated > 0) parts.push(`${result.seriesCreated} series added`);
       if (result.canonicalUpdated > 0) {
         parts.push(`${result.canonicalUpdated} Dev.to canonical URLs set`);
       }

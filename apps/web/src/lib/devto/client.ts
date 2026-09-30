@@ -7,6 +7,8 @@ export type DevtoArticleWriteInput = {
   /** When false (default), create/update as a Dev.to draft. */
   published?: boolean;
   mainImage?: string | null;
+  /** Dev.to series name — Forem finds or creates the series by this title. */
+  series?: string;
 };
 
 export type DevtoArticle = {
@@ -130,6 +132,7 @@ function toArticlePayload(input: DevtoArticleWriteInput) {
       ...(input.description ? { description: input.description } : {}),
       ...(input.canonicalUrl ? { canonical_url: input.canonicalUrl } : {}),
       ...(input.mainImage ? { main_image: input.mainImage } : {}),
+      ...(input.series ? { series: input.series } : {}),
       ...(capTags(input.tags) ? { tags: capTags(input.tags) } : {}),
     },
   };

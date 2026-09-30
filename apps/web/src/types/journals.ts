@@ -33,6 +33,17 @@ export interface JournalDetail extends JournalPreviewItem {
 }
 
 /**
+ * Series navigation for a blog post — parts ordered by publish date.
+ */
+export interface BlogSeriesNav {
+  title: string;
+  description: string | null;
+  parts: Array<{ slug: string; title: string }>;
+  /** Index of the current post within `parts`. */
+  currentIndex: number;
+}
+
+/**
  * Paginated list result for `/journals?page=` or `/blogs?page=`.
  */
 export interface JournalsListPage {
