@@ -21,7 +21,7 @@ import type {
 } from "@/types/journals";
 import { resolveMediaUrl } from "@/utils/media-url";
 
-export const BLOGS_PER_PAGE = 8;
+export const BLOGS_PER_PAGE = 10;
 export const JOURNALS_PER_PAGE = 8;
 
 /**

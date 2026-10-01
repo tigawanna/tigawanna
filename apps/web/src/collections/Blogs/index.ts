@@ -39,9 +39,10 @@ export const Blogs: CollectionConfig = {
     kind: true,
     publishedAt: true,
   },
+  defaultSort: "-publishedAt",
   admin: {
     useAsTitle: "title",
-    defaultColumns: ["title", "kind", "slug", "_status", "updatedAt"],
+    defaultColumns: ["title", "kind", "slug", "_status", "publishedAt", "updatedAt"],
     pagination: {
       defaultLimit: 30,
     },

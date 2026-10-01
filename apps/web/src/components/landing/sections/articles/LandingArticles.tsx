@@ -16,7 +16,7 @@ function BlogsHeader() {
       <SectionEyebrow>Blogs</SectionEyebrow>
       <h2 className="landing-section-heading">Writing in public.</h2>
       <p className="landing-section-lead">
-        Published here first — then cross-posted to Dev.to with a canonical URL.
+        A collection of my thoughts on the stuff I build with.
       </p>
     </div>
   );

@@ -17,7 +17,7 @@ export default function BlogsIndexPage({ searchParams }: Args) {
         <CollectionArchiveSkeleton
           eyebrow="Blog"
           title="Writing in public"
-          lead="Longer posts — published here first, then cross-posted to Dev.to with a canonical URL back to this site."
+          lead="A collection of my thoughts on the stuff I build with."
           featured
         />
       }
