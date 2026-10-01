@@ -22,7 +22,7 @@ import type {
 import { resolveMediaUrl } from "@/utils/media-url";
 
 export const BLOGS_PER_PAGE = 10;
-export const JOURNALS_PER_PAGE = 8;
+export const JOURNALS_PER_PAGE = 10;
 
 /**
  * Maps a Payload blog doc into the shared preview shape.

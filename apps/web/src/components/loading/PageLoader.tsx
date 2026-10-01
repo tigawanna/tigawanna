@@ -1,4 +1,5 @@
 import { LandingNavbar } from "@/components/landing/layout/LandingNavbar";
+import { TigawannaComponent } from "@/components/icons/tigawanna-icon";
 import { CenteredLoader } from "./CenteredLoader";
 
 type PageLoaderProps = {
@@ -12,11 +13,12 @@ export function PageLoader({ label = "Loading…" }: PageLoaderProps) {
   return (
     <div
       data-test="page-loader"
-      className="min-h-svh bg-base-100 text-base-content"
+      className="flex min-h-svh w-full flex-col items-center justify-center gap-6 bg-base-100 px-6 pt-20 text-base-content md:gap-8"
       aria-busy="true"
     >
       <LandingNavbar />
-      <CenteredLoader label={label} fullPage size="lg" className="min-h-[calc(100svh-5rem)]" />
+      <TigawannaComponent animate />
+      <CenteredLoader label={label} size="lg" />
     </div>
   );
 }

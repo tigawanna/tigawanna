@@ -1,4 +1,3 @@
-import { TigawannaMarkIcon } from "@/components/landing/stubs/tigawanna-mark";
 import { twMerge } from "tailwind-merge";
 
 type CenteredLoaderProps = {
@@ -7,19 +6,19 @@ type CenteredLoaderProps = {
   className?: string;
   /** Fill the viewport — route / page transitions. */
   fullPage?: boolean;
-  /** Mark size hint: section vs page. */
+  /** Orbit size hint: section vs page. */
   size?: "sm" | "md" | "lg";
 };
 
 const SIZE_CLASS = {
-  sm: "h-12 w-20",
-  md: "h-16 w-24",
-  lg: "h-20 w-32 md:h-24 md:w-40",
+  sm: "size-8",
+  md: "size-12",
+  lg: "size-14 md:size-16",
 } as const;
 
 /**
- * Shared loading indicator — brand mark, centered. Use everywhere instead of
- * ad-hoc “Loading…” text or mismatched skeletons.
+ * Shared loading indicator — paired-orbit dots, centered. Use everywhere
+ * instead of ad-hoc “Loading…” text or mismatched skeletons.
  */
 export function CenteredLoader({
   label = "Loading…",
@@ -35,14 +34,15 @@ export function CenteredLoader({
       aria-busy="true"
       className={twMerge(
         "flex w-full flex-col items-center justify-center text-base-content/80",
-        fullPage ? "min-h-svh px-6" : "min-h-48 py-16",
+        fullPage && "min-h-svh px-6",
         className,
       )}
     >
-      <TigawannaMarkIcon
-        className={twMerge("loader-mark text-current", SIZE_CLASS[size])}
-        aria-hidden="true"
-      />
+      <div className={twMerge("loader-orbit", SIZE_CLASS[size])} aria-hidden="true">
+        <span className="loader-orbit__core" />
+        <span className="loader-orbit__dot" />
+        <span className="loader-orbit__dot loader-orbit__dot--trail" />
+      </div>
       <span className="sr-only">{label}</span>
     </div>
   );

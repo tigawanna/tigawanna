@@ -114,28 +114,57 @@ body {
   }
 }
 
-@keyframes loader-mark {
-  0% {
-    opacity: 0.7;
-    transform: rotate(0deg);
+/* Paired revolution: a fixed core with two dots orbiting half a cycle apart. */
+@keyframes loader-orbit {
+  from {
+    transform: rotate(0deg) translate(155%);
   }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.7;
-    transform: rotate(360deg);
+  to {
+    transform: rotate(360deg) translate(155%);
   }
 }
 
-.loader-mark {
-  animation: loader-mark 2.8s linear infinite;
-  transform-origin: center;
+.loader-orbit {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
 }
 
-.loader-mark path,
-.loader-mark circle {
-  stroke-width: 3.25;
+.loader-orbit__core,
+.loader-orbit__dot {
+  position: absolute;
+  width: 25%;
+  height: 25%;
+  border-radius: 9999px;
+  background: currentColor;
+}
+
+.loader-orbit__core {
+  z-index: 1;
+}
+
+.loader-orbit__dot {
+  top: 50%;
+  left: 50%;
+  margin: -12.5% 0 0 -12.5%;
+  transform: rotate(0deg) translate(155%);
+  animation: loader-orbit 1.4s ease infinite;
+}
+
+.loader-orbit__dot--trail {
+  animation-delay: 0.7s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader-orbit__dot {
+    animation: none;
+  }
+
+  .loader-orbit__dot--trail {
+    transform: rotate(180deg) translate(155%);
+  }
 }
 
 /* Live root: unnamed chrome stays interactive; named groups still animate. */
