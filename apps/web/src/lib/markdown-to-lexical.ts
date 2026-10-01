@@ -358,9 +358,8 @@ export function hydrateMarkdownImageBlocks(
  *
  * Default `convertMarkdownToLexical` leaves ``` fences as plain paragraph text
  * when CodeFeature isn't in the editor config — so we split fences ourselves.
- * Tables are lifted the same way: Payload's experimental table feature breaks
- * under Next (duplicate `lexical` copies), so we emit table nodes manually for
- * the frontend `TableJSXConverter`.
+ * Tables are lifted the same way so cells get our inline conversion; the editor
+ * registers them via `EXPERIMENTAL_TableFeature` in `contentLexicalEditor`.
  */
 export function markdownToLexicalWithCodeBlocks(
   markdown: string,

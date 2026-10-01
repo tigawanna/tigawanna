@@ -10,7 +10,12 @@ import {
   aiDraftStatusEndpoint,
   aiRefineEndpoint,
 } from "./endpoints/ai-draft";
-import { openDevtoEndpoint, syncDevtoEndpoint, importFromDevtoEndpoint } from "./endpoints/devto";
+import {
+  devtoImportArticleEndpoint,
+  devtoOverviewEndpoint,
+  openDevtoEndpoint,
+  syncDevtoEndpoint,
+} from "./endpoints/devto";
 import { fromMarkdownEndpoint } from "./endpoints/from-markdown";
 import { toMarkdownEndpoint } from "./endpoints/to-markdown";
 import { revalidateBlog, revalidateBlogDelete } from "./hooks/revalidateBlog";
@@ -57,7 +62,8 @@ export const Blogs: CollectionConfig = {
     aiRefineEndpoint,
     toMarkdownEndpoint,
     fromMarkdownEndpoint,
-    importFromDevtoEndpoint,
+    devtoOverviewEndpoint,
+    devtoImportArticleEndpoint,
     openDevtoEndpoint,
     syncDevtoEndpoint,
   ],

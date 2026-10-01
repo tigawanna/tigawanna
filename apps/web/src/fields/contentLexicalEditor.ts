@@ -1,5 +1,6 @@
 import {
   BlocksFeature,
+  EXPERIMENTAL_TableFeature,
   FixedToolbarFeature,
   HeadingFeature,
   HorizontalRuleFeature,
@@ -12,11 +13,11 @@ import { Code } from "@/blocks/Code/config";
 import { MediaBlock } from "@/blocks/MediaBlock/config";
 
 /**
- * Shared Lexical editor for blog / README content (headings, code, media, banners).
+ * Shared Lexical editor for blog / README content (headings, code, media, banners, tables).
  *
- * GFM pipe tables are lifted in `markdownToLexicalWithCodeBlocks` — do not enable
- * `EXPERIMENTAL_TableFeature` here; it pulls a second `lexical` copy under Next and
- * breaks `convertMarkdownToLexical` with ListNode subclass errors.
+ * `EXPERIMENTAL_TableFeature` registers the `table` nodes emitted by
+ * `markdownToLexicalWithCodeBlocks`; without it the admin can't parse imported tables.
+ * Keep `lexical` / `@lexical/*` on a single version or Next bundles two copies.
  */
 export function contentLexicalEditor() {
   return lexicalEditor({
@@ -27,6 +28,7 @@ export function contentLexicalEditor() {
       FixedToolbarFeature(),
       InlineToolbarFeature(),
       HorizontalRuleFeature(),
+      EXPERIMENTAL_TableFeature(),
     ],
   });
 }

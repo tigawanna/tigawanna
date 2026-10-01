@@ -54,8 +54,25 @@ export default buildConfig({
       titleSuffix: " · Tigawanna",
     },
     components: {
-      afterNavLinks: ["/components/admin/JobsProgressNavLink#JobsProgressNavLink"],
+      afterNavLinks: [
+        {
+          path: "/components/admin/AdminViewNavLink#AdminViewNavLink",
+          clientProps: { viewPath: "/devto", label: "Dev.to" },
+        },
+        {
+          path: "/components/admin/AdminViewNavLink#AdminViewNavLink",
+          clientProps: { viewPath: "/jobs-progress", label: "Jobs progress" },
+        },
+      ],
       views: {
+        devto: {
+          Component: "/views/Devto#DevtoView",
+          path: "/devto",
+          meta: {
+            title: "Dev.to",
+            description: "Dev.to articles matched to local blogs",
+          },
+        },
         smartDraft: {
           Component: "/views/AiDraft#AiDraftView",
           path: "/smart-draft",

@@ -1,6 +1,7 @@
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { RscEntryLexicalField as RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { LexicalDiffComponent as LexicalDiffComponent_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
+import { TableFeatureClient as TableFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { HorizontalRuleFeatureClient as HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { InlineToolbarFeatureClient as InlineToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { FixedToolbarFeatureClient as FixedToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
@@ -28,7 +29,8 @@ import { SlugField as SlugField_2b8867833a34864a02ddf429b0728a40 } from '@payloa
 import { BlogsListActions as BlogsListActions_82626b0405a640e2550779db15313dc7 } from '../../../collections/Blogs/components/BlogsListActions'
 import { BlogEditMenuItems as BlogEditMenuItems_72740095a05eec8474bff06f651be8c4 } from '../../../collections/Blogs/components/BlogEditMenuItems'
 import { SyncFromGithubListAction as SyncFromGithubListAction_2345ab92bd7a5d3cbd7b9b944046ff78 } from '../../../collections/Repositories/components/SyncFromGithubListAction'
-import { JobsProgressNavLink as JobsProgressNavLink_65502696a786db1e6c9bd12f8d7f0fd4 } from '../../../components/admin/JobsProgressNavLink'
+import { AdminViewNavLink as AdminViewNavLink_0c80caddffe03ef2fc0aa7bc5dab35c5 } from '../../../components/admin/AdminViewNavLink'
+import { DevtoView as DevtoView_43d8bdad11de05070f21eb473dd6b176 } from '../../../views/Devto'
 import { AiDraftView as AiDraftView_d401f7b5270960408bcbb467cb0957b5 } from '../../../views/AiDraft'
 import { JobsProgressView as JobsProgressView_a005223bfd5e955f72530f2a94e0d171 } from '../../../views/JobsProgress'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
@@ -38,6 +40,7 @@ export const importMap = {
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalField": RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#LexicalDiffComponent": LexicalDiffComponent_44fe37237e0ebf4470c9990d8cb7b07e,
+  "@payloadcms/richtext-lexical/client#TableFeatureClient": TableFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#HorizontalRuleFeatureClient": HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#InlineToolbarFeatureClient": InlineToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#FixedToolbarFeatureClient": FixedToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
@@ -65,7 +68,8 @@ export const importMap = {
   "/collections/Blogs/components/BlogsListActions#BlogsListActions": BlogsListActions_82626b0405a640e2550779db15313dc7,
   "/collections/Blogs/components/BlogEditMenuItems#BlogEditMenuItems": BlogEditMenuItems_72740095a05eec8474bff06f651be8c4,
   "/collections/Repositories/components/SyncFromGithubListAction#SyncFromGithubListAction": SyncFromGithubListAction_2345ab92bd7a5d3cbd7b9b944046ff78,
-  "/components/admin/JobsProgressNavLink#JobsProgressNavLink": JobsProgressNavLink_65502696a786db1e6c9bd12f8d7f0fd4,
+  "/components/admin/AdminViewNavLink#AdminViewNavLink": AdminViewNavLink_0c80caddffe03ef2fc0aa7bc5dab35c5,
+  "/views/Devto#DevtoView": DevtoView_43d8bdad11de05070f21eb473dd6b176,
   "/views/AiDraft#AiDraftView": AiDraftView_d401f7b5270960408bcbb467cb0957b5,
   "/views/JobsProgress#JobsProgressView": JobsProgressView_a005223bfd5e955f72530f2a94e0d171,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1

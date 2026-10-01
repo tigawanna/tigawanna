@@ -41,8 +41,7 @@ export async function BlogsIndexContent({ searchParams }: { searchParams: Search
               Writing in public
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-center text-base leading-7 text-base-content/70">
-              Longer posts — published here first, then cross-posted to Dev.to with a canonical URL
-              back to this site.
+              A collection of my thoughts on the stuff I build.
             </p>
             <p className="mt-3 text-center text-xs text-base-content/45">
               {totalItems} {totalItems === 1 ? "post" : "posts"}
